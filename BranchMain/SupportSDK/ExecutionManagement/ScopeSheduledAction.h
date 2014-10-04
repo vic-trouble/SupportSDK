@@ -3,6 +3,7 @@
 
 #include "ExecutionManagementAPI.h"
 
+#include "ActionRecord.h"
 #include "TypeDefines.h"
 
 namespace SDK
@@ -17,14 +18,14 @@ namespace SDK
 			int																m_action_id;
 
 		private:
-			void SheduleAction (std::function<void(ulong,ulong)> i_action, ushort i_frequency, ushort i_phase);
+			void SheduleAction (const ActionRecord& i_action);
 
 		private:
 			ScopeSheduledAction (const ScopeSheduledAction& i_other);
 			ScopeSheduledAction& operator = (const ScopeSheduledAction& i_other);
 
 		public:
-			EXECUTIONMANAGEMENT_API ScopeSheduledAction (ISheduler& i_sheduler, std::function<void(ulong,ulong)> i_action, ushort i_frequency, ushort i_phase);
+			EXECUTIONMANAGEMENT_API ScopeSheduledAction (ISheduler& i_sheduler, const ActionRecord& i_action);
 			EXECUTIONMANAGEMENT_API ScopeSheduledAction (ScopeSheduledAction&& i_other);
 			EXECUTIONMANAGEMENT_API ~ScopeSheduledAction ();
 		};
@@ -33,14 +34,14 @@ namespace SDK
 
 	template <typename T>
 	ScopeSheduledAction SheduleMemberFunction (ISheduler& i_sheduler, 
-														T& i_object, void (T::*i_action)(ulong, ulong),
-														ushort i_frequency,	ushort i_phase)
+														T& i_object, void (T::*i_member)(ulong, ulong),
+														ActionRecord i_action)
 		{
-		return std::move(ScopeSheduledAction(i_sheduler, ConvertMemberFunction<T>(i_object, i_action), i_frequency, i_phase));
+		i_action.m_action_to_perform = ConvertMemberFunction<T>(i_object, i_member);
+		return std::move(ScopeSheduledAction(i_sheduler, i_action));
 		}
 
-	EXECUTIONMANAGEMENT_API ScopeSheduledAction SheduleSheduler (ISheduler& i_parent_sheduler, ISheduler& i_child_sheduler,
-																			 ushort i_frequency, ushort i_phase);
+	EXECUTIONMANAGEMENT_API ScopeSheduledAction SheduleSheduler (ISheduler& i_parent_sheduler, ISheduler& i_child_sheduler, ActionRecord i_action);
 
 	} // SDK
 

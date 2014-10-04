@@ -8,19 +8,15 @@ namespace SDK
 	{
 
 	/////////////////////////////////////////////////////////////////////////////////
-	// ActionRecord
+	// LoadBalancingRecord
 
-	LoadBalancingSheduler::ActionRecord::ActionRecord(int i_id, std::function<void(ulong, ulong)> i_action, ushort i_frequency, ushort i_phase)
-		: m_id(i_id)
-		, m_action_to_perform(i_action)
-		, m_frequency(i_frequency)
-		, m_phase(i_phase)
+	LoadBalancingSheduler::LoadBalancingRecord::LoadBalancingRecord(const ActionRecord& i_action)
+		: ActionRecord(i_action)
 		, m_last_time_run(0)
-		{
-		}
+		{}
 
 	/////////////////////////////////////////////////////////////////////////////////
-	// FrequencySheduler
+	// LoadBalancingSheduler
 
 	LoadBalancingSheduler::LoadBalancingSheduler()
 		: m_next_id(0)
@@ -32,9 +28,10 @@ namespace SDK
 		{
 		}
 
-	int	LoadBalancingSheduler::AddAction(std::function<void(ulong, ulong)> i_action, ushort i_frequency, ushort i_phase)
+	int	LoadBalancingSheduler::AddAction(const ActionRecord& i_action)
 		{
-		m_actions.push_back( ActionRecord(m_next_id, i_action, i_frequency, i_phase) );
+		m_actions.push_back( i_action );
+		m_actions.back().m_id = m_next_id;
 		return m_next_id++;
 		}
 
@@ -51,7 +48,7 @@ namespace SDK
 		{
 		++m_current_tick;		
 
-		std::vector<ActionRecord*> actions_to_run;
+		std::vector<LoadBalancingRecord*> actions_to_run;
 		for (auto& action_record : m_actions)
 			{
 			if (m_current_tick < action_record.m_frequency)

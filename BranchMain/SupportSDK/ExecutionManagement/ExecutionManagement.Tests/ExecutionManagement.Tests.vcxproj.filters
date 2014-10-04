@@ -9,6 +9,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{22eeee62-f896-492f-9038-16ae6ae86541}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -16,6 +19,9 @@
     </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>_Maintanance</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseMocks.h">
+      <Filter>Base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -36,6 +42,9 @@
     </ClCompile>
     <ClCompile Include="LoadBalancingShedulerTests.cpp">
       <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseMocks.cpp">
+      <Filter>Base</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

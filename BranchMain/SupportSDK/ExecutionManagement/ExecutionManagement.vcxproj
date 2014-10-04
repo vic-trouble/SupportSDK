@@ -84,6 +84,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ActionRecord.h" />
     <ClInclude Include="ExecutionManagementAPI.h" />
     <ClInclude Include="ISheduler.h" />
     <ClInclude Include="FrequencySheduler.h" />
@@ -95,6 +96,7 @@
     <ClInclude Include="_Link.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ActionRecord.cpp" />
     <ClCompile Include="FrequencySheduler.cpp" />
     <ClCompile Include="LoadBalancingSheduler.cpp" />
     <ClCompile Include="PrioritySheduler.cpp" />

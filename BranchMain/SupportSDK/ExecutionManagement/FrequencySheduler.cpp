@@ -6,17 +6,7 @@
 
 namespace SDK
 	{
-	/////////////////////////////////////////////////////////////////////////////////
-	// ActionRecord
-
-	FrequencySheduler::ActionRecord::ActionRecord(int i_id, std::function<void(ulong, ulong)> i_action, ushort i_frequency, ushort i_phase)
-		: m_id(i_id)
-		, m_action_to_perform(i_action)
-		, m_frequency(i_frequency)
-		, m_phase(i_phase)
-		{
-		}
-
+	
 	/////////////////////////////////////////////////////////////////////////////////
 	// FrequencySheduler
 
@@ -33,9 +23,10 @@ namespace SDK
 		
 		}
 
-	int	FrequencySheduler::AddAction(std::function<void(ulong, ulong)> i_action, ushort i_frequency, ushort i_phase)
+	int	FrequencySheduler::AddAction(const ActionRecord& i_action)
 		{
-		m_actions.push_back( ActionRecord(m_next_id, i_action, i_frequency, i_phase) );
+		m_actions.push_back( i_action );
+		m_actions.back().m_id = m_next_id;
 		return m_next_id++;
 		}
 

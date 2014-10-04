@@ -42,6 +42,9 @@
     <ClInclude Include="PrioritySheduler.h">
       <Filter>Sheduler\Shedulers</Filter>
     </ClInclude>
+    <ClInclude Include="ActionRecord.h">
+      <Filter>Sheduler\Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -58,6 +61,9 @@
     </ClCompile>
     <ClCompile Include="PrioritySheduler.cpp">
       <Filter>Sheduler\Shedulers</Filter>
+    </ClCompile>
+    <ClCompile Include="ActionRecord.cpp">
+      <Filter>Sheduler\Base</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
