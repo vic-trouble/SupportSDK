@@ -10,7 +10,7 @@ namespace SDK
 	/////////////////////////////////////////////////////////////////////////////////
 	// ActionRecord
 
-	ActionRecord::ActionRecord(std::function<void(ulong, ulong)> i_action, 
+	ActionRecord::ActionRecord(std::function<void(ulong)> i_action, 
 														ushort i_frequency, 
 														ushort i_phase, 
 														real i_priority)
@@ -47,9 +47,9 @@ namespace SDK
 	/////////////////////////////////////////////////////////////////////////////////
 	// utility functions
 
-	std::function<void(ulong, ulong)> ConvertShedulerToAction (ISheduler& i_child_sheduler)
+	std::function<void(ulong)> ConvertShedulerToAction (ISheduler& i_child_sheduler)
 		{
-		return std::bind(&ISheduler::Execute, std::ref(i_child_sheduler), std::placeholders::_2);
+		return std::bind(&ISheduler::Execute, std::ref(i_child_sheduler), std::placeholders::_1);
 		}
 
 

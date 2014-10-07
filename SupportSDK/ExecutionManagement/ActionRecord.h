@@ -12,14 +12,14 @@ namespace SDK
 
 	struct ActionRecord
 		{
-		int																m_id;
-		std::function<void(ulong, ulong)> m_action_to_perform;
-		ushort														m_frequency;
-		ushort														m_phase;
-		real															m_priority;
-
+		int													m_id;
+		std::function<void(ulong)>	m_action_to_perform;
+		ushort											m_frequency;
+		ushort											m_phase;
+		real												m_priority;
+															 
 		EXECUTIONMANAGEMENT_API ActionRecord (
-																			std::function<void(ulong/*from last execution for this action*/, ulong/*available time*/)> i_action, 
+																			std::function<void(ulong/*available time*/)> i_action, 
 																			ushort i_frequency, 
 																			ushort i_phase, 
 																			real i_priority);
@@ -36,12 +36,12 @@ namespace SDK
 		};
 
 	template <typename T>
-	std::function<void(ulong, ulong)> ConvertMemberFunction (T& i_object, void (T::*i_member_function)(ulong, ulong))
+	std::function<void(ulong)> ConvertMemberFunction (T& i_object, void (T::*i_member_function)(ulong))
 		{
-		return std::bind(i_member_function, std::ref(i_object), std::placeholders::_1, std::placeholders::_2);
+		return std::bind(i_member_function, std::ref(i_object), std::placeholders::_1);
 		}
 
-	EXECUTIONMANAGEMENT_API std::function<void(ulong, ulong)> ConvertShedulerToAction (ISheduler& i_child_sheduler);
+	EXECUTIONMANAGEMENT_API std::function<void(ulong)> ConvertShedulerToAction (ISheduler& i_child_sheduler);
 
 	} // SDK
 

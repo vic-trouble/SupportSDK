@@ -8,14 +8,6 @@ namespace SDK
 	{
 
 	/////////////////////////////////////////////////////////////////////////////////
-	// LoadBalancingRecord
-
-	LoadBalancingSheduler::LoadBalancingRecord::LoadBalancingRecord(const ActionRecord& i_action)
-		: ActionRecord(i_action)
-		, m_last_time_run(0)
-		{}
-
-	/////////////////////////////////////////////////////////////////////////////////
 	// LoadBalancingSheduler
 
 	LoadBalancingSheduler::LoadBalancingSheduler()
@@ -48,7 +40,7 @@ namespace SDK
 		{
 		++m_current_tick;		
 
-		std::vector<LoadBalancingRecord*> actions_to_run;
+		std::vector<ActionRecord*> actions_to_run;
 		for (auto& action_record : m_actions)
 			{
 			if (m_current_tick < action_record.m_frequency)
@@ -67,8 +59,7 @@ namespace SDK
 			i_available_time -= current_time - last_time_in_tick;
 
 			ulong available_time = i_available_time / (actions_size - i );
-			action_record.m_action_to_perform(current_time - action_record.m_last_time_run, available_time);
-			action_record.m_last_time_run = current_time;
+			action_record.m_action_to_perform(available_time);
 
 			// update last time for this tick
 			last_time_in_tick = clock();

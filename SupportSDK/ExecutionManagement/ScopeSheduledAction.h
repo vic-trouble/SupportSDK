@@ -34,7 +34,7 @@ namespace SDK
 
 	template <typename T>
 	ScopeSheduledAction SheduleMemberFunction (ISheduler& i_sheduler, 
-														T& i_object, void (T::*i_member)(ulong, ulong),
+														T& i_object, void (T::*i_member)(ulong),
 														ActionRecord i_action)
 		{
 		i_action.m_action_to_perform = ConvertMemberFunction<T>(i_object, i_member);

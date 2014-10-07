@@ -12,15 +12,8 @@ namespace SDK
 	class LoadBalancingSheduler : public ISheduler
 		{
 		private:
-			struct LoadBalancingRecord : ActionRecord
-				{
-				ulong m_last_time_run;
-				LoadBalancingRecord(const ActionRecord& i_action);
-				};
-
-		private:
 			int																m_next_id;
-			std::vector<LoadBalancingRecord>	m_actions;
+			std::vector<ActionRecord>	m_actions;
 
 			ulong															m_current_tick;
 

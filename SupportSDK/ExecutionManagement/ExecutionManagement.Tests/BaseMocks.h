@@ -6,7 +6,7 @@
 class ActionHandlerMock
 	{
 	public:
-		MOCK_METHOD2(TestMethod, void(SDK::ulong,SDK::ulong));
+		MOCK_METHOD1(TestMethod, void(SDK::ulong));
 	};
 
 struct ActionRecordData

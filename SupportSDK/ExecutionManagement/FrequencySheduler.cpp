@@ -13,8 +13,6 @@ namespace SDK
 	FrequencySheduler::FrequencySheduler()
 		: m_next_id(0)
 		, m_current_tick(0)
-		, m_general_time(0)
-		, m_last_time(0)
 		{
 		}
 
@@ -42,24 +40,14 @@ namespace SDK
 	void FrequencySheduler::Execute(ulong i_available_time)
 		{
 		++m_current_tick;
-		
-		ulong difference = 0;
-		if (m_last_time == 0)
-			m_last_time = clock();
-		else
-			difference = clock() - m_last_time;
-		m_general_time += difference;
 
 		for (auto& action_record : m_actions)
 			{
 			if (m_current_tick < action_record.m_frequency)
 				continue;
 			if ((m_current_tick+action_record.m_phase) % action_record.m_frequency == 0)
-				action_record.m_action_to_perform(difference, i_available_time);
+				action_record.m_action_to_perform(i_available_time);
 			}
-
-		// update last time
-		m_last_time = clock();
 		}
 
 	} // SDK

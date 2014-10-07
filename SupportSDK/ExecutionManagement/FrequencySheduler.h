@@ -16,8 +16,6 @@ namespace SDK
 			std::vector<ActionRecord> m_actions;
 
 			ulong											m_current_tick;
-			ulong											m_general_time;
-			ulong											m_last_time;
 
 		public:
 			EXECUTIONMANAGEMENT_API								FrequencySheduler();
