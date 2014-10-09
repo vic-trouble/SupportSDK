@@ -43,14 +43,23 @@ struct TestEvent
 class EventListenerMock : public SDK::EventListener
 	{
 	public:
-		EventListenerMock (SDK::uint i_interest_code = 0, SDK::EventManager* ip_manager = nullptr)
-			: EventListener(i_interest_code, ip_manager)
+		SDK::uint m_interest_code;
+	public:
+		EventListenerMock (SDK::uint i_code_interest, SDK::EventManager* ip_manager = nullptr)
+			: EventListener(ip_manager)
+			, m_interest_code(i_code_interest)
 			{			}
+
 		MOCK_METHOD1(HandleEvent_, void (TestEvent));
 
 		virtual void HandleEvent(const SDK::EventBase& i_event) override
 			{
 			HandleEvent_(TestEvent(i_event));
+			}
+
+		virtual bool IsCodeInteresting(const SDK::uint i_code) const override
+			{
+			return m_interest_code == i_code;
 			}
 	};
 

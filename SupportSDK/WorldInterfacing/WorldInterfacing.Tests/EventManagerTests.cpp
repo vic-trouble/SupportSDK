@@ -47,8 +47,11 @@ TEST(EventManagerTests, ShedulEventAndDispatch_ShouldCallListeners)
 class TimeConsumingEventListener : public SDK::EventListener
 	{
 	public:
+		uint m_interest_code;
+	public:
 		TimeConsumingEventListener (SDK::uint i_interest_code = 0, SDK::EventManager* ip_manager = nullptr)
-			: EventListener(i_interest_code, ip_manager)
+			: EventListener(ip_manager)
+			, m_interest_code(i_interest_code)
 			{			}
 
 		MOCK_METHOD1(HandleEvent_, void (TestEvent));
@@ -57,6 +60,11 @@ class TimeConsumingEventListener : public SDK::EventListener
 			{
 			HandleEvent_(i_event);
 			Sleep(1);
+			}
+
+		virtual bool IsCodeInteresting(const uint i_code) const override
+			{
+			return m_interest_code == i_code;
 			}
 	};
 

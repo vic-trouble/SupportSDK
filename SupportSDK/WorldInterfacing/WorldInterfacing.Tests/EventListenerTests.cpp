@@ -9,15 +9,18 @@
 using namespace SDK;
 using ::testing::_;
 
-TEST(EventListenerTests, DefaultsTest_ShouldNotCrash)
+TEST(EventListenerTests, ShouldAlwaysReturnTrue)
 	{
-	EventListenerMock ev_listener;
+	class EvListenerBase : public SDK::EventListener
+		{
+		public:
+			virtual void HandleEvent(const SDK::EventBase&) override
+				{				}
+		};
+	EvListenerBase ev_listener;
 
 	EXPECT_TRUE(ev_listener.IsCodeInteresting(0));
-
-	ev_listener.SetInterestCode(1);
-	EXPECT_TRUE(ev_listener.IsCodeInteresting(1));
-	EXPECT_FALSE(ev_listener.IsCodeInteresting(0));
+	EXPECT_TRUE(ev_listener.IsCodeInteresting(1));;
 	}
 
 TEST(EventListenerTests, ManagerNotNull_ShouldRegisterAndUnregister)

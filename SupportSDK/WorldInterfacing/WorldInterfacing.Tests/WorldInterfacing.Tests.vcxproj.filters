@@ -11,6 +11,9 @@
     <Filter Include="EventManaging\Base">
       <UniqueIdentifier>{bfa66a78-4e52-44de-abde-67f1d38e88c1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Polling">
+      <UniqueIdentifier>{8c5f1450-a3bd-42cf-96d0-12bbda83aa81}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="_LinkingLibraries.cpp">
@@ -29,6 +32,12 @@
       <Filter>EventManaging</Filter>
     </ClCompile>
     <ClCompile Include="EventManagerTests.cpp">
+      <Filter>EventManaging</Filter>
+    </ClCompile>
+    <ClCompile Include="EventListenerBroadCastingTests.cpp">
+      <Filter>EventManaging</Filter>
+    </ClCompile>
+    <ClCompile Include="EventListenerNarrowCastingTests.cpp">
       <Filter>EventManaging</Filter>
     </ClCompile>
   </ItemGroup>

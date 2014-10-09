@@ -82,6 +82,8 @@
   <ItemGroup>
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventListener.h" />
+    <ClInclude Include="EventListenerBroadCasting.h" />
+    <ClInclude Include="EventListenerNarrowCasting.h" />
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TypeDefines.h" />
@@ -91,6 +93,8 @@
   <ItemGroup>
     <ClCompile Include="Event.cpp" />
     <ClCompile Include="EventListener.cpp" />
+    <ClCompile Include="EventListenerBroadCasting.cpp" />
+    <ClCompile Include="EventListenerNarrowCasting.cpp" />
     <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

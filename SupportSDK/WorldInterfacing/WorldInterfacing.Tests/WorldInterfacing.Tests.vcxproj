@@ -88,6 +88,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="EventListenerBroadCastingTests.cpp" />
+    <ClCompile Include="EventListenerNarrowCastingTests.cpp" />
     <ClCompile Include="EventListenerTests.cpp" />
     <ClCompile Include="EventManagerTests.cpp" />
     <ClCompile Include="EventTests.cpp" />
