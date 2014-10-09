@@ -40,6 +40,12 @@
     <ClCompile Include="EventListenerNarrowCastingTests.cpp">
       <Filter>EventManaging</Filter>
     </ClCompile>
+    <ClCompile Include="PollingTaskTests.cpp">
+      <Filter>Polling</Filter>
+    </ClCompile>
+    <ClCompile Include="PollingStationTests.cpp">
+      <Filter>Polling</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">

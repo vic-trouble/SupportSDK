@@ -12,6 +12,9 @@
     <Filter Include="Polling">
       <UniqueIdentifier>{61fabfe8-1adc-4f72-a03f-229a8911e3f7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="EventManaging\Base">
+      <UniqueIdentifier>{be2c093e-a187-446a-8fed-3b141832193f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -23,15 +26,6 @@
     <ClInclude Include="WorldInterfacingAPI.h">
       <Filter>_Maintanance</Filter>
     </ClInclude>
-    <ClInclude Include="EventManager.h">
-      <Filter>EventManaging</Filter>
-    </ClInclude>
-    <ClInclude Include="Event.h">
-      <Filter>EventManaging</Filter>
-    </ClInclude>
-    <ClInclude Include="EventListener.h">
-      <Filter>EventManaging</Filter>
-    </ClInclude>
     <ClInclude Include="TypeDefines.h">
       <Filter>_Maintanance</Filter>
     </ClInclude>
@@ -41,25 +35,40 @@
     <ClInclude Include="EventListenerNarrowCasting.h">
       <Filter>EventManaging</Filter>
     </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>EventManaging\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="EventListener.h">
+      <Filter>EventManaging\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="EventManager.h">
+      <Filter>EventManaging\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="PollingTask.h">
+      <Filter>Polling</Filter>
+    </ClInclude>
+    <ClInclude Include="PollingStation.h">
+      <Filter>Polling</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>_Maintanance</Filter>
-    </ClCompile>
-    <ClCompile Include="Event.cpp">
-      <Filter>EventManaging</Filter>
-    </ClCompile>
-    <ClCompile Include="EventListener.cpp">
-      <Filter>EventManaging</Filter>
-    </ClCompile>
-    <ClCompile Include="EventManager.cpp">
-      <Filter>EventManaging</Filter>
     </ClCompile>
     <ClCompile Include="EventListenerBroadCasting.cpp">
       <Filter>EventManaging</Filter>
     </ClCompile>
     <ClCompile Include="EventListenerNarrowCasting.cpp">
       <Filter>EventManaging</Filter>
+    </ClCompile>
+    <ClCompile Include="Event.cpp">
+      <Filter>EventManaging\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="EventListener.cpp">
+      <Filter>EventManaging\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="EventManager.cpp">
+      <Filter>EventManaging\Base</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -94,6 +94,8 @@
     <ClCompile Include="EventManagerTests.cpp" />
     <ClCompile Include="EventTests.cpp" />
     <ClCompile Include="ExecutionManagement.Tests.cpp" />
+    <ClCompile Include="PollingStationTests.cpp" />
+    <ClCompile Include="PollingTaskTests.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="_LinkingLibraries.cpp" />
   </ItemGroup>
