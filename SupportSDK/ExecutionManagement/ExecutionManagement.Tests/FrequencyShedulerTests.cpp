@@ -3,7 +3,8 @@
 #include "BaseMocks.h"
 
 #include <FrequencySheduler.h>
-#include <Windows.h>
+
+#include <../Utilities/TimeUtilities.h>
 
 using namespace SDK;
 using ::testing::_;
@@ -73,6 +74,6 @@ TEST(FrequencyShedulerTests, TimeShouldBe_1)
 	for (size_t i = 0; i < 10; ++i)
 		{
 		sheduler.Execute(1);
-		Sleep(1);
+		Utilities::SleepMiliseconds(1);
 		}
 	}

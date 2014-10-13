@@ -5,6 +5,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExecutionManagement", "Exec
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExecutionManagement.Tests", "ExecutionManagement\ExecutionManagement.Tests\ExecutionManagement.Tests.vcxproj", "{4AF73073-CF46-46D0-9ADF-FC16CA84FE16}"
 	ProjectSection(ProjectDependencies) = postProject
+		{344430D7-1DA4-4F81-95AB-41E981166CB9} = {344430D7-1DA4-4F81-95AB-41E981166CB9}
 		{E434ECFB-BD60-4242-B976-58BD864D07A9} = {E434ECFB-BD60-4242-B976-58BD864D07A9}
 	EndProjectSection
 EndProject
@@ -21,6 +22,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Math.Tests", "Math\Math.Tes
 	ProjectSection(ProjectDependencies) = postProject
 		{AFC0C8A0-3447-4B14-83DE-2C7EB6F686B8} = {AFC0C8A0-3447-4B14-83DE-2C7EB6F686B8}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Utilities", "Utilities\Utilities.vcxproj", "{344430D7-1DA4-4F81-95AB-41E981166CB9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,6 +55,10 @@ Global
 		{DD220650-9097-472C-AB2A-30BC588E0336}.Debug|Win32.Build.0 = Debug|Win32
 		{DD220650-9097-472C-AB2A-30BC588E0336}.Release|Win32.ActiveCfg = Release|Win32
 		{DD220650-9097-472C-AB2A-30BC588E0336}.Release|Win32.Build.0 = Release|Win32
+		{344430D7-1DA4-4F81-95AB-41E981166CB9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{344430D7-1DA4-4F81-95AB-41E981166CB9}.Debug|Win32.Build.0 = Debug|Win32
+		{344430D7-1DA4-4F81-95AB-41E981166CB9}.Release|Win32.ActiveCfg = Release|Win32
+		{344430D7-1DA4-4F81-95AB-41E981166CB9}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -6,6 +6,8 @@
 #include <EventListener.h>
 #include <EventManager.h>
 
+#include <../Utilities/TimeUtilities.h>
+
 using namespace SDK;
 using ::testing::_;
 
@@ -59,7 +61,7 @@ class TimeConsumingEventListener : public SDK::EventListener
 		virtual void HandleEvent(const SDK::EventBase& i_event) override
 			{
 			HandleEvent_(i_event);
-			Sleep(1);
+			Utilities::SleepMiliseconds(1);
 			}
 
 		virtual bool IsCodeInteresting(const uint i_code) const override

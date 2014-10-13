@@ -3,7 +3,8 @@
 #include "BaseMocks.h"
 
 #include <LoadBalancingSheduler.h>
-#include <Windows.h>
+
+#include <../Utilities/TimeUtilities.h>
 
 using namespace SDK;
 using ::testing::_;
@@ -75,7 +76,7 @@ TEST(LoadBalancingShedulerTests, TimeShouldBe_1)
 	for (size_t i = 0; i < 10; ++i)
 		{
 		sheduler.Execute(1);
-		Sleep(1);
+		Utilities::SleepMiliseconds(1);
 		}
 	}
 
