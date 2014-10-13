@@ -4,6 +4,13 @@
 
 #include <time.h>
 
+#ifdef _WIN32
+    #include <windows.h>
+#else
+    #include <unistd.h>
+#endif
+
+
 namespace SDK
 	{
 
@@ -12,16 +19,16 @@ namespace SDK
 
 		void SleepSeconds(ulong i_seconds)
 			{
-			clock_t now = clock();
-			clock_t limit = now + i_seconds * CLOCKS_PER_SEC;
-			while ( limit > now )
-				now = clock();
+			SleepMiliseconds(i_seconds*1000);
 			}
 
 		void SleepMiliseconds(ulong i_miliseconds)
 			{
-			long timeout = clock() + i_miliseconds;
-			while( clock() < timeout ) continue;
+			#ifdef _WIN32
+				Sleep(i_miliseconds);
+			#else
+			 usleep(i_miliseconds * 1000); // takes microseconds
+			#endif
 			}
 
 		} // Utilities
