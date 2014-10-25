@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include <VectorUtilities.h>
+#include <VectorConstructor.h>
 
 using namespace SDK::Math;
 
@@ -83,22 +84,18 @@ TEST(VectorUtilitiesTests, BasisVectors_IsIndependentShouldReturn_True)
 
 TEST(VectorUtilitietsTests, VectorSpaces_ShouldGiveOrthonormalVectors)
 	{
-	Vector<double, 3> a;
-	a[0] = sqrt(2)/2; a[1] = sqrt(2)/2; a[2] = 0;
+	Vector<double, 3> a = VectorConstructor<double>::Construct(sqrt(2)/2, sqrt(2)/2, 0);
 
-	Vector<double, 3> b;
-	b[0] = -1; b[1] = 1; b[2] = -1;
+	Vector<double, 3> b = VectorConstructor<double>::Construct(-1, 1, -1);
 
-	Vector<double, 3> c;
-	c[0] = 0; c[1] = -2; c[2] = -2;
+	Vector<double, 3> c = VectorConstructor<double>::Construct(0, -2, -2);
 
 	std::vector<Vector<double, 3>> vectors;
 	vectors.push_back(a);
 	vectors.push_back(b);
 	vectors.push_back(c);
 
-	Vector<double, 3> d;
-	d[0] = 1; d[1] = -1; d[2] = -2; 
+	Vector<double, 3> d = VectorConstructor<double>::Construct(1, -1, -2);
 
 	auto orthonormal_vectors = VectorUtilities<double, 3>::ComputeOrthonormalVectors(vectors);
 	EXPECT_EQ(a, orthonormal_vectors[0]);

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include <Vector.h>
+#include <VectorConstructor.h>
 
 using namespace SDK::Math;
 
@@ -129,10 +130,8 @@ TEST(VectorTests, DotProductShouldBe_ZeroForPerpendicular)
 
 TEST(VectorTests, CrossProduct_TwoDimension)
 	{
-	Vector<int, 2> vec_0;
-	Vector<int, 2> vec_1;
-	vec_0[0] = 1;	vec_0[1] = 2;
-	vec_1[0] = 3;	vec_1[1] = 4;
+	Vector<int, 2> vec_0 = VectorConstructor<int>::Construct(1, 2);
+	Vector<int, 2> vec_1 = VectorConstructor<int>::Construct(3, 4);
 
 	auto cross_product = vec_0.CrossProduct(vec_1);
 	EXPECT_EQ(-2, cross_product[0]);
