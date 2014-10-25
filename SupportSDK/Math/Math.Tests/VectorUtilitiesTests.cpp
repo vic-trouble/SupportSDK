@@ -43,3 +43,65 @@ TEST(VectorUtilitiesTests, Perpendicular_3D)
 	auto result = VectorUtilities<double, 3>::PerpendicularComponent(vec_0, vec_1);
 	EXPECT_EQ(projection, result);
 	}
+
+TEST(VectorUtilitiesTests, OneVectorInContainer_IsIndependentShouldReturn_True)
+	{
+	Vector<int, 3> vec;
+	vec[0] = 1; vec[1] = 0; vec[2] = 1;
+	std::vector<Vector<int,3>> vectors;
+	vectors.push_back(vec);
+	bool is_independent = VectorUtilities<int, 3>::IsVectorsLinearyIndependent(vectors);
+	EXPECT_TRUE(is_independent);
+	}
+
+TEST(VectorUtilitiesTests, TwoIdenticalVectors_IsIndependentShouldReturn_False)
+	{
+	Vector<int, 3> vec;
+	vec[0] = 1; vec[1] = 0; vec[2] = 1;
+	std::vector<Vector<int,3>> vectors;
+	vectors.push_back(vec);
+	vectors.push_back(vec);
+	bool is_independent = VectorUtilities<int, 3>::IsVectorsLinearyIndependent(vectors);
+	EXPECT_FALSE(is_independent);
+	}
+
+TEST(VectorUtilitiesTests, BasisVectors_IsIndependentShouldReturn_True)
+	{
+	Vector<int, 3> i, j, k;
+	i[0] = 1; i[1] = 0; i[2] = 0;
+	j[0] = 0; j[1] = 1; j[2] = 0;
+	k[0] = 0; k[1] = 0; k[2] = 1;
+
+	std::vector<Vector<int,3>> vectors;
+	vectors.push_back(i);
+	vectors.push_back(j);
+	vectors.push_back(k);
+
+	bool is_independent = VectorUtilities<int, 3>::IsVectorsLinearyIndependent(vectors);
+	EXPECT_TRUE(is_independent);
+	}
+
+TEST(VectorUtilitietsTests, VectorSpaces_ShouldGiveOrthonormalVectors)
+	{
+	Vector<double, 3> a;
+	a[0] = sqrt(2)/2; a[1] = sqrt(2)/2; a[2] = 0;
+
+	Vector<double, 3> b;
+	b[0] = -1; b[1] = 1; b[2] = -1;
+
+	Vector<double, 3> c;
+	c[0] = 0; c[1] = -2; c[2] = -2;
+
+	std::vector<Vector<double, 3>> vectors;
+	vectors.push_back(a);
+	vectors.push_back(b);
+	vectors.push_back(c);
+
+	Vector<double, 3> d;
+	d[0] = 1; d[1] = -1; d[2] = -2; 
+
+	auto orthonormal_vectors = VectorUtilities<double, 3>::ComputeOrthonormalVectors(vectors);
+	EXPECT_EQ(a, orthonormal_vectors[0]);
+	EXPECT_EQ(b, orthonormal_vectors[1]);
+	EXPECT_EQ(d, orthonormal_vectors[2]);
+	}

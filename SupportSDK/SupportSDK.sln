@@ -13,6 +13,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WorldInterfacing", "WorldIn
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WorldInterfacing.Tests", "WorldInterfacing\WorldInterfacing.Tests\WorldInterfacing.Tests.vcxproj", "{6678BEA2-E590-4404-8395-5CC51047AADA}"
 	ProjectSection(ProjectDependencies) = postProject
+		{344430D7-1DA4-4F81-95AB-41E981166CB9} = {344430D7-1DA4-4F81-95AB-41E981166CB9}
 		{E179B1E5-3131-4E30-87F4-754FC6FC076B} = {E179B1E5-3131-4E30-87F4-754FC6FC076B}
 	EndProjectSection
 EndProject

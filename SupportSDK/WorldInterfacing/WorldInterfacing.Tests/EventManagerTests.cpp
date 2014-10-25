@@ -44,8 +44,6 @@ TEST(EventManagerTests, ShedulEventAndDispatch_ShouldCallListeners)
 	ev_manager.DispatchEvents(1);
 	}
 
-#include <Windows.h>
-
 class TimeConsumingEventListener : public SDK::EventListener
 	{
 	public:

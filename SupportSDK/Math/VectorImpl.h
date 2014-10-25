@@ -23,6 +23,7 @@ namespace SDK
 			{
 			for (size_t i = 0; i < VertexNumber; ++i)
 				m_vertices[i] = i_other.m_vertices[i];
+			return *this;
 			}
 
 		template <typename CoordinateType, size_t Dimension>

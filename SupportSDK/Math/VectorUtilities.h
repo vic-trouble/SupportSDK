@@ -36,6 +36,54 @@ namespace SDK
 				return perp;
 				}
 
+			/*
+			Use Kronecker delta for each pair of vectors to find if they are lineary independent
+				This is true
+			Complexity: O(n^2)
+			*/
+			template <typename Container>
+			static bool IsVectorsLinearyIndependent (const Container& i_vectors)
+				{
+				auto it_end = i_vectors.end();
+				for (auto it_cur = i_vectors.begin(); it_cur != it_end; ++it_cur)
+					{
+					for (auto next_to_current = it_cur+1; next_to_current != it_end; ++next_to_current)
+						{
+						if ((*it_cur).DotProduct(*next_to_current) != 0)
+							return false;
+						}
+					}
+
+				return true;
+				}
+			
+			// Use Gram-Schmidt Orthogonalization algorithm
+			//		The basic idea is to subtract away the projection of each vector onto the vectors preceding it in the set. 
+			//		Whatever vector is left over must then be orthogonal to its predecessors.
+			// Complexity: O(n^2)
+			template <typename Container>
+			static Container ComputeOrthonormalVectors (const Container& i_vectors)
+				{
+				#ifdef _DEBUG
+				if (i_vectors.size() > Dimension)
+					throw std::logic_error("There cannot be more orthonormal vectors than space dimension.");
+				#endif
+				
+				Container orthonormal_vectors(i_vectors);
+
+				const size_t vectors_size = i_vectors.size();
+				for (size_t i = 1; i < vectors_size; ++i)
+					{
+					Vector<CoordinateType, Dimension> projection_sum;
+					for (size_t j = 0; j < i; ++j)
+						{
+						projection_sum += Projection(i_vectors[i], orthonormal_vectors[j]);
+						}
+					orthonormal_vectors[i] -= projection_sum;
+					}
+				return std::move(orthonormal_vectors);
+				}
+
 			};
 
 		} // Math

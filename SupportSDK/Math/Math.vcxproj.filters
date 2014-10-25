@@ -9,6 +9,9 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Math\Vector">
+      <UniqueIdentifier>{28bc6a39-0271-4925-8c2e-0289738afb67}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -17,20 +20,20 @@
     <ClInclude Include="_Link.h">
       <Filter>_Maintanance</Filter>
     </ClInclude>
-    <ClInclude Include="Vector.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="VectorImpl.h">
-      <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="CrossProductCalculator.h">
-      <Filter>Math</Filter>
-    </ClInclude>
     <ClInclude Include="MathAPI.h">
       <Filter>_Maintanance</Filter>
     </ClInclude>
+    <ClInclude Include="CrossProductCalculator.h">
+      <Filter>Math\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector.h">
+      <Filter>Math\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="VectorImpl.h">
+      <Filter>Math\Vector</Filter>
+    </ClInclude>
     <ClInclude Include="VectorUtilities.h">
-      <Filter>Math</Filter>
+      <Filter>Math\Vector</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
