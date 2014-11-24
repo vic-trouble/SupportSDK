@@ -16,6 +16,8 @@ void TimeController::Update(long i_elapsed_time)
   {  
   for (TickListener* p_listener : m_listeners)
     p_listener->TickPerformed(i_elapsed_time);
+
+  ++m_ticks_performed;
   }
 
 void TimeController::AddSubscriber(TickListener* ip_listener)

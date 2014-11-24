@@ -27,6 +27,9 @@ namespace GameCore
     Initialize(i_type, i_object_node);
     }
 
+  ObjectSettings::~ObjectSettings()
+    {}
+
   void ObjectSettings::Initialize(int i_type, const TiXmlElement& i_object_node)
     {
     m_object_type = i_type;

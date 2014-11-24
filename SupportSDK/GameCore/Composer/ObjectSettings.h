@@ -40,6 +40,7 @@ namespace GameCore
       // construct object settings for i_type
       // parse i_object_node for getting list of components
       GAMECORE_EXPORT ObjectSettings (int i_type, const TiXmlElement& i_object_node, const IObjectComposer& i_composer);
+      GAMECORE_EXPORT ~ObjectSettings();
 
       GAMECORE_EXPORT void Initialize(int i_type, const TiXmlElement& i_object_node);
 
@@ -57,7 +58,7 @@ namespace GameCore
 
   //////////////////////////////////////////////////////////////////////////
 
-  const IObjectComposer& ObjectSettings::GetComposer() const
+  inline const IObjectComposer& ObjectSettings::GetComposer() const
     {
     return m_composer;
     }
