@@ -34,13 +34,13 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\..\..\ThirdParty\props\gtest.props" />
-    <Import Project="..\..\..\..\ThirdParty\props\gmock.props" />
+    <Import Project="$(THIRD_PARTIES)\props\gtest.props" />
+    <Import Project="$(THIRD_PARTIES)\props\gmock.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\..\..\ThirdParty\props\gtest.props" />
-    <Import Project="..\..\..\..\ThirdParty\props\gmock.props" />
+    <Import Project="$(THIRD_PARTIES)\props\gtest.props" />
+    <Import Project="$(THIRD_PARTIES)\props\gmock.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
