@@ -3,6 +3,7 @@
 #include "TimeController.h"
 
 TimeController::TimeController()
+  : m_ticks_performed(0)
   {
 
   }
