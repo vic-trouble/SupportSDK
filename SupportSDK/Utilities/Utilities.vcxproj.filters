@@ -12,6 +12,12 @@
     <Filter Include="Common">
       <UniqueIdentifier>{6a78eca6-c77d-4ccf-9343-fc42243c7024}</UniqueIdentifier>
     </Filter>
+    <Filter Include="XML">
+      <UniqueIdentifier>{c0817339-6d4a-4964-b122-c142e08562c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Strings">
+      <UniqueIdentifier>{21873871-1886-4895-8cbf-e172a525a245}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -29,6 +35,15 @@
     <ClInclude Include="TypeDefines.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="TemplateChecks.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="XmlUtilities.h">
+      <Filter>XML</Filter>
+    </ClInclude>
+    <ClInclude Include="StringUtilities.h">
+      <Filter>Strings</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -36,6 +51,12 @@
     </ClCompile>
     <ClCompile Include="TimeUtilities.cpp">
       <Filter>Time</Filter>
+    </ClCompile>
+    <ClCompile Include="XmlUtilities.cpp">
+      <Filter>XML</Filter>
+    </ClCompile>
+    <ClCompile Include="StringUtilities.cpp">
+      <Filter>Strings</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

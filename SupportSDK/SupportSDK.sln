@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExecutionManagement", "ExecutionManagement\ExecutionManagement.vcxproj", "{E434ECFB-BD60-4242-B976-58BD864D07A9}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ExecutionManagement.Tests", "ExecutionManagement\ExecutionManagement.Tests\ExecutionManagement.Tests.vcxproj", "{4AF73073-CF46-46D0-9ADF-FC16CA84FE16}"
@@ -25,6 +27,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Math.Tests", "Math\Math.Tes
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Utilities", "Utilities\Utilities.vcxproj", "{344430D7-1DA4-4F81-95AB-41E981166CB9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameCore", "GameCore\GameCore.vcxproj", "{EE787F9B-DE84-49AE-9CE9-914A501E0F7B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AFC0C8A0-3447-4B14-83DE-2C7EB6F686B8} = {AFC0C8A0-3447-4B14-83DE-2C7EB6F686B8}
+		{344430D7-1DA4-4F81-95AB-41E981166CB9} = {344430D7-1DA4-4F81-95AB-41E981166CB9}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,6 +68,10 @@ Global
 		{344430D7-1DA4-4F81-95AB-41E981166CB9}.Debug|Win32.Build.0 = Debug|Win32
 		{344430D7-1DA4-4F81-95AB-41E981166CB9}.Release|Win32.ActiveCfg = Release|Win32
 		{344430D7-1DA4-4F81-95AB-41E981166CB9}.Release|Win32.Build.0 = Release|Win32
+		{EE787F9B-DE84-49AE-9CE9-914A501E0F7B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EE787F9B-DE84-49AE-9CE9-914A501E0F7B}.Debug|Win32.Build.0 = Debug|Win32
+		{EE787F9B-DE84-49AE-9CE9-914A501E0F7B}.Release|Win32.ActiveCfg = Release|Win32
+		{EE787F9B-DE84-49AE-9CE9-914A501E0F7B}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

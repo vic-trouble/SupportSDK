@@ -11,9 +11,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{344430D7-1DA4-4F81-95AB-41E981166CB9}</ProjectGuid>
+    <ProjectGuid>{EE787F9B-DE84-49AE-9CE9-914A501E0F7B}</ProjectGuid>
+    <SccProjectName>
+    </SccProjectName>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccProvider>
+    </SccProvider>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Utilities</RootNamespace>
+    <RootNamespace>GameCore</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -34,37 +42,42 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\..\..\ThirdParty\props\boost.props" />
+    <Import Project="$(THIRD_PARTIES)\props\boost.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="..\..\..\..\ThirdParty\props\boost.props" />
+    <Import Project="$(THIRD_PARTIES)\props\boost.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)..\Binaries\$(PlatformName)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)..\Intermediates\$(PlatformName)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir>$(SolutionDir)..\Intermediates\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)..\Binaries\$(PlatformName)\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)..\Intermediates\$(PlatformName)\$(Configuration)\$(ProjectName)\</IntDir>
+    <IntDir>$(SolutionDir)..\Intermediates\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;UTILITIES_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(THIRD_PARTIES)\tinyxml\include;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WINDLL;GAMECORE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>false</SDLCheck>
+      <AdditionalIncludeDirectories>..;$(THIRD_PARTIES)\tinyxml\include;</AdditionalIncludeDirectories>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>
+      </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ImportLibrary>$(SolutionDir)..\Libraries\$(PlatformName)\$(Configuration)\$(TargetName).lib</ImportLibrary>
+      <ImportLibrary>$(SolutionDir)..\lib\$(Configuration)\$(ProjectName).lib</ImportLibrary>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\Libraries\$(PlatformName)\$(Configuration)\;$(THIRD_PARTIES)\tinyxml\lib;</AdditionalLibraryDirectories>
       <AdditionalDependencies>tinyxml.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(THIRD_PARTIES)\tinyxml\lib;</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -74,37 +87,46 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;UTILITIES_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(THIRD_PARTIES)\tinyxml\include;</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;GAMECORE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>false</SDLCheck>
+      <AdditionalIncludeDirectories>..;$(THIRD_PARTIES)\tinyxml\include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>
+      </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <ImportLibrary>$(SolutionDir)..\Libraries\$(PlatformName)\$(Configuration)\$(TargetName).lib</ImportLibrary>
+      <ImportLibrary>$(SolutionDir)..\lib\$(Configuration)\$(ProjectName).lib</ImportLibrary>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\Libraries\$(PlatformName)\$(Configuration)\;$(THIRD_PARTIES)\tinyxml\lib;</AdditionalLibraryDirectories>
       <AdditionalDependencies>tinyxml.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(THIRD_PARTIES)\tinyxml\lib;</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Composer\IComponentSerializer.h" />
+    <ClInclude Include="Composer\IObjectComposer.h" />
+    <ClInclude Include="Composer\ObjectSettings.h" />
+    <ClInclude Include="GameContext.h" />
+    <ClInclude Include="GameCoreAPI.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="IComponent.h" />
+    <ClInclude Include="IController.h" />
+    <ClInclude Include="IMovable.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="StringUtilities.h" />
-    <ClInclude Include="TemplateChecks.h" />
-    <ClInclude Include="TimeUtilities.h" />
-    <ClInclude Include="TypeDefines.h" />
-    <ClInclude Include="UtilitiesAPI.h" />
-    <ClInclude Include="XmlUtilities.h" />
+    <ClInclude Include="TimeController.h" />
+    <ClInclude Include="Types.h" />
     <ClInclude Include="_Link.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Composer\ObjectSettings.cpp" />
+    <ClCompile Include="GameContext.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="StringUtilities.cpp" />
-    <ClCompile Include="TimeUtilities.cpp" />
-    <ClCompile Include="XmlUtilities.cpp" />
+    <ClCompile Include="TimeController.cpp" />
+    <ClCompile Include="_LinkLibraries.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
