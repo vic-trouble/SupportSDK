@@ -11,6 +11,7 @@ namespace SDK
 	typedef unsigned short ushort;
 	typedef unsigned int	 uint;
 	typedef unsigned long	 ulong;
+  typedef unsigned char  uchar;
 
 #ifdef FLOAT_PRECISION
 	typedef float					 real;
