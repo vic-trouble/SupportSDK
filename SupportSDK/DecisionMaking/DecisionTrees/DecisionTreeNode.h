@@ -35,6 +35,20 @@ namespace SDK
 					}
 			};
 
+		// use this class to mark leafs
+		class DecisionTreeAction : public DecisionTreeNode
+			{
+			public:
+				DecisionTreeAction(int i_id, std::function<void(long)> i_perform_action)
+					: DecisionTreeNode(i_id, i_perform_action)
+					{}
+
+				virtual DecisionTreeNode* MakeDecision(long i_available_time) override
+					{
+					return this;
+					}
+			};
+
 		} // DecisonMaking
 	} // SDK
 

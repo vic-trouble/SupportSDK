@@ -11,7 +11,7 @@ class DecisionMock : public Decision
 		DecisionMock(int i_id, DecisionTreeNode* ip_true, DecisionTreeNode* ip_false)
 			: Decision(i_id, ip_true, ip_false)
 			{}
-		MOCK_METHOD0(GetBranch, DecisionTreeNode*());
+		MOCK_METHOD1(GetBranch, DecisionTreeNode*(long i_available_time));
 	};
 
 class DecisionNodeMock : public DecisionTreeNode
@@ -30,7 +30,7 @@ TEST(DecisionTests, MakeDecision_CallsGetBranchAndMakeDecision)
 
 	DecisionMock decision(2, &first, &second);
 
-	EXPECT_CALL(decision, GetBranch()).WillOnce(Return(&first));
+	EXPECT_CALL(decision, GetBranch(1)).WillOnce(Return(&first));
 	EXPECT_CALL(first, MakeDecision(1)).WillOnce(Return(&first));
 
 	EXPECT_EQ(&first, decision.MakeDecision(1));

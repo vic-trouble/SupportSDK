@@ -50,7 +50,8 @@ namespace SDK
 					static_assert(std::is_base_of<DecisionTreeNode, T>::value,
 						"T must be derived from DecisionTreeNode");
 
-					auto p_node = i_creator(0);
+					auto p_node = i_creator(m_next_id);
+					++m_next_id;
 					T* p_type = p_node.get();
 
 					m_nodes.emplace_back(std::move(p_node));

@@ -55,6 +55,7 @@ namespace SDK
 		DecisionTree::DecisionTree()
 			: mp_root_node(nullptr)
 			, mp_current_node(nullptr)
+			, m_next_id(0)
 			{
 			}
 
