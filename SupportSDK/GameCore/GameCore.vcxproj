@@ -103,6 +103,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Application.h" />
     <ClInclude Include="Composer\IComponentSerializer.h" />
     <ClInclude Include="Composer\IObjectComposer.h" />
     <ClInclude Include="Composer\ObjectSettings.h" />
@@ -118,6 +119,7 @@
     <ClInclude Include="_Link.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Application.cpp" />
     <ClCompile Include="Composer\ObjectSettings.cpp" />
     <ClCompile Include="GameContext.cpp" />
     <ClCompile Include="GameObject.cpp" />

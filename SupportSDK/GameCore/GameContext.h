@@ -11,7 +11,7 @@ class GameObject;
 class IController;
 
 class GameContext : boost::noncopyable
-                  , public TickListener
+                  , public SDK::TickListener
   {
   public:
     typedef std::unique_ptr<GameObject> GameObjectUniquePtr;
