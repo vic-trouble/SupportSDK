@@ -82,6 +82,7 @@
   <ItemGroup>
     <ClInclude Include="CrossProductCalculator.h" />
     <ClInclude Include="MathAPI.h" />
+    <ClInclude Include="Rectangle.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="VectorConstructor.h" />

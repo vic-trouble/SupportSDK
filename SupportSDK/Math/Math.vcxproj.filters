@@ -12,6 +12,9 @@
     <Filter Include="Math\Vector">
       <UniqueIdentifier>{28bc6a39-0271-4925-8c2e-0289738afb67}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Math\Shapes">
+      <UniqueIdentifier>{fd94fe0a-745e-4a78-bc31-cc53722958f4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -37,6 +40,9 @@
     </ClInclude>
     <ClInclude Include="VectorConstructor.h">
       <Filter>Math\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="Rectangle.h">
+      <Filter>Math\Shapes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
