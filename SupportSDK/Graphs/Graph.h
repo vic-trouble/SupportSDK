@@ -9,8 +9,9 @@ namespace SDK
 		{
 		class GraphNode;
 		class Connection;
-		typedef std::vector<Connection> Connections;
-		typedef std::vector<const Connection*const> ConnectionConstPtrs;
+		typedef std::unique_ptr<Connection> ConnectionUniquePtr;
+		typedef std::vector<ConnectionUniquePtr> Connections;
+		typedef std::vector<Connection*> ConnectionPtrs;
 		typedef std::unique_ptr<GraphNode> NodePtr;
 
 		class Graph
@@ -27,13 +28,13 @@ namespace SDK
 				/*
 				Returns an array of connections outgoing from given node
 				*/
-				GRAPHS_API ConnectionConstPtrs	GetConnections(GraphNode* ip_node) const;
+				GRAPHS_API ConnectionPtrs	GetConnections(GraphNode* ip_node);
 
 				GRAPHS_API GraphNode*		AddNode(NodePtr ip_node);
 				GRAPHS_API void					RemoveNode(GraphNode* ip_node);
 				GRAPHS_API GraphNode*		GetNode(int i_node) const;
 
-				GRAPHS_API Connection*	AddConnection(GraphNode* ip_from, GraphNode* ip_to, int i_cost);
+				GRAPHS_API Connection*	AddConnection(GraphNode* ip_from, GraphNode* ip_to, float i_cost);
 				GRAPHS_API void					RemoveConnection(Connection* ip_connection);
 
 				/*

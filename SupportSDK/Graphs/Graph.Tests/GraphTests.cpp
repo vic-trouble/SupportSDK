@@ -61,9 +61,11 @@ TEST(GraphTests, AddConnection)
 	auto p_node_1 = graph.AddNode(NodePtr(new GraphNode));
 
 	auto connection = graph.AddConnection(p_node, p_node_1, 0);
+	graph.AddConnection(p_node_1, p_node, 0);
 
 	auto connections_for_node = graph.GetConnections(p_node);
 	ASSERT_EQ(1, connections_for_node.size());
+	ASSERT_EQ(connection, connections_for_node[0]);
 	connections_for_node = graph.GetConnections(p_node_1);
 	ASSERT_EQ(1, connections_for_node.size());
 	}
@@ -79,6 +81,20 @@ TEST(GraphTests, RemoveConnection)
 	
 	auto connections_for_node = graph.GetConnections(p_node);
 	ASSERT_TRUE(connections_for_node.empty());
+	connections_for_node = graph.GetConnections(p_node_1);
+	ASSERT_TRUE(connections_for_node.empty());
+	}
+
+TEST(GraphTests, GetConnection_ReturnConnectionsFromRequered)
+	{
+	Graph graph;
+	auto p_node = graph.AddNode(NodePtr(new GraphNode));
+	auto p_node_1 = graph.AddNode(NodePtr(new GraphNode));
+
+	auto connection = graph.AddConnection(p_node, p_node_1, 0);
+
+	auto connections_for_node = graph.GetConnections(p_node);
+	ASSERT_EQ(1, connections_for_node.size());
 	connections_for_node = graph.GetConnections(p_node_1);
 	ASSERT_TRUE(connections_for_node.empty());
 	}

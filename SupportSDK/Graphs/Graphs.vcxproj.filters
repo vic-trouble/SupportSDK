@@ -8,6 +8,9 @@
     <Filter Include="DataStucture">
       <UniqueIdentifier>{2009f363-6f6d-4d22-b59a-512bceeead37}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Algorithms">
+      <UniqueIdentifier>{56164863-814b-40c5-8a7d-b6710042ea98}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -28,6 +31,15 @@
     <ClInclude Include="Connection.h">
       <Filter>DataStucture</Filter>
     </ClInclude>
+    <ClInclude Include="PathFinding.h">
+      <Filter>Algorithms</Filter>
+    </ClInclude>
+    <ClInclude Include="PathfindingList.h">
+      <Filter>DataStucture</Filter>
+    </ClInclude>
+    <ClInclude Include="NodeRecord.h">
+      <Filter>DataStucture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -37,6 +49,12 @@
       <Filter>DataStucture</Filter>
     </ClCompile>
     <ClCompile Include="GraphNode.cpp">
+      <Filter>DataStucture</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFinding.cpp">
+      <Filter>Algorithms</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFindingList.cpp">
       <Filter>DataStucture</Filter>
     </ClCompile>
   </ItemGroup>

@@ -31,5 +31,11 @@
     <ClCompile Include="GraphTests.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="PatFindingListTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="PathFindingTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

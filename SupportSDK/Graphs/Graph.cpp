@@ -18,14 +18,14 @@ namespace SDK
 		Graph::~Graph()
 			{}
 
-		ConnectionConstPtrs Graph::GetConnections(GraphNode* ip_node) const
+		ConnectionPtrs Graph::GetConnections(GraphNode* ip_node)
 			{
-			ConnectionConstPtrs connections;
+			ConnectionPtrs connections;
 
-			for (const auto& connection : m_connections)
+			for (auto& p_connection : m_connections)
 				{
-				if (connection.GetFromNode() == ip_node || connection.GetToNode() == ip_node)
-					connections.emplace_back(&connection);
+				if (p_connection->GetFromNode() == ip_node)
+					connections.push_back(p_connection.get());
 				}
 
 			return connections;
@@ -54,7 +54,7 @@ namespace SDK
 		void Graph::RemoveNode(GraphNode* ip_node)
 			{
 			m_connections.erase(
-				std::remove_if(m_connections.begin(), m_connections.end(), [ip_node](const Connection& connection){ return connection.GetFromNode() == ip_node || connection.GetToNode() == ip_node; }),
+				std::remove_if(m_connections.begin(), m_connections.end(), [ip_node](const ConnectionUniquePtr& connection){ return connection->GetFromNode() == ip_node || connection->GetToNode() == ip_node; }),
 				m_connections.end());
 
 			m_nodes.erase(
@@ -66,18 +66,18 @@ namespace SDK
 				);
 			}
 
-		Connection*	Graph::AddConnection(GraphNode* ip_from, GraphNode* ip_to, int i_cost)
+		Connection*	Graph::AddConnection(GraphNode* ip_from, GraphNode* ip_to, float i_cost)
 			{
-			m_connections.emplace_back(Connection(ip_from, ip_to, i_cost));
-			Connection* p_connection = &m_connections.back();
+			m_connections.emplace_back(new Connection(ip_from, ip_to, i_cost));
+			Connection* p_connection = m_connections.back().get();
 			return p_connection;
 			}
 
 		void Graph::RemoveConnection(Connection* ip_connection)
 			{
-			auto it = std::find_if(m_connections.begin(), m_connections.end(), [ip_connection](const Connection& connection)
+			auto it = std::find_if(m_connections.begin(), m_connections.end(), [ip_connection](const ConnectionUniquePtr& connection)
 				{
-				return &connection == ip_connection;
+				return connection.get() == ip_connection;
 				});
 
 			if (it != m_connections.end())

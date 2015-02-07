@@ -86,12 +86,17 @@
     <ClInclude Include="Graph.h" />
     <ClInclude Include="GraphNode.h" />
     <ClInclude Include="GraphsAPI.h" />
+    <ClInclude Include="NodeRecord.h" />
+    <ClInclude Include="PathFinding.h" />
+    <ClInclude Include="PathfindingList.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="_Link.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="GraphNode.cpp" />
+    <ClCompile Include="PathFinding.cpp" />
+    <ClCompile Include="PathFindingList.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

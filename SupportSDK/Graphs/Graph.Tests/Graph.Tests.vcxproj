@@ -93,6 +93,8 @@
     <ClCompile Include="Graph.Tests.cpp" />
     <ClCompile Include="GraphTests.cpp" />
     <ClCompile Include="GrapnNodeTests.cpp" />
+    <ClCompile Include="PatFindingListTests.cpp" />
+    <ClCompile Include="PathFindingTests.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
