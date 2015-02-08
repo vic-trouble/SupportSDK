@@ -18,7 +18,7 @@ namespace SDK
 
 		PathFindingList& PathFindingList::operator += (NodeRecord* ip_record)
 			{
-			if (!Contains(ip_record->mp_node))
+			if (m_records.end() == std::find(m_records.begin(), m_records.end(), ip_record))
 				m_records.emplace_back(ip_record);
 			return *this;
 			}

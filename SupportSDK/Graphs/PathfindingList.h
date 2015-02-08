@@ -24,10 +24,11 @@ namespace SDK
 				GRAPHS_API PathFindingList& operator -= (NodeRecord* ip_record);
 
 				GRAPHS_API NodeRecord*		GetSmallestElement();
-				GRAPHS_API bool					Contains(GraphNode* ip_node);
+				GRAPHS_API bool						Contains(GraphNode* ip_node);
 				GRAPHS_API NodeRecord*		Find(GraphNode* ip_node);
 
-				bool					empty() const { return m_records.empty(); }
+				bool empty() const { return m_records.empty(); }
+				size_t size() const { return m_records.size(); }
 			};
 
 		} // Graphs
