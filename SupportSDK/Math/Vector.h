@@ -3,6 +3,10 @@
 
 #include <array>
 
+#if _MSC_VER >= 1800
+#include <initializer_list>
+#endif
+
 namespace SDK
 	{
 
@@ -20,8 +24,18 @@ namespace SDK
 				std::array<CoordinateType, Dimension> m_vertices;
 
 			public:
-				 Vector (const Vector<CoordinateType, Dimension>& i_other);
-				 Vector<CoordinateType, Dimension>&		operator = (const Vector<CoordinateType, Dimension>& i_other);
+
+#if _MSC_VER >= 1800
+				Vector(std::initializer_list<CoordinateType> coordinates)
+					{
+					if (coordinates.size() >= VertexNumber)
+						throw std::logic_error("Initializer list contains more entries than dimension");
+					std::copy(coordinates.begin(), coordinates.end(), m_vertices.begin());
+					}
+#endif
+
+				Vector (const Vector<CoordinateType, Dimension>& i_other);
+				Vector<CoordinateType, Dimension>&		operator = (const Vector<CoordinateType, Dimension>& i_other);
 
 				Vector ();
 				virtual ~Vector ();

@@ -24,6 +24,31 @@ TEST(VectorTests, ConstructVector_VerticesShouldBeZero)
 	EXPECT_TRUE(vec.IsZero());
 	}
 
+
+#if _MSC_VER >= 1800
+TEST(VectorTests, ConstructVariadicVector_ThrowIfInitListSizeBiggerThanVertexNumber)
+	{
+	bool throwed = false;
+	try
+		{
+		Vector<double, 3> vec{ 0., 1., 3.14, 2.15 };
+		}
+	catch (std::logic_error&)
+		{
+		throwed = true;
+		}
+	EXPECT_TRUE(throwed);
+	}
+
+TEST(VectorTests, ConstructVariadicVector_VerticesShouldBeZero)
+	{
+	Vector<double, 3> vec { 0., 1., 3.14 };
+	EXPECT_EQ(0., vec[0]);
+	EXPECT_EQ(1., vec[1]);
+	EXPECT_EQ(3.14, vec[2]);
+	}
+#endif
+
 TEST(VectorTests, AssignOperator_ShouldAssignCorrectValues)
 	{
 	Vector<int, 3> vec;
