@@ -38,7 +38,6 @@ namespace SDK
 				Vector<CoordinateType, Dimension>&		operator = (const Vector<CoordinateType, Dimension>& i_other);
 
 				Vector ();
-				virtual ~Vector ();
 
 				const CoordinateType&													operator [] (size_t i_index) const;
 				CoordinateType&																operator [] (size_t i_index);

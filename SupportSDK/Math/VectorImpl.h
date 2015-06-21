@@ -34,10 +34,6 @@ namespace SDK
 			}
 		
 		template <typename CoordinateType, size_t Dimension>
-		Vector<CoordinateType, Dimension>::~Vector()
-			{			}
-
-		template <typename CoordinateType, size_t Dimension>
 		const CoordinateType&	Vector<CoordinateType, Dimension>::operator [] (size_t i_index) const
 			{
 			#ifdef _DEBUG
