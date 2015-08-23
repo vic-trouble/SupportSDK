@@ -15,8 +15,17 @@
     <Filter Include="Composer">
       <UniqueIdentifier>{f4822b5d-6bb3-48df-82df-1e9c651b97cf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Application">
+    <Filter Include="Core">
       <UniqueIdentifier>{3d0b30b8-0150-4975-a7e8-d60cfe28c854}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Application">
+      <UniqueIdentifier>{4b3de89a-53fe-4c8e-b308-729528f5f8a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Application\Win">
+      <UniqueIdentifier>{daefe891-9dbd-4fef-b7b0-8dd06d107ab7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Renderer">
+      <UniqueIdentifier>{f828f8e9-0d4a-45d3-be01-bbedae5850c6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -59,8 +68,32 @@
     <ClInclude Include="Composer\IObjectComposer.h">
       <Filter>Composer</Filter>
     </ClInclude>
-    <ClInclude Include="Application.h">
-      <Filter>Application</Filter>
+    <ClInclude Include="GameInfo.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Core.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="CoreDelegate.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TypeDefinitions.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Applications\ApplicationBase.h">
+      <Filter>Core\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="Applications\Application_Windows.h">
+      <Filter>Core\Application\Win</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\IRenderer.h">
+      <Filter>Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\OpenGLRenderer.h">
+      <Filter>Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -82,8 +115,17 @@
     <ClCompile Include="Composer\ObjectSettings.cpp">
       <Filter>Composer</Filter>
     </ClCompile>
-    <ClCompile Include="Application.cpp">
-      <Filter>Application</Filter>
+    <ClCompile Include="Core.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Applications\ApplicationBase.cpp">
+      <Filter>Core\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="Applications\Application_Windows.cpp">
+      <Filter>Core\Application\Win</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\OpenGLRenderer.cpp">
+      <Filter>Core\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

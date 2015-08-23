@@ -48,10 +48,16 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DecisionMaking.Tests", "Dec
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Graphs", "Graphs\Graphs.vcxproj", "{8012AA96-F704-46B4-BCBA-D5CE9B4C8217}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Graph.Tests", "Graphs\Graph.Tests\Graph.Tests.vcxproj", "{DE653513-A911-431D-B9C2-30F4F6429C05}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Graphs.Tests", "Graphs\Graph.Tests\Graph.Tests.vcxproj", "{DE653513-A911-431D-B9C2-30F4F6429C05}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8012AA96-F704-46B4-BCBA-D5CE9B4C8217} = {8012AA96-F704-46B4-BCBA-D5CE9B4C8217}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Terrain", "Terrain\Terrain.vcxproj", "{99C605A4-78A0-449C-B9B2-F1428640AFCE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Terrain.Tests", "Terrain\Terrain.Tests\Terrain.Tests.vcxproj", "{5D070D66-7B22-44E6-A96A-8FBFBFEADA70}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Patterns", "Patterns\Patterns.vcxproj", "{F039FC01-494D-46AE-9333-4EED828C1FB0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -111,6 +117,18 @@ Global
 		{DE653513-A911-431D-B9C2-30F4F6429C05}.Debug|Win32.Build.0 = Debug|Win32
 		{DE653513-A911-431D-B9C2-30F4F6429C05}.Release|Win32.ActiveCfg = Release|Win32
 		{DE653513-A911-431D-B9C2-30F4F6429C05}.Release|Win32.Build.0 = Release|Win32
+		{99C605A4-78A0-449C-B9B2-F1428640AFCE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{99C605A4-78A0-449C-B9B2-F1428640AFCE}.Debug|Win32.Build.0 = Debug|Win32
+		{99C605A4-78A0-449C-B9B2-F1428640AFCE}.Release|Win32.ActiveCfg = Release|Win32
+		{99C605A4-78A0-449C-B9B2-F1428640AFCE}.Release|Win32.Build.0 = Release|Win32
+		{5D070D66-7B22-44E6-A96A-8FBFBFEADA70}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5D070D66-7B22-44E6-A96A-8FBFBFEADA70}.Debug|Win32.Build.0 = Debug|Win32
+		{5D070D66-7B22-44E6-A96A-8FBFBFEADA70}.Release|Win32.ActiveCfg = Release|Win32
+		{5D070D66-7B22-44E6-A96A-8FBFBFEADA70}.Release|Win32.Build.0 = Release|Win32
+		{F039FC01-494D-46AE-9333-4EED828C1FB0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F039FC01-494D-46AE-9333-4EED828C1FB0}.Debug|Win32.Build.0 = Debug|Win32
+		{F039FC01-494D-46AE-9333-4EED828C1FB0}.Release|Win32.ActiveCfg = Release|Win32
+		{F039FC01-494D-46AE-9333-4EED828C1FB0}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

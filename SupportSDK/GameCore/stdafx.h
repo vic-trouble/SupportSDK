@@ -1,5 +1,7 @@
 #pragma once
 
+#include "TypeDefinitions.h"
+
 #include <algorithm>
 #include <array>
 #include <cassert>
@@ -12,6 +14,6 @@
 #include <unordered_map>
 #include <vector>
 
-#include <Utilities/TypeDefines.h>
+#include "TypeDefinitions.h"
 
 #define GAMECORE_EXPORTING
