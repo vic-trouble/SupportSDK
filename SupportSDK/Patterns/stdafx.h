@@ -9,6 +9,7 @@
 #include <set>
 #include <memory>
 #include <cassert>
+#include <unordered_map>
 
 #define PATTERNS_EXPORTING
 

@@ -9,6 +9,9 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
+    <Filter Include="MessageDisatcher">
+      <UniqueIdentifier>{629d2fbc-cb8d-434f-b836-6493540b4140}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -23,10 +26,31 @@
     <ClInclude Include="Singleton.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="MessageDispatcher\Event.h">
+      <Filter>MessageDisatcher</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageDispatcher\MemberFunctionHandler.h">
+      <Filter>MessageDisatcher</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageDispatcher\MessageDispatcher.h">
+      <Filter>MessageDisatcher</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageDispatcher\MessageHandlerBase.h">
+      <Filter>MessageDisatcher</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageDispatcher\TypeInfo.h">
+      <Filter>MessageDisatcher</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MessageDispatcher\MessageDispatcher.cpp">
+      <Filter>MessageDisatcher</Filter>
+    </ClCompile>
+    <ClCompile Include="MessageDispatcher\MessageHandlerBase.cpp">
+      <Filter>MessageDisatcher</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
