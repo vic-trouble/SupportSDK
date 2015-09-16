@@ -20,6 +20,7 @@ namespace SDK
 
 	private:
 		static void SetApplication(std::unique_ptr<ApplicationBase> ip_application);
+		static void ReleaseSingletons();
 
 	public:
 		static GAMECORE_EXPORT void Run(std::unique_ptr<CoreDelegate>&& ip_delegate);
@@ -33,6 +34,8 @@ namespace SDK
 
 		static GAMECORE_EXPORT void Update(float i_elapsed_time);
 		static GAMECORE_EXPORT void Draw();
+
+		static GAMECORE_EXPORT void CreateSingletons();
 	};
 
 } // SDK

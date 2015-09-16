@@ -29,6 +29,8 @@ namespace SDK
 	typedef unsigned long	 ulong;
 	typedef unsigned char  uchar;
 
+	typedef int				int32;
+
 	typedef unsigned __int64 uint64;
 	typedef signed __int64	int64;
 

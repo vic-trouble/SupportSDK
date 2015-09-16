@@ -6,6 +6,7 @@
 #include "CoreDelegate.h"
 
 #include "Renderer/OpenGLRenderer.h"
+#include "Input/InputSystem.h"
 
 #include <Windows.h>
 #include <time.h>
@@ -47,9 +48,55 @@ namespace
 
 	LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
-
+#ifndef WM_MOUSEWHEEL
+#define WM_MOUSEWHEEL 0x020A
+#endif
+#ifndef WHEEL_DELTA                     
+#define WHEEL_DELTA 120
+#endif
 		switch (message)
 		{
+			case WM_ERASEBKGND:
+				return 0;
+
+			case WM_KEYUP:
+				{
+					SDK::InputSystem::Instance().ProcessEvent(SDK::KeyEvent((SDK::int32)wParam, SDK::KeyState::Released));
+				}
+				break;
+
+			case WM_KEYDOWN:
+				{
+					SDK::InputSystem::Instance().ProcessEvent(SDK::KeyEvent((SDK::int32)wParam, SDK::KeyState::Pressed));
+				}
+				break;
+				
+			case WM_CHAR:
+				{
+				}
+				break;
+
+			case WM_INPUT:
+				{
+				}
+				break;
+
+
+			case WM_MOUSEMOVE:
+				break;
+
+			case WM_NCMOUSEMOVE:
+				break;
+
+			case WM_NCMOUSELEAVE:
+				break;
+
+
+			case WM_ACTIVATE:
+				{
+				}
+				break;
+
 			case WM_DESTROY:
 				PostQuitMessage(0);
 				return 0;

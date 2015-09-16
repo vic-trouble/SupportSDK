@@ -27,6 +27,9 @@
     <Filter Include="Core\Renderer">
       <UniqueIdentifier>{f828f8e9-0d4a-45d3-be01-bbedae5850c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Input">
+      <UniqueIdentifier>{13627250-ccd2-44d1-adea-40674f93c7f6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -95,6 +98,18 @@
     <ClInclude Include="Platform.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Input\InputSystem.h">
+      <Filter>Core\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\InputEvent.h">
+      <Filter>Core\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\InputSubscriber.h">
+      <Filter>Core\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\Keyboard.h">
+      <Filter>Core\Input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -126,6 +141,9 @@
     </ClCompile>
     <ClCompile Include="Renderer\OpenGLRenderer.cpp">
       <Filter>Core\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\InputSystem.cpp">
+      <Filter>Core\Input</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

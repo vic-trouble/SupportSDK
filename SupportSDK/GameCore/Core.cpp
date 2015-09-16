@@ -6,6 +6,9 @@
 #include "Applications/ApplicationBase.h"
 #include "Renderer/IRenderer.h"
 
+// singletons
+#include "Input/InputSystem.h"
+
 namespace SDK
 {
 
@@ -18,6 +21,16 @@ namespace SDK
 	std::unique_ptr<ApplicationBase> Core::mp_application = nullptr;
 	std::unique_ptr<IRenderer> Core::mp_renderer = nullptr;
 
+	void Core::CreateSingletons()
+	{
+		new InputSystem();
+	}
+
+	void Core::ReleaseSingletons()
+	{
+		InputSystem::Instance().Release();
+	}
+
 	void Core::SetApplication(std::unique_ptr<ApplicationBase> ip_application)
 	{
 		mp_application = std::move(ip_application);
@@ -25,6 +38,8 @@ namespace SDK
 
 	void Core::Run(std::unique_ptr<CoreDelegate>&& ip_delegate)
 	{
+		CreateSingletons();
+
 		mp_delegate = std::move(ip_delegate);
 
 		// init app that will be call delegate methods
@@ -60,6 +75,8 @@ namespace SDK
 		mp_delegate.reset();
 		mp_renderer.reset();
 		mp_application.reset();
+
+		ReleaseSingletons();
 	}
 
 	void Core::Update(float i_elapsed_time)

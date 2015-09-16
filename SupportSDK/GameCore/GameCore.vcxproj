@@ -117,6 +117,10 @@
     <ClInclude Include="IComponent.h" />
     <ClInclude Include="IController.h" />
     <ClInclude Include="IMovable.h" />
+    <ClInclude Include="Input\InputEvent.h" />
+    <ClInclude Include="Input\InputSubscriber.h" />
+    <ClInclude Include="Input\InputSystem.h" />
+    <ClInclude Include="Input\Keyboard.h" />
     <ClInclude Include="Platform.h" />
     <ClInclude Include="Renderer\IRenderer.h" />
     <ClInclude Include="Renderer\OpenGLRenderer.h" />
@@ -133,6 +137,7 @@
     <ClCompile Include="Composer\ObjectSettings.cpp" />
     <ClCompile Include="GameContext.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="Input\InputSystem.cpp" />
     <ClCompile Include="Renderer\OpenGLRenderer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
