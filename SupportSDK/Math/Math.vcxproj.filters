@@ -15,6 +15,9 @@
     <Filter Include="Math\Shapes">
       <UniqueIdentifier>{fd94fe0a-745e-4a78-bc31-cc53722958f4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Math\Matrix">
+      <UniqueIdentifier>{c2abeb7d-ad2e-450e-bf98-8483c75904bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -43,6 +46,15 @@
     </ClInclude>
     <ClInclude Include="Rectangle.h">
       <Filter>Math\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix.h">
+      <Filter>Math\Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="MatrixImpl.h">
+      <Filter>Math\Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="MatrixUtilities.h">
+      <Filter>Math\Matrix</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
