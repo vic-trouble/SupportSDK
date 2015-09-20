@@ -77,8 +77,6 @@ namespace SDK
 			// In specialized Matrix2, Matrix3, Matrix4 can be used shortcuts methods
 			inline ThisMatrix GetInverseGeneric() const;
 			inline bool Inverse();
-			// 
-			CoordinateType DeterminantGeneric() const;
 
 			// Generic multiply for all types of matrices - for user defined (e.x. Matrix2, Matrix3, Matrix4) this can be
 			//		optimized and done via operator *
