@@ -89,6 +89,7 @@
     <ClInclude Include="MessageDispatcher\TypeInfo.h" />
     <ClInclude Include="PatternsAPI.h" />
     <ClInclude Include="Singleton.h" />
+    <ClInclude Include="StaticSingleton.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="_Link.h" />
   </ItemGroup>
