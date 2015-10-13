@@ -18,6 +18,9 @@
     <Filter Include="Math\Matrix">
       <UniqueIdentifier>{c2abeb7d-ad2e-450e-bf98-8483c75904bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Math\Quaternion">
+      <UniqueIdentifier>{df0b508a-5d52-40b2-bf68-0442fa63be1e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -55,6 +58,27 @@
     </ClInclude>
     <ClInclude Include="MatrixUtilities.h">
       <Filter>Math\Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix4.h">
+      <Filter>Math\Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="Quaternion.h">
+      <Filter>Math\Quaternion</Filter>
+    </ClInclude>
+    <ClInclude Include="QuaternionImpl.h">
+      <Filter>Math\Quaternion</Filter>
+    </ClInclude>
+    <ClInclude Include="Line.h">
+      <Filter>Math\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities.h">
+      <Filter>Math\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="Plane.h">
+      <Filter>Math\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="Ray.h">
+      <Filter>Math\Shapes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -150,7 +150,7 @@ namespace SDK
 		glLoadIdentity();
 	}
 
-	void OpenGLRenderer::RenderLine(const Vector3D& i_first_point, const Vector3D& i_second_point, Color i_color, float i_width /* = 1.0 */)
+	void OpenGLRenderer::RenderLine(const Vector3& i_first_point, const Vector3& i_second_point, Color i_color, float i_width /* = 1.0 */)
 	{
 		glLoadIdentity();
 		GLColor color = i_color.Convert<GLColor>();
@@ -162,7 +162,7 @@ namespace SDK
 		glEnd();
 	}
 
-	void OpenGLRenderer::RenderRectangle(const Vector3D& i_center, double i_width, double i_height, Color i_color)
+	void OpenGLRenderer::RenderRectangle(const Vector3& i_center, double i_width, double i_height, Color i_color)
 	{
 		GLColor color = i_color.Convert<GLColor>();
 		glColor4f(color[0], color[1], color[2], color[3]);
@@ -178,7 +178,7 @@ namespace SDK
 		glEnd();
 	}
 
-	void OpenGLRenderer::RenderCircle(const Vector3D& i_center, double i_radius, Color i_color)
+	void OpenGLRenderer::RenderCircle(const Vector3& i_center, double i_radius, Color i_color)
 	{
 		//Draw Circle
 		GLColor color = i_color.Convert<GLColor>();
@@ -200,7 +200,7 @@ namespace SDK
 		//Draw Circle
 	}
 
-	void OpenGLRenderer::RenderText(const Vector3D& i_position, const std::wstring& i_text, Color i_color)
+	void OpenGLRenderer::RenderText(const Vector3& i_position, const std::wstring& i_text, Color i_color)
 	{
 		GLColor color = i_color.Convert<GLColor>();
 		glColor4f(color[0], color[1], color[2], color[3]);
@@ -208,7 +208,7 @@ namespace SDK
 		//freetype::print(m_font_data, i_position.GetX(), m_paint_rectangle.Height() - i_position.GetY(), "%s", i_text);
 	}
 
-	void OpenGLRenderer::RenderText(const Vector3D& i_position, const std::string& i_text, Color i_color)
+	void OpenGLRenderer::RenderText(const Vector3& i_position, const std::string& i_text, Color i_color)
 	{
 		GLColor color = i_color.Convert<GLColor>();
 		glColor4f(color[0], color[1], color[2], color[3]);

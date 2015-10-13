@@ -37,5 +37,14 @@
     <ClCompile Include="MatrixUtilitiesTests.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="QuaternionTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="UtilitiesTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="PlaneTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

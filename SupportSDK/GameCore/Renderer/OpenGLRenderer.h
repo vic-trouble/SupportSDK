@@ -32,11 +32,11 @@ namespace SDK
 		virtual void	BeginFrame() override;
 		virtual void	EndFrame() override;
 
-		virtual void RenderLine(const Vector3D& i_first_point, const Vector3D& i_second_point, Color i_color, float i_width = 1.0) override;
-		virtual void RenderRectangle(const Vector3D& i_center, double i_width, double i_height, Color i_color) override;
-		virtual void RenderCircle(const Vector3D& i_center, double i_radius, Color i_color) override;
-		virtual void RenderText(const Vector3D& i_position, const std::wstring& i_text, Color i_color) override;
-		virtual void RenderText(const Vector3D& i_position, const std::string& i_text, Color i_color) override;
+		virtual void RenderLine(const Vector3& i_first_point, const Vector3& i_second_point, Color i_color, float i_width = 1.0) override;
+		virtual void RenderRectangle(const Vector3& i_center, double i_width, double i_height, Color i_color) override;
+		virtual void RenderCircle(const Vector3& i_center, double i_radius, Color i_color) override;
+		virtual void RenderText(const Vector3& i_position, const std::wstring& i_text, Color i_color) override;
+		virtual void RenderText(const Vector3& i_position, const std::string& i_text, Color i_color) override;
 
 		virtual IRect GetTargetRectangle() override;
 	};

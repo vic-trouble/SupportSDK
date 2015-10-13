@@ -35,27 +35,36 @@ namespace SDK
 #endif
 
 				Vector (const Vector<CoordinateType, Dimension>& i_other);
-				Vector<CoordinateType, Dimension>&		operator = (const Vector<CoordinateType, Dimension>& i_other);
+				Vector<CoordinateType, Dimension>&	operator = (const Vector<CoordinateType, Dimension>& i_other);
 
 				Vector ();
 
-				const CoordinateType&													operator [] (size_t i_index) const;
-				CoordinateType&																operator [] (size_t i_index);
+				const CoordinateType&				operator [] (size_t i_index) const;
+				CoordinateType&						operator [] (size_t i_index);
 
-				Vector<CoordinateType, Dimension>&						operator += (const Vector<CoordinateType, Dimension>& i_other);
-				Vector<CoordinateType, Dimension>&						operator -= (const Vector<CoordinateType, Dimension>& i_other);
-				Vector<CoordinateType, Dimension>&						operator *= (CoordinateType i_multiplyer);
-				Vector<CoordinateType, Dimension>&						operator /= (CoordinateType i_multiplyer);
-				bool																					operator == (const Vector<CoordinateType, Dimension>& i_other) const;
+				Vector<CoordinateType, Dimension>&	operator += (const Vector<CoordinateType, Dimension>& i_other);
+				Vector<CoordinateType, Dimension>	operator + (const Vector<CoordinateType, Dimension>& i_other) const;
+				Vector<CoordinateType, Dimension>&	operator -= (const Vector<CoordinateType, Dimension>& i_other);
+				Vector<CoordinateType, Dimension>	operator - (const Vector<CoordinateType, Dimension>& i_other) const;
+				Vector<CoordinateType, Dimension>	operator - () const;
 
-				CoordinateType																LengthSq() const;
-				double																				Length() const;
+				Vector<CoordinateType, Dimension>&	operator *= (CoordinateType i_multiplyer);
+				Vector<CoordinateType, Dimension>	operator * (CoordinateType i_multiplyer) const;
+				Vector<CoordinateType, Dimension>&	operator /= (CoordinateType i_multiplyer);
+				Vector<CoordinateType, Dimension>	operator / (CoordinateType i_multiplyer) const;
+				bool								operator == (const Vector<CoordinateType, Dimension>& i_other) const;
 
-				Vector<CoordinateType, Dimension>&						Normalize ();
-				bool																					IsZero () const;
+				CoordinateType						LengthSq() const;
+				double								Length() const;
 
-				CoordinateType																DotProduct(const Vector<CoordinateType, Dimension>& i_other) const;
-			  Vector<CoordinateType, Dimension>							CrossProduct(const Vector<CoordinateType, Dimension>& i_other) const;
+				Vector<CoordinateType, Dimension>&	Normalize ();
+				bool								IsZero () const;
+
+				CoordinateType						DotProduct(const Vector<CoordinateType, Dimension>& i_other) const;
+				Vector<CoordinateType, Dimension>	CrossProduct(const Vector<CoordinateType, Dimension>& i_other) const;
+
+				// Multiplies every component of this vector by the same component of scale
+				void								Scale(const Vector<CoordinateType, Dimension>& i_other);
 			};
 
 		} // Math

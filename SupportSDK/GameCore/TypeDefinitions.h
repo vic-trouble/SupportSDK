@@ -15,24 +15,22 @@
 
 #include <Math/Vector.h>
 #include <Math/Rectangle.h>
-
-typedef SDK::Math::Vector<float, 3> Vector3D;
-typedef SDK::Math::Vector<float, 2> Vector2D;
-typedef SDK::Math::Rectangle<float> FRect;
-typedef SDK::Math::Rectangle<int> IRect;
+#include <Math/Matrix.h>
+#include <Math/Quaternion.h>
+#include <Math/Line.h>
 
 namespace SDK
-	{
+{
 
-	typedef unsigned short ushort;
-	typedef unsigned int	 uint;
-	typedef unsigned long	 ulong;
-	typedef unsigned char  uchar;
+	typedef unsigned short	ushort;
+	typedef unsigned int	uint;
+	typedef unsigned long	ulong;
+	typedef unsigned char	uchar;
 
 	typedef int				int32;
 
-	typedef unsigned __int64 uint64;
-	typedef signed __int64	int64;
+	typedef unsigned __int64	uint64;
+	typedef signed __int64		int64;
 
 #ifdef FLOAT_PRECISION
 	typedef float					 real;
@@ -40,6 +38,20 @@ namespace SDK
 	typedef double				 real;
 #endif
 
-	} // SDK
+	typedef Math::Matrix<real, 3, 3> Matrix3;
+
+	typedef Math::Vector<real, 2> Vector2;
+	typedef Math::Vector<real, 3> Vector3;
+	typedef Math::Vector<real, 4> Vector4;
+
+	typedef Math::Quaternion<real> QuaternionF;
+
+	typedef Math::Rectangle<real> FRect;
+	typedef Math::Rectangle<int> IRect;
+
+	typedef Math::Line<real, 2> Point2F;
+	typedef Math::Line<real, 3> Point3F;
+
+} // SDK
 
 #endif

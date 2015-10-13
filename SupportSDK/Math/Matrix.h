@@ -9,15 +9,6 @@ namespace SDK
 	namespace Math
 	{
 
-		template <size_t R, size_t C>
-		struct allow
-		{};
-
-		template <>
-		struct allow <3, 3> : std::true_type
-		{
-		};
-
 		template <typename CoordinateType, size_t Rows, size_t Collumns>
 		class Matrix
 		{
@@ -59,16 +50,27 @@ namespace SDK
 				std::vector < double> i_coordinates;
 				return m_data_[i][j];
 			}
-
 			CoordinateType& operator () (size_t i_row, size_t i_collumn)
 			{
 				return m_data_[i_row][i_collumn];
+			}
+
+			const CoordinateType* operator [] (size_t i_row) const
+			{
+				return m_data_[i_row];
+			}
+			CoordinateType* operator [] (size_t i_row)
+			{
+				return m_data_[i_row];
 			}
 
 			CoordinateType DeterminantGeneric();
 
 			// Helpers
 			inline void Identity();
+			inline bool IsIdentity() const;
+			inline void Zero();
+			inline bool IsZero() const;
 			inline void Transpose();
 			inline ThisMatrix GetTransposed() const;
 

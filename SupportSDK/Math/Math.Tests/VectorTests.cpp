@@ -223,3 +223,34 @@ TEST(VectorTests, VectorAreNotEqual)
 		}
 	EXPECT_FALSE(vec_0.operator==(vec_1));
 	}
+
+TEST(VectorTests, ScaleTest)
+{
+	Vector<double, 3> vec_0;
+	vec_0[0] = 1.f;
+	vec_0[1] = 1.f;
+	vec_0[2] = 1.f;
+	Vector<double, 3> vec_1;
+	vec_1[0] = 2.f;
+	vec_1[1] = 3.f;
+	vec_1[2] = 4.f;
+
+	vec_0.Scale(vec_1);
+
+	EXPECT_DOUBLE_EQ(2.f, vec_0[0]);
+	EXPECT_DOUBLE_EQ(3.f, vec_0[1]);
+	EXPECT_DOUBLE_EQ(4.f, vec_0[2]);
+}
+
+TEST(VectorTests, MinusOperatorTest)
+{
+	Vector<double, 3> vec_0;
+	vec_0[0] = 1.f;
+	vec_0[1] = 2.f;
+	vec_0[2] = 3.f;
+
+	auto minus_vec = -vec_0;
+	EXPECT_EQ(-1.f, minus_vec[0]);
+	EXPECT_EQ(-2.f, minus_vec[1]);
+	EXPECT_EQ(-3.f, minus_vec[2]);
+}

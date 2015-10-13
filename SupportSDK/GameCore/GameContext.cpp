@@ -62,22 +62,17 @@ GameContext::~GameContext()
 
 void GameContext::TickPerformed(long i_ms_for_tick)
   {
-  // clear dead pool
-  while (!m_dead_pool.empty())
-    {
-    GameObject* p_object = *m_dead_pool.begin();
-    if (1 != m_objects.erase(p_object->GetID()))
-      assert ("One object should be erased.");
-    }
-
   // update objects
-  for (auto& object_pair : m_objects)
-    {
-    GameObjectUniquePtr& p_object = object_pair.second;
-    p_object->Tick(i_ms_for_tick);
-    if (p_object->IsDestroyed())
-      m_dead_pool.insert(p_object.get());
-    }
+  for (auto it = m_objects.begin(); it != m_objects.end();)
+  {
+	  if (it->second->IsDestroyed())
+		  it = m_objects.erase(it);
+	  else
+	  {
+		  it->second->Tick(i_ms_for_tick);
+		  ++it;
+	  }
+  }
   }
 
 void GameContext::ReleaseContext()
@@ -94,7 +89,7 @@ void GameContext::Release()
 
 void GameContext::RemoveObject(GameObject* ip_object)
   {
-  m_dead_pool.insert(ip_object);
+	  ip_object->Destroy();
   }
 
 void GameContext::RegisterController(std::unique_ptr<IController> ip_controller)

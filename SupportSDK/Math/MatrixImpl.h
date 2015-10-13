@@ -19,8 +19,7 @@ namespace SDK
 		template <typename CoordinateType, size_t Rows, size_t Collumns>
 		Matrix<CoordinateType, Rows, Collumns>::Matrix(CoordinateType* ip_data)
 		{
-			for (size_t i = 0; i < Rows*Collumns; ++i)
-				m_data[i] = ip_data[i];
+			memcpy(m_data, ip_data, sizeof(CoordinateType)*Rows*Collumns);
 		}
 
 		template <typename CoordinateType, size_t Rows, size_t Collumns>
@@ -49,6 +48,42 @@ namespace SDK
 					else
 						m_data_[i][j] = 0;
 				}
+		}
+
+		template <typename CoordinateType, size_t Rows, size_t Collumns>
+		bool Matrix<CoordinateType, Rows, Collumns>::IsIdentity() const
+		{
+			for (size_t i = 0; i < Rows; ++i)
+				for (size_t j = 0; j < Collumns; ++j)
+				{
+					if (i == j && m_data_[i][j] != 1)
+						return false;
+					else if (m_data_[i][j] != 0)
+						return false;
+				}
+			return true;
+		}
+
+		template <typename CoordinateType, size_t Rows, size_t Collumns>
+		void Matrix<CoordinateType, Rows, Collumns>::Zero()
+		{
+			for (size_t i = 0; i < Rows; ++i)
+				for (size_t j = 0; j < Collumns; ++j)
+				{
+					m_data_[i][j] = 0;
+				}
+		}
+
+		template <typename CoordinateType, size_t Rows, size_t Collumns>
+		bool Matrix<CoordinateType, Rows, Collumns>::IsZero() const
+		{
+			for (size_t i = 0; i < Rows; ++i)
+				for (size_t j = 0; j < Collumns; ++j)
+				{
+					if (m_data_[i][j] != 0)
+						return false;
+				}
+			return true;
 		}
 
 		template <typename CoordinateType, size_t Rows, size_t Collumns>

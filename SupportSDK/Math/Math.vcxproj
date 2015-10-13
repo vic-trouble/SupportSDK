@@ -81,12 +81,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CrossProductCalculator.h" />
+    <ClInclude Include="Line.h" />
     <ClInclude Include="MathAPI.h" />
     <ClInclude Include="Matrix.h" />
+    <ClInclude Include="Matrix4.h" />
     <ClInclude Include="MatrixUtilities.h" />
     <ClInclude Include="MatrixImpl.h" />
+    <ClInclude Include="Plane.h" />
+    <ClInclude Include="Quaternion.h" />
+    <ClInclude Include="QuaternionImpl.h" />
+    <ClInclude Include="Ray.h" />
     <ClInclude Include="Rectangle.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Utilities.h" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="VectorConstructor.h" />
     <ClInclude Include="VectorImpl.h" />

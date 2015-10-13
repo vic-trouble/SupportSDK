@@ -34,7 +34,6 @@ class GameContext : boost::noncopyable
     std::string                         m_context_name;
     long                                m_next_object_id;
 
-    std::set<GameObject*>               m_dead_pool;
     std::vector<ControllerInformation>  m_controllers;
 
   private:
@@ -50,7 +49,7 @@ class GameContext : boost::noncopyable
 
     /// add object to the dead pool
     /// dead pool is clearing in TickPerformed method before updating all objects
-    GAMECORE_EXPORT void				                RemoveObject(GameObject* ip_object);
+    GAMECORE_EXPORT void						RemoveObject(GameObject* ip_object);
 
     GAMECORE_EXPORT void                        RegisterController(std::unique_ptr<IController> ip_controller);
     GAMECORE_EXPORT void                        RegisterResources (int i_type, const ResourcesCountSet& i_resources);
