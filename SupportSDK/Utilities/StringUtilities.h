@@ -3,14 +3,14 @@
 
 #include "UtilitiesAPI.h"
 
-#include <boost\utility.hpp>
+#include "noncopyable.h"
 
 #include <iostream>
 #include <sstream>
 #include <string>
 /////////////////////////////////////////////////////
 
-class StringUtilities : boost::noncopyable
+class StringUtilities : SDK::Utilities::noncopyable
 {
 private:
   StringUtilities();

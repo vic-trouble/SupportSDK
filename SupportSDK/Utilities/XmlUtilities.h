@@ -6,9 +6,9 @@
 #include "tinyxml.h"
 #include "tinystr.h"
 
-#include <boost\utility.hpp>
+#include "noncopyable.h"
 
-class XmlUtilities : boost::noncopyable
+class XmlUtilities : SDK::Utilities::noncopyable
 {
 private:
   XmlUtilities();
