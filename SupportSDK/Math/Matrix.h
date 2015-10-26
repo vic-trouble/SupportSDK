@@ -17,7 +17,7 @@ namespace SDK
 			typedef CoordinateType CoordinateType;
 			typedef Matrix<CoordinateType, Rows, Collumns> ThisMatrix;
 
-		private:
+		protected:
 			union
 			{
 				CoordinateType m_data[Rows*Collumns];

@@ -19,3 +19,9 @@ TEST(UtilitiesTests, DistanceFromPointToLine)
 	EXPECT_EQ(1.5f, dist);
 }
 
+TEST(UtilitiesTests, Sgn)
+{
+	EXPECT_EQ(-1.f, sgn(-5.f));
+	EXPECT_EQ(1.f, sgn(2.f));
+	EXPECT_EQ(0.f, sgn(0.f));
+}

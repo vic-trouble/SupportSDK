@@ -26,6 +26,16 @@ namespace SDK
 			return sqrt(DistanceSq(i_point, i_line));
 		}
 
+		template <typename T>
+		T sgn(T x)
+		{
+			if (x > T(0))
+				return T(1);
+			if (x < T(0))
+				return T(-1);
+			return T(0);
+		}
+
 	} // Math
 
 } // SDK

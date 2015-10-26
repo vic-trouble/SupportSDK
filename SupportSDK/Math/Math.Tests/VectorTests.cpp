@@ -108,11 +108,11 @@ TEST(VectorTests, MinusVector_VerticesShouldBeMinus10)
 
 TEST(VectorTests, LengthSqShouldBe300_LengthShouldBe_SqrtFromLength)
 	{
-	Vector<int, 3> vec;
+	Vector<float, 3> vec;
 	for (size_t i = 0; i < Vector<int, 3>::VertexNumber; ++i)
-		vec[i] = 10;
+		vec[i] = 10.f;
 	EXPECT_EQ(300, vec.LengthSq());
-	EXPECT_EQ(sqrt(300), vec.Length());// near 17.3205
+	EXPECT_EQ(sqrt(300.f), vec.Length());// near 17.3205
 	}
 
 TEST(VectorTests, Normalize_LengthShouldBe1)

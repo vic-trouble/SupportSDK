@@ -145,7 +145,7 @@ namespace SDK
 		}
 
 		template <typename CoordinateType, size_t Dimension>
-		double Vector<CoordinateType, Dimension>::Length() const
+		CoordinateType Vector<CoordinateType, Dimension>::Length() const
 		{
 			return sqrt(LengthSq());
 		}
@@ -184,7 +184,7 @@ namespace SDK
 		template <typename CoordinateType, size_t Dimension>
 		void Vector<CoordinateType, Dimension>::Scale(const Vector<CoordinateType, Dimension>& i_other)
 		{
-			for (size_t i = 0; i < m_vertices.size(); ++i)
+			for (size_t i = 0; i < Dimension; ++i)
 				m_vertices[i] *= i_other[i];
 		}
 

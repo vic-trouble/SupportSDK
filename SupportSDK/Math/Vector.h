@@ -1,8 +1,6 @@
 #ifndef __MATHVECTOR_H__
 #define __MATHVECTOR_H__
 
-#include <array>
-
 #if _MSC_VER >= 1800
 #include <initializer_list>
 #endif
@@ -21,7 +19,7 @@ namespace SDK
 				typedef CoordinateType CoordinateType;
 				
 			private:
-				std::array<CoordinateType, Dimension> m_vertices;
+				CoordinateType m_vertices[Dimension];
 
 			public:
 
@@ -39,6 +37,8 @@ namespace SDK
 
 				Vector ();
 
+				CoordinateType*						GetPointer() { return m_vertices; }
+
 				const CoordinateType&				operator [] (size_t i_index) const;
 				CoordinateType&						operator [] (size_t i_index);
 
@@ -55,7 +55,7 @@ namespace SDK
 				bool								operator == (const Vector<CoordinateType, Dimension>& i_other) const;
 
 				CoordinateType						LengthSq() const;
-				double								Length() const;
+				CoordinateType						Length() const;
 
 				Vector<CoordinateType, Dimension>&	Normalize ();
 				bool								IsZero () const;

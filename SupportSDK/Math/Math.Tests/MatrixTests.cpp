@@ -1,6 +1,7 @@
 #include "stdafx.h"
-
+#include <Quaternion.h>
 #include <Matrix.h>
+#include <Matrix4.h>
 
 using namespace SDK::Math;
 
@@ -199,4 +200,12 @@ TEST(MatrixTests, GenericInverseTest)
 	EXPECT_DOUBLE_EQ(6., inverse(2, 0));
 	EXPECT_DOUBLE_EQ(-3., inverse(2, 1));
 	EXPECT_DOUBLE_EQ(-6., inverse(2, 2));
+}
+
+TEST(MatrixTests, MakeTraslation4x4)
+{
+	typedef Vector<double, 3> Vector3;
+	typedef Quaternion<double> QuaternionD;
+	Matrix4<double> m;
+	//m.MakeTransform(Vector3(), Vector3(), QuaternionD(1, 0, 0, 1));
 }

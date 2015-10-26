@@ -17,13 +17,14 @@ namespace SDK
 		{
 		public:
 			typedef Vector<CoordinateType, 3> ThisVector3;
+			typedef Quaternion<CoordinateType> ThisQuaternion;
 
 		public:
 
-			inline ThisMatrix GetInverse() const;
+			inline Matrix4 GetInverse() const;
 
-			inline bool Decomposition(Vector3& position, Vector3& scale, Vector3& orientation) const;
-			void Decomposition(Vector3& position, Vector3& scale, Quaternion& orientation) const;
+			inline bool Decomposition(ThisVector3& position, ThisVector3& scale, ThisVector3& orientation) const;
+			void Decomposition(ThisVector3& position, ThisVector3& scale, ThisQuaternion& orientation) const;
 
 			// Create Rotation/Translation/Scale matrix from this Matrix and input parameters
 			inline static ThisMatrix MakeTranslation(const ThisVector3& i_translation_vector);
@@ -41,6 +42,8 @@ namespace SDK
 			inline void SetTranslationVector(const ThisVector3 & vector);
 
 			inline ThisVector3 GetScaleVector() const;
+
+			inline void MakeTransform(const ThisVector3& position, const ThisVector3& scale, const ThisQuaternion& orientation);
 		};
 
 		template <typename CoordinateType>
@@ -122,6 +125,28 @@ namespace SDK
 		{
 			Identity();
 			SetTranslationVector(i_vector);
+		}
+
+		template <typename CoordinateType>
+		void Matrix4<CoordinateType>::MakeTransform(const ThisVector3& position, const ThisVector3& scale, const ThisQuaternion& orientation)
+		{
+			// Ordering:
+			//    1. Scale
+			//    2. Rotate
+			//    3. Translate
+			typedef Matrix<CoordinateType, 3, 3> Matrix3;
+			Matrix3 rot3x3;
+			orientation.ToRotationMatrix(rot3x3);
+
+			auto& m = m_data_;
+
+			// Set up final matrix with scale, rotation and translation
+			m[0][0] = scale[0] * rot3x3[0][0]; m[0][1] = scale[1] * rot3x3[0][1]; m[0][2] = scale[2] * rot3x3[0][2]; m[0][3] = position[0];
+			m[1][0] = scale[0] * rot3x3[1][0]; m[1][1] = scale[1] * rot3x3[1][1]; m[1][2] = scale[2] * rot3x3[1][2]; m[1][3] = position[1];
+			m[2][0] = scale[0] * rot3x3[2][0]; m[2][1] = scale[1] * rot3x3[2][1]; m[2][2] = scale[2] * rot3x3[2][2]; m[2][3] = position[2];
+
+			// No projection term
+			m[3][0] = 0; m[3][1] = 0; m[3][2] = 0; m[3][3] = 1;
 		}
 
 	} // Math
