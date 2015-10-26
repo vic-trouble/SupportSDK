@@ -1,8 +1,17 @@
 #ifndef __GAMECORE_IRENDERER_H__
 #define __GAMECORE_IRENDERER_H__
 
+#include "RenderTypes.h"
+
+#include "Render/VertexDeclaration.h"
+
 namespace SDK
 {
+
+	namespace Render
+	{
+		class HardwareBufferManagerBase;
+	}
 
 	struct Color
 	{
@@ -53,6 +62,14 @@ namespace SDK
 		virtual IRect GetTargetRectangle() = 0;
 		virtual void	BeginFrame() = 0;
 		virtual void	EndFrame() = 0;
+
+		virtual Render::HardwareBufferManagerBase* GetHardwareBufferMgr() = 0;
+
+		virtual void Draw(Render::Batch i_decl) = 0;
+
+		//virtual void DrawPrimitive(Render::VertexBufferHandle i_vertices, Render::IndexBufferHandle i_indices, Render::PrimitiveType i_primitive) = 0;
+
+		/////////////////////////////////////////////////////////////////
 
 		virtual void RenderLine(const Vector3& i_first_point, const Vector3& i_second_point, Color i_color, float i_width = 1.0) = 0;
 		virtual void RenderRectangle(const Vector3& i_center, double i_width, double i_height, Color i_color) = 0;

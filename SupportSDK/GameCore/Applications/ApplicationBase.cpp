@@ -5,7 +5,7 @@
 #include "CoreDelegate.h"
 #include "Core.h"
 
-#include "Renderer/IRenderer.h"
+#include "Render/IRenderer.h"
 
 #include <Utilities/TimeUtilities.h>
 

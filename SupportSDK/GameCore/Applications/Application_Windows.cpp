@@ -5,7 +5,7 @@
 #include "Core.h"
 #include "CoreDelegate.h"
 
-#include "Renderer/OpenGLRenderer.h"
+#include "Render/OpenGL/OpenGLRenderer.h"
 #include "Input/InputSystem.h"
 
 #include <Windows.h>

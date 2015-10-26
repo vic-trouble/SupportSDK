@@ -4,7 +4,7 @@
 
 #include "CoreDelegate.h"
 #include "Applications/ApplicationBase.h"
-#include "Renderer/IRenderer.h"
+#include "Render/IRenderer.h"
 
 // singletons
 #include "Input/InputSystem.h"

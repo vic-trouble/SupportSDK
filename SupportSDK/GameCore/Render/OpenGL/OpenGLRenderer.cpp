@@ -1,12 +1,15 @@
 #include "stdafx.h"
 
 #include "OpenGLRenderer.h"
+#include "GlUitlities.h"
 
 #include <Math/VectorConstructor.h>
 
 #include <GL/glew.h>
 #include <GL/GL.h>
 #include <GL/GLU.h>
+
+#include <string>
 
 #define M_PI 3.14159265358979323846
 
@@ -75,8 +78,6 @@ namespace
 	}
 
 } // namespace
-
-//////////////////////////////////////////////////////////////////////////
 
 namespace SDK
 {
@@ -149,6 +150,108 @@ namespace SDK
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 	}
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	GLenum GetPrimitiveType(Render::PrimitiveType i_type)
+	{
+		using namespace Render;
+		switch (i_type)
+		{
+			case PrimitiveType::Points:
+				return GL_POINTS;
+			case PrimitiveType::LineStrip:
+				return GL_LINE_STRIP;
+			case PrimitiveType::LineLoop:
+				return GL_LINE_LOOP;
+			case PrimitiveType::Lines:
+				return GL_LINES;
+			case PrimitiveType::TriangleStrip:
+				return GL_TRIANGLE_STRIP;
+			case PrimitiveType::TriangleFan:
+				return GL_TRIANGLE_FAN;
+			case PrimitiveType::Triangles:
+				return GL_TRIANGLES;
+			case PrimitiveType::QuadStrip:
+				return GL_QUAD_STRIP;
+			case PrimitiveType::Quads:
+				return GL_QUADS;
+			case PrimitiveType::Polygon:
+				return GL_POLYGON;
+			
+		}
+
+		return 0;
+	}
+
+	GLenum GetComponentType(Render::ComponentType i_type)
+	{
+		using namespace Render;
+		switch (i_type)
+		{
+			case ComponentType::Byte:
+				return GL_BYTE;
+			case ComponentType::UByte:
+				return GL_UNSIGNED_BYTE;
+			case ComponentType::Shot:
+				return GL_UNSIGNED_SHORT;
+			case ComponentType::Int:
+				return GL_UNSIGNED_INT;
+			case ComponentType::HalfFloat:
+				return GL_HALF_FLOAT;
+			case ComponentType::Float:
+				return GL_FLOAT;
+			case ComponentType::Double:
+				return GL_DOUBLE;
+			case ComponentType::Fixed:
+				return GL_FIXED;
+		}
+		return 0;
+	}
+	
+	GLenum GetIndexType(Render::HardwareIndexBuffer::IndexType i_type)
+	{
+		using namespace Render;
+		switch (i_type)
+		{
+			case HardwareIndexBuffer::IndexType::Byte:
+				return GL_UNSIGNED_BYTE;
+			case HardwareIndexBuffer::IndexType::Short:
+				return GL_UNSIGNED_SHORT;
+			case HardwareIndexBuffer::IndexType::Int:
+				return GL_UNSIGNED_INT;
+		}
+
+		return GL_UNSIGNED_SHORT;
+	}
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	void OpenGLRenderer::Draw(Render::Batch i_batch)
+	{
+		auto ver_buf = m_hardware_buffer_mgr.AccessVertexBuffer(i_batch.vertices);
+		auto ind_buf = m_hardware_buffer_mgr.AccessIndexBuffer(i_batch.indices);
+		auto element = m_hardware_buffer_mgr.AccessElement(i_batch.element);
+
+		glEnableVertexAttribArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, ver_buf.m_hardware_id);
+		glVertexAttribPointer(0, // index for shader attribute
+			element.m_vertex_size, // size
+			GetComponentType(element.m_component), // type
+			element.m_normalized ? GL_TRUE : GL_FALSE, // normalized
+			element.m_stride, // stride
+			0); // pointer
+		CHECK_GL_ERRORS;
+
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ind_buf.m_hardware_id);
+		glDrawElements(GetPrimitiveType(element.m_primitive), ind_buf.m_num_indices, GetIndexType(ind_buf.m_index_type), 0);
+		CHECK_GL_ERRORS;
+
+		glDisableVertexAttribArray(0);
+	}
+
+	/////////////////////////////////////////////////////////////////////////////
 
 	void OpenGLRenderer::RenderLine(const Vector3& i_first_point, const Vector3& i_second_point, Color i_color, float i_width /* = 1.0 */)
 	{

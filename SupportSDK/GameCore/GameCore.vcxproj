@@ -114,6 +114,8 @@
     <ClInclude Include="GameCoreAPI.h" />
     <ClInclude Include="GameInfo.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GenericHandle.h" />
+    <ClInclude Include="Render\HardwareBuffer.h" />
     <ClInclude Include="IComponent.h" />
     <ClInclude Include="IController.h" />
     <ClInclude Include="IMovable.h" />
@@ -121,9 +123,19 @@
     <ClInclude Include="Input\InputSubscriber.h" />
     <ClInclude Include="Input\InputSystem.h" />
     <ClInclude Include="Input\Keyboard.h" />
+    <ClInclude Include="Render\HardwareBufferManagerBase.h" />
+    <ClInclude Include="Render\OpenGL\HardwareBufferManager.h" />
+    <ClInclude Include="Render\HardwareIndexBuffer.h" />
+    <ClInclude Include="Render\HardwareVertexBuffer.h" />
+    <ClInclude Include="Render\Mesh.h" />
     <ClInclude Include="Platform.h" />
-    <ClInclude Include="Renderer\IRenderer.h" />
-    <ClInclude Include="Renderer\OpenGLRenderer.h" />
+    <ClInclude Include="Render\IRenderer.h" />
+    <ClInclude Include="Render\MeshComponent.h" />
+    <ClInclude Include="Render\OpenGL\OpenGLRenderer.h" />
+    <ClInclude Include="Render\OpenGL\GlUitlities.h" />
+    <ClInclude Include="Render\RenderSystem.h" />
+    <ClInclude Include="Render\RenderTypes.h" />
+    <ClInclude Include="Render\VertexDeclaration.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TimeController.h" />
     <ClInclude Include="TypeDefinitions.h" />
@@ -138,7 +150,10 @@
     <ClCompile Include="GameContext.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Input\InputSystem.cpp" />
-    <ClCompile Include="Renderer\OpenGLRenderer.cpp" />
+    <ClCompile Include="Render\OpenGL\HardwareBufferManager.cpp" />
+    <ClCompile Include="Render\OpenGL\OpenGLRenderer.cpp" />
+    <ClCompile Include="Render\OpenGL\GLUtilities.cpp" />
+    <ClCompile Include="Render\RenderSystem.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

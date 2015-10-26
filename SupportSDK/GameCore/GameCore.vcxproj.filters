@@ -30,6 +30,18 @@
     <Filter Include="Core\Input">
       <UniqueIdentifier>{13627250-ccd2-44d1-adea-40674f93c7f6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Renderer\Mesh">
+      <UniqueIdentifier>{e9aba9d1-3864-496e-a254-add1b428e4f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Utilities">
+      <UniqueIdentifier>{01a858af-e01f-4f1e-9e4a-62294deb23f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Renderer\OpenGLRenderer">
+      <UniqueIdentifier>{1b2cf744-7fdc-4a85-acda-a8160f3676f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Renderer\HardwareBuffers">
+      <UniqueIdentifier>{cfe7c737-303c-46b8-be95-57eb25c863b4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -89,12 +101,6 @@
     <ClInclude Include="Applications\Application_Windows.h">
       <Filter>Core\Application\Win</Filter>
     </ClInclude>
-    <ClInclude Include="Renderer\IRenderer.h">
-      <Filter>Core\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer\OpenGLRenderer.h">
-      <Filter>Core\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Platform.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -109,6 +115,48 @@
     </ClInclude>
     <ClInclude Include="Input\Keyboard.h">
       <Filter>Core\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="GenericHandle.h">
+      <Filter>Core\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\OpenGL\GlUitlities.h">
+      <Filter>Core\Renderer\OpenGLRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\OpenGL\HardwareBufferManager.h">
+      <Filter>Core\Renderer\HardwareBuffers</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\OpenGL\OpenGLRenderer.h">
+      <Filter>Core\Renderer\OpenGLRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\HardwareBuffer.h">
+      <Filter>Core\Renderer\HardwareBuffers</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\HardwareBufferManagerBase.h">
+      <Filter>Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\HardwareIndexBuffer.h">
+      <Filter>Core\Renderer\HardwareBuffers</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\HardwareVertexBuffer.h">
+      <Filter>Core\Renderer\HardwareBuffers</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\IRenderer.h">
+      <Filter>Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Mesh.h">
+      <Filter>Core\Renderer\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\MeshComponent.h">
+      <Filter>Core\Renderer\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\RenderSystem.h">
+      <Filter>Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\RenderTypes.h">
+      <Filter>Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\VertexDeclaration.h">
+      <Filter>Core\Renderer\HardwareBuffers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -139,11 +187,20 @@
     <ClCompile Include="Applications\Application_Windows.cpp">
       <Filter>Core\Application\Win</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer\OpenGLRenderer.cpp">
-      <Filter>Core\Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="Input\InputSystem.cpp">
       <Filter>Core\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\OpenGL\GLUtilities.cpp">
+      <Filter>Core\Renderer\OpenGLRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\OpenGL\HardwareBufferManager.cpp">
+      <Filter>Core\Renderer\HardwareBuffers</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\OpenGL\OpenGLRenderer.cpp">
+      <Filter>Core\Renderer\OpenGLRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\RenderSystem.cpp">
+      <Filter>Core\Renderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
