@@ -5,12 +5,12 @@
 #include "TimeController.h"
 #include "Types.h"
 
-#include <boost/noncopyable.hpp>
+#include <Utilities/noncopyable.h>
 
 class GameObject;
 class IController;
 
-class GameContext : boost::noncopyable
+class GameContext : SDK::Utilities::noncopyable
                   , public SDK::TickListener
   {
   public:
@@ -18,7 +18,7 @@ class GameContext : boost::noncopyable
   
   public:
 
-    struct ControllerInformation : boost::noncopyable
+	  struct ControllerInformation : SDK::Utilities::noncopyable
       {
       std::unique_ptr<IController>                    mp_controller;
       /// resources that will be needed for object creation of object
