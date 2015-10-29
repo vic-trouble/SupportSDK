@@ -1,5 +1,5 @@
 ﻿set ("${PROJECT}_BINARY_DIR" Binaries/CMake)
-set ("${PROJECT}_SOURCE_DIR" Math)
+set ("${PROJECT}_SOURCE_DIR" Math:Utilities:GameCore)
 set ("${PROJECT}_LIB_DIR" lib)
 
 set (CMAKE_INCLUDE_PATH ${${PROJECT}_SOURCE_DIR})
