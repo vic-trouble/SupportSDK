@@ -1,7 +1,7 @@
 #ifndef __GAMECORE_VERTEXDECLARATION_H__
 #define __GAMECORE_VERTEXDECLARATION_H__
 
-#include "Render/RenderTypes.h"
+#include "GameCore/Render/RenderTypes.h"
 
 namespace SDK
 {

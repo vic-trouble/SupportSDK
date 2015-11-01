@@ -1,10 +1,10 @@
 #ifndef __GAMECODE_INPUTSYSTEM_H__
 #define __GAMECODE_INPUTSYSTEM_H__
 
-#include "GameCoreAPI.h"
+#include "GameCore/GameCoreAPI.h"
 
-#include "Core.h"
-#include "Input/InputEvent.h"
+#include "GameCore/Core.h"
+#include "GameCore/Input/InputEvent.h"
 
 #include <Patterns/Singleton.h>
 

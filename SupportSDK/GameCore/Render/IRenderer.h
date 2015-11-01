@@ -1,9 +1,9 @@
 #ifndef __GAMECORE_IRENDERER_H__
 #define __GAMECORE_IRENDERER_H__
 
-#include "RenderTypes.h"
+#include "GameCore/Render/RenderTypes.h"
 
-#include "Render/VertexDeclaration.h"
+#include "GameCore/Render/VertexDeclaration.h"
 
 namespace SDK
 {

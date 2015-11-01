@@ -1,7 +1,7 @@
 #ifndef	__GAMECORE_RENDERTYPES_H__
 #define __GAMECORE_RENDERTYPES_H__
 
-#include "GenericHandle.h"
+#include "GameCore/GenericHandle.h"
 
 namespace SDK
 {
