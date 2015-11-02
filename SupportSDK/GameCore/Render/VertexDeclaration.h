@@ -13,14 +13,14 @@ namespace SDK
 		struct DeclHelper
 		{
 			static uint ElementsSize;
-			static VertexElement Elements[];
+			static VertexLayout Elements[];
 		};
 
 		struct VertexDeclaration
 		{
 			VertexBufferHandle		vertices;
-			VertexElement			temp_element;
-			const VertexElement*	elements;
+			VertexLayout			temp_element;
+			const VertexLayout*	elements;
 			uint					decl_size;
 
 			template <typename T>
@@ -30,7 +30,7 @@ namespace SDK
 			}
 
 			template <typename T>
-			static inline VertexElement* Elements()
+			static inline VertexLayout* Elements()
 			{
 				return DeclHelper<T>::Elements;
 			}
@@ -39,7 +39,7 @@ namespace SDK
 		struct Batch
 		{
 			VertexBufferHandle		vertices;
-			ElementBufferHandle		element;
+			VertexLayoutHandle		element;
 			IndexBufferHandle		indices;
 		};
 
@@ -57,7 +57,7 @@ namespace SDK
 		uint DeclHelper<PosStaticBuffer>::ElementsSize = 1;
 
 		template <>
-		VertexElement DeclHelper<PosStaticBuffer>::Elements[] =
+		VertexLayout DeclHelper<PosStaticBuffer>::Elements[] =
 		{
 			{ 3, VertexSemantic::Position, ComponentType::Float, false, PrimitiveType::Points, sizeof(PosStaticBuffer), offsetof(PosStaticBuffer, handle) }
 		};		

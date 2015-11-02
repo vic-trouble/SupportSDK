@@ -10,7 +10,7 @@ namespace SDK
 	{	
 		typedef GenericBuffersArray<VertexBufferHandle, HardwareVertexBuffer, 4096> VertexBuffers;
 		typedef GenericBuffersArray<IndexBufferHandle, HardwareIndexBuffer, 4096> IndexBuffers;
-		typedef GenericBuffersArray<ElementBufferHandle, VertexElement, 4096> ElementBuffers;
+		typedef GenericBuffersArray<VertexLayoutHandle, VertexLayout, 4096> VertexLayoutBuffers;
 
 		class HardwareBufferManager : public HardwareBufferManagerBase
 		{
@@ -18,7 +18,7 @@ namespace SDK
 			// for static data
 			VertexBuffers	m_static_vertices;
 			IndexBuffers	m_static_indices;
-			ElementBuffers	m_static_elements;
+			VertexLayoutBuffers	m_static_elements;
 
 		public:
 			// TODO: allocate configurable number objects
@@ -39,8 +39,8 @@ namespace SDK
 			virtual void DestroyBuffer(IndexBufferHandle i_handle) override;
 
 			// for elements we can provide compose allocation strategy - FreList with malloc
-			virtual ElementBufferHandle CreateElement(uint i_ver_size, VertexSemantic i_semantic, PrimitiveType i_primitive, ComponentType i_component, bool i_normalized) override;
-			virtual void DestroyBuffer(ElementBufferHandle i_handle) override;
+			virtual VertexLayoutHandle CreateElement(uint i_ver_size, VertexSemantic i_semantic, PrimitiveType i_primitive, ComponentType i_component, bool i_normalized) override;
+			virtual void DestroyBuffer(VertexLayoutHandle i_handle) override;
 
 			////////////////////////////////////////////////////////////////////////////////////
 			// Part that available to render backent - OpenGL, DirectX, other
@@ -48,7 +48,7 @@ namespace SDK
 			// TODO: should return some struct or ? - not all information about ver./ind. buffer
 			HardwareVertexBuffer AccessVertexBuffer(VertexBufferHandle i_handle) const;
 			HardwareIndexBuffer AccessIndexBuffer(IndexBufferHandle i_handle) const;
-			VertexElement AccessElement(ElementBufferHandle i_handle) const;
+			VertexLayout AccessElement(VertexLayoutHandle i_handle) const;
 
 			// use for other buffers - colors/uvs/deepth...
 			/*typedef int BufHandle;

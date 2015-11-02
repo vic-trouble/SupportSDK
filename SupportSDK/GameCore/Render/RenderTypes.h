@@ -101,7 +101,7 @@ namespace SDK
 			Count
 		};
 
-		struct VertexElement
+		struct VertexLayout
 		{
 			/// The source vertex buffer, as bound to an index using VertexBufferBinding
 			//unsigned short	m_source;
@@ -117,15 +117,15 @@ namespace SDK
 			/// Offset of field in input data
 			uint			m_offset;
 		};
-		static_assert(std::is_pod<VertexElement>::value == true, "VertexElement must be a POD.");
+		static_assert(std::is_pod<VertexLayout>::value == true, "VertexLayout must be a POD.");
 		///////////////////////////////////////////////////////////////
 		
 		struct VertexHandleTag {};
 		typedef GenericHandle<12, 20, VertexHandleTag> VertexBufferHandle;
 		struct IndexHandleTag {};
 		typedef GenericHandle<12, 20, IndexHandleTag> IndexBufferHandle;
-		struct ElementHandleTag {};
-		typedef GenericHandle<12, 20, ElementHandleTag> ElementBufferHandle;
+		struct VerLayoutHandleTag {};
+		typedef GenericHandle<12, 20, VerLayoutHandleTag> VertexLayoutHandle;
 
 	} // Render
 

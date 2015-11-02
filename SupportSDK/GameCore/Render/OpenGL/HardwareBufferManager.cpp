@@ -160,22 +160,22 @@ namespace SDK
 			return HardwareIndexBuffer();
 		}
 
-		VertexElement HardwareBufferManager::AccessElement(ElementBufferHandle i_handle) const
+		VertexLayout HardwareBufferManager::AccessElement(VertexLayoutHandle i_handle) const
 		{
-			if (i_handle.index < ElementBuffers::Size && m_static_indices.m_buffer[i_handle.index].m_usage == BufferUsageFormat::Static)
+			if (i_handle.index < VertexLayoutBuffers::Size && m_static_indices.m_buffer[i_handle.index].m_usage == BufferUsageFormat::Static)
 				return m_static_elements.m_buffer[i_handle.index];
 
-			return VertexElement();
+			return VertexLayout();
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////
 
-		ElementBufferHandle HardwareBufferManager::CreateElement(uint i_ver_size, VertexSemantic i_semantic, PrimitiveType i_primitive, ComponentType i_component, bool i_normalized)
+		VertexLayoutHandle HardwareBufferManager::CreateElement(uint i_ver_size, VertexSemantic i_semantic, PrimitiveType i_primitive, ComponentType i_component, bool i_normalized)
 		{
 			auto cur_index = m_static_elements.m_current_index;
 
 			// if maximum we can hold
-			if (cur_index == ElementBuffers::Size)
+			if (cur_index == VertexLayoutBuffers::Size)
 			{
 				// if first buffer is not empty - we cannot hold one more allocation
 				// TODO: user should be notified about error
@@ -205,10 +205,10 @@ namespace SDK
 			return handle;
 		}
 
-		void HardwareBufferManager::DestroyBuffer(ElementBufferHandle i_handle)
+		void HardwareBufferManager::DestroyBuffer(VertexLayoutHandle i_handle)
 		{
 			auto cur_index = i_handle.index;
-			assert(cur_index < IndexBuffers::Size);
+			assert(cur_index < VertexLayoutBuffers::Size);
 
 			auto& buffer = m_static_elements.m_buffer[cur_index];
 

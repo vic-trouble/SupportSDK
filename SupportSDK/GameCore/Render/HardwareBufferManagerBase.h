@@ -32,8 +32,8 @@ namespace SDK
 			virtual IndexBufferHandle CreateIndexBuffer(HardwareIndexBuffer::IndexType i_type, size_t i_num_indices, BufferUsageFormat i_usage, const void* ip_initial_data = nullptr) = 0;
 			virtual void DestroyBuffer(IndexBufferHandle i_handle) = 0;
 			// for elements we can provide compose allocation strategy - FreList with malloc
-			virtual ElementBufferHandle CreateElement(uint i_ver_size, VertexSemantic i_semantic, PrimitiveType i_primitive, ComponentType i_component, bool i_normalized) = 0;
-			virtual void DestroyBuffer(ElementBufferHandle i_handle) = 0;
+			virtual VertexLayoutHandle CreateElement(uint i_ver_size, VertexSemantic i_semantic, PrimitiveType i_primitive, ComponentType i_component, bool i_normalized) = 0;
+			virtual void DestroyBuffer(VertexLayoutHandle i_handle) = 0;
 		};
 	}
 
