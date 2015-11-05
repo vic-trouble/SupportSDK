@@ -31,6 +31,16 @@ TEST(MatrixTests, ConstructMatrix_ShouldBeZero)
 	}
 }
 
+TEST(MatrixTests, AccessTest)
+{
+	double m[] = { 2., 3., 4., 5. };
+	Matrix<double, 2, 2> matrix(m);
+
+	EXPECT_EQ(matrix(0), matrix[0][0]);
+	EXPECT_EQ(matrix(1), matrix[0][1]);
+	EXPECT_EQ(matrix(2), matrix[1][0]);
+	EXPECT_EQ(matrix(3), matrix[1][1]);
+}
 
 #if _MSC_VER >= 1800
 TEST(MatrixTests, ConstructVariadicVector_ThrowIfInitListSizeBiggerThanMatrixDimensions)
@@ -140,6 +150,111 @@ TEST(MatrixTests, MultiplyOnMatrixTest)
 
 	double m_res[] = {22., 28., 49., 64., 76., 100.};
 	const Matrix<double, 3, 2> res_matrix(m_res);
+	EXPECT_EQ(res_matrix, res);
+}
+
+typedef Matrix4<float> Matrix4f;
+
+/*
+	Often Translate->Scale needed
+	And not to multiply Matrix two times
+	Create one matrix that gives this result
+*/
+TEST(MatrixTests, TranslateAndThanScale)
+{
+	Matrix4f translation_matrix(
+		1, 0, 0, 0,
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+		5, 5, 5, 1
+		);
+
+	Matrix4f scale_matrix(
+		2.f, 0, 0, 0,
+		0, 3.f, 0, 0,
+		0, 0, 4.f, 0,
+		0, 0, 0, 1
+		);
+
+	auto translate_scale = translation_matrix.Multiply<4, 4>(scale_matrix);
+	std::cout << translate_scale << std::endl;
+	Matrix4f matrix(
+		1, 2, 3, 4,
+		5, 6, 7, 8,
+		9, 10, 11, 12,
+		13, 14, 15, 16
+		);
+
+	Matrix4f current_matrix = matrix;
+	current_matrix = current_matrix.Multiply<4, 4>(translation_matrix);	
+	current_matrix = current_matrix.Multiply<4, 4>(scale_matrix);
+	
+	//current_matrix = current_matrix.Multiply<4, 4>(translation_matrix_1);
+	std::cout << current_matrix << std::endl;
+
+	Matrix4f current_matrix_0 = matrix;
+	current_matrix_0 = current_matrix_0.Multiply<4, 4>(translate_scale);
+	std::cout << current_matrix_0 << std::endl;
+
+	EXPECT_EQ(current_matrix, current_matrix_0);
+}
+
+TEST(MatrixTests, TwoTranslations)
+{
+	Matrix4f translation_matrix(
+		1, 0, 0, 0,
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+		5, 5, 5, 1
+		);
+
+	Matrix4f translation_matrix_1(
+		1, 0, 0, 0,
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+		1, 1, 1, 1
+		);
+
+	Matrix4f uni_transform(
+		1, 0, 0, 0,
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+		6, 6, 6, 1
+		);
+
+	Matrix4f matrix(
+		1, 2, 3, 4,
+		5, 6, 7, 8,
+		9, 10, 11, 12,
+		13, 14, 15, 16
+		);
+
+	Matrix4f current_matrix = matrix;
+	current_matrix = current_matrix.Multiply<4, 4>(translation_matrix);
+	current_matrix = current_matrix.Multiply<4, 4>(translation_matrix_1);
+
+	//current_matrix = current_matrix.Multiply<4, 4>(translation_matrix_1);
+	std::cout << current_matrix << std::endl;
+
+	Matrix4f current_matrix_0 = matrix;
+	current_matrix_0 = current_matrix_0.Multiply<4, 4>(uni_transform);
+	std::cout << current_matrix_0 << std::endl;
+
+	EXPECT_EQ(current_matrix, current_matrix_0);
+}
+
+TEST(MatrixTests, MultiplyOnMatrixTest_ScaleOn2)
+{
+	double m_0[] = { 1., 2., 3., 4., 5., 6., 7., 8., 9. };
+	double m_1[] = { 2., 0., 0., 0., 2., 0., 0., 0., 2.};
+
+	Matrix<double, 3, 3> matrix_0(m_0);
+	Matrix<double, 3, 3> scale_matrix(m_1);
+
+	auto res = matrix_0.Multiply<3, 3>(scale_matrix);
+
+	double m_res[] = { 2., 4., 6., 8., 10., 12., 14., 16., 18. };
+	const Matrix<double, 3, 3> res_matrix(m_res);
 	EXPECT_EQ(res_matrix, res);
 }
 

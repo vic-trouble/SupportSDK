@@ -55,6 +55,16 @@ namespace SDK
 				return m_data_[i_row][i_collumn];
 			}
 
+			// returns coordinate
+			// [index/rows][index%cols]
+			const CoordinateType& operator () (size_t index) const
+			{
+				return m_data[index];
+			}
+			CoordinateType& operator () (size_t index)
+			{
+				return m_data[index];
+			}
 			const CoordinateType* operator [] (size_t i_row) const
 			{
 				return m_data_[i_row];

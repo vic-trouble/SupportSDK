@@ -21,6 +21,37 @@ namespace SDK
 
 		public:
 
+			inline Matrix4()
+				: Matrix()
+			{}
+
+			// Construct matrix from array which must be Rows*Collumns
+			inline Matrix4(CoordinateType* ip_data)
+				: Matrix(ip_data)
+			{}
+
+			inline Matrix4(const Matrix4& i_other)
+				: Matrix(i_other)
+			{}
+
+			inline Matrix4(const Matrix<CoordinateType, 4, 4>& i_other)
+				: Matrix(i_other)
+			{}
+
+			inline Matrix4(
+				float _11, float _12, float _13, float _14,
+				float _21, float _22, float _23, float _24,
+				float _31, float _32, float _33, float _34,
+				float _41, float _42, float _43, float _44
+				)
+			{
+				m_data_[0][0] = _11; m_data_[0][1] = _12; m_data_[0][2] = _13; m_data_[0][3] = _14;
+				m_data_[1][0] = _21; m_data_[1][1] = _22; m_data_[1][2] = _23; m_data_[1][3] = _24;
+				m_data_[2][0] = _31; m_data_[2][1] = _32; m_data_[2][2] = _33; m_data_[2][3] = _34;
+				m_data_[3][0] = _41; m_data_[3][1] = _42; m_data_[3][2] = _43; m_data_[3][3] = _44;
+				
+			}
+
 			inline Matrix4 GetInverse() const;
 
 			inline bool Decomposition(ThisVector3& position, ThisVector3& scale, ThisVector3& orientation) const;
