@@ -127,6 +127,8 @@ namespace SDK
 		struct VerLayoutHandleTag {};
 		typedef GenericHandle<12, 20, VerLayoutHandleTag> VertexLayoutHandle;
 
+		struct RenderLayaerTag{};
+		typedef GenericHandle<12, 20, RenderLayaerTag> RenderLayerHandle;
 	} // Render
 
 } // SDK

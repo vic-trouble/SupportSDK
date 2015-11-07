@@ -36,11 +36,17 @@
     <Filter Include="Core\Utilities">
       <UniqueIdentifier>{01a858af-e01f-4f1e-9e4a-62294deb23f0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Renderer\OpenGLRenderer">
-      <UniqueIdentifier>{1b2cf744-7fdc-4a85-acda-a8160f3676f8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Renderer\HardwareBuffers">
       <UniqueIdentifier>{cfe7c737-303c-46b8-be95-57eb25c863b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Resources">
+      <UniqueIdentifier>{38728e30-1f4d-4acc-8916-81e14e5f87e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Renderer\OpenGL">
+      <UniqueIdentifier>{1b2cf744-7fdc-4a85-acda-a8160f3676f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FileSystem">
+      <UniqueIdentifier>{2346b487-e429-4ef1-8d05-1553410ae511}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -67,9 +73,6 @@
     </ClInclude>
     <ClInclude Include="GameCoreAPI.h">
       <Filter>_Maintanance</Filter>
-    </ClInclude>
-    <ClInclude Include="Types.h">
-      <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="TimeController.h">
       <Filter>TimeManagement</Filter>
@@ -120,19 +123,13 @@
       <Filter>Core\Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Render\OpenGL\GlUitlities.h">
-      <Filter>Core\Renderer\OpenGLRenderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\OpenGL\HardwareBufferManager.h">
-      <Filter>Core\Renderer\HardwareBuffers</Filter>
+      <Filter>Core\Renderer\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="Render\OpenGL\OpenGLRenderer.h">
-      <Filter>Core\Renderer\OpenGLRenderer</Filter>
+      <Filter>Core\Renderer\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="Render\HardwareBuffer.h">
       <Filter>Core\Renderer\HardwareBuffers</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\HardwareBufferManagerBase.h">
-      <Filter>Core\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Render\HardwareIndexBuffer.h">
       <Filter>Core\Renderer\HardwareBuffers</Filter>
@@ -157,6 +154,39 @@
     </ClInclude>
     <ClInclude Include="Render\VertexDeclaration.h">
       <Filter>Core\Renderer\HardwareBuffers</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\ResourceInformation.h">
+      <Filter>Core\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\LoadManager.h">
+      <Filter>Core\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\OpenGL\HardwareBufferManager.h">
+      <Filter>Core\Renderer\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\HardwareBufferManagerBase.h">
+      <Filter>Core\Renderer\HardwareBuffers</Filter>
+    </ClInclude>
+    <ClInclude Include="FileSystem\FileSystem.h">
+      <Filter>FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\RenderWorld.h">
+      <Filter>Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Camera.h">
+      <Filter>Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Frustum.h">
+      <Filter>Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Viewport.h">
+      <Filter>Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\RenderBucket.h">
+      <Filter>Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -191,16 +221,37 @@
       <Filter>Core\Input</Filter>
     </ClCompile>
     <ClCompile Include="Render\OpenGL\GLUtilities.cpp">
-      <Filter>Core\Renderer\OpenGLRenderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\OpenGL\HardwareBufferManager.cpp">
-      <Filter>Core\Renderer\HardwareBuffers</Filter>
+      <Filter>Core\Renderer\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="Render\OpenGL\OpenGLRenderer.cpp">
-      <Filter>Core\Renderer\OpenGLRenderer</Filter>
+      <Filter>Core\Renderer\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="Render\RenderSystem.cpp">
       <Filter>Core\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Mesh.cpp">
+      <Filter>Core\Renderer\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\LoadManager.cpp">
+      <Filter>Core\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\OpenGL\HardwareBufferManager.cpp">
+      <Filter>Core\Renderer\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="FileSystem\FileSystem.cpp">
+      <Filter>FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\RenderWorld.cpp">
+      <Filter>Core\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Frustum.cpp">
+      <Filter>Core\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Camera.cpp">
+      <Filter>Core\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

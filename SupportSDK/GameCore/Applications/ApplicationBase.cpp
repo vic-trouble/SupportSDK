@@ -6,6 +6,8 @@
 #include "Core.h"
 
 #include "Render/IRenderer.h"
+//
+//#include "Render/Viewport.h"
 
 #include <Utilities/TimeUtilities.h>
 
@@ -53,6 +55,10 @@ namespace SDK
 	void ApplicationBase::Update(float i_elapsed_time)
 	{
 		UpdateInternal(i_elapsed_time);
+
+		for (World& world : m_worlds)
+			world.Update(i_elapsed_time);
+
 		mp_delegate->Update(i_elapsed_time);
 
 		int sleep_ms = 1;
@@ -67,6 +73,13 @@ namespace SDK
 	{
 		Core::GetRenderer()->BeginFrame();
 		DrawInternal();
+
+		for (World& world : m_worlds)
+		{
+			world.SubmitDrawCommands();
+			m_render_world.Submit(world.GetViewPort());
+		}
+
 		mp_delegate->Draw();
 		Core::GetRenderer()->EndFrame();
 	}

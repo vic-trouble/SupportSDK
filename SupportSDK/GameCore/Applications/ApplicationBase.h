@@ -1,6 +1,9 @@
 #ifndef __GAMECORE_APPLICATIONBASE_H__
 #define __GAMECORE_APPLICATIONBASE_H__
 
+#include "../World.h"
+#include "../Render/RenderWorld.h"
+
 namespace SDK
 {
 	class CoreDelegate;
@@ -14,7 +17,9 @@ namespace SDK
 		CoreDelegate* mp_delegate;
 
 		int m_fps;
-
+		
+		World				m_worlds[1];
+		Render::RenderWorld m_render_world;
 	private:
 		virtual void StartInternal() = 0;
 		virtual void StopInternal() = 0;
@@ -30,6 +35,8 @@ namespace SDK
 
 		virtual void RequestShutdownInternal() = 0;
 	public:
+		World& GetWorld() { return m_worlds[0]; }
+		Render::RenderWorld& GetRenderWorld() { return m_render_world; }
 		ApplicationBase(CoreDelegate* ip_delegate)
 			: mp_delegate(ip_delegate)
 			, CONTENT_WIDTH(0)
