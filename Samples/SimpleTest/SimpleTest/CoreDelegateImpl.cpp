@@ -161,8 +161,14 @@ namespace Game
 		}
 		//////////////////////////////////////
 		auto p_renderer = Core::GetRenderer();
-		p_renderer->Draw(batch[0]);
-		p_renderer->Draw(batch[1]);
+		glPushMatrix();
+			glColor4f(0, 0.5f, 0., 1.f);
+			glTranslatef(100, 20, 0);
+			p_renderer->Draw(batch[0]);
+			glColor4f(0, 0.5f, 0.5, 1.f);
+			glTranslatef(100, 70, 0);
+			p_renderer->Draw(batch[1]);
+		glPopMatrix();
 		{
 			/*glPushMatrix();
 			glTranslatef(100, 500, 0);
