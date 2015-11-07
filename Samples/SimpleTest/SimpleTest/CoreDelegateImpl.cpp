@@ -161,8 +161,10 @@ namespace Game
 		}
 		//////////////////////////////////////
 		auto p_renderer = Core::GetRenderer();
+		p_renderer->Draw(batch[0]);
+		p_renderer->Draw(batch[1]);
 		{
-			glPushMatrix();
+			/*glPushMatrix();
 			glTranslatef(100, 500, 0);
 
 			auto beg = clock();
@@ -187,7 +189,7 @@ namespace Game
 
 			std::cout << res << res2;
 
-			glPopMatrix();
+			glPopMatrix();*/
 		}
 
 	}

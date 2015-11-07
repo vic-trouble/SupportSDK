@@ -64,6 +64,11 @@
       <AdditionalLibraryDirectories>$(SolutionDir)\..\..\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>GameCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(SolutionDir)..\..\Binaries\Win32\$(Configuration)\GameCore.dll" "$(OutputPath)" /Y /R /I /E
+xcopy "$(SolutionDir)..\..\Binaries\Win32\$(Configuration)\Utilities.dll" "$(OutputPath)" /Y /R /I /E
+xcopy "$(SolutionDir)..\..\Binaries\Win32\$(Configuration)\Patterns.dll" "$(OutputPath)" /Y /R /I /E</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -84,6 +89,11 @@
       <AdditionalLibraryDirectories>$(SolutionDir)\..\..\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>GameCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(SolutionDir)..\..\Binaries\Win32\$(Configuration)\GameCore.dll" "$(OutputPath)" /Y /R /I /E
+xcopy "$(SolutionDir)..\..\Binaries\Win32\$(Configuration)\Utilities.dll" "$(OutputPath)" /Y /R /I /E
+xcopy "$(SolutionDir)..\..\Binaries\Win32\$(Configuration)\Patterns.dll" "$(OutputPath)" /Y /R /I /E</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
