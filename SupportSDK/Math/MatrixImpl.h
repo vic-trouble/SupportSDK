@@ -219,6 +219,21 @@ namespace SDK
 		}
 
 		template <typename CoordinateType, size_t Rows, size_t Collumns>
+		Matrix<CoordinateType, Rows, Collumns>& Matrix<CoordinateType, Rows, Collumns>::operator *= (const ThisMatrix& i_other)
+		{
+			*this = this->Multiply<Rows, Collumns>(i_other);
+			return *this;
+		}
+
+		template <typename CoordinateType, size_t Rows, size_t Collumns>
+		Matrix<CoordinateType, Rows, Collumns> Matrix<CoordinateType, Rows, Collumns>::operator * (const ThisMatrix& i_other) const
+		{
+			ThisMatrix matrix(*this);
+			matrix *= i_other;
+			return matrix;
+		}
+
+		template <typename CoordinateType, size_t Rows, size_t Collumns>
 		Matrix<CoordinateType, Rows, Collumns>& Matrix<CoordinateType, Rows, Collumns>::operator *= (CoordinateType i_value)
 		{
 			for (size_t i = 0; i < Rows; ++i)

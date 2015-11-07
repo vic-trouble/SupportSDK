@@ -95,6 +95,9 @@ namespace SDK
 			template <size_t R, size_t ColsNum>
 			inline Matrix<CoordinateType, Rows, ColsNum> Multiply(const Matrix<CoordinateType, R, ColsNum>& i_other) const;
 
+			inline ThisMatrix& operator *= (const ThisMatrix& i_other);
+			inline ThisMatrix operator * (const ThisMatrix& i_other) const;
+
 			inline ThisMatrix& operator *= (CoordinateType i_value);
 			inline ThisMatrix operator * (CoordinateType i_value) const;
 

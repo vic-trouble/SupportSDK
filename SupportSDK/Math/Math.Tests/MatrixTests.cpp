@@ -153,6 +153,19 @@ TEST(MatrixTests, MultiplyOnMatrixTest)
 	EXPECT_EQ(res_matrix, res);
 }
 
+TEST(MarixTest, MultiplicationTest)
+{
+	Matrix4<float> view;
+	Matrix4<float> model;
+	view.Identity();
+	model.Identity();
+
+	view.CreateTranslation(VectorConstructor<float>::Construct(0, 0, -7));
+	const auto res_0 = view.Multiply<4, 4>(model);
+	const auto res_1 = view * model;
+	EXPECT_EQ(res_0, res_1);
+}
+
 typedef Matrix4<float> Matrix4f;
 
 /*
