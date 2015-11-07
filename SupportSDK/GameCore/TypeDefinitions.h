@@ -17,7 +17,9 @@
 #include <Math/Rectangle.h>
 #include <Math/Matrix.h>
 #include <Math/Quaternion.h>
+#include <Math/Matrix4.h>
 #include <Math/Line.h>
+#include <Math/Plane.h>
 
 namespace SDK
 {
@@ -25,7 +27,7 @@ namespace SDK
 	typedef unsigned short	ushort;
 	typedef unsigned int	uint;
 	typedef unsigned long	ulong;
-	typedef unsigned char	uchar;
+	typedef unsigned char	ubyte;
 
 	typedef int				int32;
 
@@ -39,6 +41,7 @@ namespace SDK
 #endif
 
 	typedef Math::Matrix<real, 3, 3> Matrix3;
+	typedef Math::Matrix4<real> Matrix4f;
 
 	typedef Math::Vector<real, 2> Vector2;
 	typedef Math::Vector<real, 3> Vector3;
@@ -51,6 +54,8 @@ namespace SDK
 
 	typedef Math::Line<real, 2> Point2F;
 	typedef Math::Line<real, 3> Point3F;
+
+	typedef Math::Plane<real> PlaneF;
 
 } // SDK
 

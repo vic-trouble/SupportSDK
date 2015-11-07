@@ -15,6 +15,7 @@ namespace SDK
 			virtual void OnCollapse() = 0;
 			virtual void OnActivate() = 0;
 
+			// // TODO: remove update and draw methods from delegate
 			virtual void Update(float i_elapsed_time) = 0;
 			virtual void Draw() = 0;
 		};

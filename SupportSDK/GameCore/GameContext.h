@@ -3,9 +3,11 @@
 #include "GameCoreAPI.h"
 
 #include "TimeController.h"
-#include "Types.h"
 
 #include <Utilities/noncopyable.h>
+
+typedef std::pair<int, size_t>                  ResourcePair;
+typedef std::vector<ResourcePair>               ResourcesCountSet;
 
 class GameObject;
 class IController;
