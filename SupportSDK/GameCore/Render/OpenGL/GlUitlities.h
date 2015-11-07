@@ -1,6 +1,6 @@
 #ifndef	__GAMECORE_GLUTILITIES_H__
 #define __GAMECORE_GLUTILITIES_H__
-#include "GameCoreAPI.h"
+#include "../../GameCoreAPI.h"
 
 // Макрос проверки OpenGL на ошибки
 #ifdef _DEBUG
@@ -10,5 +10,7 @@
 #endif
 
 GAMECORE_EXPORT void CheckGlErrors(const char *filename, int line);
+
+void makeGlMatrix(float gl_matrix[16], const SDK::Matrix4f& m);
 
 #endif

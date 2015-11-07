@@ -48,8 +48,11 @@ namespace SDK
 
 			glBindBuffer(GL_ARRAY_BUFFER, id);
 			CHECK_GL_ERRORS;
-
-			glBufferData(GL_ARRAY_BUFFER, i_num_verts * i_stride, ip_initial_data, GL_STATIC_DRAW);
+			uint size = i_num_verts;
+			// if stride == 0 - open GL decides that data is one-by-one
+			if (i_stride != 0)
+				size *= i_stride;
+			glBufferData(GL_ARRAY_BUFFER, size, ip_initial_data, GL_STATIC_DRAW);
 			CHECK_GL_ERRORS;
 
 			m_static_vertices.m_current_index = cur_index + 1;
