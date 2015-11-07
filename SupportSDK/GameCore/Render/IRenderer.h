@@ -67,9 +67,12 @@ namespace SDK
 
 		virtual void Draw(Render::Batch i_decl) = 0;
 
-		//virtual void DrawPrimitive(Render::VertexBufferHandle i_vertices, Render::IndexBufferHandle i_indices, Render::PrimitiveType i_primitive) = 0;
+		virtual void SetProjectionMatrix(Matrix4f&& i_projection_matrix) = 0;
+		virtual void SetModelViewMatrix(Matrix4f&& i_modelview_matrix) = 0;
+		// virtual void SetRenderTargets() = 0;
 
-		/////////////////////////////////////////////////////////////////
+		////////////////////////////////////////////////////////////////////
+		// TODO: is it still needed
 
 		virtual void RenderLine(const Vector3& i_first_point, const Vector3& i_second_point, Color i_color, float i_width = 1.0) = 0;
 		virtual void RenderRectangle(const Vector3& i_center, double i_width, double i_height, Color i_color) = 0;
