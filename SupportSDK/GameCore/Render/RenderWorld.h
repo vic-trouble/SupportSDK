@@ -8,14 +8,16 @@
 #include "RenderBucket.h"
 #include "Viewport.h"
 
+#include <Utilities/noncopyable.h>
+
 namespace SDK
 {
 
-	namespace Render
+	namespace Render 
 	{
 		// one render world contains render queus;
 		//	wraps submition process
-		class RenderWorld
+		class RenderWorld : Utilities::noncopyable
 		{
 			// TODO: TEMPORARY public for testing!!!!!!!!!!!
 		public:

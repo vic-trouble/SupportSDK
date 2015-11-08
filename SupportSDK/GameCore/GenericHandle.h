@@ -4,11 +4,14 @@
 namespace SDK
 {
 
-	template <uint N1, uint N2, typename Tag>
-	struct GenericHandle
+	template<typename T, T N1, T N2, typename Tag, class Enable = void>
+	struct GenericHandle;
+
+	template <typename T, T N1, T N2, typename Tag>
+	struct GenericHandle <T, N1, N2, Tag, typename std::enable_if<std::is_integral<T>::value>::type>
 	{
-		uint index : N1;
-		uint generation : N2;
+		T index : N1;
+		T generation : N2;
 	};
 
 	template <typename HandlerType, typename BufferType, size_t size = 4096>

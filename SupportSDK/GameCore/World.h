@@ -1,31 +1,27 @@
 #ifndef	__GAMECORE_WORLD_H__
 #define __GAMECORE_WORLD_H__
 
+#include "System.h"
+
 #include "Render/Viewport.h"
 #include "Render/Camera.h"
 #include "Render/Frustum.h"
 
+#include <Utilities/noncopyable.h>
+
 namespace SDK
 {
-	struct System
+	
+	class World : Utilities::noncopyable
 	{
-		enum class Action
-		{
-			Update,
-			SubmitDrawCommands,			
-		};
+	private:
+		typedef std::unique_ptr<System> SystemPtr;
+		std::vector<System*> m_systems;
 
-		virtual void Update(float i_elapsed_time){}
-		virtual void SubmitDrawCommands(){}
+		//Render::Viewport m_viewport;
 
-		virtual bool Requires(Action i_action) const { return false; }
-	};
-	class World
-	{
 		// TODO: !!!TEMPORARY public
 	public:
-		System m_systems[10];
-
 		Render::Viewport m_viewport;
 		Render::Camera m_camera;
 		Render::Frustum m_frustum;
@@ -36,6 +32,8 @@ namespace SDK
 		void SubmitDrawCommands();
 
 		const Render::Viewport& GetViewPort() const { return m_viewport; }
+		void RegisterSystem(System* ip_system) { m_systems.push_back(ip_system); }
+		void ClearSystems() { m_systems.clear(); }
 	};
 
 }

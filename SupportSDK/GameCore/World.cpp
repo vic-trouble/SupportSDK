@@ -13,19 +13,19 @@ namespace SDK
 
 	void World::Update(float i_elapsed_time)
 	{
-		for (auto& system : m_systems)
+		for (auto& p_system : m_systems)
 		{
-			if (system.Requires(System::Action::Update))
-				system.Update(i_elapsed_time);
+			if (p_system->Requires(System::Action::Update))
+				p_system->Update(i_elapsed_time);
 		}
 	}
 
 	void World::SubmitDrawCommands()
 	{
-		for (auto& system : m_systems)
+		for (auto& p_system : m_systems)
 		{
-			if (system.Requires(System::Action::SubmitDrawCommands))
-				system.SubmitDrawCommands();
+			if (p_system->Requires(System::Action::SubmitDrawCommands))
+				p_system->SubmitDrawCommands();
 		}
 	}
 

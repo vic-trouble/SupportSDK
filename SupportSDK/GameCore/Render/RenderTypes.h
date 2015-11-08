@@ -121,14 +121,14 @@ namespace SDK
 		///////////////////////////////////////////////////////////////
 		
 		struct VertexHandleTag {};
-		typedef GenericHandle<12, 20, VertexHandleTag> VertexBufferHandle;
+		typedef GenericHandle<size_t, 12, 20, VertexHandleTag> VertexBufferHandle;
 		struct IndexHandleTag {};
-		typedef GenericHandle<12, 20, IndexHandleTag> IndexBufferHandle;
+		typedef GenericHandle<size_t, 12, 20, IndexHandleTag> IndexBufferHandle;
 		struct VerLayoutHandleTag {};
-		typedef GenericHandle<12, 20, VerLayoutHandleTag> VertexLayoutHandle;
+		typedef GenericHandle<size_t, 12, 20, VerLayoutHandleTag> VertexLayoutHandle;
 
-		struct RenderLayaerTag{};
-		typedef GenericHandle<12, 20, RenderLayaerTag> RenderLayerHandle;
+		struct MeshHandlerTag{};
+		typedef GenericHandle<int, 12, 20, MeshHandlerTag> MeshHandler;
 	} // Render
 
 } // SDK

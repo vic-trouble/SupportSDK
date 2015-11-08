@@ -48,6 +48,9 @@
     <Filter Include="FileSystem">
       <UniqueIdentifier>{2346b487-e429-4ef1-8d05-1553410ae511}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Systems">
+      <UniqueIdentifier>{1b62819e-1a61-4bf0-aa68-0d37ee82c517}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -188,6 +191,12 @@
     <ClInclude Include="World.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="System.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\MeshSystem.h">
+      <Filter>Core\Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -252,6 +261,9 @@
     </ClCompile>
     <ClCompile Include="World.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\MeshSystem.cpp">
+      <Filter>Core\Systems</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

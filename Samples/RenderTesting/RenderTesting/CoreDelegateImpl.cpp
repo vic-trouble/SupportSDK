@@ -28,83 +28,9 @@ using namespace SDK;
 # pragma comment(lib, "glew32.lib")
 #endif
 
-// An array of 3 vectors which represents 3 vertices
-static const GLfloat g_vertex_buffer_data[][3] = {
-	{ 0.0f, 0.0f, 0.0f },
-	{ 5, 0.0f, 0.0f },
-	{ 5, 0, 5.0f },
-	{ 0.0f, 0, 5.0f },
-};
-
-static const GLfloat g_vertex_buffer_data_0[][3] = {
-	{ 20.f, -20.f, 20.f },
-	{ 20.f, -20.f, -20.f },
-	{ 20.f, 20.f, -20.f },
-	{ 20.f, 20.f, 20.f }
-};
-
-
-namespace
-{
-	static const GLfloat g_vertex_buffer_data_1[][3] = {
-		{ -2.f, -2.f, 2.f },
-		{ -2.f, -2.f, -2.f },
-		{ -2.f, 2.f, -2.f },
-		{ -2.f, 2.f, 2.f },
-		{ 2.f, -2.f, 2.f },
-		{ 2.f, -2.f, -2.f },
-		{ 2.f, 2.f, -2.f },
-		{ 2.f, 2.f, 2.f }
-	};
-
-	static const GLfloat g_vertex_buffer_data_2[] = {
-		-2.f, -2.f, 2.f,
-		-2.f, -2.f, -2.f,
-		-2.f, 2.f, -2.f,
-		-2.f, 2.f, 2.f,
-		2.f, -2.f, 2.f,
-		2.f, -2.f, -2.f,
-		2.f, 2.f, -2.f,
-		2.f, 2.f, 2.f
-	};
-
-	static const GLfloat g_index_buffer_data_1[] = {
-		3, 2, 1, 0,
-		1, 5, 4, 0,
-		2, 6, 5, 1,
-		7, 6, 2, 3,
-		4, 7, 3, 0,
-		5, 6, 7, 4,
-	};
-
-	static const GLfloat g_index_buffer_data_2[] = {
-		// left
-		0, 1, 2,
-		2, 3, 0,
-		// front
-		1, 2, 6,
-		6, 5, 1,
-		// right
-		6, 7, 4,
-		4, 5, 6,
-		// back
-		0, 3, 7,
-		7, 4, 0,
-		// bottom
-		0, 4, 5,
-		5, 1, 0,
-		// top
-		2, 3, 7,
-		7, 6, 2
-
-	};
-
-
-}
-
-
-
 #include <GameCore/Applications/ApplicationBase.h>
+
+#include <GameCore/Systems/MeshSystem.h>
 
 namespace Game
 {
@@ -112,7 +38,10 @@ namespace Game
 	void CoreDelegateImpl::LoadModel()
 	{
 		//E:\Git_Projects\SupportSDK\Samples\Resources\Models\Box.obj
-		loaded_mesh = Resources::g_load_manager.LoadMesh("..\\..\\..\\Resources\\Models\\Box.obj", Render::BufferUsageFormat::Static, Render::BufferUsageFormat::Static);
+		loaded_mesh = Render::g_mesh_system.Load("Resources\\Models\\Box.obj", Render::BufferUsageFormat::Static, Render::BufferUsageFormat::Static);
+		loaded_mesh = Render::g_mesh_system.Load("..\\..\\..\\Resources\\Models\\Box.obj", Render::BufferUsageFormat::Static, Render::BufferUsageFormat::Static);
+		Render::g_mesh_system.Unload(loaded_mesh);
+		loaded_mesh = Render::g_mesh_system.Load("..\\..\\..\\Resources\\Models\\Box.obj", Render::BufferUsageFormat::Static, Render::BufferUsageFormat::Static);
 		/*auto p_mgr = Core::GetRenderer()->GetHardwareBufferMgr();
 
 		const float verts[] = {
@@ -680,12 +609,10 @@ namespace Game
 
 		} // coords for drawTest
 
-		void drawTest(Render::Batch& batch)
+		void drawTest()
 		{
 			glPushMatrix();
-			glTranslatef(2, 2, 0);
-
-			Core::GetRenderer()->Draw(batch);
+			glTranslatef(2, 2, 0);			
 
 			// enable and specify pointers to vertex arrays
 			glEnableClientState(GL_NORMAL_ARRAY);
@@ -704,7 +631,7 @@ namespace Game
 			glPopMatrix();
 		}
 
-		void draw3(Render::Batch& batch, bool draw_test)
+		void draw3(bool draw_test)
 		{
 			static int windowWidth = 640;
 			static int windowHeight = 960;
@@ -722,7 +649,6 @@ namespace Game
 
 			// clear buffer
 			glClearColor(0.0f, 0.0f, 0.0f, 0.f);   // background color
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 			glPushMatrix();
 				// First, transform the camera (viewing matrix) from world space to eye space
@@ -733,7 +659,7 @@ namespace Game
 				drawGrid(10, 1);
 				DrawSpheres();
 				if (draw_test)
-					drawTest(batch);
+					drawTest();
 				draw1();
 			glPopMatrix();
 		}
@@ -743,21 +669,7 @@ namespace Game
 	{
 		auto p_renderer = Core::GetRenderer();
 		//p_renderer->Draw(batch[1]);
-		Render::Batch b;
-		b.element = loaded_mesh.GetLayout();
-		b.indices = loaded_mesh.GetIndices();
-		b.vertices = loaded_mesh.GetVertices();
-		draw3(b, false);	
-		
-		auto render_world = Core::GetApplication()->GetRenderWorld();
-		render_world.Submit(Core::GetApplication()->GetWorld().m_viewport);
-		
-		glPushMatrix();
-			glTranslatef(0, 0, 0);
-
-			Core::GetRenderer()->Draw(b);
-		glPopMatrix();
-		CHECK_GL_ERRORS;
+		draw3(true);		
 	}
 
 } // Game

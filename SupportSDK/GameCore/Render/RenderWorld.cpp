@@ -23,13 +23,13 @@ namespace SDK
 		}
 
 		RenderWorld::RenderWorld()
-		{
-			m_buckets.push_back(RenderBucket());
+		{			
 		}
 
 		void RenderWorld::AddCommand(Batch&& i_batch)
 		{
-			m_buckets[0].batch = i_batch;
+			m_buckets.push_back(RenderBucket());
+			m_buckets.back().batch = std::move(i_batch);
 		}
 
 		void RenderWorld::Submit(const Viewport& i_viewport)
@@ -41,8 +41,10 @@ namespace SDK
 			SetRenderTargets();
 
 			//dispatch commands
-			/*for (auto s : m_buckets)
-				p_renderer->Draw(s.batch);			*/
+			for (auto bucket : m_buckets)
+				p_renderer->Draw(bucket.batch);
+
+			m_buckets.clear();
 		}
 
 	} // Render
