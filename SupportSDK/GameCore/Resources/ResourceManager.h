@@ -4,23 +4,11 @@
 #include "../GameCoreAPI.h"
 
 #include "ResourceInformation.h"
-
+#include "../FileSystem/Stream.h"
 #include "../Render/Mesh.h"
 
 namespace SDK
 {
-	
-	namespace FS
-	{
-		struct Stream
-		{
-			virtual ~Stream(){}
-			virtual std::istream& Get() = 0;
-			virtual bool IsValid() const = 0;
-		};
-
-		typedef std::unique_ptr<Stream> StreamPtr;
-	}
 
 	namespace Resources
 	{
@@ -54,15 +42,10 @@ namespace SDK
 
 		} // Serialization
 
-		
-
 		class ResourceManager
 		{
 		private:
-			typedef ResourceInformation<Render::Mesh> MeshResourceInfo;
-			std::vector<MeshResourceInfo> m_loaded_resources;
-
-			std::vector<ResInformation> m_loaded_resources_new;
+			std::vector<ResourceInformation> m_loaded_resources;
 
 		private:
 			static Render::Mesh LoadObj(const std::string& i_file_name, Render::BufferUsageFormat i_vertices_usage, Render::BufferUsageFormat i_indices_usage);
@@ -71,7 +54,7 @@ namespace SDK
 
 			// already registered internally - reload and increase counter
 			template <typename ResType>
-			void Register(ResInformation& io_info, ResType i_resource)
+			void Register(ResourceInformation& io_info, ResType i_resource)
 			{
 				Serialization::LoaderImpl<ResType>::Register(io_info.m_handle, i_resource);
 				++io_info.m_use_count;
@@ -90,8 +73,8 @@ namespace SDK
 				using namespace Serialization;
 				const size_t hash = hash_function(i_file_name);
 				// check if handle already exist
-				auto it = std::find_if(m_loaded_resources_new.begin(), m_loaded_resources_new.end(), ResInformation::FindPredicate(hash));
-				if (it != m_loaded_resources_new.end())
+				auto it = std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(hash));
+				if (it != m_loaded_resources.end())
 				{
 					++it->m_use_count;
 					return it->m_handle;
@@ -99,17 +82,17 @@ namespace SDK
 				// handle not exist - this file was not loaded before			
 				const int handle = LoaderImpl<ResType>::CreateNewHandle();
 				{
-					ResInformation res_info = { hash, 0, ResInformation::State::Unloaded, handle };
-					m_loaded_resources_new.emplace_back(res_info);
+					ResourceInformation res_info = { hash, 0, ResourceInformation::State::Unloaded, handle };
+					m_loaded_resources.emplace_back(res_info);
 				}
 
 				auto p_stream = OpenStream(i_file_name);
 				if (p_stream == nullptr)
 				{
 					LoaderImpl<ResType>::RemoveHandle(handle);
-					m_loaded_resources_new.erase(
-						std::find_if(m_loaded_resources_new.begin(), m_loaded_resources_new.end(), ResInformation::FindPredicate(hash)),
-						m_loaded_resources_new.end());
+					m_loaded_resources.erase(
+						std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(hash)),
+						m_loaded_resources.end());
 					return -1;
 				}
 
@@ -118,15 +101,16 @@ namespace SDK
 				if (load_res.first == LoadResult::Failure)
 				{
 					LoaderImpl<ResType>::RemoveHandle(handle);
-					m_loaded_resources_new.erase(
-						std::find_if(m_loaded_resources_new.begin(), m_loaded_resources_new.end(), ResInformation::FindPredicate(hash)),
-						m_loaded_resources_new.end());
+					m_loaded_resources.erase(
+						std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(hash)),
+						m_loaded_resources.end());
 					return -1;
 				}
 
 				// TODO: when will be async - this will not be reference to back element
-				// auto it = std::find(m_loaded_resources_new.begin(), m_loaded_resources_new.end(), ResInformation::FindPredicate(hash));
-				auto& res_info = m_loaded_resources_new.back();
+				// auto it = std::find(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(hash));
+				auto& res_info = m_loaded_resources.back();
+				res_info.m_state = ResourceInformation::State::Loaded;
 				Register<ResType>(res_info, load_res.second);
 
 				return handle;
@@ -137,10 +121,10 @@ namespace SDK
 			{
 				const size_t hash = hash_function(i_name);
 				Serialization::LoaderImpl<ResType>::Register(i_handle, i_resource);
-				auto it = std::find_if(m_loaded_resources_new.begin(), m_loaded_resources_new.end(), ResInformation::FindPredicate(i_handle));
-				if (it == m_loaded_resources_new.end())
+				auto it = std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(i_handle));
+				if (it == m_loaded_resources.end())
 				{
-					m_loaded_resources_new.emplace_back(hash, 1, ResInformation::State::Loaded, i_handle);
+					m_loaded_resources.emplace_back(hash, 1, ResourceInformation::State::Loaded, i_handle);
 				}
 				else
 				{
@@ -151,9 +135,9 @@ namespace SDK
 			template <typename ResType>
 			void Unload(int i_handle)
 			{
-				auto it = std::find_if(m_loaded_resources_new.begin(), m_loaded_resources_new.end(), ResInformation::FindPredicate(i_handle));
+				auto it = std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(i_handle));
 				// <PANIC> Who creates this? It`s not ours; so we do nothing!
-				if (it == m_loaded_resources_new.end())
+				if (it == m_loaded_resources.end())
 				{
 					assert(false && "It is not our Mesh");
 					return;
@@ -164,12 +148,11 @@ namespace SDK
 				if (it->m_use_count == 0)
 				{
 					Serialization::LoaderImpl<ResType>::UnloadResource(it->m_handle);
-					m_loaded_resources_new.erase(it, m_loaded_resources_new.end());
+					m_loaded_resources.erase(it, m_loaded_resources.end());
 				}
 				// otherwise we do nothing
 			}
 		};
-
 
 		// global instance for loading
 		// TODO: decide in what format user should access objects like this

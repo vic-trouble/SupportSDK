@@ -197,6 +197,12 @@
     <ClInclude Include="Resources\ResourceManager.h">
       <Filter>Core\Resources</Filter>
     </ClInclude>
+    <ClInclude Include="FileSystem\Stream.h">
+      <Filter>FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="FileSystem\FileStream.h">
+      <Filter>FileSystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -264,6 +270,9 @@
     </ClCompile>
     <ClCompile Include="Resources\ResourceManager.cpp">
       <Filter>Core\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="FileSystem\FileStream.cpp">
+      <Filter>FileSystem</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
