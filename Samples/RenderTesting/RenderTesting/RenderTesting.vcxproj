@@ -56,18 +56,18 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\SupportSDK;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\..\SupportSDK;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)\..\..\..\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>GameCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(SolutionDir)..\..\Binaries\Win32\$(Configuration)\GameCore.dll" "$(OutputPath)" /Y /R /I /E
-xcopy "$(SolutionDir)..\..\Binaries\Win32\$(Configuration)\Utilities.dll" "$(OutputPath)" /Y /R /I /E
-xcopy "$(SolutionDir)..\..\Binaries\Win32\$(Configuration)\Patterns.dll" "$(OutputPath)" /Y /R /I /E</Command>
+      <Command>xcopy "$(ProjectDir)\..\..\..\Binaries\Win32\$(Configuration)\GameCore.dll" "$(OutputPath)" /Y /R /I /E
+xcopy "$(ProjectDir)\..\..\..\Binaries\Win32\$(Configuration)\Utilities.dll" "$(OutputPath)" /Y /R /I /E
+xcopy "$(ProjectDir)\..\..\..\Binaries\Win32\$(Configuration)\Patterns.dll" "$(OutputPath)" /Y /R /I /E</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -79,20 +79,20 @@ xcopy "$(SolutionDir)..\..\Binaries\Win32\$(Configuration)\Patterns.dll" "$(Outp
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)\..\..\SupportSDK;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\..\SupportSDK;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)\..\..\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)\..\..\..\lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>GameCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(SolutionDir)..\..\Binaries\Win32\$(Configuration)\GameCore.dll" "$(OutputPath)" /Y /R /I /E
-xcopy "$(SolutionDir)..\..\Binaries\Win32\$(Configuration)\Utilities.dll" "$(OutputPath)" /Y /R /I /E
-xcopy "$(SolutionDir)..\..\Binaries\Win32\$(Configuration)\Patterns.dll" "$(OutputPath)" /Y /R /I /E</Command>
+      <Command>xcopy "$(ProjectDir)\..\..\..\Binaries\Win32\$(Configuration)\GameCore.dll" "$(OutputPath)" /Y /R /I /E
+xcopy "$(ProjectDir)\..\..\..\Binaries\Win32\$(Configuration)\Utilities.dll" "$(OutputPath)" /Y /R /I /E
+xcopy "$(ProjectDir)\..\..\..\Binaries\Win32\$(Configuration)\Patterns.dll" "$(OutputPath)" /Y /R /I /E</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
