@@ -142,7 +142,7 @@
     <ClInclude Include="Render\RenderTypes.h" />
     <ClInclude Include="Render\VertexDeclaration.h" />
     <ClInclude Include="Render\Viewport.h" />
-    <ClInclude Include="Resources\LoadManager.h" />
+    <ClInclude Include="Resources\ResourceManager.h" />
     <ClInclude Include="Resources\ResourceInformation.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="System.h" />
@@ -169,7 +169,7 @@
     <ClCompile Include="Render\RenderSystem.cpp" />
     <ClCompile Include="Render\Mesh.cpp" />
     <ClCompile Include="Render\RenderWorld.cpp" />
-    <ClCompile Include="Resources\LoadManager.cpp" />
+    <ClCompile Include="Resources\ResourceManager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

@@ -15,8 +15,6 @@
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 #include <time.h>
 
-#include <GameCore/Resources/LoadManager.h>
-
 #include <Math/Matrix4.h>
 
 using namespace SDK;

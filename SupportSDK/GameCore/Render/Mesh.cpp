@@ -2,8 +2,6 @@
 
 #include "Mesh.h"
 
-#include "Resources/LoadManager.h"
-
 #include "Core.h"
 #include "HardwareBufferManagerBase.h"
 #include "IRenderer.h"

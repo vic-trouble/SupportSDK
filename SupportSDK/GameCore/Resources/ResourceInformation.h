@@ -28,7 +28,7 @@ namespace SDK
 				Unloaded,
 				Loaded
 			};
-			// e.x., hash - used internally with LoadManager
+			// e.x., hash - used internally with ResourceManager
 			size_t		m_resource_id;
 			uint		m_use_count;
 			State		m_state;

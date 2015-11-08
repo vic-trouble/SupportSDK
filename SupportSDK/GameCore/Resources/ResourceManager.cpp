@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "LoadManager.h"
+#include "ResourceManager.h"
 
 #include "Core.h"
 #include "Render/HardwareBufferManagerBase.h"
@@ -90,10 +90,10 @@ namespace SDK
 			return hash;
 		}
 #endif
-		static LoadManager manager;
-		LoadManager& g_load_manager = manager;
+		static ResourceManager manager;
+		ResourceManager& g_load_manager = manager;
 
-		FS::StreamPtr LoadManager::OpenStream(const std::string& i_file_name)
+		FS::StreamPtr ResourceManager::OpenStream(const std::string& i_file_name)
 		{
 			struct FileStream : FS::Stream
 			{

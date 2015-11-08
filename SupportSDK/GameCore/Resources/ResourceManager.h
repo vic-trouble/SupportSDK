@@ -1,5 +1,5 @@
-#ifndef __GAMECORE_LOADMANAGER_H__
-#define __GAMECORE_LOADMANAGER_H__
+#ifndef __GAMECORE_RESOURCEMANAGER_H__
+#define __GAMECORE_RESOURCEMANAGER_H__
 
 #include "../GameCoreAPI.h"
 
@@ -56,7 +56,7 @@ namespace SDK
 
 		
 
-		class LoadManager
+		class ResourceManager
 		{
 		private:
 			typedef ResourceInformation<Render::Mesh> MeshResourceInfo;
@@ -173,7 +173,7 @@ namespace SDK
 
 		// global instance for loading
 		// TODO: decide in what format user should access objects like this
-		GAMECORE_EXPORT extern LoadManager& g_load_manager;
+		GAMECORE_EXPORT extern ResourceManager& g_load_manager;
 
 	} // Resources
 

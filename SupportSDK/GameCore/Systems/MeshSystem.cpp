@@ -7,7 +7,7 @@
 #include "Render/IRenderer.h"
 #include "Applications/ApplicationBase.h"
 #include "Render/RenderWorld.h"
-#include "Resources/LoadManager.h"
+#include "Resources/ResourceManager.h"
 
 #include <string>
 

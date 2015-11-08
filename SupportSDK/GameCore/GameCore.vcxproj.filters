@@ -161,9 +161,6 @@
     <ClInclude Include="Resources\ResourceInformation.h">
       <Filter>Core\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="Resources\LoadManager.h">
-      <Filter>Core\Resources</Filter>
-    </ClInclude>
     <ClInclude Include="Render\OpenGL\HardwareBufferManager.h">
       <Filter>Core\Renderer\OpenGL</Filter>
     </ClInclude>
@@ -196,6 +193,9 @@
     </ClInclude>
     <ClInclude Include="Systems\MeshSystem.h">
       <Filter>Core\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\ResourceManager.h">
+      <Filter>Core\Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -241,9 +241,6 @@
     <ClCompile Include="Render\Mesh.cpp">
       <Filter>Core\Renderer\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="Resources\LoadManager.cpp">
-      <Filter>Core\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="Render\OpenGL\HardwareBufferManager.cpp">
       <Filter>Core\Renderer\OpenGL</Filter>
     </ClCompile>
@@ -264,6 +261,9 @@
     </ClCompile>
     <ClCompile Include="Systems\MeshSystem.cpp">
       <Filter>Core\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\ResourceManager.cpp">
+      <Filter>Core\Resources</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
