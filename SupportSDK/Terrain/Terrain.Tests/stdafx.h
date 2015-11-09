@@ -6,6 +6,5 @@
 #include <tchar.h>
 
 #include <gtest/gtest.h>
-#include <gmock/gmock.h>
 
 #endif

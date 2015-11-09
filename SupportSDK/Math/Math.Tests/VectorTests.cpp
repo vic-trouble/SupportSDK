@@ -40,7 +40,7 @@ TEST(VectorTests, ConstructVariadicVector_ThrowIfInitListSizeBiggerThanVertexNum
 	EXPECT_TRUE(throwed);
 	}
 
-TEST(VectorTests, ConstructVariadicVector_VerticesShouldBeZero)
+TEST(VectorTests, ConstructVariadicVector_VerticesShouldNotBeZero)
 	{
 	Vector<double, 3> vec { 0., 1., 3.14 };
 	EXPECT_EQ(0., vec[0]);

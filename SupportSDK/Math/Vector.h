@@ -26,9 +26,9 @@ namespace SDK
 #if _MSC_VER >= 1800
 				Vector(std::initializer_list<CoordinateType> coordinates)
 					{
-					if (coordinates.size() >= VertexNumber)
+					if (coordinates.size() > VertexNumber)
 						throw std::logic_error("Initializer list contains more entries than dimension");
-					std::copy(coordinates.begin(), coordinates.end(), m_vertices.begin());
+					std::copy(coordinates.begin(), coordinates.end(), m_vertices);
 					}
 #endif
 

@@ -38,11 +38,11 @@
     <ClInclude Include="MessageDispatcher\MessageHandlerBase.h">
       <Filter>MessageDisatcher</Filter>
     </ClInclude>
-    <ClInclude Include="MessageDispatcher\TypeInfo.h">
-      <Filter>MessageDisatcher</Filter>
-    </ClInclude>
     <ClInclude Include="StaticSingleton.h">
       <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageDispatcher\type_index.h">
+      <Filter>MessageDisatcher</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

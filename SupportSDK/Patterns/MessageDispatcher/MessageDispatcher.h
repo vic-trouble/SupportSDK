@@ -4,14 +4,15 @@
 
 #include "MessageHandlerBase.h"
 #include "MemberFunctionHandler.h"
-#include "TypeInfo.h"
+
+#include "type_index.h"
 
 struct Event;
 
 class MessageDispatcher
   {
   private:
-    typedef std::unordered_map<TypeInfoRef, std::unique_ptr<MessageHandlerBase>, Hasher, EqualTo> Handlers;
+    typedef std::unordered_map<std::type_index, std::unique_ptr<MessageHandlerBase>> Handlers;
     Handlers m_handlers;
 
   public:
