@@ -173,8 +173,10 @@ namespace SDK
 							break;
 						}
 					}
+
 					if (new_index == -1)
 					{
+						// TODO: resize vector normally - with some strategy - not push_back
 						handlers.push_back(Render::MeshHandler());						
 						new_index = handlers.size() - 1;
 
@@ -208,22 +210,24 @@ namespace SDK
 					Render::Mesh& mesh = meshes[i_handle];
 					p_mgr->DestroyBuffer(mesh.GetVertices());
 					p_mgr->DestroyBuffer(mesh.GetLayout());
-					p_mgr->DestroyBuffer(mesh.GetIndices());					
+					p_mgr->DestroyBuffer(mesh.GetIndices());
 				}
 
 				static void Register(int i_handle, Render::Mesh i_mesh)
 				{					
-					auto& meshes = Render::g_mesh_system.m_meshes;
-					meshes.reserve(i_handle + 1);
-					
-					if (i_handle < static_cast<int>(meshes.size()))
-						meshes[i_handle] = std::move(i_mesh);
-					else
+					auto& meshes = Render::g_mesh_system.m_meshes;					
+					if (meshes.size() < i_handle)
 					{
-						meshes.push_back(std::move(i_mesh));
-						assert(i_handle == static_cast<int>(meshes.size()-1));
+						// TODO: increase buffer strategy
+						const size_t RANGE = 1000;
+						float coeff = 2;
+						if (meshes.size() > RANGE)
+							coeff = 1.5f;
+						meshes.resize(static_cast<size_t>(meshes.size() * coeff));
 					}
 					
+
+					meshes[i_handle] = i_mesh;
 				}
 			};
 		
@@ -239,6 +243,12 @@ namespace SDK
 
 		MeshSystem::MeshSystem()
 		{
+			// TODO: choose initial size - provide generic strategy for allocating such types of buffers
+			const size_t INITIAL_SIZE = 10;
+			m_meshes.resize(INITIAL_SIZE);
+			m_handlers.resize(INITIAL_SIZE);
+			for (auto& handler : m_handlers)
+				handler.index = -1;
 		}
 
 		MeshSystem::~MeshSystem()
@@ -254,8 +264,13 @@ namespace SDK
 		void MeshSystem::SubmitDrawCommands()
 		{
 			auto& render_world = Core::GetApplication()->GetRenderWorld();
-			for (auto& mesh : m_meshes)
+
+			for (auto& handler : m_handlers)
 			{
+				// reach the end of registered (valid) meshes
+				if (handler.index == -1)
+					break;
+				auto& mesh = m_meshes[handler.index];
 				Batch b;
 				b.vertices = mesh.GetVertices();
 				b.element = mesh.GetLayout();

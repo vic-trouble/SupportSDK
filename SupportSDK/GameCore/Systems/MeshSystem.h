@@ -28,10 +28,6 @@ namespace SDK
 			std::vector<Mesh> m_meshes;
 			std::vector<MeshHandler> m_handlers;
 
-			static int CreateNewHandler();
-			static void RemoveHandler(int i_handler);
-			static void UnloadResource(int i_handler);
-
 		public:
 			MeshSystem();
 			virtual ~MeshSystem();
