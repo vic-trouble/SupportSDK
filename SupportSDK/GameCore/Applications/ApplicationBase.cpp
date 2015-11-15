@@ -77,13 +77,13 @@ namespace SDK
 	{
 		Core::GetRenderer()->BeginFrame();
 		DrawInternal();
-		mp_delegate->Draw();
+		
 		for (World& world : m_worlds)
 		{
 			world.SubmitDrawCommands();
 			m_render_world.Submit(world.GetViewPort());
 		}
-
+		mp_delegate->Draw();
 		
 		Core::GetRenderer()->EndFrame();
 	}

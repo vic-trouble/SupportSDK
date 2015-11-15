@@ -192,7 +192,6 @@ namespace SDK
 
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		gluOrtho2D(0, m_paint_rectangle.Width(), m_paint_rectangle.Height(), 0);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 	}
