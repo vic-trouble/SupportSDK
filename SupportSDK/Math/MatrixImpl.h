@@ -190,7 +190,7 @@ namespace SDK
 		{
 			try
 			{
-				this = this->GetInverseGeneric();
+				*this = this->GetInverseGeneric();
 			}
 			catch (std::logic_error&)
 			{

@@ -93,7 +93,8 @@ namespace SDK
 				size_t j = s_iNext[i];
 				size_t k = s_iNext[j];
 
-				fRoot = Math::Sqrt(i_rot[i][i] - i_rot[j][j] - i_rot[k][k] + 1.0f);
+				// TODO: Math::Sqrt
+				fRoot = sqrt(i_rot[i][i] - i_rot[j][j] - i_rot[k][k] + 1.0f);
 				CT* apkQuat[3] = { &x, &y, &z };
 				*apkQuat[i] = 0.5f*fRoot;
 				fRoot = 0.5f / fRoot;
