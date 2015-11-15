@@ -14,6 +14,14 @@
 # define FLOAT_PRECISION
 #endif
 
+#if defined(_MSC_VER)
+# ifdef NOMINMAX
+#  undef NOMINMAX
+# endif
+#define NOMINMAX
+
+#endif
+
 namespace SDK
 {
 

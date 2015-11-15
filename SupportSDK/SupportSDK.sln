@@ -57,6 +57,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Terrain", "Terrain\Terrain.vcxproj", "{99C605A4-78A0-449C-B9B2-F1428640AFCE}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Terrain.Tests", "Terrain\Terrain.Tests\Terrain.Tests.vcxproj", "{5D070D66-7B22-44E6-A96A-8FBFBFEADA70}"
+	ProjectSection(ProjectDependencies) = postProject
+		{99C605A4-78A0-449C-B9B2-F1428640AFCE} = {99C605A4-78A0-449C-B9B2-F1428640AFCE}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Patterns", "Patterns\Patterns.vcxproj", "{F039FC01-494D-46AE-9333-4EED828C1FB0}"
 EndProject

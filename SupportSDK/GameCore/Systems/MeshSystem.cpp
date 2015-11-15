@@ -216,7 +216,7 @@ namespace SDK
 				static void Register(int i_handle, Render::Mesh i_mesh)
 				{					
 					auto& meshes = Render::g_mesh_system.m_meshes;					
-					if (meshes.size() < i_handle)
+					if (static_cast<int>(meshes.size()) < i_handle)
 					{
 						// TODO: increase buffer strategy
 						const size_t RANGE = 1000;
