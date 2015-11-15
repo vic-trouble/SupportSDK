@@ -58,9 +58,24 @@ namespace SDK
 			void Decomposition(ThisVector3& position, ThisVector3& scale, ThisQuaternion& orientation) const;
 
 			// Create Rotation/Translation/Scale matrix from this Matrix and input parameters
-			inline static ThisMatrix MakeTranslation(const ThisVector3& i_translation_vector);
-			inline static ThisMatrix MakeRotation(const ThisVector3& i_axis, CoordinateType i_angle_radians);
-			inline static ThisMatrix MakeScale(const ThisVector3& i_scale_vector);
+			inline static ThisMatrix MakeTranslation(const ThisVector3& i_translation_vector)
+			{
+				Matrix4 m;
+				m.CreateTranslation(i_translation_vector);
+				return m;
+			}
+			inline static ThisMatrix MakeRotation(const ThisVector3& i_axis, CoordinateType i_angle_radians)
+			{
+				Matrix4 m;
+				m.CreateRotation(i_axis, i_angle_radiands);
+				return m;
+			}
+			inline static ThisMatrix MakeScale(const ThisVector3& i_scale_vector)
+			{
+				Matrix4 m;
+				m.CreateScale(i_scale_vector);
+				return m;
+			}
 
 			// Makes translation matrix for this matrix
 			inline void CreateTranslation(const ThisVector3& i_vector);
