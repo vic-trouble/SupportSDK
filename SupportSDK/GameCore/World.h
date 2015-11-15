@@ -18,10 +18,6 @@ namespace SDK
 		typedef std::unique_ptr<System> SystemPtr;
 		std::vector<System*> m_systems;
 
-		//Render::Viewport m_viewport;
-
-		// TODO: !!!TEMPORARY public
-	public:
 		Render::Viewport m_viewport;
 		Render::Camera m_camera;
 		Render::Frustum m_frustum;
@@ -34,6 +30,9 @@ namespace SDK
 		const Render::Viewport& GetViewPort() const { return m_viewport; }
 		void RegisterSystem(System* ip_system) { m_systems.push_back(ip_system); }
 		void ClearSystems() { m_systems.clear(); }
+
+		Render::Camera& GetCamera() { return m_camera; }
+		Render::Frustum& GetFrustum() { return m_frustum; }
 	};
 
 }

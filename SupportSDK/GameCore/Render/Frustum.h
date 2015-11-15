@@ -53,15 +53,22 @@ namespace SDK
 			void SetProjectionType(ProjectionType i_projection_type)
 			{
 				m_projection_type = i_projection_type;
+				m_valid = false;
 				InvalidateFrustum();
 			}
 
-			void SetFOV(const Radian& i_fov);
+			void SetFOV(const Radian& i_fov)
+			{
+				m_fov = i_fov;
+				m_valid = false;
+				InvalidateFrustum();
+			}
 			const Radian& GetFOV() const { return m_fov; }
 
 			void SetNearClipDistance(real i_near_dist)
 			{
 				m_near_dist = i_near_dist;
+				m_valid = false;
 				InvalidateFrustum();
 			}
 			real GetNearClipDistance() const { return m_near_dist; }
@@ -69,6 +76,7 @@ namespace SDK
 			void SetFarClipDistance(real i_far_dist)
 			{
 				m_far_dist = i_far_dist;
+				m_valid = false;
 				InvalidateFrustum();
 			}
 			real GetFarClipDistance() const { return m_far_dist; }
@@ -76,6 +84,7 @@ namespace SDK
 			void SetAspectRatio(real i_aspect)
 			{
 				m_aspect = i_aspect;
+				m_valid = false;
 				InvalidateFrustum();
 			}
 			real GetAspectRatio() const { return m_aspect; }
@@ -86,6 +95,7 @@ namespace SDK
 				m_far_dist = i_far;
 				m_fov = i_fov;
 				m_aspect = i_aspect;
+				m_valid = false;
 				InvalidateFrustum();
 			}
 			void SetFrustumExtents(real i_left, real i_right, real i_bottom, real i_top, real i_near, real i_far)
@@ -96,6 +106,7 @@ namespace SDK
 				m_top = i_top;
 				m_near_dist = i_near;
 				m_far_dist = i_far;
+				m_valid = false;
 				InvalidateFrustum();
 			}
 

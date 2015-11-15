@@ -16,13 +16,15 @@ namespace SDK
 			, m_right(real(0.5))
 			, m_bottom(real(-0.5))
 			, m_top(real(0.5))
-			, m_aspect(real(0.66))
+			, m_aspect(real(0.667))
 			, m_near_dist(real(1))
-			, m_far_dist(real(100))
+			, m_far_dist(real(1000))
 			, m_fov(45 * DEG_TO_RAD)
 			, m_projection_type(ProjectionType::Perspective)
 			, m_valid(false)
-		{}
+		{
+			InvalidateFrustum();
+		}
 
 		void Frustum::CalculateOrtho()
 		{

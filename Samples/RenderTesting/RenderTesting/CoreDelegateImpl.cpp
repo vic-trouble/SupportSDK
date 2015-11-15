@@ -191,22 +191,10 @@ namespace Game
 
 	GLUquadricObj* quadricId;
 
-	const float DEG2RAD = 3.141593f / 180;
 	void SetMatrix()
 	{
 		auto& world = Core::GetApplication()->GetWorld();
-		auto p_renderer = Core::GetRenderer();
-		auto rect = p_renderer->GetTargetRectangle();
-		//world.m_frustum.SetFrustum(100.f*DEG2RAD, (float)rect.Width() / rect.Height(), 1.f, 100.f);
-		world.m_frustum.SetFrustum(60.f*DEG2RAD, (float)rect.Width() / rect.Height(), 1.f, 1000.f);
-		world.m_frustum.SetProjectionType(Render::ProjectionType::Perspective);
-		Matrix4f matrixModel;
-		matrixModel.Identity();
-		Matrix4f matrixView;
-		matrixView.Identity();
-		matrixView.CreateTranslation(Math::VectorConstructor<float>::Construct(0, 0, -15));
-		world.m_camera.m_modelview_matrix = matrixView * matrixModel;
-
+		world.GetFrustum().SetFOV(60 * Math::DEG2RAD);
 		// create a GLU quadric object
 		quadricId = gluNewQuadric();
 		gluQuadricDrawStyle(quadricId, GLU_FILL);
@@ -219,6 +207,13 @@ namespace Game
 		LoadModel();
 
 		CreateMesh();
+
+		auto& world = Core::GetApplication()->GetWorld();
+		auto& camera = world.GetCamera();
+		
+		camera.SetPosition({ 0,0,-15 });
+		camera.Pitch(21 * Math::DEG2RAD);
+		camera.Yaw(146 * Math::DEG2RAD);
 
 		SetMatrix();
 	}
@@ -631,29 +626,11 @@ namespace Game
 
 		void draw3(bool draw_test)
 		{
-			static int windowWidth = 640;
-			static int windowHeight = 960;
-			static float FOV_Y = 60.f;
-			// set bottom viewport (perspective)
-			glViewport(0, 0, windowWidth, windowHeight);
-			glScissor(0, 0, windowWidth, windowHeight);
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			gluPerspective(FOV_Y, windowWidth / float(windowHeight), 1, 1000);
-
-			// switch to modelview matrix
-			glMatrixMode(GL_MODELVIEW);
-			glLoadIdentity();
-
 			// clear buffer
 			glClearColor(0.0f, 0.0f, 0.0f, 0.f);   // background color
 
-			glPushMatrix();
-				// First, transform the camera (viewing matrix) from world space to eye space
-				glTranslatef(0, 0, -15.f);
-				glRotatef(21, 1, 0, 0); // pitch
-				glRotatef(146, 0, 1, 0); // heading
 
+			glPushMatrix();
 				drawGrid(10, 1);
 				DrawSpheres();
 				if (draw_test)
@@ -665,9 +642,7 @@ namespace Game
 
 	void CoreDelegateImpl::Draw()
 	{
-		auto p_renderer = Core::GetRenderer();
-		//p_renderer->Draw(batch[1]);
-		draw3(true);		
+		draw3(true);
 	}
 
 } // Game
