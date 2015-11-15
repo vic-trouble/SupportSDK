@@ -6,7 +6,7 @@
 #include <GameCore/Render/IRenderer.h>
 #include <GameCore/Render/HardwareBufferManagerBase.h>
 #include <GameCore/Input/inputsystem.h>
-
+#include <GameCore/Applications/ApplicationBase.h>
 
 // for test
 #include <GL/glew.h>
@@ -94,12 +94,18 @@ namespace Game
 
 	void CoreDelegateImpl::OnCreate()
 	{
+		auto& world = Core::GetApplication()->GetWorld();
+		auto& camera = world.GetCamera();
+		camera.SetPosition({ 0,0,-10 });
+		auto& frustum = world.GetFrustum();
+		frustum.SetProjectionType(Render::ProjectionType::Orthographic);
+
 		InputSystem::Instance().AddSubscriber(&m_input_subs);
 		InputSystem::Instance().AddSubscriber(&m_ship);
 
 		InitQuaternions();
 
-		offset = Math::VectorConstructor<float>::Construct(50.f, 10.f, 0.f);
+		offset = Math::VectorConstructor<float>::Construct(5.f, 1.f, 0.f);
 
 		CreateMesh();
 	}
@@ -146,29 +152,75 @@ namespace Game
 		m_time += step;
 	}
 
+	template <typename T>
+	struct ScopedHelper
+	{
+		static void Push();
+		static void Pop();
+	};
+
+	struct GlMatrix {};
+
+	template <>
+	struct ScopedHelper <GlMatrix>
+	{
+		static void Push()
+		{
+			glPushMatrix();
+		}
+
+		static void Pop()
+		{
+			glPopMatrix();
+		}
+	};
+
+	template <typename T>
+	struct CustomScopedObject
+	{
+		CustomScopedObject()
+		{
+			ScopedHelper<T>::Push();
+		}
+
+		~CustomScopedObject()
+		{
+			ScopedHelper<T>::Pop();
+		}
+	};
+
 	void CoreDelegateImpl::Draw()
 	{
+		CustomScopedObject<GlMatrix> scopedMatrix;
+		auto p_renderer = Core::GetRenderer();
+		glScalef(0.0005f, 0.0005f, 0.0005f);
 		m_ship.Draw();
-		static Vector3 vec = Math::VectorConstructor<float>::Construct(200, 300, 0);
-		Core::GetRenderer()->RenderLine(offset + first_point, offset + first_point + m_point, Color(255, 255, 255, 255));
 
-		/////////////////////////////////////
-		size_t i = 1;
-		for (Vector3& p : points)
 		{
-			Core::GetRenderer()->RenderCircle(offset + first_point + p, 0.3*i, Color(255 % i, 0, 255, 255));
-			++i;
+			CustomScopedObject<GlMatrix> scopedMatrix;
+			glTranslatef(-500, 300, 0);
+			static Vector3 vec = Math::VectorConstructor<float>::Construct(10, 30, 0);
+			p_renderer->RenderLine(offset + first_point, offset + first_point + m_point, Color(255, 255, 255, 255));
+			size_t i = 1;
+
+			for (Vector3& p : points)
+			{
+				p_renderer->RenderCircle(offset + first_point + p, 0.3*i, Color(255 % i, 0, 255, 255));
+				++i;
+			}
 		}
 		//////////////////////////////////////
-		auto p_renderer = Core::GetRenderer();
-		glPushMatrix();
+		{
+			CustomScopedObject<GlMatrix> scopedMatrix;
+			glTranslatef(0, 10, 0);
 			glColor4f(0, 0.5f, 0., 1.f);
-			glTranslatef(100, 20, 0);
+
 			p_renderer->Draw(batch[0]);
+
 			glColor4f(0, 0.5f, 0.5, 1.f);
-			glTranslatef(100, 70, 0);
+			glTranslatef(25, 0, 0);
 			p_renderer->Draw(batch[1]);
-		glPopMatrix();
+		}
 		{
 			/*glPushMatrix();
 			glTranslatef(100, 500, 0);

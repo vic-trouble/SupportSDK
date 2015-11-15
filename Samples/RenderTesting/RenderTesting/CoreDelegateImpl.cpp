@@ -191,15 +191,6 @@ namespace Game
 
 	GLUquadricObj* quadricId;
 
-	void SetMatrix()
-	{
-		auto& world = Core::GetApplication()->GetWorld();
-		world.GetFrustum().SetFOV(60 * Math::DEG2RAD);
-		// create a GLU quadric object
-		quadricId = gluNewQuadric();
-		gluQuadricDrawStyle(quadricId, GLU_FILL);
-	}
-
 	void CoreDelegateImpl::OnCreate()
 	{
 		InputSystem::Instance().AddSubscriber(&m_input_subs);
@@ -215,7 +206,10 @@ namespace Game
 		camera.Pitch(21 * Math::DEG2RAD);
 		camera.Yaw(146 * Math::DEG2RAD);
 
-		SetMatrix();
+		world.GetFrustum().SetFOV(60 * Math::DEG2RAD);
+		// create a GLU quadric object
+		quadricId = gluNewQuadric();
+		gluQuadricDrawStyle(quadricId, GLU_FILL);
 	}
 
 	void CoreDelegateImpl::OnTerminate()
