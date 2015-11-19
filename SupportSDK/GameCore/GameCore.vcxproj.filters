@@ -51,6 +51,9 @@
     <Filter Include="Core\Systems">
       <UniqueIdentifier>{1b62819e-1a61-4bf0-aa68-0d37ee82c517}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Renderer\Queues">
+      <UniqueIdentifier>{06d894e4-9ff4-4292-b9f6-974d317c96d7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -149,9 +152,6 @@
     <ClInclude Include="Render\MeshComponent.h">
       <Filter>Core\Renderer\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="Render\RenderSystem.h">
-      <Filter>Core\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Render\RenderTypes.h">
       <Filter>Core\Renderer</Filter>
     </ClInclude>
@@ -170,9 +170,6 @@
     <ClInclude Include="FileSystem\FileSystem.h">
       <Filter>FileSystem</Filter>
     </ClInclude>
-    <ClInclude Include="Render\RenderWorld.h">
-      <Filter>Core\Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Render\Camera.h">
       <Filter>Core\Renderer</Filter>
     </ClInclude>
@@ -180,9 +177,6 @@
       <Filter>Core\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="Render\Viewport.h">
-      <Filter>Core\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\RenderBucket.h">
       <Filter>Core\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="World.h">
@@ -202,6 +196,18 @@
     </ClInclude>
     <ClInclude Include="FileSystem\FileStream.h">
       <Filter>FileSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\CommandBucket.h">
+      <Filter>Core\Renderer\Queues</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\CommandPacket.h">
+      <Filter>Core\Renderer\Queues</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\RenderWorld.h">
+      <Filter>Core\Renderer\Queues</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Commands.h">
+      <Filter>Core\Renderer\Queues</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -241,9 +247,6 @@
     <ClCompile Include="Render\OpenGL\OpenGLRenderer.cpp">
       <Filter>Core\Renderer\OpenGL</Filter>
     </ClCompile>
-    <ClCompile Include="Render\RenderSystem.cpp">
-      <Filter>Core\Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="Render\Mesh.cpp">
       <Filter>Core\Renderer\Mesh</Filter>
     </ClCompile>
@@ -252,9 +255,6 @@
     </ClCompile>
     <ClCompile Include="FileSystem\FileSystem.cpp">
       <Filter>FileSystem</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\RenderWorld.cpp">
-      <Filter>Core\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="Render\Frustum.cpp">
       <Filter>Core\Renderer</Filter>
@@ -273,6 +273,12 @@
     </ClCompile>
     <ClCompile Include="FileSystem\FileStream.cpp">
       <Filter>FileSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\RenderWorld.cpp">
+      <Filter>Core\Renderer\Queues</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Commands.cpp">
+      <Filter>Core\Renderer\Queues</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

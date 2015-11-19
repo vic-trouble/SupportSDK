@@ -7,29 +7,26 @@
 #include "Core.h"
 #include "IRenderer.h"
 
-#include <GL/glew.h>
-
-#include "Render/OpenGL/GlUitlities.h"
-
 namespace SDK
 {
 
 	namespace Render
 	{
+		Commands::CommandBucket<int64> gBuffer;
 		// shaders?
 		void SetRenderTargets()
 		{
 
 		}
 
-		RenderWorld::RenderWorld()
-		{			
+		// gather buckets for threads
+		void MergeBuffers()
+		{
+
 		}
 
-		void RenderWorld::AddCommand(Batch&& i_batch)
-		{
-			m_buckets.push_back(RenderBucket());
-			m_buckets.back().batch = std::move(i_batch);
+		RenderWorld::RenderWorld()
+		{			
 		}
 
 		void RenderWorld::Submit(const Viewport& i_viewport)
@@ -40,11 +37,8 @@ namespace SDK
 			p_renderer->SetModelViewMatrix(i_viewport.mp_camera->GetModelViewMatrix());
 			SetRenderTargets();
 
-			//dispatch commands
-			for (auto bucket : m_buckets)
-				p_renderer->Draw(bucket.batch);
-
-			m_buckets.clear();
+			gBuffer.Sort();
+			gBuffer.Submit();			
 		}
 
 	} // Render

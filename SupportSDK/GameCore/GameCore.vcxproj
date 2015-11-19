@@ -119,6 +119,9 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GenericHandle.h" />
     <ClInclude Include="Render\Camera.h" />
+    <ClInclude Include="Render\CommandBucket.h" />
+    <ClInclude Include="Render\CommandPacket.h" />
+    <ClInclude Include="Render\Commands.h" />
     <ClInclude Include="Render\Frustum.h" />
     <ClInclude Include="Render\HardwareBuffer.h" />
     <ClInclude Include="IComponent.h" />
@@ -129,7 +132,6 @@
     <ClInclude Include="Input\InputSystem.h" />
     <ClInclude Include="Input\Keyboard.h" />
     <ClInclude Include="Render\HardwareBufferManagerBase.h" />
-    <ClInclude Include="Render\RenderBucket.h" />
     <ClInclude Include="Render\RenderWorld.h" />
     <ClInclude Include="Render\OpenGL\HardwareBufferManager.h" />
     <ClInclude Include="Render\HardwareIndexBuffer.h" />
@@ -140,7 +142,6 @@
     <ClInclude Include="Render\MeshComponent.h" />
     <ClInclude Include="Render\OpenGL\OpenGLRenderer.h" />
     <ClInclude Include="Render\OpenGL\GlUitlities.h" />
-    <ClInclude Include="Render\RenderSystem.h" />
     <ClInclude Include="Render\RenderTypes.h" />
     <ClInclude Include="Render\VertexDeclaration.h" />
     <ClInclude Include="Render\Viewport.h" />
@@ -165,11 +166,11 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Input\InputSystem.cpp" />
     <ClCompile Include="Render\Camera.cpp" />
+    <ClCompile Include="Render\Commands.cpp" />
     <ClCompile Include="Render\Frustum.cpp" />
     <ClCompile Include="Render\OpenGL\HardwareBufferManager.cpp" />
     <ClCompile Include="Render\OpenGL\OpenGLRenderer.cpp" />
     <ClCompile Include="Render\OpenGL\GLUtilities.cpp" />
-    <ClCompile Include="Render\RenderSystem.cpp" />
     <ClCompile Include="Render\Mesh.cpp" />
     <ClCompile Include="Render\RenderWorld.cpp" />
     <ClCompile Include="Resources\ResourceManager.cpp" />

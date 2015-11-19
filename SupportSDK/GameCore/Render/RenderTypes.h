@@ -129,6 +129,8 @@ namespace SDK
 
 		struct MeshHandlerTag{};
 		typedef GenericHandle<int, 12, 20, MeshHandlerTag> MeshHandler;
+
+		typedef void(*CommandExecutor)(const void*);
 	} // Render
 
 } // SDK

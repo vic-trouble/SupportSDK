@@ -5,7 +5,7 @@
 
 #include "RenderTypes.h"
 
-#include "RenderBucket.h"
+#include "CommandBucket.h"
 #include "Viewport.h"
 
 #include <Utilities/noncopyable.h>
@@ -15,22 +15,16 @@ namespace SDK
 
 	namespace Render 
 	{
+		// TODO: what type of global objects
+		extern Commands::CommandBucket<int64> gBuffer;
 		// one render world contains render queus;
 		//	wraps submition process
 		class RenderWorld : Utilities::noncopyable
 		{
-			// TODO: TEMPORARY public for testing!!!!!!!!!!!
-		public:
-			// TODO: vector or another structure?
-			std::vector<RenderBucket> m_buckets;
-
-
-
 		public:
 			RenderWorld();
 			// end command
 			GAMECORE_EXPORT void Submit(const Viewport& i_viewport);
-			GAMECORE_EXPORT void AddCommand(Batch&& i_batch);
 		};
 
 	}

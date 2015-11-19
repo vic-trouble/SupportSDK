@@ -3,6 +3,7 @@
 #include "MeshSystem.h"
 
 #include "Core.h"
+#include "Render/Commands.h"
 #include "Render/HardwareBufferManagerBase.h"
 #include "Render/IRenderer.h"
 #include "Applications/ApplicationBase.h"
@@ -271,11 +272,11 @@ namespace SDK
 				if (handler.index == -1)
 					break;
 				auto& mesh = m_meshes[handler.index];
-				Batch b;
-				b.vertices = mesh.GetVertices();
-				b.element = mesh.GetLayout();
-				b.indices = mesh.GetIndices();
-				render_world.AddCommand(std::move(b));
+				
+				Commands::Draw* p_cmd = Render::gBuffer.Create<Commands::Draw>(sizeof(Commands::Draw));
+				p_cmd->vertices = mesh.GetVertices();
+				p_cmd->layout = mesh.GetLayout();
+				p_cmd->indices = mesh.GetIndices();			
 			}
 		}
 		
