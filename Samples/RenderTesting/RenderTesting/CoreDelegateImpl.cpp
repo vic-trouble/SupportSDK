@@ -165,7 +165,7 @@ namespace Game
 		// create a GLU quadric object
 		quadricId = gluNewQuadric();
 		gluQuadricDrawStyle(quadricId, GLU_FILL);
-		shader_handler = Render::g_shader_system.Load("..\\..\\..\\Resources\\Shaders\\SimpleShader.vertexshader", "..\\..\\..\\Resources\\Shaders\\SimpleShader.fragmentshader");
+		shader_handler = Render::g_shader_system.Load("SimpleShader", "..\\..\\..\\Resources\\Shaders\\SimpleShader.vertexshader", "..\\..\\..\\Resources\\Shaders\\SimpleShader.fragmentshader");
 	}
 
 	void CoreDelegateImpl::OnTerminate()

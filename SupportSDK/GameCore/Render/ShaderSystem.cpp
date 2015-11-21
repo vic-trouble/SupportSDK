@@ -23,12 +23,24 @@ namespace SDK
 			template <>
 			struct Definition <Render::Shader>
 			{
-				typedef std::string& InfoType;
+				typedef void* InfoType;
 			};
 
 			template <>
 			struct LoaderImpl < Render::Shader >
 			{
+				// TODO: is it possible to catch error like ip_streams[3] in compile time?
+				static std::pair<LoadResult, Render::Shader> Load(std::istream* ip_streams[2], void*)
+				{
+					using namespace Render;
+					auto p_compiler = Core::GetRenderer()->GetShaderCompiler();
+
+					const auto vertex_source = FS::ReadFileToString(*ip_streams[0]);
+					const auto fragment_source = FS::ReadFileToString(*ip_streams[1]);
+					Shader shader = p_compiler->Compile(vertex_source, fragment_source);
+					return std::make_pair(shader.IsValid() ? LoadResult::Success : LoadResult::Failure, shader);
+				}
+
 				static std::pair<LoadResult, Render::Shader> Load(std::istream& io_stream, std::string& i_fragment_path)
 				{
 					using namespace Render;
@@ -117,9 +129,9 @@ namespace SDK
 			}
 		}
 
-		ShaderHandler ShaderSystem::Load(const std::string& i_vertex_shader_file, const std::string& i_fragment_shader_file)
+		ShaderHandler ShaderSystem::Load(const std::string& i_res_name, const std::string& i_vertex_shader_file, const std::string& i_fragment_shader_file)
 		{
-			int index = Resources::g_load_manager.Load<Shader>(i_vertex_shader_file, std::string(i_fragment_shader_file));
+			int index = Resources::g_load_manager.Load<Shader, 2>(i_res_name, { i_vertex_shader_file, i_fragment_shader_file }, nullptr);
 
 			// resource is already loaded
 			if (index != -1)

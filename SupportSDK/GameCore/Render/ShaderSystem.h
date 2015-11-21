@@ -26,7 +26,7 @@ namespace SDK
 
 		public:
 			ShaderSystem();
-			GAMECORE_EXPORT ShaderHandler Load(const std::string& i_vertex_shader_file, const std::string& i_fragment_shader_file);
+			GAMECORE_EXPORT ShaderHandler Load(const std::string& i_resource_name, const std::string& i_vertex_shader_file, const std::string& i_fragment_shader_file);
 			GAMECORE_EXPORT void Unload(ShaderHandler i_handler);
 			inline Shader Access(ShaderHandler i_handler)
 			{
