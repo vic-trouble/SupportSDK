@@ -2,6 +2,8 @@
 
 #include "FileSystem.h"
 
+#include "FileStream.h"
+
 namespace SDK
 {
 
@@ -19,6 +21,26 @@ namespace SDK
 #else
 			return std::string()
 #endif
+		}
+
+		std::string ReadFileToString(const std::string& i_path)
+		{
+			FS::FileStream stream(i_path);
+			if (!stream.IsValid())
+				return std::string();
+
+			return ReadFileToString(stream.Get());
+		}
+
+		std::string ReadFileToString(std::istream& io_stream)
+		{
+			io_stream.seekg(0, io_stream.end);
+			auto file_size = io_stream.tellg();
+			io_stream.seekg(0, io_stream.beg);			
+			std::string result;
+			result.resize(file_size);
+			io_stream.read(&result[0], file_size);
+			return result;
 		}
 
 	} // FS

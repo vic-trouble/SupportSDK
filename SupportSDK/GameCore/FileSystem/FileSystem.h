@@ -9,6 +9,9 @@ namespace SDK
 		// TODO: make FS :)
 		std::string GetApplicationPath();
 
+		std::string ReadFileToString(const std::string& i_path);
+		std::string ReadFileToString(std::istream& io_stream);
+
 	} // FS
 
 } // SDK
