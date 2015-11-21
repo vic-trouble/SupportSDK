@@ -95,7 +95,7 @@ namespace SDK
 			template <>
 			struct LoaderImpl < Render::Mesh >
 			{
-				static std::pair<LoadResult, Render::Mesh> Load(std::istream& io_stream, MeshInformation)
+				static std::pair<LoadResult, Render::Mesh> Load(std::istream& io_stream, MeshInformation i_info)
 				{
 					using namespace Render;
 
@@ -145,7 +145,7 @@ namespace SDK
 					}
 					
 					auto p_mgr = Core::GetRenderer()->GetHardwareBufferMgr();
-					auto ver_buf = p_mgr->CreateVertexBuffer(vertices.size(), sizeof(float), BufferUsageFormat::Static, &vertices[0]);
+					auto ver_buf = p_mgr->CreateVertexBuffer(vertices.size(), sizeof(float), i_info.m_ver_usage, &vertices[0]);
 					HardwareIndexBuffer::IndexType ind_type = HardwareIndexBuffer::IndexType::Int;
 					/*
 					TODO: correct determination of vertex types
@@ -153,7 +153,7 @@ namespace SDK
 					ind_type = HardwareIndexBuffer::IndexType::Short;
 					else if(indices.size() < 255)
 					ind_type = HardwareIndexBuffer::IndexType::Byte;*/
-					auto ind_buf = p_mgr->CreateIndexBuffer(ind_type, indices.size(), BufferUsageFormat::Static, &indices[0]);
+					auto ind_buf = p_mgr->CreateIndexBuffer(ind_type, indices.size(), i_info.m_ind_usage, &indices[0]);
 					auto ver_layout = p_mgr->CreateElement(3, Render::VertexSemantic::Position, Render::PrimitiveType::Triangles, Render::ComponentType::Float, false);
 
 					return std::make_pair(LoadResult::Success, Mesh(ver_buf, ind_buf, ver_layout));
@@ -238,7 +238,6 @@ namespace SDK
 
 	namespace Render
 	{
-
 		static MeshSystem mesh_system;
 		MeshSystem& g_mesh_system = mesh_system;
 
@@ -273,10 +272,13 @@ namespace SDK
 					break;
 				auto& mesh = m_meshes[handler.index];
 				
-				Commands::Draw* p_cmd = Render::gBuffer.Create<Commands::Draw>(sizeof(Commands::Draw));
+				Commands::Transform* p_transform = Render::gBuffer.Create<Commands::Transform>();
+				p_transform->Translate(mesh.position);
+
+				Commands::Draw* p_cmd = Render::gBuffer.Append<Commands::Draw>(p_transform);
 				p_cmd->vertices = mesh.GetVertices();
 				p_cmd->layout = mesh.GetLayout();
-				p_cmd->indices = mesh.GetIndices();			
+				p_cmd->indices = mesh.GetIndices();
 			}
 		}
 		

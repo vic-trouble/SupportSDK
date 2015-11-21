@@ -41,6 +41,8 @@ namespace SDK
 			// Own
 			GAMECORE_EXPORT MeshHandler Load(const std::string& i_file_name, Render::BufferUsageFormat i_vertices_usage, Render::BufferUsageFormat i_indices_usage);
 			GAMECORE_EXPORT void Unload(MeshHandler i_handler);
+			// TEMP: ITERATION SMASH
+			GAMECORE_EXPORT Mesh& Get(MeshHandler& i_handler) { return m_meshes[i_handler.index]; }
 			void Register(const std::string& i_name, Mesh i_mesh);
 		};
 

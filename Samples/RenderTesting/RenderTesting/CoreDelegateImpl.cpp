@@ -30,16 +30,22 @@ using namespace SDK;
 
 #include <GameCore/Systems/MeshSystem.h>
 
+#include <GameCore/Render/ShaderSystem.h>
+
 namespace Game
 {
 
 	void CoreDelegateImpl::LoadModel()
 	{
 		//E:\Git_Projects\SupportSDK\Samples\Resources\Models\Box.obj
-		loaded_mesh = Render::g_mesh_system.Load("Resources\\Models\\Box.obj", Render::BufferUsageFormat::Static, Render::BufferUsageFormat::Static);
+		//loaded_mesh = Render::g_mesh_system.Load("Resources\\Models\\Box.obj", Render::BufferUsageFormat::Static, Render::BufferUsageFormat::Static);
 		loaded_mesh = Render::g_mesh_system.Load("..\\..\\..\\Resources\\Models\\Box.obj", Render::BufferUsageFormat::Static, Render::BufferUsageFormat::Static);
 		Render::g_mesh_system.Unload(loaded_mesh);
 		loaded_mesh = Render::g_mesh_system.Load("..\\..\\..\\Resources\\Models\\Box.obj", Render::BufferUsageFormat::Static, Render::BufferUsageFormat::Static);
+
+		auto& mesh = Render::g_mesh_system.Get(loaded_mesh);
+		mesh.position = { 2.f, 0.f, 0.f };
+
 		/*auto p_mgr = Core::GetRenderer()->GetHardwareBufferMgr();
 
 		const float verts[] = {
@@ -134,62 +140,11 @@ namespace Game
 		batch[0].vertices = p_mgr->CreateVertexBuffer(sizeof(verts)/sizeof(float), sizeof(float) * 3, Render::BufferUsageFormat::Static, verts);
 		batch[0].indices = p_mgr->CreateIndexBuffer(Render::HardwareIndexBuffer::IndexType::Int, sizeof(inds) / sizeof(uint), Render::BufferUsageFormat::Static, inds);
 		batch[0].element = p_mgr->CreateElement(3, Render::VertexSemantic::Position, Render::PrimitiveType::Triangles, Render::ComponentType::Float, false);
-	}
-
-	Matrix4f CreateViewMatrix(float posX, float posY, float posZ, float targetX, float targetY, float targetZ)
-	{
-		float forward[4];
-		float up[4];
-		float left[4];
-		float position[4];
-		float invLength;
-
-		// determine forward vector (direction reversed because it is camera)
-		forward[0] = posX - targetX;    // x
-		forward[1] = posY - targetY;    // y
-		forward[2] = posZ - targetZ;    // z
-		forward[3] = 0.0f;              // w
-		// normalize it without w-component
-		invLength = 1.0f / sqrtf(forward[0] * forward[0] + forward[1] * forward[1] + forward[2] * forward[2]);
-		forward[0] *= invLength;
-		forward[1] *= invLength;
-		forward[2] *= invLength;
-
-		// assume up direction is straight up
-		up[0] = 0.0f;   // x
-		up[1] = 0.0f;   // y
-		up[2] = 1.0f;   // z
-		up[3] = 0.0f;   // w
-
-		// compute left vector with cross product
-		left[0] = up[1] * forward[2] - up[2] * forward[1];  // x
-		left[1] = up[2] * forward[0] - up[0] * forward[2];  // y
-		left[2] = up[0] * forward[1] - up[1] * forward[0];  // z
-		left[3] = 1.0f;                                 // w
-
-		// re-compute orthogonal up vector
-		up[0] = forward[1] * left[2] - forward[2] * left[1];    // x
-		up[1] = forward[2] * left[0] - forward[0] * left[2];    // y
-		up[2] = forward[0] * left[1] - forward[1] * left[0];    // z
-		up[3] = 0.0f;                                       // w
-
-		// camera position
-		position[0] = posX;
-		position[1] = posY;
-		position[2] = posZ;
-		position[3] = 1.0f;
-
-		Matrix4f model_matrix;
-		// copy axis vectors to matrix
-		model_matrix.Identity();
-		model_matrix[0][0] = left[0]; model_matrix[1][0] = left[1]; model_matrix[2][0] = left[2]; model_matrix[3][0] = left[3];
-		model_matrix[0][1] = up[0]; model_matrix[1][1] = up[1]; model_matrix[2][1] = up[2]; model_matrix[3][1] = up[3];
-		model_matrix[0][2] = forward[0]; model_matrix[1][2] = forward[1]; model_matrix[2][2] = forward[2]; model_matrix[3][2] = forward[3];
-		model_matrix[0][3] = position[0]; model_matrix[1][3] = position[1]; model_matrix[2][3] = position[2]; model_matrix[3][3] = position[3];
-		return model_matrix;
-	}
+	}	
 
 	GLUquadricObj* quadricId;
+	Render::ShaderHandler shader_handler;
+	
 
 	void CoreDelegateImpl::OnCreate()
 	{
@@ -210,6 +165,7 @@ namespace Game
 		// create a GLU quadric object
 		quadricId = gluNewQuadric();
 		gluQuadricDrawStyle(quadricId, GLU_FILL);
+		shader_handler = Render::g_shader_system.Load("..\\..\\..\\Resources\\Shaders\\SimpleShader.vertexshader", "..\\..\\..\\Resources\\Shaders\\SimpleShader.fragmentshader");
 	}
 
 	void CoreDelegateImpl::OnTerminate()
@@ -636,6 +592,8 @@ namespace Game
 
 	void CoreDelegateImpl::Draw()
 	{
+		//Render::Shader shader = Render::g_shader_system.Access(shader_handler);
+
 		draw3(true);
 	}
 

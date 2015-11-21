@@ -120,10 +120,10 @@ namespace SDK
 			void Register(int i_handle, const std::string& i_name, ResType i_resource)
 			{
 				const size_t hash = hash_function(i_name);
-				Serialization::LoaderImpl<ResType>::Register(i_handle, i_resource);
 				auto it = std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(i_handle));
 				if (it == m_loaded_resources.end())
 				{
+					Serialization::LoaderImpl<ResType>::Register(i_handle, i_resource);
 					m_loaded_resources.emplace_back(hash, 1, ResourceInformation::State::Loaded, i_handle);
 				}
 				else
