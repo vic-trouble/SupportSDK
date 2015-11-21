@@ -29,7 +29,7 @@ namespace SDK
 			inline Matrix();
 
 			// Construct matrix from array which must be Rows*Collumns
-			inline Matrix(CoordinateType* ip_data);
+			inline Matrix(const CoordinateType* ip_data);
 
 			inline Matrix(const Matrix& i_other);
 			inline ThisMatrix& operator = (const Matrix& i_other);

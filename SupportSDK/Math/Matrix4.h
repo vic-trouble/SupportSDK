@@ -17,6 +17,7 @@ namespace SDK
 		{
 		public:
 			typedef Vector<CoordinateType, 3> ThisVector3;
+			typedef Matrix<CoordinateType, 3, 3> ThisMatrix3;
 			typedef Quaternion<CoordinateType> ThisQuaternion;
 
 		public:
@@ -90,12 +91,13 @@ namespace SDK
 			inline ThisVector3 GetScaleVector() const;
 
 			inline void MakeTransform(const ThisVector3& position, const ThisVector3& scale, const ThisQuaternion& orientation);
+			inline void MakeTransform(const ThisVector3& position, const ThisVector3& scale, const Matrix<CoordinateType, 3, 3>& rot3x3);
 		};
 
 		template <typename CoordinateType>
 		Matrix4<CoordinateType> Matrix4<CoordinateType>::GetInverse() const
 		{
-			return MatrixUtilities<CoordinateType, 4, 4>::Inverse();
+			return MatrixUtilities<CoordinateType, 4, 4>::Inverse(*this);
 		}
 
 		template <typename CoordinateType>
@@ -174,16 +176,30 @@ namespace SDK
 		}
 
 		template <typename CoordinateType>
-		void Matrix4<CoordinateType>::MakeTransform(const ThisVector3& position, const ThisVector3& scale, const ThisQuaternion& orientation)
+		void Matrix4<CoordinateType>::MakeTransform(const ThisVector3& position, const ThisVector3& scale, const ThisQuaternion& rot3x3)
 		{
 			// Ordering:
 			//    1. Scale
 			//    2. Rotate
 			//    3. Translate
-			typedef Matrix<CoordinateType, 3, 3> Matrix3;
-			Matrix3 rot3x3;
-			orientation.ToRotationMatrix(rot3x3);
+			auto& m = m_data_;
 
+			// Set up final matrix with scale, rotation and translation
+			m[0][0] = scale[0] * rot3x3[0][0]; m[0][1] = scale[1] * rot3x3[0][1]; m[0][2] = scale[2] * rot3x3[0][2]; m[0][3] = position[0];
+			m[1][0] = scale[0] * rot3x3[1][0]; m[1][1] = scale[1] * rot3x3[1][1]; m[1][2] = scale[2] * rot3x3[1][2]; m[1][3] = position[1];
+			m[2][0] = scale[0] * rot3x3[2][0]; m[2][1] = scale[1] * rot3x3[2][1]; m[2][2] = scale[2] * rot3x3[2][2]; m[2][3] = position[2];
+
+			// No projection term
+			m[3][0] = 0; m[3][1] = 0; m[3][2] = 0; m[3][3] = 1;
+		}
+
+		template <typename CoordinateType>
+		void Matrix4<CoordinateType>::MakeTransform(const ThisVector3& position, const ThisVector3& scale, const ThisMatrix3& rot3x3)
+		{
+			// Ordering:
+			//    1. Scale
+			//    2. Rotate
+			//    3. Translate
 			auto& m = m_data_;
 
 			// Set up final matrix with scale, rotation and translation

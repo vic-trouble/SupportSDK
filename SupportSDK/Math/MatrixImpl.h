@@ -17,7 +17,7 @@ namespace SDK
 		}
 
 		template <typename CoordinateType, size_t Rows, size_t Collumns>
-		Matrix<CoordinateType, Rows, Collumns>::Matrix(CoordinateType* ip_data)
+		Matrix<CoordinateType, Rows, Collumns>::Matrix(const CoordinateType* ip_data)
 		{
 			memcpy(m_data, ip_data, sizeof(CoordinateType)*Rows*Collumns);
 		}
