@@ -132,6 +132,7 @@
     <ClInclude Include="Input\InputSystem.h" />
     <ClInclude Include="Input\Keyboard.h" />
     <ClInclude Include="Render\HardwareBufferManagerBase.h" />
+    <ClInclude Include="Render\OpenGL\GLShaderCompiler.h" />
     <ClInclude Include="Render\RenderWorld.h" />
     <ClInclude Include="Render\OpenGL\HardwareBufferManager.h" />
     <ClInclude Include="Render\HardwareIndexBuffer.h" />
@@ -143,6 +144,9 @@
     <ClInclude Include="Render\OpenGL\OpenGLRenderer.h" />
     <ClInclude Include="Render\OpenGL\GlUitlities.h" />
     <ClInclude Include="Render\RenderTypes.h" />
+    <ClInclude Include="Render\Shader.h" />
+    <ClInclude Include="Render\ShaderCompiler.h" />
+    <ClInclude Include="Render\ShaderSystem.h" />
     <ClInclude Include="Render\VertexDeclaration.h" />
     <ClInclude Include="Render\Viewport.h" />
     <ClInclude Include="Resources\ResourceManager.h" />
@@ -168,11 +172,13 @@
     <ClCompile Include="Render\Camera.cpp" />
     <ClCompile Include="Render\Commands.cpp" />
     <ClCompile Include="Render\Frustum.cpp" />
+    <ClCompile Include="Render\OpenGL\GLShaderCompiler.cpp" />
     <ClCompile Include="Render\OpenGL\HardwareBufferManager.cpp" />
     <ClCompile Include="Render\OpenGL\OpenGLRenderer.cpp" />
     <ClCompile Include="Render\OpenGL\GLUtilities.cpp" />
     <ClCompile Include="Render\Mesh.cpp" />
     <ClCompile Include="Render\RenderWorld.cpp" />
+    <ClCompile Include="Render\ShaderSystem.cpp" />
     <ClCompile Include="Resources\ResourceManager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -11,6 +11,7 @@ namespace SDK
 	namespace Render
 	{
 		class HardwareBufferManagerBase;
+		class ShaderCompiler;
 	}
 
 	struct Color
@@ -54,6 +55,10 @@ namespace SDK
 		virtual ~IRenderer(){}
 
 		SDK::uint64 GetRenderContextID() const { return m_render_context_id; }
+		
+		virtual void PushMatrix() = 0;
+		virtual void PopMatrix() = 0;
+		virtual void SetCurrentMatrix(const Matrix4f& i_translation_matrix) = 0;
 
 		virtual void Initialize() = 0;
 		virtual void Release() = 0;
@@ -64,6 +69,7 @@ namespace SDK
 		virtual void	EndFrame() = 0;
 
 		virtual Render::HardwareBufferManagerBase* GetHardwareBufferMgr() = 0;
+		virtual Render::ShaderCompiler* GetShaderCompiler() = 0;
 
 		virtual void Draw(Render::Batch i_decl) = 0;
 

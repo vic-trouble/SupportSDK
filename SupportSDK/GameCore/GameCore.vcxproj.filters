@@ -54,6 +54,9 @@
     <Filter Include="Core\Renderer\Queues">
       <UniqueIdentifier>{06d894e4-9ff4-4292-b9f6-974d317c96d7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Renderer\Shaders">
+      <UniqueIdentifier>{516b8f6e-5d4e-4179-9e60-59ba6d460ee4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -209,6 +212,18 @@
     <ClInclude Include="Render\Commands.h">
       <Filter>Core\Renderer\Queues</Filter>
     </ClInclude>
+    <ClInclude Include="Render\ShaderSystem.h">
+      <Filter>Core\Renderer\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\ShaderCompiler.h">
+      <Filter>Core\Renderer\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Shader.h">
+      <Filter>Core\Renderer\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\OpenGL\GLShaderCompiler.h">
+      <Filter>Core\Renderer\OpenGL</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -279,6 +294,12 @@
     </ClCompile>
     <ClCompile Include="Render\Commands.cpp">
       <Filter>Core\Renderer\Queues</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\ShaderSystem.cpp">
+      <Filter>Core\Renderer\Shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\OpenGL\GLShaderCompiler.cpp">
+      <Filter>Core\Renderer\OpenGL</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

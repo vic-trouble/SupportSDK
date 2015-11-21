@@ -4,6 +4,7 @@
 #include "Render/IRenderer.h"
 
 #include "HardwareBufferManager.h"
+#include "GLShaderCompiler.h"
 
 namespace SDK
 {
@@ -20,6 +21,15 @@ namespace SDK
 		int         m_pixel_format;
 
 		Render::HardwareBufferManager m_hardware_buffer_mgr;
+		Render::GLShaderCompiler m_shader_compiler;
+
+		enum class MatrixMode
+		{
+			Projection,
+			ModelView
+		};
+
+		Matrix4f m_matrices[2];
 
 	private:
 		// TODO: more precise configurations
@@ -45,6 +55,11 @@ namespace SDK
 		virtual void SetModelViewMatrix(Matrix4f&& i_modelview_matrix) override;
 
 		virtual Render::HardwareBufferManager* GetHardwareBufferMgr() override { return &m_hardware_buffer_mgr; }
+		virtual Render::ShaderCompiler* GetShaderCompiler() override { return &m_shader_compiler; }
+
+		virtual void PushMatrix() override;
+		virtual void PopMatrix() override;
+		virtual void SetCurrentMatrix(const Matrix4f& i_translation_matrix) override;
 
 		////////////////////////////////////////////////////////////////////
 		// TODO: is it still needed

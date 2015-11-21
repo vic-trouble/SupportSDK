@@ -130,7 +130,26 @@ namespace SDK
 		struct MeshHandlerTag{};
 		typedef GenericHandle<int, 12, 20, MeshHandlerTag> MeshHandler;
 
+		struct ShaderHandlerTag {};
+		typedef GenericHandle<int, 12, 20, ShaderHandlerTag> ShaderHandler;
+
+		// Commands
 		typedef void(*CommandExecutor)(const void*);
+
+#define IMPLEMENT_COMMAND_IMPL(ProcessorFunc, CompletionFunc) \
+		static constexpr CommandExecutor EXECUTOR_FUNCTION = &ProcessorFunc; \
+		static constexpr CommandExecutor COMPLETION_FUNCTION = &CompletionFunc; \
+		void SetDefaultValues();
+
+#define IMPLEMENT_COMMAND_WITH_COMPLETION(ProcessorFunc, CompletionFunc) \
+		static void ProcessorFunc(const void*); \
+		static void CompletionFunc(const void*); \
+		IMPLEMENT_COMMAND_IMPL(ProcessorFunc, CompletionFunc)
+
+#define IMPLEMENT_COMMAND(ProcessorFunc) \
+		static void ProcessorFunc(const void*); \
+		static void CompletionStub(const void*){} \
+		IMPLEMENT_COMMAND_IMPL(ProcessorFunc, CompletionStub)
 	} // Render
 
 } // SDK

@@ -78,7 +78,7 @@ namespace
 	}
 
 } // namespace
-
+#include "../ShaderSystem.h"
 namespace SDK
 {
 
@@ -298,6 +298,7 @@ namespace SDK
 
 	void OpenGLRenderer::SetProjectionMatrix(Matrix4f&& i_projection_matrix)
 	{
+		m_matrices[(int)MatrixMode::Projection] = i_projection_matrix;
 		glMatrixMode(GL_PROJECTION);
 		GLfloat gl_matrix[16];
 		makeGlMatrix(gl_matrix, i_projection_matrix);
@@ -306,10 +307,33 @@ namespace SDK
 
 	void OpenGLRenderer::SetModelViewMatrix(Matrix4f&& i_modelview_matrix)
 	{
+		m_matrices[(int)MatrixMode::ModelView] = i_modelview_matrix;
 		glMatrixMode(GL_MODELVIEW);
 		GLfloat gl_matrix[16];
 		makeGlMatrix(gl_matrix, i_modelview_matrix);
 		glLoadMatrixf(gl_matrix);
+	}
+
+	void OpenGLRenderer::PushMatrix()
+	{
+		glPushMatrix();
+	}
+
+	void OpenGLRenderer::PopMatrix()
+	{
+		glPopMatrix();
+	}
+
+	void OpenGLRenderer::SetCurrentMatrix(const Matrix4f& i_translation_matrix)
+	{
+		// TODO: as understood - use shader and not modify current matrix
+		auto scale = i_translation_matrix.GetScaleVector();
+		auto translate = i_translation_matrix.GetTranslationVector();
+		glTranslatef(translate[0], translate[1], translate[2]);
+		/*
+		float[16] transMatrix;
+		glGetFloatv(GL_MODELVIEW_MATRIX, transMatrix);
+		*/
 	}
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -382,6 +406,15 @@ namespace SDK
 	void OpenGLRenderer::BeginFrame()
 	{
 		_Clear(m_clear_color);
+		using namespace Render;
+		ShaderHandler h;
+		h.index = 0;
+		h.generation = 0;
+		auto shader = Render::g_shader_system.Access(h);
+		if (shader.IsValid())
+		{
+			//m_shader_compiler.SetUniform("u_modelview",)
+		}
 	}
 
 	void OpenGLRenderer::EndFrame()

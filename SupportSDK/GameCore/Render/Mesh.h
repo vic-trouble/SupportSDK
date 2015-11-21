@@ -26,6 +26,9 @@ namespace SDK
 			bool m_valid;
 
 		public:
+			// TODO: TEMP!
+			Vector3 position;
+
 			GAMECORE_EXPORT Mesh();
 			GAMECORE_EXPORT Mesh(VertexBufferHandle i_vertices, IndexBufferHandle i_indices, VertexLayoutHandle i_layout);
 			GAMECORE_EXPORT ~Mesh();
