@@ -5,6 +5,7 @@
 
 #include "../System.h"
 #include "../Render/Mesh.h"
+#include "../Render/MeshComponent.h"
 
 namespace SDK
 {
@@ -25,8 +26,11 @@ namespace SDK
 			friend struct Resources::Serialization::LoaderImpl<Mesh>;
 
 		private:
+			// raw resources - not processed if they not used with MeshComponent
 			std::vector<Mesh> m_meshes;
 			std::vector<MeshHandler> m_handlers;
+			std::vector<MeshComponent> m_instances;
+			std::vector<MeshComponentHandler> m_component_handlers;
 
 		public:
 			MeshSystem();
@@ -41,12 +45,23 @@ namespace SDK
 			// Own
 			GAMECORE_EXPORT MeshHandler Load(const std::string& i_file_name, Render::BufferUsageFormat i_vertices_usage, Render::BufferUsageFormat i_indices_usage);
 			GAMECORE_EXPORT void Unload(MeshHandler i_handler);
-			// TEMP: ITERATION SMASH
-			GAMECORE_EXPORT Mesh& Get(MeshHandler& i_handler) { return m_meshes[i_handler.index]; }
-			void Register(const std::string& i_name, Mesh i_mesh);
+			
+			GAMECORE_EXPORT MeshComponentHandler CreateInstance(MeshHandler i_handler);
+			// if you want to change something - use this method. On one frame it is guaranteed that 
+			//	pointer will be valid if not nullptr
+			GAMECORE_EXPORT MeshComponent* GetInstance(MeshComponentHandler i_handler);
+			GAMECORE_EXPORT void RemoveInstance(MeshComponentHandler i_handler);
+
+			// TODO: Custom mesh
+			//MeshHandler Register(const std::string& i_name, Mesh i_mesh);
+
+		// Extension for entity manager
+		public:
+			GAMECORE_EXPORT static MeshComponent* Get(int i_in_system_id, int i_in_system_generation);
+			GAMECORE_EXPORT static void Remove(int i_in_system_id, int i_in_system_generation);
 		};
 
-		// TODO: decide in what format user should access objects like this
+		// TODO: global object: decide in what format user should access objects like this
 		GAMECORE_EXPORT extern MeshSystem& g_mesh_system;
 
 	} // Render

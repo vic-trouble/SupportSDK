@@ -265,13 +265,15 @@ namespace SDK
 		{
 			auto& render_world = Core::GetApplication()->GetRenderWorld();
 
-			for (auto& handler : m_handlers)
+			for (auto& handler : m_component_handlers)
 			{
 				// reach the end of registered (valid) meshes
 				if (handler.index == -1)
 					break;
-				auto& mesh = m_meshes[handler.index];
-				
+
+				auto& mesh_instance = m_instances[handler.index];
+				auto& mesh = m_meshes[mesh_instance.GetHandler().index];
+
 				Commands::Transform* p_transform = Render::gBuffer.Create<Commands::Transform>();
 				p_transform->Translate(mesh.position);
 
@@ -304,6 +306,76 @@ namespace SDK
 		{
 			Resources::g_load_manager.Unload<Mesh>(i_handler.index);
 		}
+
+		MeshComponentHandler MeshSystem::CreateInstance(MeshHandler i_handler)
+		{
+			static MeshComponentHandler error_handler{ -1, -1 };
+			if (i_handler.generation != m_handlers[i_handler.index].generation)
+				return error_handler;
+
+			// get free index
+			int new_index = -1;
+			for (size_t i = 0; i < m_component_handlers.size(); ++i)
+			{
+				if (m_component_handlers[i].index == -1)
+				{
+					new_index = static_cast<int>(i);
+					m_component_handlers[i].index = i;
+					break;
+				}
+			}
+			// create index
+			if (new_index == -1)
+			{
+				// TODO: resize vector normally - with some strategy - not push_back
+				const size_t new_count = m_component_handlers.size() + 1;
+				m_component_handlers.resize(new_count);
+				m_instances.resize(new_count);
+				new_index = new_count - 1;
+				m_component_handlers[new_index].generation = 0;
+				m_component_handlers[new_index].index = new_index;
+
+				
+			}
+			
+			//////////////////
+			// set data for MeshComponent			
+			m_instances[new_index] = MeshComponent(i_handler);			
+			assert(m_instances.size() == m_component_handlers.size());
+			return m_component_handlers[new_index];
+		}
+
+		MeshComponent* MeshSystem::GetInstance(MeshComponentHandler i_handler)
+		{
+			if (m_component_handlers[i_handler.index].generation != i_handler.generation)
+			{
+				assert(false && "Generation is not identical");
+				return nullptr;
+			}
+			return &m_instances[i_handler.index];
+		}
+
+		void MeshSystem::RemoveInstance(MeshComponentHandler i_handler)
+		{
+			m_component_handlers[i_handler.index].index = -1;
+			++m_component_handlers[i_handler.index].generation;
+		}
+
+		///////////////////////////////////////////////////////////////////////////////
+		// Extension for EntityManager
+
+		MeshComponent* MeshSystem::Get(int i_in_system_id, int i_in_system_generation)
+		{
+			MeshComponentHandler inst_handler{ i_in_system_id, i_in_system_generation };
+			MeshComponent* component = g_mesh_system.GetInstance(inst_handler);
+			return component;
+		}
+
+		void MeshSystem::Remove(int i_in_system_id, int i_in_system_generation)
+		{
+			g_mesh_system.RemoveInstance({ i_in_system_id, i_in_system_generation });
+		}
+		
 
 	} // Render
 

@@ -31,10 +31,10 @@ using namespace SDK;
 #include <GameCore/Systems/MeshSystem.h>
 
 #include <GameCore/Render/ShaderSystem.h>
-
+#include <GameCore/EntityManager.h>
 namespace Game
 {
-
+	EntityHandler entity_handler;
 	void CoreDelegateImpl::LoadModel()
 	{
 		//E:\Git_Projects\SupportSDK\Samples\Resources\Models\Box.obj
@@ -42,10 +42,13 @@ namespace Game
 		loaded_mesh = Render::g_mesh_system.Load("..\\..\\..\\Resources\\Models\\Box.obj", Render::BufferUsageFormat::Static, Render::BufferUsageFormat::Static);
 		Render::g_mesh_system.Unload(loaded_mesh);
 		loaded_mesh = Render::g_mesh_system.Load("..\\..\\..\\Resources\\Models\\Box.obj", Render::BufferUsageFormat::Static, Render::BufferUsageFormat::Static);
+		
+		auto inst_handler = Render::g_mesh_system.CreateInstance(loaded_mesh);
 
-		auto& mesh = Render::g_mesh_system.Get(loaded_mesh);
-		mesh.position = { 2.f, 0.f, 0.f };
-
+		entity_handler = g_entity_manager.CreateEntity();
+		g_entity_manager.AddComponent<Render::MeshComponent>(entity_handler, inst_handler);
+		auto entity = g_entity_manager.GetEntity(entity_handler);
+		entity->GetComponent<Render::MeshComponent>(0, 0);
 		/*auto p_mgr = Core::GetRenderer()->GetHardwareBufferMgr();
 
 		const float verts[] = {
@@ -180,6 +183,8 @@ namespace Game
 		p_renderer->GetHardwareBufferMgr()->DestroyBuffer(batch[1].vertices);
 		p_renderer->GetHardwareBufferMgr()->DestroyBuffer(batch[1].indices);
 		p_renderer->GetHardwareBufferMgr()->DestroyBuffer(batch[1].vertices);
+
+		g_entity_manager.RemoveEntity(entity_handler);
 	}
 
 

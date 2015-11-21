@@ -3,20 +3,32 @@
 
 #include "Mesh.h"
 
+#include "../Component.h"
+
 namespace SDK
 {
 
 	namespace Render
 	{
 
+		class MeshSystem;
+
 		class MeshComponent
 		{
+		public:
+			static constexpr int ID = static_cast<int>(ComponentClass::MeshClass);
+			typedef MeshSystem ProcessorSystem;
+
 		private:
-			Mesh m_mesh_data;
+			MeshHandler m_mesh;
 
 		public:
-			const Mesh& GetMesh() const { return m_mesh_data; }
-			Mesh& GetMeshNonConst() { return m_mesh_data; }
+			MeshComponent() {}
+			MeshComponent(MeshHandler i_handler)
+				: m_mesh(i_handler)
+			{}			
+
+			MeshHandler GetHandler() const { return m_mesh; }
 		};
 
 	} // Render

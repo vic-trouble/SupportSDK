@@ -57,6 +57,9 @@
     <Filter Include="Core\Renderer\Shaders">
       <UniqueIdentifier>{516b8f6e-5d4e-4179-9e60-59ba6d460ee4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Entities">
+      <UniqueIdentifier>{0afcd029-20f4-4060-898d-392b3b69d0bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -224,6 +227,15 @@
     <ClInclude Include="Render\OpenGL\GLShaderCompiler.h">
       <Filter>Core\Renderer\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="EntityManager.h">
+      <Filter>Core\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Core\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Core\Entities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -300,6 +312,9 @@
     </ClCompile>
     <ClCompile Include="Render\OpenGL\GLShaderCompiler.cpp">
       <Filter>Core\Renderer\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityManager.cpp">
+      <Filter>Core\Entities</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

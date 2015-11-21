@@ -105,11 +105,14 @@
   <ItemGroup>
     <ClInclude Include="Applications\ApplicationBase.h" />
     <ClInclude Include="Applications\Application_Windows.h" />
+    <ClInclude Include="Component.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="Composer\IComponentSerializer.h" />
     <ClInclude Include="Composer\IObjectComposer.h" />
     <ClInclude Include="Composer\ObjectSettings.h" />
     <ClInclude Include="CoreDelegate.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="EntityManager.h" />
     <ClInclude Include="FileSystem\FileStream.h" />
     <ClInclude Include="FileSystem\FileSystem.h" />
     <ClInclude Include="FileSystem\Stream.h" />
@@ -164,6 +167,7 @@
     <ClCompile Include="Applications\Application_Windows.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="Composer\ObjectSettings.cpp" />
+    <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="FileSystem\FileStream.cpp" />
     <ClCompile Include="FileSystem\FileSystem.cpp" />
     <ClCompile Include="GameContext.cpp" />

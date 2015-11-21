@@ -126,10 +126,12 @@ namespace SDK
 		typedef GenericHandle<size_t, 12, 20, IndexHandleTag> IndexBufferHandle;
 		struct VerLayoutHandleTag {};
 		typedef GenericHandle<size_t, 12, 20, VerLayoutHandleTag> VertexLayoutHandle;
-
+		// Meshes
 		struct MeshHandlerTag{};
 		typedef GenericHandle<int, 12, 20, MeshHandlerTag> MeshHandler;
-
+		struct MeshComponentHandlerTag {};
+		typedef GenericHandle<int, 12, 20, MeshComponentHandlerTag> MeshComponentHandler;
+		// Shaders
 		struct ShaderHandlerTag {};
 		typedef GenericHandle<int, 12, 20, ShaderHandlerTag> ShaderHandler;
 
