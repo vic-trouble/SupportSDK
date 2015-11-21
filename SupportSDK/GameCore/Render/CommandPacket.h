@@ -17,6 +17,7 @@ namespace SDK
 				void* mp_data;
 				size_t m_data_size;
 				CommandExecutor m_executor;
+				CommandExecutor m_completion;
 				CommandPacket* mp_next;
 				bool m_executed;
 
@@ -36,6 +37,7 @@ namespace SDK
 					, m_executor(i_other.m_executor)
 					, mp_next(i_other.mp_next)
 					, m_executed(i_other.m_executed)
+					, m_completion(i_other.m_completion)
 				{
 					i_other.mp_data = nullptr;
 					i_other.m_data_size = 0;

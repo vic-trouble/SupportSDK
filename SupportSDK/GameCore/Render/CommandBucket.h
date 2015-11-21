@@ -9,7 +9,6 @@ namespace SDK
 	{		
 		namespace Commands
 		{
-			
 
 			template <typename KeyType = uint>
 			class CommandBucket
@@ -25,40 +24,48 @@ namespace SDK
 					i_packet.m_executor(i_packet.mp_data);
 					if (i_packet.mp_next != nullptr)
 						Submit(*i_packet.mp_next);
+					i_packet.m_completion(i_packet.mp_data);
 					i_packet.m_executed = true;
 				}
 
-			public:
 				template <typename ProcessorType>
-				ProcessorType* Create(size_t i_aux_mem_size)
+				CommandPacket CreateImpl(size_t i_aux_mem_size)
 				{
-					void* p_data = ::operator new(i_aux_mem_size);
-					CommandPacket command;
-					command.mp_data = p_data;
-					command.m_data_size = i_aux_mem_size;
-					command.m_executor = ProcessorType::EXECUTOR_FUNCTION;					
-					m_packets.push_back(std::move(command));
-
-					return reinterpret_cast<ProcessorType*>(p_data);
-				}
-
-				template <typename ProcessorType>
-				ProcessorType* Append(void* ip_command, size_t i_aux_mem_size)
-				{
-					void* p_data = ::operator new(aux_size);
+					void* p_data = ::operator new(sizeof(ProcessorType) + i_aux_mem_size);
 					CommandPacket command;
 					command.mp_data = p_data;
 					command.m_data_size = i_aux_mem_size;
 					command.m_executor = ProcessorType::EXECUTOR_FUNCTION;
-					m_packets.push_back(std::move(command));
+					command.m_completion = ProcessorType::COMPLETION_FUNCTION;
+					ProcessorType* p_processor = reinterpret_cast<ProcessorType*>(p_data);
+					// POD data cannot contain constructor - so call this method to init
+					p_processor->SetDefaultValues();
+					return std::move(command);
+				}
 
+			public:
+				template <typename ProcessorType>
+				ProcessorType* Create(size_t i_aux_mem_size = 0)
+				{
+					CommandPacket command = CreateImpl<ProcessorType>(i_aux_mem_size);
+					void* p_data = command.mp_data;
+					m_packets.push_back(std::move(command));					
+					return reinterpret_cast<ProcessorType*>(p_data);
+				}
+
+				template <typename ProcessorType>
+				ProcessorType* Append(void* ip_command, size_t i_aux_mem_size = 0)
+				{
+					CommandPacket command = CreateImpl<ProcessorType>(i_aux_mem_size);
+					void* p_data = command.mp_data;
+					m_packets.push_back(std::move(command));
 					auto it = std::find_if(m_packets.begin(), m_packets.end(), [ip_command](const CommandPacket& cmd_packet)
 					{
-						return cmd_packet.mp_data = ip_command;
+						return cmd_packet.mp_data == ip_command;
 					});
 					// TODO: notify user about error
-					//if (it == m_packets.end())
-					it->mp_next = &m_packets.back();
+					if (it != m_packets.end())					
+						it->mp_next = &m_packets.back();
 					return reinterpret_cast<ProcessorType*>(p_data);
 				}
 
