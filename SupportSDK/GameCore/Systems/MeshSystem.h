@@ -20,7 +20,7 @@ namespace SDK
 
 	namespace Render
 	{
-		class MeshSystem : public System		
+		class MeshSystem : public System
 		{
 		private:
 			friend struct Resources::Serialization::LoaderImpl<Mesh>;

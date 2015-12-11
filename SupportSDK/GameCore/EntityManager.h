@@ -10,11 +10,6 @@
 
 namespace SDK
 {
-	// 70368744177663 indices; 65535 generations
-	// TODO: this is too many; no?	
-	struct EntityTag {};
-	typedef GenericHandle<int64, 47, 17, EntityTag> EntityHandler;
-
 	class EntityManager
 	{
 	private:
@@ -35,7 +30,11 @@ namespace SDK
 			component.m_in_system_generation = static_cast<int>(i_component_handle.generation);
 			component.m_remove_function = &ComponentClass::ProcessorSystem::Remove;
 
-			m_entities[i_entity_handle.index].AddComponent(std::move(component));
+			auto& entity = m_entities[i_entity_handle.index];
+
+			entity.AddComponent(std::move(component));
+			auto p_component = entity.GetComponent<ComponentClass>();
+			p_component->SetEntity(i_entity_handle);
 		}
 
 		Entity* GetEntity(EntityHandler i_handler)

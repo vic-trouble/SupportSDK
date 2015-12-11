@@ -236,6 +236,9 @@
     <ClInclude Include="Entity.h">
       <Filter>Core\Entities</Filter>
     </ClInclude>
+    <ClInclude Include="Systems\TransformationsSystem.h">
+      <Filter>Core\Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -315,6 +318,9 @@
     </ClCompile>
     <ClCompile Include="EntityManager.cpp">
       <Filter>Core\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\TransformationsSystem.cpp">
+      <Filter>Core\Systems</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -29,9 +29,11 @@ using namespace SDK;
 #include <GameCore/Applications/ApplicationBase.h>
 
 #include <GameCore/Systems/MeshSystem.h>
+#include <GameCore/Systems/TransformationsSystem.h>
 
 #include <GameCore/Render/ShaderSystem.h>
 #include <GameCore/EntityManager.h>
+
 namespace Game
 {
 	EntityHandler entity_handler;
@@ -43,12 +45,20 @@ namespace Game
 		Render::g_mesh_system.Unload(loaded_mesh);
 		loaded_mesh = Render::g_mesh_system.Load("..\\..\\..\\Resources\\Models\\Box.obj", Render::BufferUsageFormat::Static, Render::BufferUsageFormat::Static);
 		
-		auto inst_handler = Render::g_mesh_system.CreateInstance(loaded_mesh);
+		auto mesh_handler = Render::g_mesh_system.CreateInstance(loaded_mesh);
+		auto trans_handler = g_transforms_system.CreateInstance();
+		auto p_transform = g_transforms_system.GetInstance(trans_handler);
+		p_transform->m_position[0] = 1.f;
+		p_transform->m_position[1] = -1.5f;
+		p_transform->m_position[2] = -2.5f;
 
 		entity_handler = g_entity_manager.CreateEntity();
-		g_entity_manager.AddComponent<Render::MeshComponent>(entity_handler, inst_handler);
+		g_entity_manager.AddComponent<Render::MeshComponent>(entity_handler, mesh_handler);
+		g_entity_manager.AddComponent<Transform>(entity_handler, trans_handler);
+
+		// test getting of entity and component
 		auto entity = g_entity_manager.GetEntity(entity_handler);
-		entity->GetComponent<Render::MeshComponent>(0, 0);
+		entity->GetComponent<Render::MeshComponent>();
 		/*auto p_mgr = Core::GetRenderer()->GetHardwareBufferMgr();
 
 		const float verts[] = {

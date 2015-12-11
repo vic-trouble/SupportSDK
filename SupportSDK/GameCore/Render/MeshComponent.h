@@ -4,6 +4,7 @@
 #include "Mesh.h"
 
 #include "../Component.h"
+#include "../Entity.h"
 
 namespace SDK
 {
@@ -22,6 +23,8 @@ namespace SDK
 		private:
 			MeshHandler m_mesh;
 
+			EntityHandler m_entity;
+
 		public:
 			MeshComponent() {}
 			MeshComponent(MeshHandler i_handler)
@@ -29,6 +32,9 @@ namespace SDK
 			{}			
 
 			MeshHandler GetHandler() const { return m_mesh; }
+
+			void SetEntity(EntityHandler i_entity) { m_entity = i_entity; }
+			EntityHandler GetEntity() const { return m_entity; }
 		};
 
 	} // Render

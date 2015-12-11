@@ -10,6 +10,9 @@
 #include "Render/RenderWorld.h"
 #include "Resources/ResourceManager.h"
 
+#include "TransformationsSystem.h"
+#include "EntityManager.h"
+
 #include <string>
 
 namespace SDK
@@ -274,10 +277,22 @@ namespace SDK
 				auto& mesh_instance = m_instances[handler.index];
 				auto& mesh = m_meshes[mesh_instance.GetHandler().index];
 
-				Commands::Transform* p_transform = Render::gBuffer.Create<Commands::Transform>();
-				p_transform->Translate(mesh.position);
+				Commands::Transform* p_transform_cmd = nullptr;
+				auto p_entity = g_entity_manager.GetEntity(mesh_instance.GetEntity());
+				if (p_entity != nullptr)
+				{
+					auto p_transform = p_entity->GetComponent<Transform>();
+					// we have no transform - cannot draw somewhere -> skip
+					if (p_transform == nullptr)
+					{
+						assert(false && "No transform component for mesh");
+						continue;
+					}
+					p_transform_cmd = Render::gBuffer.Create<Commands::Transform>();
+					p_transform_cmd->Translate(p_transform->m_position);
+				}
 
-				Commands::Draw* p_cmd = Render::gBuffer.Append<Commands::Draw>(p_transform);
+				Commands::Draw* p_cmd = Render::gBuffer.Append<Commands::Draw>(p_transform_cmd);
 				p_cmd->vertices = mesh.GetVertices();
 				p_cmd->layout = mesh.GetLayout();
 				p_cmd->indices = mesh.GetIndices();

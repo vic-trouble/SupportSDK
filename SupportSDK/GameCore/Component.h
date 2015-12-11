@@ -6,7 +6,8 @@ namespace SDK
 
 	enum class ComponentClass
 	{
-		MeshClass
+		MeshClass,
+		TransformClass
 	};
 
 	typedef void (*RemoveFunction)(int i_in_system_id, int i_in_system_generation);
