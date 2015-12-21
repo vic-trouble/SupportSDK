@@ -8,6 +8,8 @@
 #include "Render/IRenderer.h"
 #include "Systems/MeshSystem.h"
 
+#include "UI/UIControlSystem.h"
+
 #include <Utilities/TimeUtilities.h>
 
 namespace SDK
@@ -58,12 +60,14 @@ namespace SDK
 
 	void ApplicationBase::Update(float i_elapsed_time)
 	{
+		UI::g_ui_system.Update(i_elapsed_time);
+
 		UpdateInternal(i_elapsed_time);		
 
 		mp_delegate->Update(i_elapsed_time);
 
 		for (World& world : m_worlds)
-			world.Update(i_elapsed_time);
+			world.Update(i_elapsed_time);	
 
 		int sleep_ms = 1;
 		const float frame_time = 1000.f / m_fps;
@@ -84,7 +88,8 @@ namespace SDK
 			m_render_world.Submit(world.GetViewPort());
 		}
 		mp_delegate->Draw();
-		
+		UI::g_ui_system.Draw();
+
 		Core::GetRenderer()->EndFrame();
 	}
 

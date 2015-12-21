@@ -60,6 +60,12 @@
     <Filter Include="Core\Entities">
       <UniqueIdentifier>{0afcd029-20f4-4060-898d-392b3b69d0bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\UI">
+      <UniqueIdentifier>{db56efe7-d94e-4fc3-b68c-d39ff4882604}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Properties">
+      <UniqueIdentifier>{289f0319-a67e-4bcc-8fee-b3481c4e7dc2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -239,6 +245,30 @@
     <ClInclude Include="Systems\TransformationsSystem.h">
       <Filter>Core\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="UI\UIScreen.h">
+      <Filter>Core\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIButton.h">
+      <Filter>Core\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIControl.h">
+      <Filter>Core\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIControlSystem.h">
+      <Filter>Core\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseTypesHashes.h">
+      <Filter>Core\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="PropertyElement.h">
+      <Filter>Core\Properties</Filter>
+    </ClInclude>
+    <ClInclude Include="PropertyReader.h">
+      <Filter>Core\Properties</Filter>
+    </ClInclude>
+    <ClInclude Include="PropertyReaders.h">
+      <Filter>Core\Properties</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -321,6 +351,21 @@
     </ClCompile>
     <ClCompile Include="Systems\TransformationsSystem.cpp">
       <Filter>Core\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UIButton.cpp">
+      <Filter>Core\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UIScreen.cpp">
+      <Filter>Core\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UIControl.cpp">
+      <Filter>Core\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UIControlSystem.cpp">
+      <Filter>Core\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="PropertyReaders.cpp">
+      <Filter>Core\Properties</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

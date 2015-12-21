@@ -105,6 +105,7 @@
   <ItemGroup>
     <ClInclude Include="Applications\ApplicationBase.h" />
     <ClInclude Include="Applications\Application_Windows.h" />
+    <ClInclude Include="BaseTypesHashes.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="Composer\IComponentSerializer.h" />
@@ -121,6 +122,9 @@
     <ClInclude Include="GameInfo.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GenericHandle.h" />
+    <ClInclude Include="PropertyElement.h" />
+    <ClInclude Include="PropertyReader.h" />
+    <ClInclude Include="PropertyReaders.h" />
     <ClInclude Include="Render\Camera.h" />
     <ClInclude Include="Render\CommandBucket.h" />
     <ClInclude Include="Render\CommandPacket.h" />
@@ -160,6 +164,10 @@
     <ClInclude Include="Systems\TransformationsSystem.h" />
     <ClInclude Include="TimeController.h" />
     <ClInclude Include="TypeDefinitions.h" />
+    <ClInclude Include="UI\UIButton.h" />
+    <ClInclude Include="UI\UIControl.h" />
+    <ClInclude Include="UI\UIScreen.h" />
+    <ClInclude Include="UI\UIControlSystem.h" />
     <ClInclude Include="World.h" />
     <ClInclude Include="_Link.h" />
   </ItemGroup>
@@ -174,6 +182,7 @@
     <ClCompile Include="GameContext.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Input\InputSystem.cpp" />
+    <ClCompile Include="PropertyReaders.cpp" />
     <ClCompile Include="Render\Camera.cpp" />
     <ClCompile Include="Render\Commands.cpp" />
     <ClCompile Include="Render\Frustum.cpp" />
@@ -192,6 +201,10 @@
     <ClCompile Include="Systems\MeshSystem.cpp" />
     <ClCompile Include="Systems\TransformationsSystem.cpp" />
     <ClCompile Include="TimeController.cpp" />
+    <ClCompile Include="UI\UIButton.cpp" />
+    <ClCompile Include="UI\UIControl.cpp" />
+    <ClCompile Include="UI\UIScreen.cpp" />
+    <ClCompile Include="UI\UIControlSystem.cpp" />
     <ClCompile Include="World.cpp" />
     <ClCompile Include="_LinkLibraries.cpp" />
   </ItemGroup>
