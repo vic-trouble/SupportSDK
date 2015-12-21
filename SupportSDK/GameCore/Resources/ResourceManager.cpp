@@ -15,21 +15,6 @@ namespace SDK
 
 	namespace Resources
 	{
-#if defined(CPP_11)
-		static std::hash<std::string> hash_func;
-		size_t hash_function(const std::string& str)
-		{
-			return hash_func(str);
-		}
-#else
-		size_t hash_function(const std::string& str)
-		{
-			size_t hash = 0;
-			for (char c : str)
-				hash += c;
-			return hash;
-		}
-#endif
 		static ResourceManager manager;
 		ResourceManager& g_load_manager = manager;
 

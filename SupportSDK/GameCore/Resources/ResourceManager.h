@@ -7,13 +7,13 @@
 #include "../FileSystem/Stream.h"
 #include "../Render/Mesh.h"
 
+#include <Utilities/HashFunctions.h>
+
 namespace SDK
 {
 
 	namespace Resources
 	{
-		size_t hash_function(const std::string& str);		
-
 		namespace Serialization
 		{
 			
@@ -78,7 +78,7 @@ namespace SDK
 				///	
 				using Loader = LoaderImpl<ResType>;
 
-				const size_t hash = hash_function(i_res_name);
+				const size_t hash = Utilities::hash_function(i_res_name);
 				// check if handle already exist
 				auto it = std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(hash));
 				if (it != m_loaded_resources.end())
@@ -141,7 +141,7 @@ namespace SDK
 					typename Serialization::Definition<ResType>::InfoType i_info)
 			{
 				using namespace Serialization;
-				const size_t hash = hash_function(i_file_name);
+				const size_t hash = Utilities::hash_function(i_file_name);
 				// check if handle already exist
 				auto it = std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(hash));
 				if (it != m_loaded_resources.end())
