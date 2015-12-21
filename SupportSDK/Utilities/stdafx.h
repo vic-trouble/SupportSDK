@@ -8,6 +8,8 @@
 #include <vector>
 #include <set>
 
+#include <GameCore/Platform.h>
+
 #define UTILITIES_EXPORTING
 
 #endif
