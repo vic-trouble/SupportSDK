@@ -14,6 +14,7 @@
     <ProjectGuid>{C8080EEC-B0D1-4335-96A5-E14E96D2DEF1}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>RenderTesting</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -43,11 +44,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)Binaries\$(Configuration)\</OutDir>
+    <OutDir>$(ProjectDir)..\..\Binaries\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)Binaries\$(Configuration)\</OutDir>
+    <OutDir>$(ProjectDir)..\..\Binaries\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -65,9 +66,7 @@
       <AdditionalDependencies>GameCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(ProjectDir)\..\..\..\Binaries\Win32\$(Configuration)\GameCore.dll" "$(OutputPath)" /Y /R /I /E
-xcopy "$(ProjectDir)\..\..\..\Binaries\Win32\$(Configuration)\Utilities.dll" "$(OutputPath)" /Y /R /I /E
-xcopy "$(ProjectDir)\..\..\..\Binaries\Win32\$(Configuration)\Patterns.dll" "$(OutputPath)" /Y /R /I /E</Command>
+      <Command>xcopy "$(ProjectDir)\..\..\..\Binaries\Win32\$(Configuration)\GameCore.dll" "$(OutputPath)" /Y /R /I /E</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -90,9 +89,7 @@ xcopy "$(ProjectDir)\..\..\..\Binaries\Win32\$(Configuration)\Patterns.dll" "$(O
       <AdditionalDependencies>GameCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(ProjectDir)\..\..\..\Binaries\Win32\$(Configuration)\GameCore.dll" "$(OutputPath)" /Y /R /I /E
-xcopy "$(ProjectDir)\..\..\..\Binaries\Win32\$(Configuration)\Utilities.dll" "$(OutputPath)" /Y /R /I /E
-xcopy "$(ProjectDir)\..\..\..\Binaries\Win32\$(Configuration)\Patterns.dll" "$(OutputPath)" /Y /R /I /E</Command>
+      <Command>xcopy "$(ProjectDir)\..\..\..\Binaries\Win32\$(Configuration)\GameCore.dll" "$(OutputPath)" /Y /R /I /E</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
