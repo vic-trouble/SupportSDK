@@ -58,7 +58,7 @@ namespace SDK
 				{
 					if (i == j && m_data_[i][j] != 1)
 						return false;
-					else if (m_data_[i][j] != 0)
+					else if (i != j && m_data_[i][j] != 0)
 						return false;
 				}
 			return true;

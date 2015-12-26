@@ -76,6 +76,14 @@ TEST(MatrixTests, IdentityTest)
 	EXPECT_EQ(0., matrix(0, 1));
 	EXPECT_EQ(0., matrix(1, 0));
 	EXPECT_EQ(1., matrix(1, 1));
+	EXPECT_TRUE(matrix.IsIdentity());	
+}
+
+TEST(MatrixTests, IdentityTest_False)
+{
+	double m_0[] = { 1., 2., 3., 4. };
+	Matrix<double, 2, 2> matrix(m_0);	
+	EXPECT_FALSE(matrix.IsIdentity());
 }
 
 TEST(MatrixTests, AddMatrices)

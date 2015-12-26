@@ -19,7 +19,7 @@ namespace SDK
 			typedef Vector<CoordinateType, 3> ThisVector3;
 			typedef Matrix<CoordinateType, 3, 3> ThisMatrix3;
 			typedef Quaternion<CoordinateType> ThisQuaternion;
-
+			static const Matrix4<CoordinateType> IDENTITY;
 		public:
 
 			inline Matrix4()
@@ -210,6 +210,14 @@ namespace SDK
 			// No projection term
 			m[3][0] = 0; m[3][1] = 0; m[3][2] = 0; m[3][3] = 1;
 		}
+
+		template <typename CoordinateType>
+		const Matrix4<CoordinateType> Matrix4<CoordinateType>::IDENTITY = {
+			1, 0, 0, 0,
+			0, 1, 0, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 1
+		};
 
 	} // Math
 
