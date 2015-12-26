@@ -77,6 +77,8 @@ namespace SDK
 		virtual void SetModelViewMatrix(Matrix4f&& i_modelview_matrix) = 0;
 		// virtual void SetRenderTargets() = 0;
 
+		virtual void SetProjectionType(Render::ProjectionType i_projection_type) = 0;
+
 		////////////////////////////////////////////////////////////////////
 		// TODO: is it still needed
 

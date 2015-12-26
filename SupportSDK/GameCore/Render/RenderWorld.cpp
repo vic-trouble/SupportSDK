@@ -13,6 +13,8 @@ namespace SDK
 	namespace Render
 	{
 		Commands::CommandBucket<int64> gBuffer;
+		// TODO: separate buffers for different jobs
+		Commands::CommandBucket<int64> g_ui_buffer;
 		// shaders?
 		void SetRenderTargets()
 		{
@@ -29,15 +31,20 @@ namespace SDK
 		{			
 		}
 
-		void RenderWorld::Submit(const Viewport& i_viewport)
+		void RenderWorld::Submit(Viewport&& i_viewport)
 		{
 			auto p_renderer = Core::GetRenderer();
-
-			p_renderer->SetProjectionMatrix(i_viewport.mp_frustum->GetProjectionMatrix());
-			p_renderer->SetModelViewMatrix(i_viewport.mp_camera->GetModelViewMatrix());
+			p_renderer->SetModelViewMatrix(std::move(i_viewport.m_modelview_matrix));
+			p_renderer->SetProjectionMatrix(std::move(i_viewport.m_projection_matrix));
+			p_renderer->SetProjectionType(i_viewport.m_projection_type);
+			
 			SetRenderTargets();
 
+			// sort buffers
 			gBuffer.Sort();
+
+
+			// submit buffers
 			gBuffer.Submit();			
 		}
 

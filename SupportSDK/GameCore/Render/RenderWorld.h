@@ -24,7 +24,7 @@ namespace SDK
 		public:
 			RenderWorld();
 			// end command
-			GAMECORE_EXPORT void Submit(const Viewport& i_viewport);
+			GAMECORE_EXPORT void Submit(Viewport&& i_viewport);
 		};
 
 	}

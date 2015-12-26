@@ -296,8 +296,17 @@ namespace SDK
 		glDisableVertexAttribArray(0);
 	}
 
-	void OpenGLRenderer::SetProjectionMatrix(Matrix4f&& i_projection_matrix)
+	void OpenGLRenderer::SetProjectionType(Render::ProjectionType i_projection_type)
 	{
+		if (i_projection_type == Render::ProjectionType::Orthographic)
+			gluOrtho2D(0, m_paint_rectangle.Width(), 0, m_paint_rectangle.Height());			
+		else
+			glViewport(0, 0, m_paint_rectangle.Width(), m_paint_rectangle.Height());
+
+	}
+
+	void OpenGLRenderer::SetProjectionMatrix(Matrix4f&& i_projection_matrix)
+	{		
 		m_matrices[(int)MatrixMode::Projection] = i_projection_matrix;
 		glMatrixMode(GL_PROJECTION);
 		GLfloat gl_matrix[16];
@@ -330,6 +339,15 @@ namespace SDK
 		auto scale = i_translation_matrix.GetScaleVector();
 		auto translate = i_translation_matrix.GetTranslationVector();
 		glTranslatef(translate[0], translate[1], translate[2]);
+		if (i_translation_matrix.IsIdentity())
+		{
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+			glLoadIdentity();
+		}
+
 		/*
 		float[16] transMatrix;
 		glGetFloatv(GL_MODELVIEW_MATRIX, transMatrix);
@@ -405,20 +423,16 @@ namespace SDK
 
 	void OpenGLRenderer::BeginFrame()
 	{
-		_Clear(m_clear_color);
-		using namespace Render;
-		ShaderHandler h;
-		h.index = 0;
-		h.generation = 0;
-		auto shader = Render::g_shader_system.Access(h);
-		if (shader.IsValid())
-		{
-			//m_shader_compiler.SetUniform("u_modelview",)
-		}
+		SetProjectionType(Render::ProjectionType::Perspective);
+		/*glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();*/
+		_Clear(m_clear_color);		
 	}
 
 	void OpenGLRenderer::EndFrame()
-	{
+	{		
 		glFinish();
 		SwapBuffers(wglGetCurrentDC());
 	}

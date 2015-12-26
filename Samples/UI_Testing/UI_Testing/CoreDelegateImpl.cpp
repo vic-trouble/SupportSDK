@@ -36,11 +36,10 @@ namespace Game
 	{
 		mp_button = UI::g_ui_system.AppendControl<UI::UIButton>(mp_screen);
 		UI::g_ui_system.Load("..\\..\\Resources\\UI\\TestUIProfile.properties");
-		
 	}
 
 	void CoreDelegateImpl::OnTerminate()
-	{		
+	{
 	}
 
 	void CoreDelegateImpl::Update(float i_elapsed_time)

@@ -13,8 +13,28 @@ namespace SDK
 		class Viewport
 		{
 		public:
-			Camera* mp_camera;
-			Frustum* mp_frustum;
+			Matrix4f m_projection_matrix;
+			Matrix4f m_modelview_matrix;
+			ProjectionType m_projection_type;
+			
+			Viewport()
+				: m_projection_type(ProjectionType::Perspective)				
+			{
+				m_projection_matrix.Identity();
+				m_modelview_matrix.Identity();
+			}
+
+			Viewport(ProjectionType i_projection_type, Matrix4f i_proj_mat, Matrix4f i_modelview)
+				: m_projection_matrix(i_proj_mat)
+				, m_modelview_matrix(i_modelview)
+				, m_projection_type(i_projection_type)
+			{}
+
+			Viewport(Viewport&& i_left)
+				: m_projection_type(i_left.m_projection_type)
+				, m_modelview_matrix(std::move(i_left.m_modelview_matrix))
+				, m_projection_matrix(std::move(i_left.m_projection_matrix))
+			{}
 		};
 
 	} // Render

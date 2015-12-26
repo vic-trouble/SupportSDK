@@ -48,8 +48,8 @@ namespace Game
 		auto mesh_handler = Render::g_mesh_system.CreateInstance(loaded_mesh);
 		auto trans_handler = g_transforms_system.CreateInstance();
 		auto p_transform = g_transforms_system.GetInstance(trans_handler);
-		p_transform->m_position[0] = 1.f;
-		p_transform->m_position[1] = -1.5f;
+		p_transform->m_position[0] = -1.f;
+		p_transform->m_position[1] = 1.5f;
 		p_transform->m_position[2] = -2.5f;
 
 		entity_handler = g_entity_manager.CreateEntity();
@@ -603,13 +603,65 @@ namespace Game
 				draw1();
 			glPopMatrix();
 		}
-	}
+	} // namespace
 
+	Render::Batch batch;
+	void Render2D()
+	{
+		static bool once = true;
+		auto p_renderer = Core::GetRenderer();
+		if (once)
+		{
+			constexpr static float i_center[] = { 200, 500 };
+			constexpr static float x_offset = 100.f;
+			constexpr static float y_offset = 50.f;
+			const GLfloat verts[] = {
+				i_center[0] - x_offset, i_center[1] - y_offset,
+				i_center[0] + x_offset, i_center[1] - y_offset,
+				i_center[0] + x_offset, i_center[1] + y_offset,
+				i_center[0] - x_offset, i_center[1] + y_offset
+			};
+
+			uint inds[] = {
+				0, 1, 2,
+				3, 0, 2
+			};
+
+			auto p_mgr = p_renderer->GetHardwareBufferMgr();
+			batch.vertices = p_mgr->CreateVertexBuffer(sizeof(verts) / sizeof(float), sizeof(float) * 2, Render::BufferUsageFormat::Static, verts);
+			batch.indices = p_mgr->CreateIndexBuffer(Render::HardwareIndexBuffer::IndexType::Int, sizeof(inds) / sizeof(uint), Render::BufferUsageFormat::Static, inds);
+			batch.element = p_mgr->CreateElement(2, Render::VertexSemantic::Position, Render::PrimitiveType::Triangles, Render::ComponentType::Float, false);
+
+			once = false;
+		}
+
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		p_renderer->SetProjectionType(Render::ProjectionType::Orthographic);
+		
+		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_LIGHTING);
+		glDisable(GL_LIGHT0);
+
+		glColor4f(1.f, 1.f, 1.f, 0.2f);		
+		p_renderer->Draw(batch);
+		
+		glColor4f(1.f, 1.f, 1.f, 1.f);
+		glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHT0);
+		glEnable(GL_DEPTH_TEST);
+		//p_renderer->SetProjectionType(Render::ProjectionType::Perspective);
+		CHECK_GL_ERRORS;
+	}
 	void CoreDelegateImpl::Draw()
 	{
+		
 		//Render::Shader shader = Render::g_shader_system.Access(shader_handler);
-
+		
 		draw3(true);
+		//Render2D();
 	}
 
 } // Game

@@ -53,6 +53,7 @@ namespace SDK
 		virtual void Draw(Render::Batch i_decl) override;
 		virtual void SetProjectionMatrix(Matrix4f&& i_projection_matrix) override;
 		virtual void SetModelViewMatrix(Matrix4f&& i_modelview_matrix) override;
+		virtual void SetProjectionType(Render::ProjectionType i_projection_type) override;
 
 		virtual Render::HardwareBufferManager* GetHardwareBufferMgr() override { return &m_hardware_buffer_mgr; }
 		virtual Render::ShaderCompiler* GetShaderCompiler() override { return &m_shader_compiler; }

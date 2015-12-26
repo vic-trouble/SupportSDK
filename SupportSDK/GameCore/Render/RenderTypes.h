@@ -9,6 +9,12 @@ namespace SDK
 	namespace Render
 	{
 
+		enum class ProjectionType
+		{
+			Orthographic,
+			Perspective
+		};
+
 		enum class BufferUsageFormat
 		{
 			/*

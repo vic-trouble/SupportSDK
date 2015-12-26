@@ -6,6 +6,10 @@
 #include "UIScreen.h"
 #include "UIButton.h"
 
+#include "Core.h"
+#include "Applications/ApplicationBase.h"
+#include "Render/RenderWorld.h"
+
 #include "PropertyReaders.h"
 
 namespace SDK
@@ -42,6 +46,8 @@ namespace SDK
 				p_control->Draw();
 			}
 
+			auto& render_world = Core::GetApplication()->GetRenderWorld();
+			render_world.Submit({Render::ProjectionType::Orthographic, Matrix4f::IDENTITY, Matrix4f::IDENTITY });
 		}
 		
 		/*

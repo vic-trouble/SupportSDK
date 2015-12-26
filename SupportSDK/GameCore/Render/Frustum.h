@@ -3,17 +3,13 @@
 
 #include "../GameCoreAPI.h"
 
+#include "../Render/RenderTypes.h"
+
 namespace SDK
 {
 
 	namespace Render
-	{
-
-		enum class ProjectionType
-		{
-			Orthographic,
-			Perspective
-		};
+	{		
 
 		class Frustum
 		{

@@ -7,8 +7,6 @@ namespace SDK
 
 	World::World()
 	{
-		m_viewport.mp_camera = &m_camera;
-		m_viewport.mp_frustum = &m_frustum;
 	}
 
 	void World::Update(float i_elapsed_time)

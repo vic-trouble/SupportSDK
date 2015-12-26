@@ -44,6 +44,11 @@ namespace SDK
 				}
 
 			public:
+				CommandBucket()				
+				{
+					m_packets.reserve(20);
+				}
+
 				template <typename ProcessorType>
 				ProcessorType* Create(size_t i_aux_mem_size = 0)
 				{

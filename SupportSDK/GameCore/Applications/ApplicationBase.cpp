@@ -85,7 +85,11 @@ namespace SDK
 		for (World& world : m_worlds)
 		{
 			world.SubmitDrawCommands();
-			m_render_world.Submit(world.GetViewPort());
+			m_render_world.Submit({
+				world.GetFrustum().GetProjectionType(), 
+				world.GetFrustum().GetProjectionMatrix(), 
+				world.GetCamera().GetModelViewMatrix() 
+			});
 		}
 		mp_delegate->Draw();
 		UI::g_ui_system.Draw();
