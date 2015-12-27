@@ -29,12 +29,6 @@ namespace SDK
 				, m_modelview_matrix(i_modelview)
 				, m_projection_type(i_projection_type)
 			{}
-
-			Viewport(Viewport&& i_left)
-				: m_projection_type(i_left.m_projection_type)
-				, m_modelview_matrix(std::move(i_left.m_modelview_matrix))
-				, m_projection_matrix(std::move(i_left.m_projection_matrix))
-			{}
 		};
 
 	} // Render

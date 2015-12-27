@@ -48,8 +48,8 @@ namespace Game
 		auto mesh_handler = Render::g_mesh_system.CreateInstance(loaded_mesh);
 		auto trans_handler = g_transforms_system.CreateInstance();
 		auto p_transform = g_transforms_system.GetInstance(trans_handler);
-		p_transform->m_position[0] = -1.f;
-		p_transform->m_position[1] = 1.5f;
+		p_transform->m_position[0] = 1.f;
+		p_transform->m_position[1] = -1.5f;
 		p_transform->m_position[2] = -2.5f;
 
 		entity_handler = g_entity_manager.CreateEntity();
