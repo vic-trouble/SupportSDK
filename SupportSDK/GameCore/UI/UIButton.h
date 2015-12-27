@@ -2,6 +2,7 @@
 #define __GAMECORE_UIBUTTON_H__
 
 #include "UIControl.h"
+#include "../Render/VertexDeclaration.h"
 
 namespace SDK
 {
@@ -11,9 +12,12 @@ namespace SDK
 		class UIButton : public UIControl
 		{
 		private:
+			Render::Batch m_batch;
+
+		private:
 			virtual void UpdateImpl(float i_elapsed_time) override;
 			virtual void DrawImpl() override;
-			virtual void Load(const PropertyElement& i_element) override;
+			virtual void LoadImpl(const PropertyElement& i_element) override;
 
 		public:
 			GAMECORE_EXPORT UIButton();

@@ -333,20 +333,23 @@ namespace SDK
 		glPopMatrix();
 	}
 
+	void OpenGLRenderer::SetMatrixMode(MatrixMode i_matrix_mode)
+	{
+		if (m_current_mode == i_matrix_mode)
+			return;
+		m_current_mode = i_matrix_mode;
+		if (m_current_mode == MatrixMode::ModelView)
+			glMatrixMode(GL_MODELVIEW);
+		else
+			glMatrixMode(GL_PROJECTION);
+	}
+
 	void OpenGLRenderer::SetCurrentMatrix(const Matrix4f& i_translation_matrix)
 	{
 		// TODO: as understood - use shader and not modify current matrix
 		auto scale = i_translation_matrix.GetScaleVector();
 		auto translate = i_translation_matrix.GetTranslationVector();
 		glTranslatef(translate[0], translate[1], translate[2]);
-		if (i_translation_matrix.IsIdentity())
-		{
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			glMatrixMode(GL_MODELVIEW);
-			glLoadIdentity();
-			glLoadIdentity();
-		}
 
 		/*
 		float[16] transMatrix;
@@ -423,11 +426,16 @@ namespace SDK
 
 	void OpenGLRenderer::BeginFrame()
 	{
-		SetProjectionType(Render::ProjectionType::Perspective);
-		/*glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
+		// reset projection type
+		SetProjectionType(Render::ProjectionType::Perspective);		
+		// reset matrices
 		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();*/
+		glLoadIdentity();
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		// set to ModelView matrix
+		SetMatrixMode(MatrixMode::ModelView);
+		// clear screen
 		_Clear(m_clear_color);		
 	}
 

@@ -95,7 +95,9 @@ namespace SDK
 		for (size_t i = i_begin; i <= i_end; ++i)
 		{
 			if (value[i] == ' ' || value[i] == '\t' || value[i] == ']' || i == i_end)
-			{
+			{			
+				if (i_begin == i_end)
+					break;
 				ValType v = Utilities::lexical_cast<ValType>(value.substr(i_begin, i - i_begin).c_str());
 				values.push_back(v);
 				i_begin = value.find_first_not_of(" \t", i + 1);

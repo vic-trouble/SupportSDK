@@ -26,53 +26,40 @@ namespace SDK
 		{
 
 		}
-		Render::Batch batch;
-		void CreateDummy()
-		{
-			static bool once = true;
-			auto p_renderer = Core::GetRenderer();
-			if (once)
-			{
-				constexpr static float i_center[] = { 200, 500 };
-				constexpr static float x_offset = 100.f;
-				constexpr static float y_offset = 50.f;
-				const float verts[] = {
-					i_center[0] - x_offset, i_center[1] - y_offset,
-					i_center[0] + x_offset, i_center[1] - y_offset,
-					i_center[0] + x_offset, i_center[1] + y_offset,
-					i_center[0] - x_offset, i_center[1] + y_offset
-				};
-
-				uint inds[] = {
-					0, 1, 2,
-					3, 0, 2
-				};
-
-				auto p_mgr = p_renderer->GetHardwareBufferMgr();
-				batch.vertices = p_mgr->CreateVertexBuffer(sizeof(verts) / sizeof(float), sizeof(float) * 2, Render::BufferUsageFormat::Static, verts);
-				batch.indices = p_mgr->CreateIndexBuffer(Render::HardwareIndexBuffer::IndexType::Int, sizeof(inds) / sizeof(uint), Render::BufferUsageFormat::Static, inds);
-				batch.element = p_mgr->CreateElement(2, Render::VertexSemantic::Position, Render::PrimitiveType::Triangles, Render::ComponentType::Float, false);
-
-				once = false;
-			}
-		}
 
 		void UIButton::DrawImpl()
 		{
 			using namespace Render;
-			CreateDummy();
+			auto rect = Core::GetRenderer()->GetTargetRectangle();
 			Commands::Transform* p_transform_cmd = Render::gBuffer.Create<Commands::Transform>();
-			p_transform_cmd->Translate(Vector3{50, 50, 0});
+			p_transform_cmd->Translate(Vector3{ static_cast<float>(m_global_position[0]), static_cast<float>(m_global_position[1]), 0.f });
 
 			Commands::Draw* p_cmd = Render::gBuffer.Append<Commands::Draw>(p_transform_cmd);
-			p_cmd->vertices = batch.vertices;
-			p_cmd->layout = batch.element;
-			p_cmd->indices = batch.indices;
+			p_cmd->vertices = m_batch.vertices;
+			p_cmd->layout = m_batch.element;
+			p_cmd->indices = m_batch.indices;
 		}
 
-		void UIButton::Load(const PropertyElement& i_element)
+		void UIButton::LoadImpl(const PropertyElement& i_element)
 		{
+			constexpr static float i_center[] = { 0, 0 };
+			const uint half_size[] = { m_global_size[0] / 2, m_global_size[1] / 2 };
+			const float verts[] = {
+				i_center[0] - half_size[0], i_center[1] - half_size[1],
+				i_center[0] + half_size[0], i_center[1] - half_size[1],
+				i_center[0] + half_size[0], i_center[1] + half_size[1],
+				i_center[0] - half_size[0], i_center[1] + half_size[1]
+			};
 
+			ubyte inds[] = {
+				0, 1, 2,
+				3, 0, 2
+			};
+			// TODO: can optimize allocations?
+			auto p_mgr = Core::GetRenderer()->GetHardwareBufferMgr();
+			m_batch.vertices = p_mgr->CreateVertexBuffer(sizeof(verts) / sizeof(float), sizeof(float) * 2, Render::BufferUsageFormat::Static, verts);
+			m_batch.indices = p_mgr->CreateIndexBuffer(Render::HardwareIndexBuffer::IndexType::Byte, sizeof(inds) / sizeof(ubyte), Render::BufferUsageFormat::Static, inds);
+			m_batch.element = p_mgr->CreateElement(2, Render::VertexSemantic::Position, Render::PrimitiveType::Triangles, Render::ComponentType::Float, false);
 		}
 
 	} // UI

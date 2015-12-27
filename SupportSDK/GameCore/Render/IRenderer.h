@@ -42,6 +42,12 @@ namespace SDK
 		}
 	};
 
+	enum class MatrixMode
+	{
+		Projection,
+		ModelView
+	};
+
 	class IRenderer
 	{
 	protected:
@@ -58,6 +64,7 @@ namespace SDK
 		
 		virtual void PushMatrix() = 0;
 		virtual void PopMatrix() = 0;
+		virtual void SetMatrixMode(MatrixMode i_matrix_mode) = 0;
 		virtual void SetCurrentMatrix(const Matrix4f& i_translation_matrix) = 0;
 
 		virtual void Initialize() = 0;

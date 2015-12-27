@@ -23,5 +23,10 @@ namespace SDK
 		}
 
 
+		void UIScreen::LoadImpl(const PropertyElement& element)
+		{
+
+		}
+
 	} // UI
 } // SDK

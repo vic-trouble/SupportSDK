@@ -22,13 +22,8 @@ namespace SDK
 
 		Render::HardwareBufferManager m_hardware_buffer_mgr;
 		Render::GLShaderCompiler m_shader_compiler;
-
-		enum class MatrixMode
-		{
-			Projection,
-			ModelView
-		};
-
+		
+		MatrixMode m_current_mode;
 		Matrix4f m_matrices[2];
 
 	private:
@@ -51,6 +46,7 @@ namespace SDK
 		virtual void	EndFrame() override;
 
 		virtual void Draw(Render::Batch i_decl) override;
+
 		virtual void SetProjectionMatrix(Matrix4f&& i_projection_matrix) override;
 		virtual void SetModelViewMatrix(Matrix4f&& i_modelview_matrix) override;
 		virtual void SetProjectionType(Render::ProjectionType i_projection_type) override;
@@ -60,6 +56,7 @@ namespace SDK
 
 		virtual void PushMatrix() override;
 		virtual void PopMatrix() override;
+		virtual void SetMatrixMode(MatrixMode i_matrix_mode) override;
 		virtual void SetCurrentMatrix(const Matrix4f& i_translation_matrix) override;
 
 		////////////////////////////////////////////////////////////////////
