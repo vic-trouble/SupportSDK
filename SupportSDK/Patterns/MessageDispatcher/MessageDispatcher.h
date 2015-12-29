@@ -1,11 +1,13 @@
 #pragma once
 
-#include "PatternsAPI.h"
+#include "../PatternsAPI.h"
 
 #include "MessageHandlerBase.h"
 #include "MemberFunctionHandler.h"
 
 #include "type_index.h"
+
+#include <unordered_map>
 
 struct Event;
 

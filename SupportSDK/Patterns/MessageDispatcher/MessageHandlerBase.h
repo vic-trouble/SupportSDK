@@ -1,7 +1,7 @@
 #ifndef __GAMECORE_MESSAGEHANDLERBASE_H__
 #define __GAMECORE_MESSAGEHANDLERBASE_H__
 
-#include "PatternsAPI.h"
+#include "../PatternsAPI.h"
 
 struct Event;
 
