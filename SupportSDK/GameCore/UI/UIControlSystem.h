@@ -68,6 +68,8 @@ namespace SDK
 				UIControlHandler handler{ index, 0 };
 				// push to controls array
 				m_controls.push_back(std::make_pair(handler, std::move(p_obj)));
+				// initialize this handler - can be done only after adding to m_controls
+				p_raw->InitializeThisHandler();
 				return UIControlAccessor<ControlType>(this, handler);
 			}
 

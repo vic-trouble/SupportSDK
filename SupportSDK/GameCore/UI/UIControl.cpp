@@ -19,8 +19,8 @@ namespace SDK
 			: m_relative_position()
 			, m_global_position()
 			, m_parent(INVALID_UI_HANDLER)
+			, m_this_handler(INVALID_UI_HANDLER)
 		{
-			m_this_handler = g_ui_system.GetHandlerTo(this);
 			m_scale[0] = m_scale[1] = 1.f;
 			m_rotation[0] = m_rotation[1] = 0.f;
 			m_size[0] = m_size[1] = 0.01f;
@@ -30,45 +30,65 @@ namespace SDK
 		{
 			UIControl* p_parent = g_ui_system.AccessControl(m_parent);
 			if (p_parent)
-				p_parent->RemoveChild(this);
+				p_parent->RemoveChild(m_this_handler);
+		}
+
+		void UIControl::InitializeThisHandler()
+		{
+			m_this_handler = g_ui_system.GetHandlerTo(this);
 		}
 
 		void UIControl::Update(float i_elapsed_time)
 		{
 			UpdateImpl(i_elapsed_time);
-			for (auto p_child : m_children)
-				p_child->Update(i_elapsed_time);
+			for (auto child : m_children)
+			{
+				auto p_control = g_ui_system.AccessControl(child);
+				if (p_control)
+					p_control->Update(i_elapsed_time);
+			}
 		}
 
 		void UIControl::Draw()
 		{
 			DrawImpl();
-			for (auto p_child : m_children)
-				p_child->Draw();
+			for (auto child : m_children)
+			{
+				auto p_control = g_ui_system.AccessControl(child);
+				if (p_control)
+					p_control->Draw();
+			}
+				
 		}
 
 		void UIControl::SetParent(UIControlHandler i_parent)
 		{
 			UIControl* p_parent = g_ui_system.AccessControl(m_parent);
 			if (p_parent != nullptr)
-				p_parent->RemoveChild(this);
+				p_parent->RemoveChild(m_this_handler);
 				
 			m_parent = i_parent;
+
 			p_parent = g_ui_system.AccessControl(m_parent);
 			if (p_parent != nullptr)
-				p_parent->AddChild(this);
+				p_parent->AddChild(m_this_handler);
 		}
 
-		void UIControl::AddChild(UIControl* ip_child)
+		UIControl* UIControl::GetParentPtr() const
 		{
-			assert(ip_child != nullptr);
-			m_children.push_back(ip_child);
+			return g_ui_system.AccessControl(m_parent);
 		}
 
-		void UIControl::RemoveChild(UIControl* ip_child)
+		void UIControl::AddChild(UIControlHandler i_child)
 		{
-			assert(ip_child != nullptr);
-			auto it = std::find(m_children.begin(), m_children.end(), ip_child);
+			assert(i_child != INVALID_UI_HANDLER);
+			m_children.push_back(i_child);
+		}
+
+		void UIControl::RemoveChild(UIControlHandler i_child)
+		{
+			assert(i_child != INVALID_UI_HANDLER);
+			auto it = std::find(m_children.begin(), m_children.end(), i_child);
 			if (it != m_children.end())
 				m_children.erase(it);
 		}		

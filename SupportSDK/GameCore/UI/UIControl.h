@@ -19,7 +19,7 @@ namespace SDK
 
 			std::string m_name;
 			UIControlHandler m_parent;
-			std::vector<UIControl*> m_children;
+			std::vector<UIControlHandler> m_children;
 			
 			// [0;1]
 			Vector2 m_relative_position;
@@ -49,8 +49,8 @@ namespace SDK
 			UIControlHandler GetParent() const { return m_parent; }
 			GAMECORE_EXPORT UIControl* GetParentPtr() const;
 
-			GAMECORE_EXPORT  void AddChild(UIControl* ip_child);
-			GAMECORE_EXPORT  void RemoveChild(UIControl* ip_child);
+			GAMECORE_EXPORT  void AddChild(UIControlHandler i_child);
+			GAMECORE_EXPORT  void RemoveChild(UIControlHandler i_child);
 
 			// Return in pixels [0-width; 0-height]
 			GAMECORE_EXPORT Vector2i GetGlobalPosition() const;			
@@ -62,6 +62,8 @@ namespace SDK
 			Vector2 GetRelativeSize() const { return m_size; }
 
 			void Load(const PropertyElement& i_element);
+
+			void InitializeThisHandler();
 		};
 
 
