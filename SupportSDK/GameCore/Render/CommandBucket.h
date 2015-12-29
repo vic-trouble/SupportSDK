@@ -22,8 +22,8 @@ namespace SDK
 				void Submit(CommandPacket& i_packet)
 				{
 					i_packet.m_executor(i_packet.mp_data);
-					if (i_packet.mp_next != nullptr)
-						Submit(*i_packet.mp_next);
+					if (i_packet.m_next != CommandPacket::InvalidHandler)
+						Submit(m_packets[i_packet.m_next]);
 					i_packet.m_completion(i_packet.mp_data);
 					i_packet.m_executed = true;
 				}
@@ -45,9 +45,7 @@ namespace SDK
 
 			public:
 				CommandBucket()				
-				{
-					m_packets.reserve(20);
-				}
+				{	}
 
 				template <typename ProcessorType>
 				ProcessorType* Create(size_t i_aux_mem_size = 0)
@@ -69,8 +67,8 @@ namespace SDK
 						return cmd_packet.mp_data == ip_command;
 					});
 					// TODO: notify user about error
-					if (it != m_packets.end())					
-						it->mp_next = &m_packets.back();
+					if (it != m_packets.end())
+						it->m_next = m_packets.size() - 1;
 					return reinterpret_cast<ProcessorType*>(p_data);
 				}
 
