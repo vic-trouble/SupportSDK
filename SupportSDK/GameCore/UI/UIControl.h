@@ -2,6 +2,7 @@
 #define __GAMECORE_UICONTROL_H__
 
 #include "../GameCoreAPI.h"
+#include "UITypes.h"
 
 namespace SDK
 {
@@ -9,12 +10,15 @@ namespace SDK
 
 	namespace UI
 	{
+		class UIControlSystem;
 
 		class UIControl
 		{
 		protected:
+			UIControlHandler m_this_handler;
+
 			std::string m_name;
-			UIControl* mp_parent;
+			UIControlHandler m_parent;
 			std::vector<UIControl*> m_children;
 			
 			// [0;1]
@@ -40,9 +44,10 @@ namespace SDK
 			
 			GAMECORE_EXPORT void Update(float i_elapsed_time);
 			GAMECORE_EXPORT void Draw();
-
-			GAMECORE_EXPORT void SetParent(UIControl* ip_parent);
-			UIControl* GetParent() const { return mp_parent; }
+			
+			GAMECORE_EXPORT void SetParent(UIControlHandler i_parent);
+			UIControlHandler GetParent() const { return m_parent; }
+			GAMECORE_EXPORT UIControl* GetParentPtr() const;
 
 			GAMECORE_EXPORT  void AddChild(UIControl* ip_child);
 			GAMECORE_EXPORT  void RemoveChild(UIControl* ip_child);

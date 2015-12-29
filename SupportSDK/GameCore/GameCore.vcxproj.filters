@@ -269,6 +269,9 @@
     <ClInclude Include="PropertyReaders.h">
       <Filter>Core\Properties</Filter>
     </ClInclude>
+    <ClInclude Include="UI\UITypes.h">
+      <Filter>Core\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

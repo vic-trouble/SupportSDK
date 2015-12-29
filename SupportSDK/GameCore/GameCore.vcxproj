@@ -168,6 +168,7 @@
     <ClInclude Include="UI\UIControl.h" />
     <ClInclude Include="UI\UIScreen.h" />
     <ClInclude Include="UI\UIControlSystem.h" />
+    <ClInclude Include="UI\UITypes.h" />
     <ClInclude Include="World.h" />
     <ClInclude Include="_Link.h" />
   </ItemGroup>

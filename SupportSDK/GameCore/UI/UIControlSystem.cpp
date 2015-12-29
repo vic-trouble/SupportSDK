@@ -20,30 +20,51 @@ namespace SDK
 
 		UIControlSystem::~UIControlSystem()
 		{
-			for (auto& p_control : m_controls)
-				p_control->SetParent(nullptr);
+			for (auto& control : m_controls)
+				control.second->SetParent(INVALID_UI_HANDLER);
 			m_controls.clear();
+		}
+
+		UIControlHandler UIControlSystem::GetHandlerTo(UIControl* ip_pointer) const
+		{
+			auto it = std::find_if(m_controls.begin(), m_controls.end(), [ip_pointer](const UIControlPair& control)
+			{
+				return control.second.get() == ip_pointer;
+			});
+			if (it == m_controls.end())
+				return INVALID_UI_HANDLER;
+			return it->first;
+		}
+
+		UIControl* UIControlSystem::AccessControl(UIControlHandler i_handler) const
+		{
+			if (i_handler.index == -1 || m_controls.size() <= i_handler.index)
+				return nullptr;
+			if (m_controls[i_handler.index].first.generation != i_handler.generation)
+				return nullptr;
+
+			return m_controls[i_handler.index].second.get();
 		}
 
 		void UIControlSystem::Update(float i_elapsed_time)
 		{
-			for (auto& p_control : m_controls)
+			for (auto& control : m_controls)
 			{
 				// control is updated from parent
-				if (p_control->GetParent() != nullptr)
+				if (control.second->GetParent() != INVALID_UI_HANDLER)
 					continue;
-				p_control->Update(i_elapsed_time);
+				control.second->Update(i_elapsed_time);
 			}
 		}
 
 		void UIControlSystem::Draw()
 		{
-			for (auto& p_control : m_controls)
+			for (auto& control : m_controls)
 			{
 				// control is updated from parent
-				if (p_control->GetParent() != nullptr)
+				if (control.second->GetParent() != INVALID_UI_HANDLER)
 					continue;
-				p_control->Draw();
+				control.second->Draw();
 			}
 
 			auto& render_world = Core::GetApplication()->GetRenderWorld();
@@ -82,38 +103,38 @@ namespace SDK
 			struct ObjectCreator
 			{
 				typedef ObjType Type;
-				static UIControl* Create(const PropertyElement& i_element, UIControl* ip_parent = nullptr)
+				typedef UIControlSystem::UIControlAccessor<Type> Accessor;
+				static Accessor Create(const PropertyElement& i_element, UIControlHandler i_parent)
 				{
-					auto name = i_element.GetValue<std::string>("name");
-					UIControl* p_control = nullptr;
-					if (ip_parent == nullptr)
-						p_control = g_ui_system.CreateControl<Type>();
+					Accessor accessor(&g_ui_system, INVALID_UI_HANDLER);
+					if (i_parent == INVALID_UI_HANDLER)
+						accessor = g_ui_system.CreateControl<Type>();
 					else
-						p_control = g_ui_system.AppendControl<Type>(ip_parent);
-					p_control->Load(i_element);
-					return p_control;
+						accessor = g_ui_system.AppendControl<Type>(i_parent);
+					accessor.GetActual()->Load(i_element);
+					return accessor;
 				}
 			};
-		}
+		} // namespace
 
-		void AddControlElement(const PropertyElement::iterator<PropertyElement>& i_it, UIControl* ip_parent = nullptr)
+		void AddControlElement(const PropertyElement::iterator<PropertyElement>& i_it, UIControlHandler i_parent = INVALID_UI_HANDLER)
 		{
 			// type of control
 			auto type = i_it.element_name();
 			const PropertyElement& element = *i_it;
-			UIControl* p_control = nullptr;
+			UIControlHandler handler = INVALID_UI_HANDLER;
 			if (type == "button")				
-				p_control = ObjectCreator<UIButton>::Create(element, ip_parent);
+				handler = ObjectCreator<UIButton>::Create(element, i_parent).GetHandler();
 			else if (type == "screen")
-				p_control = ObjectCreator<UIScreen>::Create(element, ip_parent);
+				handler = ObjectCreator<UIScreen>::Create(element, i_parent).GetHandler();
 
-			if (p_control == nullptr)
+			if (handler == INVALID_UI_HANDLER)
 				return;
 			
 			
 			const auto end = element.end<PropertyElement>();
 			for (auto it = element.begin<PropertyElement>(); it != end; ++it)
-				AddControlElement(it, p_control);
+				AddControlElement(it, handler);
 		}
 
 		void UIControlSystem::Load(const std::string& i_file_name)

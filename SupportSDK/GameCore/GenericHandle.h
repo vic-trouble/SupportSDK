@@ -13,6 +13,16 @@ namespace SDK
 		T index : N1;
 		T generation : N2;
 	};
+	template <typename T, T N1, T N2, typename Tag>
+	bool operator == (const GenericHandle<T, N1, N2, Tag>& left, const GenericHandle<T, N1, N2, Tag>& right)
+	{
+		return left.index == right.index && left.generation == right.generation;
+	}
+	template <typename T, T N1, T N2, typename Tag>
+	bool operator != (const GenericHandle<T, N1, N2, Tag>& left, const GenericHandle<T, N1, N2, Tag>& right)
+	{
+		return left.index != right.index || left.generation != right.generation;
+	}
 
 	template <typename HandlerType, typename BufferType, size_t size = 4096>
 	struct GenericBuffersArray

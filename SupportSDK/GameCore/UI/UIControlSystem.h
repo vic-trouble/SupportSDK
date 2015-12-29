@@ -2,8 +2,11 @@
 #define __GAMECORE_UICONTROLSYSTEM_H__
 
 #include "../GameCoreAPI.h"
+#include "UITypes.h"
 
 #include <Utilities/noncopyable.h>
+
+#include <Patterns/MessageDispatcher/MessageDispatcher.h>
 
 namespace SDK
 {
@@ -14,37 +17,73 @@ namespace SDK
 
 		class UIControlSystem : Utilities::noncopyable
 		{
+		public:
+			template <typename ControlType>
+			class UIControlAccessor
+			{
+			private:
+				UIControlHandler m_handler;
+				UIControlSystem* mp_owner_system;
+			public:
+				UIControlAccessor(UIControlSystem* ip_control_system, UIControlHandler i_handler)
+					: mp_owner_system(ip_control_system)
+					, m_handler(i_handler)
+				{}
+
+				// return pointer to control or return nullptr
+				ControlType* GetActual() const
+				{
+					return static_cast<ControlType*>(mp_owner_system->AccessControl(m_handler));
+				}
+				bool IsControlAlive() const
+				{
+					return GetActual() != nullptr;
+				}
+				UIControlHandler GetHandler() const { return m_handler; }
+			};
 		private:
 			UIScreen* mp_current_screen;
 			UIScreen* mp_prev_screen;
 			UIScreen* mp_next_screen;
 
 			typedef std::unique_ptr<UIControl> UIControlPtr;
-			std::vector<UIControlPtr> m_controls;
+			typedef std::pair<UIControlHandler, UIControlPtr> UIControlPair;
+			std::vector<UIControlPair> m_controls;
+			MessageDispatcher m_message_dispatcher;
 
 		public:
 			GAMECORE_EXPORT ~UIControlSystem();
 
+			UIControl* AccessControl(UIControlHandler i_handler) const;
+			UIControlHandler GetHandlerTo(UIControl* ip_pointer) const;
+
 			template <typename ControlType, typename... Args>
-			ControlType* CreateControl(Args... args)
+			UIControlAccessor<ControlType> CreateControl(Args... args)
 			{
-				UIControlPtr p_obj = std::make_unique<ControlType>(args...);				
-				auto p_raw = p_obj.get();
-				m_controls.push_back(std::move(p_obj));
-				return static_cast<ControlType*>(p_raw);
+				// Create control
+				UIControlPtr p_obj = std::make_unique<ControlType>(args...);
+				// get raw pointer and create handler
+				UIControl* p_raw = p_obj.get();
+				const size_t index = m_controls.size();
+				UIControlHandler handler{ index, 0 };
+				// push to controls array
+				m_controls.push_back(std::make_pair(handler, std::move(p_obj)));
+				return UIControlAccessor<ControlType>(this, handler);
 			}
 
 			template <typename ControlType, typename... Args>
-			ControlType* AppendControl(UIControl* ip_parent, Args... args)
+			UIControlAccessor<ControlType> AppendControl(UIControlHandler i_parent, Args... args)
 			{
-				ControlType* p_control = CreateControl<ControlType>(args...);
-				p_control->SetParent(ip_parent);
-				return p_control;
+				UIControlAccessor<ControlType> control_accessor = CreateControl<ControlType>(args...);
+				control_accessor.GetActual()->SetParent(i_parent);
+				return control_accessor;
 			}
 
 			void Update(float i_elapsed_time);
 			void Draw();
 			GAMECORE_EXPORT void Load(const std::string& i_file_name);
+
+			MessageDispatcher& GetMessageDispatcher() { return m_message_dispatcher; }
 		};
 
 		// TODO: global object

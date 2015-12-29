@@ -7,6 +7,7 @@
 
 #include "Core.h"
 #include "Render/IRenderer.h"
+#include "UIControlSystem.h"
 
 #include <Utilities/HashFunctions.h>
 
@@ -15,10 +16,11 @@ namespace SDK
 	namespace UI
 	{
 		UIControl::UIControl()
-			: mp_parent(nullptr)
-			, m_relative_position()
+			: m_relative_position()
 			, m_global_position()
+			, m_parent(INVALID_UI_HANDLER)
 		{
+			m_this_handler = g_ui_system.GetHandlerTo(this);
 			m_scale[0] = m_scale[1] = 1.f;
 			m_rotation[0] = m_rotation[1] = 0.f;
 			m_size[0] = m_size[1] = 0.01f;
@@ -26,8 +28,9 @@ namespace SDK
 
 		UIControl::~UIControl()
 		{
-			if (mp_parent)
-				mp_parent->RemoveChild(this);
+			UIControl* p_parent = g_ui_system.AccessControl(m_parent);
+			if (p_parent)
+				p_parent->RemoveChild(this);
 		}
 
 		void UIControl::Update(float i_elapsed_time)
@@ -44,13 +47,16 @@ namespace SDK
 				p_child->Draw();
 		}
 
-		void UIControl::SetParent(UIControl* ip_parent)
+		void UIControl::SetParent(UIControlHandler i_parent)
 		{
-			if (mp_parent)
-				mp_parent->RemoveChild(this);
-			mp_parent = ip_parent;
-			if (mp_parent)
-				mp_parent->AddChild(this);
+			UIControl* p_parent = g_ui_system.AccessControl(m_parent);
+			if (p_parent != nullptr)
+				p_parent->RemoveChild(this);
+				
+			m_parent = i_parent;
+			p_parent = g_ui_system.AccessControl(m_parent);
+			if (p_parent != nullptr)
+				p_parent->AddChild(this);
 		}
 
 		void UIControl::AddChild(UIControl* ip_child)
