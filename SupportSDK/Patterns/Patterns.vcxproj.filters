@@ -49,11 +49,8 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
-    <ClCompile Include="MessageDispatcher\MessageDispatcher.cpp">
-      <Filter>MessageDisatcher</Filter>
-    </ClCompile>
-    <ClCompile Include="MessageDispatcher\MessageHandlerBase.cpp">
-      <Filter>MessageDisatcher</Filter>
+    <ClCompile Include="_LinkingLibraries.cpp">
+      <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

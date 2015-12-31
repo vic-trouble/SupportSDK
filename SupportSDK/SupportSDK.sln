@@ -62,6 +62,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Terrain.Tests", "Terrain\Te
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Patterns", "Patterns\Patterns.vcxproj", "{F039FC01-494D-46AE-9333-4EED828C1FB0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{344430D7-1DA4-4F81-95AB-41E981166CB9} = {344430D7-1DA4-4F81-95AB-41E981166CB9}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

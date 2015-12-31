@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #if defined(TARGET_PLATFORM_WIN32)
-//#include <Math/_Link.h>
+#include <Math/_Link.h>
 #include <Utilities/_Link.h>
 #include <Patterns/_Link.h>
 

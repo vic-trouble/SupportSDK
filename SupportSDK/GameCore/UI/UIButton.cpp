@@ -61,6 +61,12 @@ namespace SDK
 			m_batch.indices = p_mgr->CreateIndexBuffer(Render::HardwareIndexBuffer::IndexType::Byte, sizeof(inds) / sizeof(ubyte), Render::BufferUsageFormat::Static, inds);
 			m_batch.element = p_mgr->CreateElement(2, Render::VertexSemantic::Position, Render::PrimitiveType::Triangles, Render::ComponentType::Float, false);
 		}
-
+		/*
+		
+		button
+		message_system
+		handler
+		control_system
+		*/
 	} // UI
 } // SDK

@@ -29,12 +29,61 @@ using namespace SDK;
 #include <GameCore/Applications/ApplicationBase.h>
 
 #include <GameCore/UI/UIControlSystem.h>
+#include <string>
+
+#include <Utilities/_Link.h>
+#include <Patterns/_Link.h>
 
 namespace Game
 {
+	typedef int ConnectionHandler;
+	typedef int/*index*/ Publisher;
+	struct Connection
+	{
+		ConnectionHandler handler;
+		typedef int EventType;
+		typedef Publisher EventPublisherHandler;
+		
+		Connection(EventType, EventPublisherHandler, void (*handlerFunction))
+		{
+
+		}
+		~Connection() { disconnect(); }
+		bool connected() const
+		{
+			// UI::system.TestConnection(handler);
+		}
+		void disconnect() {}
+	};
+
+	struct Ev : public Event
+	{
+		std::string name;
+		Ev(const std::string& n) : name(n){}
+	};
+
+	struct TestHandler
+	{
+		void Handle(const Ev& e)
+		{
+			std::cout << e.name << std::endl;
+		}
+	};
+
 	void CoreDelegateImpl::OnCreate()
 	{
 		UI::g_ui_system.Load("..\\..\\Resources\\UI\\TestUIProfile.properties");
+		auto& msg_dsp = UI::g_ui_system.GetMessageDispatcher();
+		TestHandler handler;
+		msg_dsp.RegisterHandler<TestHandler, const Ev&>(handler, &TestHandler::Handle, "publisher");
+		msg_dsp.HandleMessage<Ev>(Ev("publisher"), "publisher1");
+		msg_dsp.HandleMessage<Ev>(Ev("publisher"), "publisher");
+		msg_dsp.UnregisterHandler<Ev>("publisher");
+		// Connection x = UI::g_ui_system.Subscribe(EventType, EventPublisher, &EventListener);
+		//		EventType - specific - int?enum?
+		//		EventPublisher - UIControl* - need index (in vector it all stores)
+		//		Function
+		// x.Test();
 		//UI::g_ui_system.Load("..\\..\\Resources\\UI\\test.properties");
 	}
 

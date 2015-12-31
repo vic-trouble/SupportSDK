@@ -1,5 +1,5 @@
-#ifndef __stdafx_h__
-#define __stdafx_h__
+#ifndef __PATTERNS_stdafx_h__
+#define __PATTERNS_stdafx_h__
 
 #include <algorithm>
 #include <functional>
