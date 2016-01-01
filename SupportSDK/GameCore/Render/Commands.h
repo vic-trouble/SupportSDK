@@ -1,7 +1,7 @@
 #ifndef	__GAMECORE_COMMANDS_H__
 #define __GAMECORE_COMMANDS_H__
 
-#include "Render/RenderTypes.h"
+#include "../Render/RenderTypes.h"
 
 namespace SDK
 {

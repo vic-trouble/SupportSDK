@@ -644,14 +644,17 @@ namespace Game
 		glDisable(GL_DEPTH_TEST);
 		glDisable(GL_LIGHTING);
 		glDisable(GL_LIGHT0);
-
+		glEnable(GL_BLEND);
+		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendFunc(GL_ONE, GL_SRC_ALPHA);
 		glColor4f(1.f, 1.f, 1.f, 0.2f);		
 		p_renderer->Draw(batch);
 		
-		glColor4f(1.f, 1.f, 1.f, 1.f);
+		glColor4f(1.f, 1.f, 1.f, .5f);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_LIGHT0);
 		glEnable(GL_DEPTH_TEST);
+		glDisable(GL_BLEND);
 		//p_renderer->SetProjectionType(Render::ProjectionType::Perspective);
 		CHECK_GL_ERRORS;
 	}
@@ -661,7 +664,7 @@ namespace Game
 		//Render::Shader shader = Render::g_shader_system.Access(shader_handler);
 		
 		draw3(true);
-		//Render2D();
+		Render2D();
 	}
 
 } // Game
