@@ -12,11 +12,67 @@
 
 #include "PropertyReaders.h"
 
+#include "Input/InputSystem.h"
+#include "Input/InputSubscriber.h"
+
 namespace SDK
 {
 	namespace UI
 	{
 		UIControlSystem g_ui_system;
+
+		class UIControlSystem::UI_InputSubscriber : public InputSubscriber
+		{
+		private:
+			UIControlSystem& m_system;
+
+		public:
+			UI_InputSubscriber(UIControlSystem& i_system)
+				: m_system(i_system)
+			{
+				InputSystem::Instance().SetUISubscriber(this);
+			}
+			virtual ~UI_InputSubscriber()
+			{
+				InputSystem::Instance().SetUISubscriber(nullptr);
+			}
+
+			virtual bool KeyPressed(const KeyEvent& i_evt) override
+			{
+				return false;
+			}
+			virtual bool KeyReleased(const KeyEvent& i_evt) override
+			{
+				return false;
+			}
+
+			virtual bool MouseMoved(const MouseEvent& i_evt) override
+			{
+				return false;
+			}
+			virtual bool MousePressed(const MouseEvent& i_evt) override
+			{
+				auto& controls = g_ui_system.m_controls;
+				for (auto& control : controls)
+				{
+					control.second->RecalculateGlobalValues();
+					auto pos = control.second->GetGlobalPosition();
+					auto size = control.second->GetGlobalSize();
+					size /= 2;
+					if (pos[0] - size[0] < i_evt.m_x && pos[0] + size[0] > i_evt.m_x
+						&& pos[1] - size[1] < i_evt.m_y && pos[1] + size[1] > i_evt.m_y)
+					{
+						g_ui_system.GetMessageDispatcher().HandleMessage(UIEvent{ UIEventType::ButtonPressed }, control.second->GetName());
+						return true;
+					}
+				}
+				return false;
+			}
+			virtual bool MouseReleased(const MouseEvent& i_evt) override
+			{
+				return false;
+			}
+		};		
 
 		UIControlSystem::~UIControlSystem()
 		{
@@ -38,7 +94,7 @@ namespace SDK
 
 		UIControl* UIControlSystem::AccessControl(UIControlHandler i_handler) const
 		{
-			if (i_handler.index == -1 || m_controls.size() <= i_handler.index)
+			if (i_handler.index == -1 || static_cast<int>(m_controls.size()) <= i_handler.index)
 				return nullptr;
 			if (m_controls[i_handler.index].first.generation != i_handler.generation)
 				return nullptr;
@@ -71,6 +127,11 @@ namespace SDK
 			render_world.Submit({Render::ProjectionType::Orthographic, Matrix4f::IDENTITY, Matrix4f::IDENTITY });
 		}
 		
+		void UIControlSystem::SetInputSystem(InputSystem& i_input_system)
+		{
+			static UI_InputSubscriber g_subscriber(*this);			
+		}
+
 		/*
 			button = {
 				name = "my_mega_button"

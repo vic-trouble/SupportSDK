@@ -9,6 +9,8 @@
 // singletons
 #include "Input/InputSystem.h"
 
+#include "UI/UIControlSystem.h"
+
 namespace SDK
 {
 
@@ -39,6 +41,7 @@ namespace SDK
 	void Core::Run(std::unique_ptr<CoreDelegate>&& ip_delegate)
 	{
 		CreateSingletons();
+		UI::g_ui_system.SetInputSystem(InputSystem::Instance());
 
 		mp_delegate = std::move(ip_delegate);
 

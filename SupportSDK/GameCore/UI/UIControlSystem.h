@@ -10,6 +10,8 @@
 
 namespace SDK
 {
+	class InputSystem;
+
 	namespace UI
 	{
 		class UIScreen;
@@ -41,7 +43,13 @@ namespace SDK
 				}
 				UIControlHandler GetHandler() const { return m_handler; }
 			};
+		
 		private:
+			class UI_InputSubscriber;
+			friend class UI_InputSubscriber;
+
+		private:
+			
 			UIScreen* mp_current_screen;
 			UIScreen* mp_prev_screen;
 			UIScreen* mp_next_screen;
@@ -64,7 +72,7 @@ namespace SDK
 				UIControlPtr p_obj = std::make_unique<ControlType>(args...);
 				// get raw pointer and create handler
 				UIControl* p_raw = p_obj.get();
-				const size_t index = m_controls.size();
+				const int index = static_cast<int>(m_controls.size());
 				UIControlHandler handler{ index, 0 };
 				// push to controls array
 				m_controls.push_back(std::make_pair(handler, std::move(p_obj)));
@@ -84,8 +92,10 @@ namespace SDK
 			void Update(float i_elapsed_time);
 			void Draw();
 			GAMECORE_EXPORT void Load(const std::string& i_file_name);
-
+			
 			MessageDispatcher& GetMessageDispatcher() { return m_message_dispatcher; }
+
+			void SetInputSystem(InputSystem& i_input_system);
 		};
 
 		// TODO: global object

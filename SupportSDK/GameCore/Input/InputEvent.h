@@ -49,8 +49,8 @@ namespace SDK
 	enum MouseButtonID
 	{
 		Left = 0, 
-		Right, 
-		Middle
+		Right = 1, 
+		Middle = 2,
 	};
 
 	enum class MousePhase
@@ -65,12 +65,12 @@ namespace SDK
 		MouseEvent(MousePhase i_phase)
 			: InputEvent(ET_Mouse)
 			, m_phase(i_phase)
-			, m_buttons_down(0)
+			, m_buttons(0)
 			, m_x(0.f)
 			, m_y(0.f)
 		{}
 
-		int m_buttons_down;
+		int m_buttons;
 		float m_x;
 		float m_y;
 

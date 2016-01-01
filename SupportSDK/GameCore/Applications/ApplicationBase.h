@@ -60,6 +60,9 @@ namespace SDK
 
 		void Update(float i_elapsed_time);
 		void Draw();
+
+		int GetHeight() const { return CONTENT_HEIGHT; }
+		int GetWidth() const { return CONTENT_WIDTH; }
 	};
 
 } // SDK

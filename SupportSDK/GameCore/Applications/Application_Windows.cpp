@@ -7,16 +7,15 @@
 
 #include "Render/OpenGL/OpenGLRenderer.h"
 #include "Input/InputSystem.h"
+#include "Input/InputEvent.h"
 
 #include <Windows.h>
 #include <time.h>
-
 
 /////////////////////////////////////////////////////////////////
 
 namespace
 {
-
 	void RegisterApplicationClass(HINSTANCE ih_instance, WNDPROC i_wnd_proc, LPCWSTR i_class_name)
 	{
 		// Register Class
@@ -45,6 +44,116 @@ namespace
 		return static_cast<SDK::uint64>(((double)(liCounter.QuadPart)) / (double)liFrequency.QuadPart * 1000.);
 	}
 
+
+	void ChangeMouseButonState(USHORT buttonFlags)
+	{
+	}
+
+	void PushMouseEventToInputSystem(USHORT buttsFlags, WPARAM wParam/*isMove, isInside*/, LPARAM lParam/*x,y*/)
+	{
+		SDK::MouseEvent m_ev(SDK::MousePhase::ButtonPressed);
+		if (buttsFlags & RI_MOUSE_LEFT_BUTTON_DOWN || buttsFlags & RI_MOUSE_RIGHT_BUTTON_DOWN || buttsFlags & RI_MOUSE_MIDDLE_BUTTON_DOWN)
+		{			
+			m_ev.m_phase = SDK::MousePhase::ButtonPressed;
+			if (buttsFlags & RI_MOUSE_LEFT_BUTTON_DOWN)
+			{
+				m_ev.m_buttons |= SDK::MouseButtonID::Left;
+			}
+			if (buttsFlags & RI_MOUSE_RIGHT_BUTTON_DOWN)
+			{
+				m_ev.m_buttons |= SDK::MouseButtonID::Right;
+			}
+			if (buttsFlags & RI_MOUSE_MIDDLE_BUTTON_DOWN)
+			{
+				m_ev.m_buttons |= SDK::MouseButtonID::Middle;
+			}
+		}
+		else
+		{
+			m_ev.m_phase = SDK::MousePhase::ButtonReleased;
+			if (buttsFlags & RI_MOUSE_LEFT_BUTTON_DOWN)
+			{
+				m_ev.m_buttons |= SDK::MouseButtonID::Left;
+			}
+			if (buttsFlags & RI_MOUSE_RIGHT_BUTTON_DOWN)
+			{
+				m_ev.m_buttons |= SDK::MouseButtonID::Right;
+			}
+			if (buttsFlags & RI_MOUSE_MIDDLE_BUTTON_DOWN)
+			{
+				m_ev.m_buttons |= SDK::MouseButtonID::Middle;
+			}
+		}
+		m_ev.m_x = LOWORD(lParam);
+
+		const int h = SDK::Core::GetApplication()->GetHeight();
+		m_ev.m_y = h-HIWORD(lParam);
+		SDK::InputSystem::Instance().ProcessEvent(m_ev);
+	}
+		
+	//  OnMouseEvent(raw->data.mouse.usButtonFlags, MAKEWPARAM(isMove, isInside), MAKELPARAM(x, y), raw->data.mouse.usButtonData);
+	void OnMouseEvent(
+		USHORT buttsFlags, 
+		WPARAM wParam/*isMove, isInside*/, 
+		LPARAM lParam/*x,y*/, 
+		USHORT buttonData/*Specifies mouse wheel data, if MOUSE_WHEEL is set in ButtonFlags.*/)
+	{
+		if (HIWORD(wParam))
+		{
+			ChangeMouseButonState(buttsFlags);
+		}
+
+		if (buttsFlags & RI_MOUSE_WHEEL)
+		{
+			// wheel
+		}
+		else
+		{
+			if (HIWORD(wParam)) // HIWORD(wParam) - isPoint inside window
+			{
+				PushMouseEventToInputSystem(buttsFlags, wParam, lParam);
+			}
+		}
+
+		/*
+		if (HIWORD(wParam) || mouseButtonsDownMask > 0) // isPoint inside window or some clicks already captured
+		{
+			HandleMouseButtonsPressed(buttsFlags);
+		}
+
+		if (buttsFlags & RI_MOUSE_WHEEL)
+		{
+			UIEvent newTouch;
+			newTouch.tid = 0;
+			newTouch.physPoint.x = 0;
+			newTouch.physPoint.y = ((SHORT)buttonData) / (float32)(WHEEL_DELTA);
+			newTouch.phase = touchPhase = UIEvent::PHASE_WHEEL;
+			touches.push_back(newTouch);
+		}
+		else
+		{
+			if (HIWORD(wParam) || mouseButtonsDownMask > 0) // HIWORD(wParam) - isPoint inside window
+			{
+				touchPhase = MoveTouchsToVector(buttsFlags, wParam, lParam, &touches);
+			}
+		}
+
+		if (touchPhase != -1)
+			UIControlSystem::Instance()->OnInput(touchPhase, emptyTouches, touches);
+
+		if (RenderManager::Instance()->GetCursor() != 0 && mouseCursorShown)
+		{
+			ShowCursor(false);
+			mouseCursorShown = false;
+		}
+		if (RenderManager::Instance()->GetCursor() == 0 && !mouseCursorShown)
+		{
+			ShowCursor(false);
+			mouseCursorShown = false;
+		}
+		
+		HandleMouseButtonsReleased(buttsFlags);*/
+	}
 
 	LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
@@ -78,6 +187,43 @@ namespace
 
 			case WM_INPUT:
 				{
+					UINT dwSize;
+
+					GetRawInputData((HRAWINPUT)lParam, RID_INPUT, NULL, &dwSize,
+						sizeof(RAWINPUTHEADER));
+					LPBYTE lpb = new BYTE[dwSize];
+					if (lpb == NULL)
+						return 0;
+
+					if (GetRawInputData((HRAWINPUT)lParam, RID_INPUT, lpb, &dwSize,
+						sizeof(RAWINPUTHEADER)) != dwSize)
+						OutputDebugString(TEXT("GetRawInputData does not return correct size !\n"));
+
+					RAWINPUT* raw = (RAWINPUT*)lpb;
+
+					if (raw->header.dwType == RIM_TYPEMOUSE && raw->data.mouse.usFlags == 0)
+					{
+						LONG x = raw->data.mouse.lLastX;
+						LONG y = raw->data.mouse.lLastY;
+
+						bool isMove = x || y;
+
+						POINT p;
+						GetCursorPos(&p);
+						ScreenToClient(hWnd, &p);
+						x += p.x;
+						y += p.y;
+
+						RECT clientRect;
+						GetClientRect(hWnd, &clientRect);
+
+						bool isInside = (x > clientRect.left && x < clientRect.right && y > clientRect.top && y < clientRect.bottom);
+
+						OnMouseEvent(raw->data.mouse.usButtonFlags, MAKEWPARAM(isMove, isInside), MAKELPARAM(x, y), raw->data.mouse.usButtonData); // only move, drag and wheel events
+					}
+
+					if (lpb != nullptr)
+						delete[] lpb;
 				}
 				break;
 

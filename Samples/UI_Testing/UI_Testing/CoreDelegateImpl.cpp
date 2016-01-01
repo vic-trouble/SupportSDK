@@ -64,21 +64,19 @@ namespace Game
 
 	struct TestHandler
 	{
-		void Handle(const Ev& e)
+		void Handle(const UI::UIEvent& e)
 		{
-			std::cout << e.name << std::endl;
+			std::cout << "Handle";
 		}
 	};
-
+	TestHandler handler;
 	void CoreDelegateImpl::OnCreate()
 	{
 		UI::g_ui_system.Load("..\\..\\Resources\\UI\\TestUIProfile.properties");
+		
 		auto& msg_dsp = UI::g_ui_system.GetMessageDispatcher();
-		TestHandler handler;
-		msg_dsp.RegisterHandler<TestHandler, const Ev&>(handler, &TestHandler::Handle, "publisher");
-		msg_dsp.HandleMessage<Ev>(Ev("publisher"), "publisher1");
-		msg_dsp.HandleMessage<Ev>(Ev("publisher"), "publisher");
-		msg_dsp.UnregisterHandler<Ev>("publisher");
+		
+		msg_dsp.RegisterHandler<TestHandler, const UI::UIEvent&>(handler, &TestHandler::Handle, "my_mega_button1");
 		// Connection x = UI::g_ui_system.Subscribe(EventType, EventPublisher, &EventListener);
 		//		EventType - specific - int?enum?
 		//		EventPublisher - UIControl* - need index (in vector it all stores)

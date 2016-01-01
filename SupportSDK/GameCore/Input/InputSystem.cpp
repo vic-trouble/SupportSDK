@@ -11,6 +11,7 @@ namespace SDK
 {
 
 	InputSystem::InputSystem()
+		: mp_ui_subscriber(nullptr)
 	{
 
 	}
@@ -20,8 +21,42 @@ namespace SDK
 
 	}
 
+	bool InputSystem::ProcessUI(const InputEvent& i_event)
+	{
+		if (mp_ui_subscriber == nullptr)
+			return false;
+
+		switch (i_event.GetType())
+		{
+			case EventType::ET_Keyboard:
+				{
+					const KeyEvent& evt = static_cast<const KeyEvent&>(i_event);
+
+					if (evt.m_key_state == KeyState::Pressed)
+						return mp_ui_subscriber->KeyPressed(evt);
+					else if (evt.m_key_state == KeyState::Released)
+						return mp_ui_subscriber->KeyReleased(evt);
+				}
+				break;
+			case EventType::ET_Mouse:
+				{
+					const MouseEvent& evt = static_cast<const MouseEvent&>(i_event);
+					if (evt.m_phase == MousePhase::Moved)
+						return mp_ui_subscriber->MouseMoved(evt);
+					else if (evt.m_phase == MousePhase::ButtonPressed)
+						return mp_ui_subscriber->MousePressed(evt);
+					else if (evt.m_phase == MousePhase::ButtonReleased)
+						return mp_ui_subscriber->MouseReleased(evt);
+				}
+				break;
+		}
+	}
+
 	void InputSystem::ProcessEvent(const InputEvent& i_evt)
 	{
+		if (ProcessUI(i_evt))
+			return;
+
 		switch (i_evt.GetType())
 		{
 			case EventType::ET_Keyboard:
@@ -80,6 +115,11 @@ namespace SDK
 	void InputSystem::RemoveSubscriber(InputSubscriber* ip_subscriber)
 	{
 		m_subscribers.erase(std::find(m_subscribers.begin(), m_subscribers.end(), ip_subscriber), m_subscribers.end());
+	}
+
+	void InputSystem::SetUISubscriber(InputSubscriber* ip_subscriber)
+	{
+		mp_ui_subscriber = ip_subscriber;
 	}
 
 } // SDK

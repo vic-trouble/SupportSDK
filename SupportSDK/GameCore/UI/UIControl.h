@@ -36,12 +36,15 @@ namespace SDK
 			virtual void UpdateImpl(float i_elapsed_time) = 0;
 			virtual void LoadImpl(const PropertyElement& i_element) = 0;
 			
-			void RecalculateGlobalValues();
+			//void RecalculateGlobalValues();
 
 		public:
+			void RecalculateGlobalValues();
 			GAMECORE_EXPORT UIControl();
 			GAMECORE_EXPORT virtual ~UIControl();
 			
+			GAMECORE_EXPORT std::string GetName() const { return m_name; }
+
 			GAMECORE_EXPORT void Update(float i_elapsed_time);
 			GAMECORE_EXPORT void Draw();
 			

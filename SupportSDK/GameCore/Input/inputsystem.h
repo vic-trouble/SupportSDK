@@ -26,12 +26,19 @@ namespace SDK
 
 	private:
 		std::vector<InputSubscriber*> m_subscribers;
+		// TODO: maybe create prioritize queue of subscribers [Chain of Responsibility]
+		InputSubscriber* mp_ui_subscriber;
+
+	private:
+		bool ProcessUI(const InputEvent& i_event);
 
 	public:
 		void ProcessEvent(const InputEvent& i_event);
 
 		void AddSubscriber(InputSubscriber* ip_subscriber);
 		void RemoveSubscriber(InputSubscriber* ip_subscriber);
+
+		void SetUISubscriber(InputSubscriber* ip_subscriber);
 	};
 
 } // SDK
