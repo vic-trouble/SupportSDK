@@ -41,7 +41,7 @@ void MessageDispatcher::RegisterHandler(HandlerType& i_instance, void (HandlerTy
 {
 	using FunctionHandler = MemberFunctionHandler<HandlerType, EventType>;
 	auto p_handler = std::make_unique< FunctionHandler >(i_instance, member_function);
-	const size_t hash = Utilities::hash_function(i_publisher);
+	const size_t hash = SDK::Utilities::hash_function(i_publisher);
 	EventHandlers& handlers = m_handlers[typeid(EventType)];
 	handlers.push_back(std::make_pair(hash, std::move(p_handler)));
 }
@@ -52,7 +52,7 @@ void MessageDispatcher::UnregisterHandler(const std::string& i_publisher)
 	Handlers::iterator handlers_it = m_handlers.find(typeid(EventType));
 	if (handlers_it != m_handlers.end())
 	{
-		const size_t hash = Utilities::hash_function(i_publisher);
+		const size_t hash = SDK::Utilities::hash_function(i_publisher);
 		auto& handlers = handlers_it->second;
 		auto handler_it = std::find_if(handlers.begin(), handlers.end(), [hash](const HandlerPair& h_p)
 		{
@@ -69,7 +69,7 @@ void MessageDispatcher::HandleMessage(const EventType& i_event, const std::strin
 	Handlers::iterator handlers_it = m_handlers.find(typeid(i_event));
 	if (handlers_it != m_handlers.end())
 	{
-		const size_t hash = Utilities::hash_function(i_publisher);
+		const size_t hash = SDK::Utilities::hash_function(i_publisher);
 		auto& handlers = handlers_it->second;
 		auto handler_it = std::find_if(handlers.begin(), handlers.end(), [hash](const HandlerPair& h_p)
 		{
