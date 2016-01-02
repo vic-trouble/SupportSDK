@@ -55,13 +55,9 @@ namespace SDK
 				auto& controls = g_ui_system.m_controls;
 				for (auto& control : controls)
 				{
-					control.second->RecalculateGlobalValues();
-					auto pos = control.second->GetGlobalPosition();
-					auto size = control.second->GetGlobalSize();
-					size /= 2;
-					if (pos[0] - size[0] < i_evt.m_x && pos[0] + size[0] > i_evt.m_x
-						&& pos[1] - size[1] < i_evt.m_y && pos[1] + size[1] > i_evt.m_y)
+					if (control.second->IsHited({ i_evt.m_x, i_evt.m_y }))
 					{
+						// TODO: need to return true/false based on HandleMessage result
 						g_ui_system.GetMessageDispatcher().HandleMessage(UIEvent{ UIEventType::ButtonPressed }, control.second->GetName());
 						return true;
 					}
@@ -130,6 +126,12 @@ namespace SDK
 		void UIControlSystem::SetInputSystem(InputSystem& i_input_system)
 		{
 			static UI_InputSubscriber g_subscriber(*this);			
+		}
+
+		void UIControlSystem::OnResize(const IRect& i_new_size)
+		{
+			for (auto& control : m_controls)
+				control.second->OnResize(i_new_size);
 		}
 
 		/*

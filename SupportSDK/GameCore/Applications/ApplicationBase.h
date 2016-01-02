@@ -63,6 +63,8 @@ namespace SDK
 
 		int GetHeight() const { return CONTENT_HEIGHT; }
 		int GetWidth() const { return CONTENT_WIDTH; }
+
+		void OnResize(const IRect& i_rect);
 	};
 
 } // SDK

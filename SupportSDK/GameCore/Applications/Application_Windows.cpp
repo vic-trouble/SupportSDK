@@ -168,6 +168,17 @@ namespace
 			case WM_ERASEBKGND:
 				return 0;
 
+			case WM_SIZE:
+				{
+					if (wParam == SIZE_RESTORED)
+					{
+						const int w = LOWORD(lParam);
+						const int h = HIWORD(lParam);
+						SDK::Core::GetApplication()->OnResize(SDK::IRect({ w / 2, h / 2 }, w, h));
+					}
+				}
+				break;
+
 			case WM_KEYUP:
 				{
 					SDK::InputSystem::Instance().ProcessEvent(SDK::KeyEvent((SDK::int32)wParam, SDK::KeyState::Released));
@@ -293,7 +304,7 @@ namespace SDK
 		return true;
 	}
 
-	const int WINDOWED_STYLE = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX;
+	const int WINDOWED_STYLE = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_SIZEBOX;
 	void ApplicationWindows::OnCreateInternal()
 	{
 		CONTENT_WIDTH = 640;

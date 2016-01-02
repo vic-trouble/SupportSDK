@@ -96,6 +96,7 @@ namespace SDK
 			MessageDispatcher& GetMessageDispatcher() { return m_message_dispatcher; }
 
 			void SetInputSystem(InputSystem& i_input_system);
+			void OnResize(const IRect& i_new_size);
 		};
 
 		// TODO: global object

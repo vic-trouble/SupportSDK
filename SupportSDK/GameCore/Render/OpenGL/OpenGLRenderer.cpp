@@ -185,7 +185,7 @@ namespace SDK
 
 		const int width = rc.right - rc.left;
 		const int height = rc.bottom - rc.top;
-		m_paint_rectangle.SetCenter(SDK::Math::VectorConstructor<int>::Construct(rc.left + width / 2, rc.bottom + height / 2));
+		m_paint_rectangle.SetCenter(Vector2i{ rc.left + width / 2, rc.bottom + height / 2 });
 		m_paint_rectangle.SetSize(width, height);
 
 		glViewport(0, 0, m_paint_rectangle.Width(), m_paint_rectangle.Height());

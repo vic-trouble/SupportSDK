@@ -97,4 +97,9 @@ namespace SDK
 		Core::GetRenderer()->EndFrame();
 	}
 
+	void ApplicationBase::OnResize(const IRect& i_rect)
+	{
+		UI::g_ui_system.OnResize(i_rect);
+	}
+
 } // SDK

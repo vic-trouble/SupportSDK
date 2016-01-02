@@ -66,13 +66,13 @@ namespace SDK
 			: InputEvent(ET_Mouse)
 			, m_phase(i_phase)
 			, m_buttons(0)
-			, m_x(0.f)
-			, m_y(0.f)
+			, m_x(0)
+			, m_y(0)
 		{}
 
 		int m_buttons;
-		float m_x;
-		float m_y;
+		int m_x;
+		int m_y;
 
 		MousePhase m_phase;
 	};

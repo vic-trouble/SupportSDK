@@ -29,17 +29,15 @@ namespace SDK
 			// [0-width; 0-height] - TODO: is it needed
 			Vector2i m_global_position;
 			Vector2i m_global_size;
-			
+			// precalculated rectangle
+			IRect m_rect;
 
 		private:
 			virtual void DrawImpl() = 0;
 			virtual void UpdateImpl(float i_elapsed_time) = 0;
 			virtual void LoadImpl(const PropertyElement& i_element) = 0;
 			
-			//void RecalculateGlobalValues();
-
-		public:
-			void RecalculateGlobalValues();
+		public:			
 			GAMECORE_EXPORT UIControl();
 			GAMECORE_EXPORT virtual ~UIControl();
 			
@@ -59,6 +57,9 @@ namespace SDK
 			GAMECORE_EXPORT Vector2i GetGlobalPosition() const;			
 			GAMECORE_EXPORT Vector2i GetGlobalSize() const;
 
+			virtual bool IsHited(const Vector2i& i_hit) const;
+			virtual void OnResize(const IRect& i_new_size);
+
 			// return [0, 1] values
 			Vector2 GetRelativeScale() const { return m_scale; }
 			Vector2 GetRelativePosition() const { return m_relative_position; }
@@ -66,7 +67,7 @@ namespace SDK
 
 			void Load(const PropertyElement& i_element);
 
-			void InitializeThisHandler();
+			void InitializeThisHandler();			
 		};
 
 

@@ -93,13 +93,14 @@ namespace SDK
 				m_children.erase(it);
 		}		
 
-		void UIControl::RecalculateGlobalValues()
+		void UIControl::OnResize(const IRect& i_new_size)
 		{
-			auto rect = Core::GetRenderer()->GetTargetRectangle();			
 			// position
-			m_global_position = { static_cast<uint>(rect.Width()*m_relative_position[0]), static_cast<uint>(rect.Height()*m_relative_position[1]) };
+			m_global_position = { static_cast<int>(i_new_size.Width()*m_relative_position[0]), static_cast<int>(i_new_size.Height()*m_relative_position[1]) };
 			// size
-			m_global_size = { static_cast<uint>(rect.Width()*m_size[0]), static_cast<uint>(rect.Height()*m_size[1]) };
+			m_global_size = { static_cast<int>(i_new_size.Width()*m_size[0]), static_cast<int>(i_new_size.Height()*m_size[1]) };
+			// rectangle
+			m_rect = IRect(m_global_position, m_global_size[0], m_global_size[1]);
 		}
 
 		void UIControl::Load(const PropertyElement& i_element)
@@ -139,7 +140,9 @@ namespace SDK
 				m_rotation[0] = p_rotation->at(0);
 				m_rotation[1] = p_rotation->at(1);
 			}
-			RecalculateGlobalValues();
+			// to calculate all values first time
+			const auto rect = Core::GetRenderer()->GetTargetRectangle();
+			OnResize(rect);
 			//-------------------------------------------------------------------
 			// Specific for inheritor
 			LoadImpl(i_element);
@@ -153,6 +156,11 @@ namespace SDK
 		Vector2i UIControl::GetGlobalSize() const
 		{
 			return m_global_size;
+		}
+
+		bool UIControl::IsHited(const Vector2i& i_hit) const
+		{
+			return m_rect.IsInside(i_hit);
 		}
 
 	} // UI
