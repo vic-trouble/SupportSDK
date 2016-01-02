@@ -41,6 +41,13 @@ namespace SDK
 			CoordinateType	Width() const { return m_size[0]; }
 			CoordinateType	Height() const { return m_size[1]; }
 			Vector2			Center() const { return m_center; }
+
+			bool			IsInside(const Vector2& i_point) const
+			{
+				const CoordinateType half_size[] = { m_size[0] / 2, m_size[1] / 2 };
+				return m_center[0] - half_size[0] < i_point[0] && m_center[0] + half_size[0] > i_point[0]
+					&& m_center[1] - half_size[1] < i_point[1] && m_center[1] + half_size[1] > i_point[1];
+			}
 		};
 
 	} // Math
