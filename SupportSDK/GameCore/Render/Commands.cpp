@@ -68,13 +68,12 @@ namespace SDK
 				p_renderer->PushMatrix();
 				
 				Matrix4f transformation;
-				Matrix3 x(cmd->m_matrix);
 				transformation.MakeTransform(
 						{ cmd->m_position[0], cmd->m_position[1], cmd->m_position[2] }, 
 						{ cmd->m_scale[0], cmd->m_scale[1], cmd->m_scale[2] },
 						Matrix3(cmd->m_matrix));
 
-				p_renderer->SetCurrentMatrix(transformation);
+				p_renderer->ModifyCurrentMatrix(transformation);
 			}
 
 			void Transform::PopTransformation(const void* ip_data)

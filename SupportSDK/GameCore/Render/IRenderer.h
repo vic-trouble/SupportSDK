@@ -65,7 +65,14 @@ namespace SDK
 		virtual void PushMatrix() = 0;
 		virtual void PopMatrix() = 0;
 		virtual void SetMatrixMode(MatrixMode i_matrix_mode) = 0;
+		// Chagne current matrix to i_translation_matrix
 		virtual void SetCurrentMatrix(const Matrix4f& i_translation_matrix) = 0;
+		// Apply i_multiplyer to current matrix
+		virtual void ModifyCurrentMatrix(const Matrix4f& i_multiplier) = 0;
+
+		virtual void SetProjectionMatrix(const Matrix4f& i_projection_matrix) = 0;
+		virtual void SetModelViewMatrix(const Matrix4f& i_modelview_matrix) = 0;
+		// virtual void SetRenderTargets() = 0;
 
 		virtual void Initialize() = 0;
 		virtual void Release() = 0;
@@ -79,10 +86,6 @@ namespace SDK
 		virtual Render::ShaderCompiler* GetShaderCompiler() = 0;
 
 		virtual void Draw(Render::Batch i_decl) = 0;
-
-		virtual void SetProjectionMatrix(Matrix4f&& i_projection_matrix) = 0;
-		virtual void SetModelViewMatrix(Matrix4f&& i_modelview_matrix) = 0;
-		// virtual void SetRenderTargets() = 0;
 
 		virtual void SetProjectionType(Render::ProjectionType i_projection_type) = 0;
 

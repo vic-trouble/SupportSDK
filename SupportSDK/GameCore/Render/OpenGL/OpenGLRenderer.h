@@ -25,6 +25,7 @@ namespace SDK
 		
 		MatrixMode m_current_mode;
 		Matrix4f m_matrices[2];
+		std::vector<int> m_pushed_matrices;
 
 	private:
 		// TODO: more precise configurations
@@ -47,8 +48,8 @@ namespace SDK
 
 		virtual void Draw(Render::Batch i_decl) override;
 
-		virtual void SetProjectionMatrix(Matrix4f&& i_projection_matrix) override;
-		virtual void SetModelViewMatrix(Matrix4f&& i_modelview_matrix) override;
+		virtual void SetProjectionMatrix(const Matrix4f& i_projection_matrix) override;
+		virtual void SetModelViewMatrix(const Matrix4f& i_modelview_matrix) override;
 		virtual void SetProjectionType(Render::ProjectionType i_projection_type) override;
 
 		virtual Render::HardwareBufferManager* GetHardwareBufferMgr() override { return &m_hardware_buffer_mgr; }
@@ -58,6 +59,7 @@ namespace SDK
 		virtual void PopMatrix() override;
 		virtual void SetMatrixMode(MatrixMode i_matrix_mode) override;
 		virtual void SetCurrentMatrix(const Matrix4f& i_translation_matrix) override;
+		virtual void ModifyCurrentMatrix(const Matrix4f& i_multiplier) override;
 
 		////////////////////////////////////////////////////////////////////
 		// TODO: is it still needed

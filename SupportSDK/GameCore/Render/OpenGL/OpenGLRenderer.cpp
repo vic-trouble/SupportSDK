@@ -270,6 +270,17 @@ namespace SDK
 		return GL_UNSIGNED_SHORT;
 	}
 
+	GLenum GetMatrixName(MatrixMode i_mode)
+	{
+		switch (i_mode)
+		{
+			case MatrixMode::ModelView:
+				return GL_MODELVIEW_MATRIX;
+			case MatrixMode::Projection:
+				return GL_PROJECTION_MATRIX;
+		}
+	}
+
 	/////////////////////////////////////////////////////////////////////////////
 
 	void OpenGLRenderer::Draw(Render::Batch i_batch)
@@ -297,16 +308,21 @@ namespace SDK
 	}
 
 	void OpenGLRenderer::SetProjectionType(Render::ProjectionType i_projection_type)
-	{
+	{		
 		if (i_projection_type == Render::ProjectionType::Orthographic)
 			gluOrtho2D(0, m_paint_rectangle.Width(), 0, m_paint_rectangle.Height());			
 		else
 			glViewport(0, 0, m_paint_rectangle.Width(), m_paint_rectangle.Height());
 
+		glGetFloatv(GL_PROJECTION_MATRIX, m_matrices[(int)MatrixMode::Projection][0]);
+		glGetFloatv(GL_MODELVIEW_MATRIX, m_matrices[(int)MatrixMode::ModelView][0]);
+
+		m_matrices[(int)MatrixMode::Projection].Transpose();
+		m_matrices[(int)MatrixMode::ModelView].Transpose();
 	}
 
-	void OpenGLRenderer::SetProjectionMatrix(Matrix4f&& i_projection_matrix)
-	{		
+	void OpenGLRenderer::SetProjectionMatrix(const Matrix4f& i_projection_matrix)
+	{
 		m_matrices[(int)MatrixMode::Projection] = i_projection_matrix;
 		glMatrixMode(GL_PROJECTION);
 		GLfloat gl_matrix[16];
@@ -314,7 +330,7 @@ namespace SDK
 		glLoadMatrixf(gl_matrix);
 	}
 
-	void OpenGLRenderer::SetModelViewMatrix(Matrix4f&& i_modelview_matrix)
+	void OpenGLRenderer::SetModelViewMatrix(const Matrix4f& i_modelview_matrix)
 	{
 		m_matrices[(int)MatrixMode::ModelView] = i_modelview_matrix;
 		glMatrixMode(GL_MODELVIEW);
@@ -326,11 +342,15 @@ namespace SDK
 	void OpenGLRenderer::PushMatrix()
 	{
 		glPushMatrix();
+		m_pushed_matrices.push_back(GetMatrixName(m_current_mode));
 	}
 
 	void OpenGLRenderer::PopMatrix()
 	{
 		glPopMatrix();
+		glGetFloatv(m_pushed_matrices.back(), m_matrices[(int)m_current_mode][0]);		
+		m_matrices[(int)m_current_mode].Transpose();
+		m_pushed_matrices.pop_back();
 	}
 
 	void OpenGLRenderer::SetMatrixMode(MatrixMode i_matrix_mode)
@@ -346,15 +366,17 @@ namespace SDK
 
 	void OpenGLRenderer::SetCurrentMatrix(const Matrix4f& i_translation_matrix)
 	{
-		// TODO: as understood - use shader and not modify current matrix
-		auto scale = i_translation_matrix.GetScaleVector();
-		auto translate = i_translation_matrix.GetTranslationVector();
-		glTranslatef(translate[0], translate[1], translate[2]);
+		GLfloat gl_matrix[16];
+		makeGlMatrix(gl_matrix, i_translation_matrix);
+		glLoadMatrixf(gl_matrix);
+	}
 
-		/*
-		float[16] transMatrix;
-		glGetFloatv(GL_MODELVIEW_MATRIX, transMatrix);
-		*/
+	void OpenGLRenderer::ModifyCurrentMatrix(const Matrix4f& i_multiplier)
+	{		
+		m_matrices[(int)m_current_mode] *= i_multiplier;		
+		GLfloat gl_matrix[16];
+		makeGlMatrix(gl_matrix, m_matrices[(int)m_current_mode]);
+		glLoadMatrixf(gl_matrix);
 	}
 
 	/////////////////////////////////////////////////////////////////////////////
