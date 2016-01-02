@@ -48,18 +48,16 @@ namespace SDK
 
 		virtual void Draw(Render::Batch i_decl) override;
 
-		virtual void SetProjectionMatrix(const Matrix4f& i_projection_matrix) override;
-		virtual void SetModelViewMatrix(const Matrix4f& i_modelview_matrix) override;
+		virtual void SetMatrixMode(MatrixMode i_matrix_mode) override;
+		virtual void SetMatrix(MatrixMode i_matrix_mode, const Matrix4f& i_matrix) override;		
 		virtual void SetProjectionType(Render::ProjectionType i_projection_type) override;
+		virtual void PushMatrix() override;
+		virtual void PopMatrix() override;		
+		virtual void SetCurrentMatrix(const Matrix4f& i_translation_matrix) override;
+		virtual void ModifyCurrentMatrix(const Matrix4f& i_multiplier) override;
 
 		virtual Render::HardwareBufferManager* GetHardwareBufferMgr() override { return &m_hardware_buffer_mgr; }
 		virtual Render::ShaderCompiler* GetShaderCompiler() override { return &m_shader_compiler; }
-
-		virtual void PushMatrix() override;
-		virtual void PopMatrix() override;
-		virtual void SetMatrixMode(MatrixMode i_matrix_mode) override;
-		virtual void SetCurrentMatrix(const Matrix4f& i_translation_matrix) override;
-		virtual void ModifyCurrentMatrix(const Matrix4f& i_multiplier) override;
 
 		////////////////////////////////////////////////////////////////////
 		// TODO: is it still needed

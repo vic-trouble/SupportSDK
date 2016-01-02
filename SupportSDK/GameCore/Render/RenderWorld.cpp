@@ -32,8 +32,8 @@ namespace SDK
 		void RenderWorld::Submit(Viewport&& i_viewport)
 		{
 			auto p_renderer = Core::GetRenderer();
-			p_renderer->SetProjectionMatrix(std::move(i_viewport.m_projection_matrix));
-			p_renderer->SetModelViewMatrix(std::move(i_viewport.m_modelview_matrix));
+			p_renderer->SetMatrix(MatrixMode::Projection, i_viewport.m_projection_matrix);
+			p_renderer->SetMatrix(MatrixMode::ModelView, i_viewport.m_modelview_matrix);
 			p_renderer->SetProjectionType(i_viewport.m_projection_type);
 			SetRenderTargets();
 

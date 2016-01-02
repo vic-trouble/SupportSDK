@@ -281,6 +281,17 @@ namespace SDK
 		}
 	}
 
+	GLenum GetMatrixMode(MatrixMode i_mode)
+	{
+		switch (i_mode)
+		{
+			case MatrixMode::ModelView:
+				return GL_MODELVIEW;
+			case MatrixMode::Projection:
+				return GL_PROJECTION;
+		}
+	}
+
 	/////////////////////////////////////////////////////////////////////////////
 
 	void OpenGLRenderer::Draw(Render::Batch i_batch)
@@ -307,36 +318,29 @@ namespace SDK
 		glDisableVertexAttribArray(0);
 	}
 
+	void OpenGLRenderer::SetMatrix(MatrixMode i_matrix_mode, const Matrix4f& i_matrix)
+	{
+		m_matrices[(int)i_matrix_mode] = i_matrix;
+		glMatrixMode(GetMatrixMode(i_matrix_mode));
+		GLfloat gl_matrix[16];
+		makeGlMatrix(gl_matrix, i_matrix);
+		glLoadMatrixf(gl_matrix);
+	}
+
 	void OpenGLRenderer::SetProjectionType(Render::ProjectionType i_projection_type)
 	{		
 		if (i_projection_type == Render::ProjectionType::Orthographic)
 			gluOrtho2D(0, m_paint_rectangle.Width(), 0, m_paint_rectangle.Height());			
 		else
 			glViewport(0, 0, m_paint_rectangle.Width(), m_paint_rectangle.Height());
-
-		glGetFloatv(GL_PROJECTION_MATRIX, m_matrices[(int)MatrixMode::Projection][0]);
-		glGetFloatv(GL_MODELVIEW_MATRIX, m_matrices[(int)MatrixMode::ModelView][0]);
-
-		m_matrices[(int)MatrixMode::Projection].Transpose();
-		m_matrices[(int)MatrixMode::ModelView].Transpose();
-	}
-
-	void OpenGLRenderer::SetProjectionMatrix(const Matrix4f& i_projection_matrix)
-	{
-		m_matrices[(int)MatrixMode::Projection] = i_projection_matrix;
-		glMatrixMode(GL_PROJECTION);
-		GLfloat gl_matrix[16];
-		makeGlMatrix(gl_matrix, i_projection_matrix);
-		glLoadMatrixf(gl_matrix);
-	}
-
-	void OpenGLRenderer::SetModelViewMatrix(const Matrix4f& i_modelview_matrix)
-	{
-		m_matrices[(int)MatrixMode::ModelView] = i_modelview_matrix;
-		glMatrixMode(GL_MODELVIEW);
-		GLfloat gl_matrix[16];
-		makeGlMatrix(gl_matrix, i_modelview_matrix);
-		glLoadMatrixf(gl_matrix);
+		// TODO: All matrices is changed or only ModelView and Projection?
+		// Rescan all matrices
+		constexpr int matrix_count = sizeof(m_matrices) / sizeof(Matrix4f);
+		for (int i = 0; i < matrix_count; ++i)
+		{
+			glGetFloatv(GetMatrixName(static_cast<MatrixMode>(i)), m_matrices[i][0]);
+			m_matrices[i].Transpose();
+		}		
 	}
 
 	void OpenGLRenderer::PushMatrix()
