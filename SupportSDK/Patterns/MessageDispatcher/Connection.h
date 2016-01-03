@@ -9,21 +9,23 @@ namespace SDK
 	class Connection
 	{
 	private:
-		MessageDispatcher& m_dispatcher;
+		MessageDispatcher* mp_dispatcher;
 		std::type_index m_type;
 		std::string m_publisher;
 
-		bool m_connected;
-
 	public:
+		Connection()
+			: m_type(typeid(*this))
+			, mp_dispatcher(nullptr)
+		{}
+
 		template <typename HandlerType, typename EventType>
 		Connection(MessageDispatcher& o_dispatcher, HandlerType& i_instance, void (HandlerType::*member_function)(const EventType&), const std::string& i_publisher)
 			: m_type(typeid(EventType))
-			, m_dispatcher(o_dispatcher)
+			, mp_dispatcher(&o_dispatcher)
 			, m_publisher(i_publisher)
-			, m_connected(true)
 		{
-			m_dispatcher.RegisterHandler<HandlerType, EventType>(i_instance, member_function, i_publisher);
+			mp_dispatcher->RegisterHandler<HandlerType, EventType>(i_instance, member_function, i_publisher);
 		}
 		~Connection()
 		{
@@ -32,12 +34,15 @@ namespace SDK
 
 		bool connected() const
 		{
-			return m_connected;
+			return mp_dispatcher != nullptr;
 		}
 		void disconnect()
 		{
-			m_dispatcher.UnregisterHandler(m_type, m_publisher);
-			m_connected = false;
+			if (mp_dispatcher == nullptr)
+				return;
+
+			mp_dispatcher->UnregisterHandler(m_type, m_publisher);
+			mp_dispatcher = nullptr;
 		}
 	};
 

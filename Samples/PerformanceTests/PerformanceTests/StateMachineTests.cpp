@@ -34,5 +34,7 @@ namespace StateMachineTests
 		fsm.SetNext(2);
 		fsm.OnUpdate(1.2f);
 
+		fsm.SetNext<MyState1>();
+		fsm1.SetNext<MyState2>();
 	}
 } // StateMachineTests

@@ -38,12 +38,6 @@ using namespace SDK;
 namespace Game
 {
 
-	struct Ev : public Event
-	{
-		std::string name;
-		Ev(const std::string& n) : name(n){}
-	};
-
 	struct TestHandler
 	{
 		void Handle(const UI::UIEvent& e)

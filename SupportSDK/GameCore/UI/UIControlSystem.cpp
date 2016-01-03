@@ -314,10 +314,12 @@ namespace SDK
 			UIScheme& current = m_schemes[i_scheme.index];
 
 			for (auto& handler : current.m_handlers)
-			{
 				RemoveControl(handler);
-			}
-			current.m_handler.index = -1;
+
+			if (m_current_scheme == current.m_handler)
+				m_current_scheme = INVALID_UISCHEME_HANDLER;
+
+			current.m_handler.index = -1;			
 		}
 
 		void UIControlSystem::UnloadScheme(const std::string& i_scheme)

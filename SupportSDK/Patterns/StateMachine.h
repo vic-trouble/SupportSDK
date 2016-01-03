@@ -5,6 +5,32 @@
 
 namespace SDK
 {
+	/*
+	template <typename Type, typename PtrType>
+	struct PtrGetter
+	{
+	static Type* Get(const PtrType&);
+	};
+
+	template <typename Type>
+	struct PtrGetter <Type, std::unique_ptr<Type>>
+	{
+	static Type* Get(const PtrType& ip_ptr)
+	{
+	return ip_ptr.get();
+	}
+	};
+
+	template <typename Type>
+	struct PtrGetter <Type, Type*>
+	{
+	static Type* Get(const PtrType& ip_ptr)
+	{
+	return ip_ptr;
+	}
+	};
+	*/
+
 	template <typename OnUdateParam = float>
 	class BaseState
 	{
@@ -24,6 +50,7 @@ namespace SDK
 		constexpr static size_t _StatesCount = StatesCount;
 		static_assert(_StatesCount > 0, "Size of states must be greater than 0");
 		constexpr static size_t NullState = _StatesCount;
+		constexpr static size_t NullNextState = _StatesCount + 1;
 
 	private:
 		PtrType m_states[_StatesCount];
@@ -33,7 +60,10 @@ namespace SDK
 
 	private:
 		void ChangeStateIfNeeded()
-		{	
+		{
+			if (m_next == NullNextState)
+				return;
+
 			if (m_current != NullState)
 				m_states[m_current]->OnExit();
 
@@ -42,22 +72,35 @@ namespace SDK
 			if (m_current != NullState)
 				m_states[m_current]->OnEnter();
 
-			m_next = NullState;
+			m_next = NullNextState;
 		}
 
 	public:
+		StateMachine()
+			: m_current(NullState)
+			, m_next(NullNextState)
+			, m_prev(NullState)
+		{}
 		template <typename... Ptrs>
 		StateMachine(Ptrs... i_states)
-			: m_current(0)
-			, m_next(NullState)
-			, m_prev(NullState)
+			: StateMachine{}
+		{
+			SetStates(std::move(i_states)...);
+		}
+		virtual ~StateMachine() {}
+
+		template <typename... Ptrs>
+		void SetStates(Ptrs... i_states)			
 		{
 			static_assert(sizeof...(i_states) == _StatesCount, "Size of arguments must be same as size of states");
 			PtrType states[] = { std::move(i_states)... };
 			for (size_t i = 0; i < _StatesCount; ++i)
 				m_states[i] = std::move(states[i]);
+
+			m_current = NullState;
+			m_next = NullNextState;
+			m_prev = NullState;
 		}
-		virtual ~StateMachine() {}
 
 		void SetNext(size_t i_next)
 		{
@@ -67,6 +110,23 @@ namespace SDK
 				return;
 			}
 			m_next = i_next;
+		}
+		
+		template <typename State>
+		void SetNext()
+		{
+			m_next = NullState;
+
+			const std::type_info& next_state = typeid(State);
+			for (size_t i = 0; i < _StatesCount; ++i)
+			{
+				const auto& state = m_states[i];
+				if (typeid(*state) == next_state)
+				{
+					m_next = i;
+					break;
+				}
+			}			
 		}
 
 		size_t GetPrev() const { return m_prev; }
