@@ -67,7 +67,7 @@ namespace SDK
 
 			void Load(const PropertyElement& i_element);
 
-			void InitializeThisHandler();			
+			GAMECORE_EXPORT void InitializeThisHandler();
 		};
 
 

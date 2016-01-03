@@ -72,11 +72,15 @@ namespace Game
 	TestHandler handler;
 	void CoreDelegateImpl::OnCreate()
 	{
-		auto scheme_handler = UI::g_ui_system.LoadScheme("..\\..\\Resources\\UI\\TestUIProfile.scheme");
 		UI::g_ui_system.LoadScheme("..\\..\\Resources\\UI\\test.scheme");
+		UI::g_ui_system.UnloadScheme("test");
+		UI::g_ui_system.SetActiveScheme("test");
+		auto scheme_handler = UI::g_ui_system.LoadScheme("..\\..\\Resources\\UI\\TestUIProfile.scheme");				
 		UI::g_ui_system.SetActiveScheme(scheme_handler);
-		//UI::g_ui_system.SetActiveScheme("test");
-		
+		auto accessor = UI::g_ui_system.CreateControl<UI::UIButton>();
+		UI::g_ui_system.RemoveControl(accessor.GetHandler());
+		auto accessor1 = UI::g_ui_system.CreateControl<UI::UIButton>();
+
 		auto& msg_dsp = UI::g_ui_system.GetMessageDispatcher();		
 		msg_dsp.RegisterHandler<TestHandler, const UI::UIEvent&>(handler, &TestHandler::Handle, "my_mega_button1");
 		// Connection x = UI::g_ui_system.Subscribe(EventType, EventPublisher, &EventListener);

@@ -15,7 +15,18 @@ namespace SDK
 	namespace UI
 	{
 		class UIScreen;
-		class UIControl;
+		class UIControl;		
+
+		// TODO: perform straight way to compare and validate handlers in collection
+		template <typename HType, typename Collection>
+		bool IsValid(const HType& i_handler, const Collection& i_collection)
+		{
+			if (i_handler.index == -1 || static_cast<int>(i_collection.size()) <= i_handler.index)
+				return false;
+			if (i_collection[i_handler.index].first.index != i_handler.index || i_collection[i_handler.index].first.generation != i_handler.generation)
+				return false;
+			return true;
+		}
 
 		class UIControlSystem : Utilities::noncopyable
 		{
@@ -99,13 +110,13 @@ namespace SDK
 
 		private:
 			UISchemeHandler FindScheme(size_t i_hash);
-
+		
 		public:
 			UIControlSystem();
 			GAMECORE_EXPORT ~UIControlSystem();
 
-			UIControl* AccessControl(UIControlHandler i_handler) const;
-			UIControlHandler GetHandlerTo(UIControl* ip_pointer) const;
+			GAMECORE_EXPORT UIControl* AccessControl(UIControlHandler i_handler) const;
+			GAMECORE_EXPORT UIControlHandler GetHandlerTo(UIControl* ip_pointer) const;
 
 			template <typename ControlType, typename... Args>
 			UIControlAccessor<ControlType> CreateControl(Args... args)
@@ -114,10 +125,29 @@ namespace SDK
 				UIControlPtr p_obj = std::make_unique<ControlType>(args...);
 				// get raw pointer and create handler
 				UIControl* p_raw = p_obj.get();
-				const int index = static_cast<int>(m_controls.size());
-				UIControlHandler handler{ index, 0 };
-				// push to controls array
-				m_controls.push_back(std::make_pair(handler, std::move(p_obj)));
+
+				UIControlHandler handler{ static_cast<int>(m_controls.size()), 0 };
+				// find free control
+				{
+					for (size_t i = 0; i < m_controls.size(); ++i)
+					{
+						auto& control = m_controls[i];
+						if (control.first.index == -1)
+						{
+							handler = { static_cast<int>(i), control.first.generation + 1 };							
+							break;
+						}
+					}
+				}
+				// free slots not found -> push back new
+				if (handler.index == m_controls.size())					
+					m_controls.push_back(std::make_pair(handler, std::move(p_obj)));
+				else
+				{
+					m_controls[handler.index].first = handler;
+					m_controls[handler.index].second = std::move(p_obj);
+				}
+
 				// initialize this handler - can be done only after adding to m_controls
 				p_raw->InitializeThisHandler();
 				return UIControlAccessor<ControlType>(this, handler);
@@ -131,12 +161,19 @@ namespace SDK
 				return control_accessor;
 			}
 
+			GAMECORE_EXPORT void RemoveControl(UIControlHandler i_handler);
+
 			void Update(float i_elapsed_time);
 			void Draw();
+
 			GAMECORE_EXPORT UISchemeHandler LoadScheme(const std::string& i_file_name);
-			void SetActiveScheme(UISchemeHandler i_scheme) { m_current_scheme = i_scheme; }
+			GAMECORE_EXPORT void UnloadScheme(UISchemeHandler i_scheme);
+			GAMECORE_EXPORT void UnloadScheme(const std::string& i_scheme);
+
 			GAMECORE_EXPORT void SetActiveScheme(const std::string& i_scheme_name);
-			
+			GAMECORE_EXPORT void SetActiveScheme(UISchemeHandler i_scheme);
+			GAMECORE_EXPORT const UIScheme* AccessScheme(UISchemeHandler i_scheme) const;
+
 			MessageDispatcher& GetMessageDispatcher() { return m_message_dispatcher; }
 
 			void SetInputSystem(InputSystem& i_input_system);
