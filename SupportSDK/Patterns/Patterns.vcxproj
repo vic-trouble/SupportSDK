@@ -85,6 +85,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="MessageDispatcher\Connection.h" />
     <ClInclude Include="MessageDispatcher\Event.h" />
     <ClInclude Include="MessageDispatcher\MemberFunctionHandler.h" />
     <ClInclude Include="MessageDispatcher\MessageDispatcher.h" />

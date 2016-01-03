@@ -29,6 +29,7 @@ using namespace SDK;
 #include <GameCore/Applications/ApplicationBase.h>
 
 #include <GameCore/UI/UIControlSystem.h>
+#include <Patterns/MessageDispatcher/Connection.h>
 #include <string>
 
 #include <Utilities/_Link.h>
@@ -36,25 +37,6 @@ using namespace SDK;
 
 namespace Game
 {
-	typedef int ConnectionHandler;
-	typedef int/*index*/ Publisher;
-	struct Connection
-	{
-		ConnectionHandler handler;
-		typedef int EventType;
-		typedef Publisher EventPublisherHandler;
-		
-		Connection(EventType, EventPublisherHandler, void (*handlerFunction))
-		{
-
-		}
-		~Connection() { disconnect(); }
-		bool connected() const
-		{
-			// UI::system.TestConnection(handler);
-		}
-		void disconnect() {}
-	};
 
 	struct Ev : public Event
 	{
@@ -66,10 +48,11 @@ namespace Game
 	{
 		void Handle(const UI::UIEvent& e)
 		{
-			std::cout << "Handle";
+			Core::GetApplication()->RequestShutdown();
 		}
 	};
 	TestHandler handler;
+
 	void CoreDelegateImpl::OnCreate()
 	{
 		UI::g_ui_system.LoadScheme("..\\..\\Resources\\UI\\test.scheme");
@@ -81,14 +64,11 @@ namespace Game
 		UI::g_ui_system.RemoveControl(accessor.GetHandler());
 		auto accessor1 = UI::g_ui_system.CreateControl<UI::UIButton>();
 
-		auto& msg_dsp = UI::g_ui_system.GetMessageDispatcher();		
-		msg_dsp.RegisterHandler<TestHandler, const UI::UIEvent&>(handler, &TestHandler::Handle, "my_mega_button1");
-		// Connection x = UI::g_ui_system.Subscribe(EventType, EventPublisher, &EventListener);
-		//		EventType - specific - int?enum?
-		//		EventPublisher - UIControl* - need index (in vector it all stores)
-		//		Function
-		// x.Test();
-		//UI::g_ui_system.Load("..\\..\\Resources\\UI\\test.properties");
+		auto& msg_dsp = UI::g_ui_system.GetMessageDispatcher();
+		msg_dsp.RegisterHandler<TestHandler, UI::UIEvent>(handler, &TestHandler::Handle, "exit_button");
+
+		Connection connection(msg_dsp, handler, &TestHandler::Handle, "my_mega_button");
+		connection.disconnect();
 	}
 
 	void CoreDelegateImpl::OnTerminate()

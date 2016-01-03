@@ -44,6 +44,9 @@
     <ClInclude Include="MessageDispatcher\type_index.h">
       <Filter>MessageDisatcher</Filter>
     </ClInclude>
+    <ClInclude Include="MessageDispatcher\Connection.h">
+      <Filter>MessageDisatcher</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
