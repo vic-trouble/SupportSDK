@@ -4,10 +4,12 @@
 #include "stdafx.h"
 
 #include "CommandBucketTests.h"
+#include "StateMachineTests.h"
 
 int main()
 {
-	CmdBucketTest::Test();
+	StateMachineTests::Test();
+	CmdBucketTest::Test();	
     return 0;
 }
 
