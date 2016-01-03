@@ -44,22 +44,64 @@ namespace SDK
 				UIControlHandler GetHandler() const { return m_handler; }
 			};
 		
+			class UIScheme
+			{
+				friend class UIControlSystem;
+			private:
+				std::vector<UIControlHandler> m_handlers;
+				std::string m_name;
+				size_t m_name_hash;
+				UISchemeHandler m_handler;
+
+			public:
+				UIScheme()
+					: m_name_hash(0)
+					, m_name()
+					, m_handler{ -1, -1 }
+				{}
+
+				UIScheme(const std::string& i_name, size_t i_hash, UISchemeHandler i_handler)
+					: m_name(i_name)
+					, m_name_hash(i_hash)
+					, m_handler(i_handler)
+				{}
+
+				void AddControl(UIControlHandler i_handler)
+				{
+					m_handlers.push_back(i_handler);
+				}
+				void RemoveControl(UIControlHandler i_handler)
+				{
+					auto it = std::find(m_handlers.begin(), m_handlers.end(), i_handler);
+					if (it != m_handlers.end())
+						m_handlers.erase(it);
+				}
+
+				size_t GetHash() const { return m_name_hash; }
+				std::string GetName() const { return m_name; }
+				UISchemeHandler GetHandler() const { return m_handler; }
+			};
+
 		private:
 			class UI_InputSubscriber;
 			friend class UI_InputSubscriber;
 
 		private:
-			
-			UIScreen* mp_current_screen;
-			UIScreen* mp_prev_screen;
-			UIScreen* mp_next_screen;
-
 			typedef std::unique_ptr<UIControl> UIControlPtr;
 			typedef std::pair<UIControlHandler, UIControlPtr> UIControlPair;
-			std::vector<UIControlPair> m_controls;
+			typedef std::vector<UIControlPair> UIControls;
+			UIControls m_controls;
+
+			std::vector<UIScheme> m_schemes;
+			UISchemeHandler m_current_scheme;
+
 			MessageDispatcher m_message_dispatcher;
 
+		private:
+			UISchemeHandler FindScheme(size_t i_hash);
+
 		public:
+			UIControlSystem();
 			GAMECORE_EXPORT ~UIControlSystem();
 
 			UIControl* AccessControl(UIControlHandler i_handler) const;
@@ -91,7 +133,9 @@ namespace SDK
 
 			void Update(float i_elapsed_time);
 			void Draw();
-			GAMECORE_EXPORT void Load(const std::string& i_file_name);
+			GAMECORE_EXPORT UISchemeHandler LoadScheme(const std::string& i_file_name);
+			void SetActiveScheme(UISchemeHandler i_scheme) { m_current_scheme = i_scheme; }
+			GAMECORE_EXPORT void SetActiveScheme(const std::string& i_scheme_name);
 			
 			MessageDispatcher& GetMessageDispatcher() { return m_message_dispatcher; }
 

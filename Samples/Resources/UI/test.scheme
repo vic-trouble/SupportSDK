@@ -1,3 +1,4 @@
+name = "test"
 screen = {
 	button = {
 		name = "my_mega_button"

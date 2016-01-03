@@ -15,6 +15,11 @@ namespace SDK
 
 		constexpr static UIControlHandler INVALID_UI_HANDLER = { -1, -1 };
 
+		struct UISchemeHandlerTag {};
+		typedef GenericHandle<int, 12, 20, UISchemeHandlerTag> UISchemeHandler;
+
+		constexpr static UISchemeHandler INVALID_UISCHEME_HANDLER = { -1, -1 };
+
 		/////////////////////////////////////////////////////////////////////////////
 		// Events
 		enum class UIEventType
