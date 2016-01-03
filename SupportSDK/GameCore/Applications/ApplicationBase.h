@@ -1,6 +1,8 @@
 #ifndef __GAMECORE_APPLICATIONBASE_H__
 #define __GAMECORE_APPLICATIONBASE_H__
 
+#include "../GameCoreAPI.h"
+
 #include "../World.h"
 #include "../Render/RenderWorld.h"
 
@@ -54,7 +56,7 @@ namespace SDK
 		void OnCollapse();
 		void OnActivate();
 
-		void RequestShutdown();
+		GAMECORE_EXPORT void RequestShutdown();
 
 		void SetMaxFPS(int i_fps) { m_fps = i_fps; }
 
