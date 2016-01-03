@@ -59,6 +59,8 @@ namespace SDK
 				auto& controls = g_ui_system.m_controls;
 				for (auto& control : controls)
 				{
+					if (control.second == nullptr)
+						continue;
 					if (control.second->IsHited({ i_evt.m_x, i_evt.m_y }))
 					{
 						// TODO: need to return true/false based on HandleMessage result
@@ -77,7 +79,11 @@ namespace SDK
 		UIControlSystem::~UIControlSystem()
 		{
 			for (auto& control : m_controls)
+			{
+				if (control.second == nullptr)
+					continue;
 				control.second->SetParent(INVALID_UI_HANDLER);
+			}
 			m_controls.clear();
 		}
 
@@ -85,7 +91,7 @@ namespace SDK
 		{
 			auto it = std::find_if(m_controls.begin(), m_controls.end(), [ip_pointer](const UIControlPair& control)
 			{
-				return control.second.get() == ip_pointer;
+				return control.second != nullptr && control.second.get() == ip_pointer;
 			});
 			if (it == m_controls.end())
 				return INVALID_UI_HANDLER;
@@ -110,6 +116,8 @@ namespace SDK
 			for (auto& handler : current.m_handlers)
 			{
 				auto& control = m_controls[handler.index];
+				if (control.second == nullptr)
+					continue;
 				// control is updated from parent
 				if (control.second->GetParent() != INVALID_UI_HANDLER)
 					continue;
@@ -127,6 +135,8 @@ namespace SDK
 			for (auto& handler : current.m_handlers)
 			{
 				auto& control = m_controls[handler.index];
+				if (control.second == nullptr)
+					continue;
 				// control is updated from parent
 				if (control.second->GetParent() != INVALID_UI_HANDLER)
 					continue;
@@ -145,7 +155,11 @@ namespace SDK
 		void UIControlSystem::OnResize(const IRect& i_new_size)
 		{
 			for (auto& control : m_controls)
+			{
+				if (control.second == nullptr)
+					continue;
 				control.second->OnResize(i_new_size);
+			}
 		}
 
 		void UIControlSystem::RemoveControl(UIControlHandler i_handler)
