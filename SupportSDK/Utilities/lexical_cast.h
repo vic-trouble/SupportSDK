@@ -22,7 +22,7 @@ namespace SDK
 			{
 				static float convert_to(const std::string& i_value)
 				{
-					return atof(i_value.c_str());
+					return std::stof(i_value.c_str());
 				}
 				static std::string convert_from(const float& i_value)
 				{
@@ -35,7 +35,7 @@ namespace SDK
 			{
 				static int convert_to(const std::string& i_value)
 				{
-					return atoi(i_value.c_str());
+					return std::stoi(i_value.c_str());
 				}
 				static std::string convert_from(const int& i_value)
 				{
@@ -48,7 +48,7 @@ namespace SDK
 			{
 				static unsigned int convert_to(const std::string& i_value)
 				{
-					return atoi(i_value.c_str());
+					return std::stoi(i_value.c_str());
 				}
 				static std::string convert_from(const unsigned int& i_value)
 				{
