@@ -29,9 +29,6 @@
     <ClInclude Include="Singleton.h">
       <Filter>Singleton</Filter>
     </ClInclude>
-    <ClInclude Include="MessageDispatcher\Event.h">
-      <Filter>MessageDisatcher</Filter>
-    </ClInclude>
     <ClInclude Include="MessageDispatcher\MemberFunctionHandler.h">
       <Filter>MessageDisatcher</Filter>
     </ClInclude>
@@ -44,15 +41,13 @@
     <ClInclude Include="StaticSingleton.h">
       <Filter>Singleton</Filter>
     </ClInclude>
-    <ClInclude Include="MessageDispatcher\type_index.h">
-      <Filter>MessageDisatcher</Filter>
-    </ClInclude>
     <ClInclude Include="MessageDispatcher\Connection.h">
       <Filter>MessageDisatcher</Filter>
     </ClInclude>
     <ClInclude Include="StateMachine.h">
       <Filter>FSM</Filter>
     </ClInclude>
+    <ClInclude Include="Event.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

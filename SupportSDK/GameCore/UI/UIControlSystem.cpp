@@ -171,32 +171,6 @@ namespace SDK
 			m_controls[i_handler.index].first.index = -1;
 		}
 
-		/*
-			button = {
-				name = "my_mega_button"
-				position = [ 0.2f 0.1f ]
-				scale = [ 1.2f 0.9f ]
-				rotation = [ 0.5f 1.8f ]
-				texture = "button.png"
-			}
-
-			scroll_bar = {
-				name = "perfect scroll bar"
-				position = [ 0.2f 0.1f ]
-				scale = [ 1.2f 0.9f ]
-				rotation = [ 0.5f 1.8f ]
-				texture = "scroll_bar.png"
-				auto_scroll_speed = 0.2f
-			}
-
-			screen = {
-				name = "menu_screen"
-				button = {
-					...
-				}
-			}
-		*/
-
 		namespace
 		{
 			template <typename ObjType>

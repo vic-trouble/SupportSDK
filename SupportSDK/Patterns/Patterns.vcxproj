@@ -87,11 +87,10 @@
   <ItemGroup>
     <ClInclude Include="StateMachine.h" />
     <ClInclude Include="MessageDispatcher\Connection.h" />
-    <ClInclude Include="MessageDispatcher\Event.h" />
+    <ClInclude Include="Event.h" />
     <ClInclude Include="MessageDispatcher\MemberFunctionHandler.h" />
     <ClInclude Include="MessageDispatcher\MessageDispatcher.h" />
     <ClInclude Include="MessageDispatcher\MessageHandlerBase.h" />
-    <ClInclude Include="MessageDispatcher\type_index.h" />
     <ClInclude Include="PatternsAPI.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="StaticSingleton.h" />

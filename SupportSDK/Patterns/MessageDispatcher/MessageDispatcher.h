@@ -5,11 +5,10 @@
 #include "MessageHandlerBase.h"
 #include "MemberFunctionHandler.h"
 
-#include "type_index.h"
-
 #include <unordered_map>
 
 #include <Utilities/HashFunctions.h>
+#include <Utilities/type_index.h>
 
 class MessageDispatcher
 {

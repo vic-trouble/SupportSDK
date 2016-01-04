@@ -2,8 +2,8 @@
 #define __GAMECORE_EVENT_H__
 
 struct Event
-  {
-  virtual ~Event(){}
-  };
+{
+	virtual ~Event() {}
+};
 
 #endif

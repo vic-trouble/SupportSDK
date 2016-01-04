@@ -101,6 +101,7 @@
     <ClInclude Include="TemplateChecks.h" />
     <ClInclude Include="TimeUtilities.h" />
     <ClInclude Include="TypeDefines.h" />
+    <ClInclude Include="type_index.h" />
     <ClInclude Include="UtilitiesAPI.h" />
     <ClInclude Include="XmlUtilities.h" />
     <ClInclude Include="_Link.h" />

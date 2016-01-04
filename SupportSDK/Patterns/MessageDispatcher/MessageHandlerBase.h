@@ -2,7 +2,7 @@
 #define __GAMECORE_MESSAGEHANDLERBASE_H__
 
 #include "../PatternsAPI.h"
-#include "Event.h"
+#include "../Event.h"
 
 class MessageHandlerBase
   {
