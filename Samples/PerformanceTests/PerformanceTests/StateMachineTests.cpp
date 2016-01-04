@@ -4,36 +4,35 @@
 
 #include <Patterns/StateMachine.h>
 
+#include <Utilities/lexical_cast.h>
+
 namespace StateMachineTests
 {
 	using namespace SDK;
+	struct Event11
+	{
+		std::string name;
+		Event11(std::string x) : name(x) {}
+		Event11() : name("ev") {}
+	};
 	struct MyState1 : public BaseState<>
 	{
-		virtual void OnEnter()
-		{
-		}
 	};
-
+	
 	struct MyState2 : public BaseState<>
 	{
-		virtual void OnEnter() override
-		{
-
-		}
 	};
+	
 
 	struct MyState3 : public BaseState<>
 	{
-		virtual void OnEnter() override
+		void OnEnter(const Event11& ev)
 		{
-
+			std::cout << ev.name << std::endl;
 		}
 	};
 
-	struct Event11 : public Event
-	{
-		Event11(){}
-	};
+	
 
 	class MyFSM;
 	
@@ -41,10 +40,13 @@ namespace StateMachineTests
 		Transition<MyState1, MyState2, Event11>, 
 		CompoundTransition<Transition<MyState2, MyState3, Event11>, Transition<MyState3, MyState1, Event11>>
 	> TransitionTable;
-	
-	class MyFSM : public SDK::StateMachine<MyFSM, SDK::BaseState<>*, 3, TransitionTable>
+	class MyFSM : public SDK::StateMachine<MyFSM, SDK::BaseState<>, 3, TransitionTable, SDK::BaseState<>*>
 	{
 	public:
+		typedef CompoundTransition<
+			Transition<MyState1, MyState2, Event11>,
+			CompoundTransition<Transition<MyState2, MyState3, Event11>, Transition<MyState3, MyState1, Event11>>
+		> TransitionTableX;
 	};
 
 	/////////////////////////////
@@ -67,7 +69,7 @@ namespace StateMachineTests
 		{
 			my_fsm.OnUpdate(0.1f);
 			std::cout << "Current " << my_fsm.GetCurrent() << std::endl;
-			my_fsm.ProcessEvent<Event11>();
+			my_fsm.ProcessEvent<Event11>(Event11(Utilities::lexical_cast(i)));
 		}
 	}
 } // StateMachineTests

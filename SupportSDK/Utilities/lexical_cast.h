@@ -26,7 +26,7 @@ namespace SDK
 				}
 				static std::string convert_from(const float& i_value)
 				{
-					return "";
+					return std::to_string(i_value);
 				}
 			};
 
@@ -39,10 +39,22 @@ namespace SDK
 				}
 				static std::string convert_from(const int& i_value)
 				{
-					return "";
+					return std::to_string(i_value);
 				}
 			};
 
+			template <>
+			struct Converter <unsigned int>
+			{
+				static unsigned int convert_to(const std::string& i_value)
+				{
+					return atoi(i_value.c_str());
+				}
+				static std::string convert_from(const unsigned int& i_value)
+				{
+					return std::to_string(i_value);
+				}
+			};
 
 		} // impl
 
@@ -50,6 +62,12 @@ namespace SDK
 		T lexical_cast(const std::string& i_value)
 		{
 			return impl::Converter<T>::convert_to(i_value);
+		}
+
+		template <typename T>
+		std::string lexical_cast(T i_val)
+		{
+			return impl::Converter<T>::convert_from(i_val);
 		}
 
 	} // Utilities
