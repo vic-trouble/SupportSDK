@@ -17,7 +17,8 @@ namespace SDK
 		//typename PtrType = std::unique_ptr<StateBaseType>::_Myt,
 		typename OnUpdateParam = float
 	>
-	class StateMachine
+	class StateMachine 
+		: public BaseState<OnUpdateParam> // inheritance to use StateMachine as substate
 	{
 		constexpr static size_t _StatesCount = StatesCount;
 		static_assert(_StatesCount > 0, "Size of states must be greater than 0");
