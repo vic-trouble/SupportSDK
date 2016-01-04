@@ -44,10 +44,19 @@
     <ClInclude Include="MessageDispatcher\Connection.h">
       <Filter>MessageDisatcher</Filter>
     </ClInclude>
-    <ClInclude Include="StateMachine.h">
+    <ClInclude Include="Event.h" />
+    <ClInclude Include="StateMachine\StateMachine.h">
       <Filter>FSM</Filter>
     </ClInclude>
-    <ClInclude Include="Event.h" />
+    <ClInclude Include="StateMachine\Executor.h">
+      <Filter>FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="StateMachine\Transitions.h">
+      <Filter>FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="StateMachine\BaseState.h">
+      <Filter>FSM</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

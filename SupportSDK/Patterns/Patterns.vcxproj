@@ -85,7 +85,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="StateMachine.h" />
+    <ClInclude Include="StateMachine\BaseState.h" />
+    <ClInclude Include="StateMachine\Executor.h" />
+    <ClInclude Include="StateMachine\StateMachine.h" />
     <ClInclude Include="MessageDispatcher\Connection.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="MessageDispatcher\MemberFunctionHandler.h" />
@@ -93,6 +95,7 @@
     <ClInclude Include="MessageDispatcher\MessageHandlerBase.h" />
     <ClInclude Include="PatternsAPI.h" />
     <ClInclude Include="Singleton.h" />
+    <ClInclude Include="StateMachine\Transitions.h" />
     <ClInclude Include="StaticSingleton.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="_Link.h" />

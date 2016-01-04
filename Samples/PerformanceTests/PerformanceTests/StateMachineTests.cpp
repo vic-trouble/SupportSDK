@@ -2,7 +2,7 @@
 
 #include "StateMachineTests.h"
 
-#include <Patterns/StateMachine.h>
+#include <Patterns/StateMachine/StateMachine.h>
 
 #include <Utilities/lexical_cast.h>
 

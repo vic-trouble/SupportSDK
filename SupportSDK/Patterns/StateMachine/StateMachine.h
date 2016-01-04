@@ -1,96 +1,16 @@
 #ifndef	__PATTERNS_STATEMACHINE_H__
 #define __PATTERNS_STATEMACHINE_H__
 
-#include "Event.h"
+#include "Executor.h"
+#include "Transitions.h"
+#include "BaseState.h"
 
 #include <Utilities/type_index.h>
 
 namespace SDK
 {
-	template <typename OnUdateParam = float>
-	class BaseState
-	{
-	public:
-		virtual ~BaseState() {}
-		template <typename EventType>
-		void OnEnter(const EventType&) {}
-		virtual void OnExit() {}
-		virtual void OnUpdate(OnUdateParam i_elapsed_time) {}
-	};
-	
-	struct ExBase
-	{
-		const std::type_index m_handler_type;
-		ExBase(const std::type_index& i_handler_type)
-			: m_handler_type(i_handler_type)
-		{}
-		virtual void Execute() = 0;
-	};
-
-	template <typename EventType, typename Handler>
-	struct Executor : public ExBase
-	{
-		EventType m_cached;
-		Handler* mp_handler;
-		Executor(EventType cached, Handler* ip_handler)
-			: ExBase(typeid(Handler))
-			, m_cached(cached)
-			, mp_handler(ip_handler)
-		{}
-		virtual void Execute() override
-		{
-			mp_handler->OnEnter(m_cached);
-		}
-	};
-
-	typedef std::unique_ptr<ExBase> ExecutorPtr;
-	typedef std::type_index NextStateType;
-	typedef std::pair<NextStateType, ExecutorPtr> TransitionGetterResult;
-	template <typename StateMachine>
-	struct NoTransition
-	{
-		std::type_index GetNextState() const
-		{
-			return std::type_index(typeid(*this));
-		}
-	};
-
-	template <typename FirstTransition, typename SecondTransition>
-	struct CompoundTransition
-	{
-		FirstTransition first;
-		SecondTransition second;
-
-		template <typename EventType, typename StateMachine>
-		TransitionGetterResult GetNextState(const EventType& i_event, const StateMachine& i_fsm)
-		{
-			typedef std::pair<NextStateType, ExecutorPtr> Result;
-			Result first_result = std::move(first.GetNextState<EventType, StateMachine>(i_event, i_fsm));
-
-			if (first_result.first != typeid(first))
-				return first_result;
-			Result second_result = std::move(second.GetNextState<EventType, StateMachine>(i_event, i_fsm));
-			if (second_result.first != typeid(second))
-				return second_result;
-
-			return std::make_pair(std::type_index(typeid(*this)), nullptr);
-		}
-	};
-	
-	template <typename StateFrom, typename StateTo, typename TargetEventType>
-	struct Transition
-	{
-		template <typename EventType, typename StateMachine>
-		TransitionGetterResult GetNextState(const EventType& i_event, const StateMachine& i_fsm) const
-		{
-			if (i_fsm.IsStateCurrent<StateFrom>() && typeid(EventType) == typeid(TargetEventType))
-				return std::make_pair(std::type_index(typeid(StateTo)), std::make_unique<Executor<EventType, StateTo>>(i_event, i_fsm.GetState<StateTo>()));
-			return std::make_pair(std::type_index(typeid(*this)), nullptr);
-		}
-	};	
-	
 	template <typename Derived,
-		typename StateBaseType,
+		typename BaseStateType,
 		size_t StatesCount,
 		typename TransitionTable,
 		typename PtrType,
@@ -104,7 +24,7 @@ namespace SDK
 		constexpr static size_t NullState = _StatesCount;
 		constexpr static size_t NullNextState = _StatesCount + 1;		
 	public:
-		typedef typename StateMachine<Derived, StateBaseType, StatesCount, TransitionTable, PtrType, OnUpdateParam> ThisMachine;
+		typedef typename StateMachine<Derived, BaseStateType, StatesCount, TransitionTable, PtrType, OnUpdateParam> ThisMachine;
 
 	private:
 		PtrType m_states[_StatesCount];
@@ -243,7 +163,8 @@ namespace SDK
 		/////////////////////////////////////////////////////////////
 		// BaseState overrides
 
-		void OnEnter(const Event& i_event)
+		template <typename EventType>
+		void OnEnter(const EventType& i_event)
 		{
 			if (m_current != NullState)
 				m_states[m_current]->OnEnter(i_event);
