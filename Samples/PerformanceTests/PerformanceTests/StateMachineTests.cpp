@@ -22,19 +22,52 @@ namespace StateMachineTests
 		}
 	};
 
+	struct MyState3 : public BaseState<>
+	{
+		virtual void OnEnter() override
+		{
+
+		}
+	};
+
+	struct Event11 : public Event
+	{
+		Event11(){}
+	};
+
+	class MyFSM;
+	
+	typedef CompoundTransition<
+		Transition<MyState1, MyState2, Event11>, 
+		CompoundTransition<Transition<MyState2, MyState3, Event11>, Transition<MyState3, MyState1, Event11>>
+	> TransitionTable;
+	
+	class MyFSM : public SDK::StateMachine<MyFSM, SDK::BaseState<>*, 3, TransitionTable>
+	{
+	public:
+	};
+
+	/////////////////////////////
+
+
+	
+
+
+	/////////////////////////////
+
+
+	
+
 	void Test()
 	{
-		StateMachine<std::unique_ptr<BaseState<>>, 2> fsm(std::unique_ptr<MyState1>(new MyState1), std::unique_ptr<MyState2>(new MyState2));		
-		StateMachine<BaseState<>*, 2> fsm1(new MyState1, new MyState2);
-
-		fsm.OnEnter();
-		fsm1.OnEnter();
-
-		fsm.SetNext(1);
-		fsm.SetNext(2);
-		fsm.OnUpdate(1.2f);
-
-		fsm.SetNext<MyState1>();
-		fsm1.SetNext<MyState2>();
+		MyFSM my_fsm;
+		my_fsm.SetStates(new MyState1, new MyState2, new MyState3);
+		my_fsm.SetNext<MyState1>();
+		for (size_t i = 0; i < 10; ++i)
+		{
+			my_fsm.OnUpdate(0.1f);
+			std::cout << "Current " << my_fsm.GetCurrent() << std::endl;
+			my_fsm.ProcessEvent<Event11>();
+		}
 	}
 } // StateMachineTests
