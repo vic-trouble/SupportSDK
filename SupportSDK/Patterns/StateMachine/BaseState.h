@@ -13,6 +13,8 @@ namespace SDK
 		//	DEFINE_BASE_FUNCTIONS()
 		template <typename EventType>
 		void OnEnter(const EventType&) {}
+		// Is called for first state from SetStates
+		void OnEnter(void) {}
 
 		virtual void OnExit() {}
 		virtual void OnUpdate(OnUdateParam i_elapsed_time) {}

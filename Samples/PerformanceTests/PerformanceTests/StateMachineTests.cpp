@@ -19,16 +19,16 @@ namespace StateMachineTests
 	struct Event33 {};
 	struct MyState1 : public BaseState<>
 	{
-		
+		DEFINE_BASE_FUNCTIONS();
+		void OnEnter()
+		{
+			std::cout << "MyState1 Enters first state" << std::endl;
+		}
 	};
 	
 	struct MyState2 : public BaseState<>
 	{
 		DEFINE_BASE_FUNCTIONS();
-		void OnEnter(const Event22&)
-		{
-
-		}
 	};
 	
 	struct MyState3;
@@ -37,7 +37,7 @@ namespace StateMachineTests
 		Transition<MyState1, MyState2, Event22>,
 		CompoundTransition<Transition<MyState2, MyState3, Event11>, Transition<MyState3, MyState1, Event11>>
 	> TransitionTable;
-	class MyFSM : public SDK::StateMachine<MyFSM, SDK::BaseState<>, 3, TransitionTable, SDK::BaseState<>*>
+	class MyFSM : public SDK::StateMachine<MyFSM, SDK::BaseState<>, 3, TransitionTable, MyState1, SDK::BaseState<>*>
 	{
 	public:
 		typedef CompoundTransition<
@@ -49,6 +49,12 @@ namespace StateMachineTests
 		{
 			std::cout << "sdfaerwer" << std::endl;
 		}
+
+		void OnEnter()
+		{
+			std::cout << "MyFSM Enters first state" << std::endl;
+		}
+
 		DEFINE_BASE_FUNCTIONS();
 
 	};
@@ -75,7 +81,7 @@ namespace StateMachineTests
 		Transition<MyFSM, M4, Event11>, Transition<M4, MyFSM, Event22>
 	> TransTable;
 
-	class MyCompoundFSM : public SDK::StateMachine<MyCompoundFSM, SDK::BaseState<>, 2, TransTable, SDK::BaseState<>*>
+	class MyCompoundFSM : public SDK::StateMachine<MyCompoundFSM, SDK::BaseState<>, 2, TransTable, MyFSM, SDK::BaseState<>*>
 	{};
 
 	/////////////////////////////
@@ -87,7 +93,6 @@ namespace StateMachineTests
 	{
 		MyCompoundFSM x;
 		x.SetStates(new MyFSM, new M4);
-		x.SetNext<MyFSM>();
 		x.OnUpdate(.1f);
 		x.ProcessEvent(Event11());
 		x.OnUpdate(1.f);
@@ -96,7 +101,6 @@ namespace StateMachineTests
 
 		MyFSM my_fsm;
 		my_fsm.SetStates(new MyState1, new MyState2, new MyState3);
-		my_fsm.SetNext<MyState1>();
 		for (size_t i = 0; i < 10; ++i)
 		{
 			my_fsm.OnUpdate(0.1f);

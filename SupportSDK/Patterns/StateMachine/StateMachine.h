@@ -13,8 +13,8 @@ namespace SDK
 		typename BaseStateType,
 		size_t StatesCount,
 		typename TransitionTable,
-		typename PtrType,
-		//typename PtrType = std::unique_ptr<StateBaseType>::_Myt,
+		typename FirstStateType,
+		typename PtrType,		
 		typename OnUpdateParam = float
 	>
 	class StateMachine 
@@ -25,8 +25,8 @@ namespace SDK
 		constexpr static size_t NullState = _StatesCount;
 		constexpr static size_t NullNextState = _StatesCount + 1;		
 	public:
-		typedef typename StateMachine<Derived, BaseStateType, StatesCount, TransitionTable, PtrType, OnUpdateParam> ThisMachine;
-
+		typedef typename StateMachine<Derived, BaseStateType, StatesCount, TransitionTable, FirstStateType, PtrType, OnUpdateParam> _ThisMachine;
+		typedef typename FirstStateType _FirstState;
 	private:
 		PtrType m_states[_StatesCount];
 		TransitionTable m_transitions;
@@ -99,6 +99,8 @@ namespace SDK
 			m_current = NullState;
 			m_next = NullNextState;
 			m_prev = NullState;
+
+			SetNext<_FirstState>();
 		}
 
 		/////////////////////////////////////////////////////////////
@@ -107,7 +109,7 @@ namespace SDK
 		template <typename EventType>
 		void ProcessEvent(const EventType& i_evt)
 		{
-			auto result = std::move(m_transitions.GetNextState<EventType, ThisMachine>(i_evt, dynamic_cast<Derived&>(*this)));
+			auto result = std::move(m_transitions.GetNextState<EventType, _ThisMachine>(i_evt, dynamic_cast<Derived&>(*this)));
 			if (std::type_index(typeid(m_transitions)) != result.first)
 				SetNext(std::move(result));
 		}
@@ -116,7 +118,10 @@ namespace SDK
 		void SetNext()
 		{
 			const std::type_info& next_state = typeid(State);
-			SetNext(std::make_pair(std::type_index(typeid(State)), nullptr));
+			SetNext(
+				std::make_pair( std::type_index(typeid(State)),
+				std::make_unique<VoidExecutor<State>>(GetState<State>()) )
+				);
 		}
 
 		/////////////////////////////////////////////////////////////

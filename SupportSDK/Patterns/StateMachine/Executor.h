@@ -31,6 +31,20 @@ namespace SDK
 		}
 	};
 
+	template <typename Handler>
+	struct VoidExecutor : public ExBase
+	{
+		Handler* mp_handler;
+		VoidExecutor(Handler* ip_handler)
+			: ExBase(typeid(Handler))
+			, mp_handler(ip_handler)
+		{}
+		virtual void Execute() override
+		{
+			mp_handler->OnEnter();
+		}
+	};
+
 } // SDK
 
 #endif
