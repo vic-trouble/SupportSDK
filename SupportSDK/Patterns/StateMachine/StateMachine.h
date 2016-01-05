@@ -14,7 +14,7 @@ namespace SDK
 		size_t StatesCount,
 		typename TransitionTable,
 		typename FirstStateType,
-		typename PtrType,		
+		class PtrType = std::unique_ptr<BaseStateType>,
 		typename OnUpdateParam = float
 	>
 	class StateMachine 

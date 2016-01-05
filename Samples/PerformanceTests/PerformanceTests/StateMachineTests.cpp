@@ -81,18 +81,15 @@ namespace StateMachineTests
 		Transition<MyFSM, M4, Event11>, Transition<M4, MyFSM, Event22>
 	> TransTable;
 
-	class MyCompoundFSM : public SDK::StateMachine<MyCompoundFSM, SDK::BaseState<>, 2, TransTable, MyFSM, SDK::BaseState<>*>
+	class MyCompoundFSM : public SDK::StateMachine<MyCompoundFSM, SDK::BaseState<>, 2, TransTable, MyFSM>
 	{};
 
 	/////////////////////////////
 
-
-	
-
 	void Test()
 	{
 		MyCompoundFSM x;
-		x.SetStates(new MyFSM, new M4);
+		x.SetStates(std::make_unique<MyFSM>(), std::make_unique<M4>());
 		x.OnUpdate(.1f);
 		x.ProcessEvent(Event11());
 		x.OnUpdate(1.f);
