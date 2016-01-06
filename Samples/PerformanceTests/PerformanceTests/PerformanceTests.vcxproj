@@ -100,7 +100,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)\..\..\..\Libraries\$(PlatformName)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>GameCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>GameCore.lib;Utilities.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(ProjectDir)\..\..\..\Binaries\Win32\$(Configuration)\GameCore.dll" "$(OutputPath)" /Y /R /I /E</Command>
@@ -119,7 +119,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)\..\..\..\Libraries\$(PlatformName)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>GameCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>GameCore.lib;Utilities.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(ProjectDir)\..\..\..\Binaries\Win32\$(Configuration)\GameCore.dll" "$(OutputPath)" /Y /R /I /E</Command>
@@ -142,7 +142,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(ProjectDir)\..\..\..\Libraries\$(PlatformName)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>GameCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>GameCore.lib;Utilities.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(ProjectDir)\..\..\..\Binaries\Win32\$(Configuration)\GameCore.dll" "$(OutputPath)" /Y /R /I /E</Command>
@@ -165,7 +165,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(ProjectDir)\..\..\..\Libraries\$(PlatformName)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>GameCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>GameCore.lib;Utilities.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(ProjectDir)\..\..\..\Binaries\Win32\$(Configuration)\GameCore.dll" "$(OutputPath)" /Y /R /I /E</Command>
@@ -176,11 +176,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CommandBucketTests.h" />
+    <ClInclude Include="FactoryTests.h" />
     <ClInclude Include="StateMachineTests.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="commandBucketTests.cpp" />
+    <ClCompile Include="FactoryTests.cpp" />
     <ClCompile Include="PerformanceTests.cpp" />
     <ClCompile Include="StateMachineTests.cpp" />
     <ClCompile Include="stdafx.cpp">

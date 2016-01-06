@@ -30,6 +30,9 @@
     <ClInclude Include="StateMachineTests.h">
       <Filter>Tests</Filter>
     </ClInclude>
+    <ClInclude Include="FactoryTests.h">
+      <Filter>Tests</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -42,6 +45,9 @@
       <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="StateMachineTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="FactoryTests.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
   </ItemGroup>

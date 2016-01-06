@@ -15,6 +15,9 @@
     <Filter Include="FSM">
       <UniqueIdentifier>{f98fcc79-95cc-485f-b8fb-818e1110d601}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Factory">
+      <UniqueIdentifier>{3ceebed5-1b4e-4c2d-9260-7dfe0f1cc2c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -56,6 +59,9 @@
     </ClInclude>
     <ClInclude Include="StateMachine\BaseState.h">
       <Filter>FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="Factory\factory.h">
+      <Filter>Factory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

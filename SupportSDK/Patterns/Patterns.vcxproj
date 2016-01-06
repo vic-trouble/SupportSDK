@@ -85,6 +85,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Factory\factory.h" />
     <ClInclude Include="StateMachine\BaseState.h" />
     <ClInclude Include="StateMachine\Executor.h" />
     <ClInclude Include="StateMachine\StateMachine.h" />
