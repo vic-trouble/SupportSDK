@@ -37,11 +37,8 @@ namespace SDK
 		typedef ErrorPolicy<BaseClass, IdentifierType, PtrType> _ErrorPolicy;
 	private:
 		typedef std::pair<size_t, Creator> ProductPair;
-		std::vector<ProductPair> m_creators;		
+		std::vector<ProductPair> m_creators;
 
-
-		typedef std::pair<IdentifierType, Creator> ProductPairTest;
-		std::vector<ProductPairTest> m_creators_test;
 	private:
 		const ProductPair* Find(size_t i_hash) const
 		{
@@ -62,7 +59,6 @@ namespace SDK
 				return _ErrorPolicy::OnCreatorExist(i_id);
 					
 			m_creators.emplace_back(hash, i_creator);
-			m_creators_test.emplace_back(i_id, i_creator);
 		}
 
 		void Unregister(const IdentifierType& i_id)
@@ -75,25 +71,6 @@ namespace SDK
 				);
 		}
 
-		///////////////
-		const ProductPairTest* FindTest(const IdentifierType& i_hash) const
-		{
-			const auto it = std::find_if(m_creators_test.begin(), m_creators_test.end(), [&i_hash](const ProductPairTest& pp)
-			{
-				return pp.first == i_hash;
-			});
-			if (it == m_creators_test.end())
-				return nullptr;
-			return &(*it);
-		}
-		PtrType CreateTest(const IdentifierType& i_id) const
-		{
-			const ProductPairTest* p_p = FindTest(i_id);
-			if (p_p == nullptr)
-				return _ErrorPolicy::OnUnknownType(i_id);
-			return p_p->second();
-		}
-		//////////////////
 		PtrType Create(const IdentifierType& i_id) const
 		{
 			const size_t hash = HashFunction(i_id);

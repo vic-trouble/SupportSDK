@@ -131,6 +131,7 @@ namespace FactoryTests
 		return objects;
 	}
 
+	/*
 	template <typename KeyType>
 	std::vector<std::unique_ptr<Base>> TestFactoryTest(const KeyType* ip_test_array, size_t i_num, size_t i_obj_to_create)
 	{
@@ -143,7 +144,7 @@ namespace FactoryTests
 			objects.push_back(std::move(factory.CreateTest(ip_test_array[i%i_num])));
 		return objects;
 	}
-
+	*/
 	void Out(const std::vector<std::unique_ptr<Base>>& i_objects)
 	{
 		for (const auto& obj : i_objects)
@@ -173,9 +174,8 @@ namespace FactoryTests
 		std::cout << "\tString: " << OBJ_NUMBER << "-" << end << std::endl;
 		//Out(objects);
 		begin = clock();
-		
-		objects = TestFactoryTest<std::string>(TestData, sizeof(TestData) / sizeof(std::string), OBJ_NUMBER);
-		//objects = TestFactory<int>(TestData_int, sizeof(TestData_int) / sizeof(int), OBJ_NUMBER);
+		//objects = TestFactoryTest<std::string>(TestData, sizeof(TestData) / sizeof(std::string), OBJ_NUMBER);
+		objects = TestFactory<int>(TestData_int, sizeof(TestData_int) / sizeof(int), OBJ_NUMBER);
 		end = clock() - begin;
 		std::cout << "\tInt: " << OBJ_NUMBER << "-" << end << std::endl;
 		//Out(objects);
