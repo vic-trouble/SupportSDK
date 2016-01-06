@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <vector>
+#include <algorithm>
 
 #include <Utilities/HashFunctions.h>
 
@@ -59,6 +60,10 @@ namespace SDK
 				return _ErrorPolicy::OnCreatorExist(i_id);
 					
 			m_creators.emplace_back(hash, i_creator);
+			std::sort(m_creators.begin(), m_creators.end(), [](const ProductPair& left, const ProductPair& right)
+			{
+				return left.first < right.first;
+			});
 		}
 
 		void Unregister(const IdentifierType& i_id)

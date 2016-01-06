@@ -126,8 +126,10 @@ namespace FactoryTests
 			factory.Register(ip_test_array[i], CreateFunc[i]);
 		
 		std::vector<std::unique_ptr<Base>> objects;
+		static const size_t buffer_count = 100000;
+		objects.resize(buffer_count);
 		for (size_t i = 0; i < i_obj_to_create; ++i)
-			objects.push_back(std::move(factory.Create(ip_test_array[i%i_num])));
+			objects[i%buffer_count] = std::move(factory.Create(ip_test_array[i%i_num]));
 		return objects;
 	}
 
@@ -153,7 +155,7 @@ namespace FactoryTests
 
 	void Test()
 	{
-		static const size_t OBJ_NUMBER = 10000000;
+		static const size_t OBJ_NUMBER = 100000000;
 		std::cout << "==========================================================" << std::endl
 			<< "\t\t\tFactory tests" << std::endl;
 		/*size_t sum = 0;
