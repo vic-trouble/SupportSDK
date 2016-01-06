@@ -31,7 +31,17 @@ namespace SDK
 			static constexpr size_t hash = hash_value;
 		};
 
-		UTILITIES_API size_t hash_function(const std::string& str);
+		constexpr size_t hash_function(ConstString str)
+		{
+			return Utilities::hash_str(str);
+		}
+
+		template<class T>
+		size_t hash_function(const T& val)
+		{
+			static std::hash<T> hash;
+			return hash(val);
+		}
 
 	} // Utilities
 } // SDK
