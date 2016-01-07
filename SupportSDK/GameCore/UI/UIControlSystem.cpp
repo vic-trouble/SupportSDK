@@ -3,9 +3,6 @@
 #include "UIControlSystem.h"
 #include "UIControl.h"
 
-#include "UIScreen.h"
-#include "UIButton.h"
-
 #include "Core.h"
 #include "Applications/ApplicationBase.h"
 #include "Render/RenderWorld.h"
@@ -70,11 +67,15 @@ namespace SDK
 				}
 				return false;
 			}
-		};		
+		};
+		
+		namespace detail { extern void RegisterBaseUITypes(UIControlSystem&); }
 
 		UIControlSystem::UIControlSystem()
 			: m_current_scheme(INVALID_UISCHEME_HANDLER)
-		{}
+		{
+			detail::RegisterBaseUITypes(*this);
+		}
 
 		UIControlSystem::~UIControlSystem()
 		{
@@ -171,45 +172,24 @@ namespace SDK
 			m_controls[i_handler.index].first.index = -1;
 		}
 
-		namespace
-		{
-			template <typename ObjType>
-			struct ObjectCreator
-			{
-				typedef ObjType Type;
-				typedef UIControlSystem::UIControlAccessor<Type> Accessor;
-				static Accessor Create(const PropertyElement& i_element, UIControlHandler i_parent)
-				{
-					Accessor accessor(&g_ui_system, INVALID_UI_HANDLER);
-					if (i_parent == INVALID_UI_HANDLER)
-						accessor = g_ui_system.CreateControl<Type>();
-					else
-						accessor = g_ui_system.AppendControl<Type>(i_parent);
-					accessor.GetActual()->Load(i_element);
-					return accessor;
-				}
-			};
-		} // namespace
-
 		void AddControlElement(UIControlSystem::UIScheme& o_scheme, const PropertyElement::iterator<PropertyElement>& i_it, UIControlHandler i_parent = INVALID_UI_HANDLER)
 		{
 			// type of control
 			auto type = i_it.element_name();
 			const PropertyElement& element = *i_it;
-			UIControlHandler handler = INVALID_UI_HANDLER;
-			if (type == "button")				
-				handler = ObjectCreator<UIButton>::Create(element, i_parent).GetHandler();
-			else if (type == "screen")
-				handler = ObjectCreator<UIScreen>::Create(element, i_parent).GetHandler();
+			UIControlSystem::UIControlAccessor<UIControl> accessor = g_ui_system.GetFactory().Create(type);
 
-			if (handler == INVALID_UI_HANDLER)
+			if (!accessor.IsValid())
 				return;
-			
-			o_scheme.AddControl(handler);
+
+			if (i_parent != INVALID_UI_HANDLER)
+				accessor.GetActual()->SetParent(i_parent);			
+
+			o_scheme.AddControl(accessor.GetHandler());
 			
 			const auto end = element.end<PropertyElement>();
 			for (auto it = element.begin<PropertyElement>(); it != end; ++it)
-				AddControlElement(o_scheme, it, handler);
+				AddControlElement(o_scheme, it, accessor.GetHandler());
 		}
 
 		UISchemeHandler UIControlSystem::LoadScheme(const std::string& i_file_name)
@@ -236,7 +216,7 @@ namespace SDK
 				}
 			}
 
-			UISchemeHandler scheme_handler{ m_schemes.size(), 0 };
+			UISchemeHandler scheme_handler{ static_cast<int>(m_schemes.size()), 0 };
 			// find empty slot
 			{
 				for (size_t i = 0; i < m_schemes.size(); ++i)

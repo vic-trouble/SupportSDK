@@ -370,5 +370,8 @@
     <ClCompile Include="PropertyReaders.cpp">
       <Filter>Core\Properties</Filter>
     </ClCompile>
+    <ClCompile Include="UI\UIRegistrar.cpp">
+      <Filter>Core\UI</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

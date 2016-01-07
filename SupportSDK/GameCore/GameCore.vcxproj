@@ -204,6 +204,7 @@
     <ClCompile Include="TimeController.cpp" />
     <ClCompile Include="UI\UIButton.cpp" />
     <ClCompile Include="UI\UIControl.cpp" />
+    <ClCompile Include="UI\UIRegistrar.cpp" />
     <ClCompile Include="UI\UIScreen.cpp" />
     <ClCompile Include="UI\UIControlSystem.cpp" />
     <ClCompile Include="World.cpp" />

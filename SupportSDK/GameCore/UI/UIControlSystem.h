@@ -7,6 +7,7 @@
 #include <Utilities/noncopyable.h>
 
 #include <Patterns/MessageDispatcher/MessageDispatcher.h>
+#include <Patterns/Factory/Factory.h>
 
 namespace SDK
 {
@@ -38,21 +39,38 @@ namespace SDK
 				UIControlHandler m_handler;
 				UIControlSystem* mp_owner_system;
 			public:
+				UIControlAccessor()
+					: mp_owner_system(nullptr)
+					, m_handler(INVALID_UI_HANDLER)
+				{}
 				UIControlAccessor(UIControlSystem* ip_control_system, UIControlHandler i_handler)
 					: mp_owner_system(ip_control_system)
 					, m_handler(i_handler)
+				{}
+			
+				template <typename OtherControl, typename CType = ControlType>
+				UIControlAccessor(const UIControlAccessor<OtherControl>& i_other
+					, typename std::enable_if< std::is_same<CType, UIControl>::value >::type* = 0)
+					: m_handler(i_other.GetHandler())
+					, mp_owner_system(i_other.GetSystem())
 				{}
 
 				// return pointer to control or return nullptr
 				ControlType* GetActual() const
 				{
+					if (mp_owner_system == nullptr)
+						return nullptr;
 					return static_cast<ControlType*>(mp_owner_system->AccessControl(m_handler));
 				}
 				bool IsControlAlive() const
 				{
+					if (mp_owner_system == nullptr)
+						return false;
 					return GetActual() != nullptr;
 				}
 				UIControlHandler GetHandler() const { return m_handler; }
+				UIControlSystem* GetSystem() const { return mp_owner_system; }
+				bool IsValid() const { return mp_owner_system != nullptr && m_handler != INVALID_UI_HANDLER; }
 			};
 		
 			class UIScheme
@@ -93,6 +111,8 @@ namespace SDK
 				UISchemeHandler GetHandler() const { return m_handler; }
 			};
 
+			typedef Factory<UIControl, std::string, UIControlAccessor<UIControl>> UIFactory;
+
 		private:
 			class UI_InputSubscriber;
 			friend class UI_InputSubscriber;
@@ -107,7 +127,7 @@ namespace SDK
 			UISchemeHandler m_current_scheme;
 
 			MessageDispatcher m_message_dispatcher;
-
+			UIFactory m_factory;
 		private:
 			UISchemeHandler FindScheme(size_t i_hash);
 		
@@ -175,6 +195,7 @@ namespace SDK
 			GAMECORE_EXPORT const UIScheme* AccessScheme(UISchemeHandler i_scheme) const;
 
 			MessageDispatcher& GetMessageDispatcher() { return m_message_dispatcher; }
+			UIFactory& GetFactory() { return m_factory; }
 
 			void SetInputSystem(InputSystem& i_input_system);
 			void OnResize(const IRect& i_new_size);
