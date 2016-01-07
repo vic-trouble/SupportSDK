@@ -152,7 +152,7 @@ namespace SDK
 			if (i_handle.index < VertexBuffers::Size && m_static_vertices.m_buffer[i_handle.index].m_usage == BufferUsageFormat::Static)
 				return m_static_vertices.m_buffer[i_handle.index];
 
-			return HardwareVertexBuffer();
+			return HardwareVertexBuffer{ 0, BufferUsageFormat::Static, 0, 0, 0 };
 		}
 
 		HardwareIndexBuffer HardwareBufferManager::AccessIndexBuffer(IndexBufferHandle i_handle) const
@@ -160,7 +160,10 @@ namespace SDK
 			if (i_handle.index < VertexBuffers::Size && m_static_indices.m_buffer[i_handle.index].m_usage == BufferUsageFormat::Static)
 				return m_static_indices.m_buffer[i_handle.index];
 
-			return HardwareIndexBuffer();
+			// set hardware id so rendere can check it
+			HardwareIndexBuffer hib;
+			hib.m_hardware_id = 0;
+			return hib;
 		}
 
 		VertexLayout HardwareBufferManager::AccessElement(VertexLayoutHandle i_handle) const
@@ -168,7 +171,9 @@ namespace SDK
 			if (i_handle.index < VertexLayoutBuffers::Size && m_static_indices.m_buffer[i_handle.index].m_usage == BufferUsageFormat::Static)
 				return m_static_elements.m_buffer[i_handle.index];
 
-			return VertexLayout();
+			VertexLayout vl;
+			vl.m_vertex_size = 0;
+			return vl;
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////

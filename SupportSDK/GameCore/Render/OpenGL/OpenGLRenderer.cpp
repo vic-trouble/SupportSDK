@@ -300,6 +300,12 @@ namespace SDK
 		auto ind_buf = m_hardware_buffer_mgr.AccessIndexBuffer(i_batch.indices);
 		auto element = m_hardware_buffer_mgr.AccessElement(i_batch.element);
 
+		if (ver_buf.m_hardware_id == 0 || ind_buf.m_hardware_id == 0 || element.m_vertex_size == 0)
+		{
+			assert(false && "Invalid parameters. Have buffers been created?");
+			return;
+		}
+
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, ver_buf.m_hardware_id);
 		glVertexAttribPointer(0, // index for shader attribute
