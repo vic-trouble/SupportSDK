@@ -31,6 +31,8 @@ public:
 
 	__forceinline void UnregisterHandler(const std::type_index& i_type, const std::string& i_publisher)
 	{
+		if (m_handlers.empty())
+			return;
 		Handlers::iterator handlers_it = m_handlers.find(i_type);
 		if (handlers_it != m_handlers.end())
 		{
