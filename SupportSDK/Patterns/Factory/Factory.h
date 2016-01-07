@@ -9,12 +9,12 @@
 
 namespace SDK
 {
-	template <typename BaseType, typename IdentifierType, typename PtrType>
+	template <typename BaseType, typename IdentifierType, typename ReturnType>
 	struct DefaultErrorPolicy
 	{
-		static PtrType OnUnknownType(const IdentifierType& i_id)
+		static ReturnType OnUnknownType(const IdentifierType& i_id)
 		{
-			return nullptr;
+			return ReturnType();
 		}
 
 		static void OnCreatorExist(const IdentifierType& i_id)
@@ -27,15 +27,15 @@ namespace SDK
 	template <
 		typename BaseClass,
 		typename IdentifierType,
-		typename PtrType = std::unique_ptr<BaseClass>,
+		typename ReturnType = std::unique_ptr<BaseClass>,
 		template <typename, typename, typename> class ErrorPolicy = DefaultErrorPolicy,
 		size_t (*HashFunction)(const IdentifierType&) = &Utilities::hash_function<IdentifierType>
 	>
 	class Factory
 	{
 	public:
-		typedef PtrType(*Creator)();
-		typedef ErrorPolicy<BaseClass, IdentifierType, PtrType> _ErrorPolicy;
+		typedef ReturnType(*Creator)(void);
+		typedef ErrorPolicy<BaseClass, IdentifierType, ReturnType> _ErrorPolicy;
 	private:
 		typedef std::pair<size_t, Creator> ProductPair;
 		std::vector<ProductPair> m_creators;
@@ -76,7 +76,7 @@ namespace SDK
 				);
 		}
 
-		PtrType Create(const IdentifierType& i_id) const
+		ReturnType Create(const IdentifierType& i_id) const
 		{
 			const size_t hash = HashFunction(i_id);
 			const ProductPair* p_p = Find(hash);
