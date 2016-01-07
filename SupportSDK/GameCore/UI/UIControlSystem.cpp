@@ -182,6 +182,8 @@ namespace SDK
 			if (!accessor.IsValid())
 				return;
 
+			accessor.GetActual()->Load(element);
+
 			if (i_parent != INVALID_UI_HANDLER)
 				accessor.GetActual()->SetParent(i_parent);			
 
