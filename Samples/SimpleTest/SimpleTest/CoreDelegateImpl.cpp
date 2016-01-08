@@ -15,7 +15,8 @@
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 #include <time.h>
 
-
+#include <GameCore/Systems/MeshSystem.h>
+#include <GameCore/UI/UIControlSystem.h>
 using namespace SDK;
 
 
@@ -49,10 +50,27 @@ namespace Game
 		batch[0].vertices = p_mgr->CreateVertexBuffer(4, sizeof(float) * 3, Render::BufferUsageFormat::Static, g_vertex_buffer_data);
 		batch[0].indices = p_mgr->CreateIndexBuffer(Render::HardwareIndexBuffer::IndexType::Int, 6, Render::BufferUsageFormat::Static, cubeIndices);
 		batch[0].element = p_mgr->CreateElement(3, Render::VertexSemantic::Position, Render::PrimitiveType::Triangles, Render::ComponentType::Float, false);
-		// 2nd
-		batch[1].vertices = p_mgr->CreateVertexBuffer(4, sizeof(float) * 3, Render::BufferUsageFormat::Static, g_vertex_buffer_data);
-		batch[1].indices = p_mgr->CreateIndexBuffer(Render::HardwareIndexBuffer::IndexType::Int, 6, Render::BufferUsageFormat::Static, cubeIndices);
-		batch[1].element = p_mgr->CreateElement(3, Render::VertexSemantic::Position, Render::PrimitiveType::Triangles, Render::ComponentType::Float, false);
+
+		{
+			constexpr static float i_center[] = { 0, 0 };
+			const uint half_size[] = { 100 / 2, 50 / 2 };
+			const float verts[] = {
+				i_center[0] - half_size[0], i_center[1] - half_size[1],
+				i_center[0] + half_size[0], i_center[1] - half_size[1],
+				i_center[0] + half_size[0], i_center[1] + half_size[1],
+				i_center[0] - half_size[0], i_center[1] + half_size[1]
+			};
+
+			ubyte inds[] = {
+				0, 1, 2,
+				3, 0, 2
+			};
+			// TODO: can optimize allocations?
+			auto p_mgr = Core::GetRenderer()->GetHardwareBufferMgr();
+			batch[1].vertices = p_mgr->CreateVertexBuffer(sizeof(verts) / sizeof(float), sizeof(float) * 2, Render::BufferUsageFormat::Static, verts);
+			batch[1].indices = p_mgr->CreateIndexBuffer(Render::HardwareIndexBuffer::IndexType::Byte, sizeof(inds) / sizeof(ubyte), Render::BufferUsageFormat::Static, inds);
+			batch[1].element = p_mgr->CreateElement(2, Render::VertexSemantic::Position, Render::PrimitiveType::Triangles, Render::ComponentType::Float, false);			
+		}		
 	}
 
 	void CoreDelegateImpl::InitQuaternions()
@@ -96,10 +114,12 @@ namespace Game
 	{
 		auto& world = Core::GetApplication()->GetWorld();
 		auto& camera = world.GetCamera();
-		camera.SetPosition({ 0,0,-10 });
+		camera.m_modelview_matrix = Matrix4f::IDENTITY;
+		camera.m_need_recalc = false;
 		auto& frustum = world.GetFrustum();
+		
 		frustum.SetProjectionType(Render::ProjectionType::Orthographic);
-
+		//frustum.SetFrustumExtents(-0.5f, 0.5f, 0.5f, 0.5f)
 		InputSystem::Instance().AddSubscriber(&m_input_subs);
 		InputSystem::Instance().AddSubscriber(&m_ship);
 
@@ -166,12 +186,12 @@ namespace Game
 	{
 		static void Push()
 		{
-			glPushMatrix();
+			Core::GetRenderer()->PushMatrix();
 		}
 
 		static void Pop()
 		{
-			glPopMatrix();
+			Core::GetRenderer()->PopMatrix();
 		}
 	};
 
@@ -191,14 +211,17 @@ namespace Game
 
 	void CoreDelegateImpl::Draw()
 	{
-		CustomScopedObject<GlMatrix> scopedMatrix;
 		auto p_renderer = Core::GetRenderer();
-		glScalef(0.0005f, 0.0005f, 0.0005f);
+		//p_renderer->SetMatrix(MatrixMode::Projection, Matrix4f::IDENTITY);
+		//p_renderer->SetMatrix(MatrixMode::ModelView, Matrix4f::IDENTITY);
+		p_renderer->SetProjectionType(Render::ProjectionType::Orthographic);
+
+		CustomScopedObject<GlMatrix> scopedMatrix;
 		m_ship.Draw();
 
 		{
 			CustomScopedObject<GlMatrix> scopedMatrix;
-			glTranslatef(-500, 300, 0);
+			p_renderer->ModifyCurrentMatrix(Matrix4f::MakeTranslation(Vector3{ 150, 200, 0 }));
 			static Vector3 vec = Math::VectorConstructor<float>::Construct(10, 30, 0);
 			p_renderer->RenderLine(offset + first_point, offset + first_point + m_point, Color(255, 255, 255, 255));
 			size_t i = 1;
@@ -212,13 +235,13 @@ namespace Game
 		//////////////////////////////////////
 		{
 			CustomScopedObject<GlMatrix> scopedMatrix;
-			glTranslatef(0, 10, 0);
+			p_renderer->ModifyCurrentMatrix(Matrix4f::MakeTranslation(Vector3{ 150, 150, 0 }));
 			glColor4f(0, 0.5f, 0., 1.f);
 
 			p_renderer->Draw(batch[0]);
 
 			glColor4f(0, 0.5f, 0.5, 1.f);
-			glTranslatef(25, 0, 0);
+			p_renderer->ModifyCurrentMatrix(Matrix4f::MakeTranslation(Vector3{ 200, 250, 0 }));
 			p_renderer->Draw(batch[1]);
 		}
 		{

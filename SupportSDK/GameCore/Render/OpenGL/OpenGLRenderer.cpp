@@ -352,12 +352,14 @@ namespace SDK
 	void OpenGLRenderer::PushMatrix()
 	{
 		glPushMatrix();
+		CHECK_GL_ERRORS;
 		m_pushed_matrices.push_back(GetMatrixName(m_current_mode));
 	}
 
 	void OpenGLRenderer::PopMatrix()
 	{
 		glPopMatrix();
+		CHECK_GL_ERRORS;
 		glGetFloatv(m_pushed_matrices.back(), m_matrices[(int)m_current_mode][0]);		
 		m_matrices[(int)m_current_mode].Transpose();
 		m_pushed_matrices.pop_back();
@@ -458,13 +460,13 @@ namespace SDK
 
 	void OpenGLRenderer::BeginFrame()
 	{
-		// reset projection type
-		SetProjectionType(Render::ProjectionType::Perspective);		
 		// reset matrices
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
+		// reset projection type
+		SetProjectionType(Render::ProjectionType::Perspective);					
 		// set to ModelView matrix
 		SetMatrixMode(MatrixMode::ModelView);
 		// clear screen

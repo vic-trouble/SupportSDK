@@ -38,7 +38,11 @@ namespace SDK
 			SetRenderTargets();
 
 			gBuffer.Sort();
-			gBuffer.Submit();			
+			gBuffer.Submit();	
+
+			p_renderer->SetMatrix(MatrixMode::Projection, Matrix4f::IDENTITY);
+			p_renderer->SetMatrix(MatrixMode::ModelView, Matrix4f::IDENTITY);
+			p_renderer->SetProjectionType(Render::ProjectionType::Perspective);
 		}
 
 	} // Render
