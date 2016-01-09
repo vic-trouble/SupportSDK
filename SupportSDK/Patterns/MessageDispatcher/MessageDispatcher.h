@@ -72,7 +72,7 @@ void MessageDispatcher::UnregisterHandler(const std::string& i_publisher)
 template < typename EventType >
 void MessageDispatcher::HandleMessage(const EventType& i_event, const std::string& i_publisher)
 {
-	Handlers::iterator handlers_it = m_handlers.find(typeid(i_event));
+	Handlers::iterator handlers_it = m_handlers.find(std::type_index(typeid(i_event)));
 	if (handlers_it != m_handlers.end())
 	{
 		const size_t hash = SDK::Utilities::hash_function(i_publisher);

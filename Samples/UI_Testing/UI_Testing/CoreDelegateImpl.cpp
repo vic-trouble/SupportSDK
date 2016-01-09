@@ -40,7 +40,7 @@ namespace Game
 
 	struct TestHandler
 	{
-		void Handle(const UI::UIEvent& e)
+		void Handle(const UI::UIButtonEvent& e)
 		{
 			Core::GetApplication()->RequestShutdown();
 		}
@@ -59,9 +59,9 @@ namespace Game
 		auto accessor1 = UI::g_ui_system.CreateControl<UI::UIButton>();
 
 		auto& msg_dsp = UI::g_ui_system.GetMessageDispatcher();
-		msg_dsp.RegisterHandler<TestHandler, UI::UIEvent>(handler, &TestHandler::Handle, "exit_button");
+		msg_dsp.RegisterHandler<TestHandler, UI::UIButtonEvent>(handler, &TestHandler::Handle, "exit_button");
 
-		Connection connection(msg_dsp, handler, &TestHandler::Handle, "my_mega_button");
+		connection = SDK::Connection(msg_dsp, handler, &TestHandler::Handle, "my_mega_button");		
 		connection.disconnect();
 	}
 

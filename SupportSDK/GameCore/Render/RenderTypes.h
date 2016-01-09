@@ -1,6 +1,8 @@
 #ifndef	__GAMECORE_RENDERTYPES_H__
 #define __GAMECORE_RENDERTYPES_H__
 
+#include "../GameCoreAPI.h"
+
 #include "GameCore/GenericHandle.h"
 
 namespace SDK
@@ -147,16 +149,16 @@ namespace SDK
 #define IMPLEMENT_COMMAND_IMPL(ProcessorFunc, CompletionFunc) \
 		static constexpr CommandExecutor EXECUTOR_FUNCTION = &ProcessorFunc; \
 		static constexpr CommandExecutor COMPLETION_FUNCTION = &CompletionFunc; \
-		void SetDefaultValues();
+		GAMECORE_EXPORT void SetDefaultValues();
 
 #define IMPLEMENT_COMMAND_WITH_COMPLETION(ProcessorFunc, CompletionFunc) \
-		static void ProcessorFunc(const void*); \
-		static void CompletionFunc(const void*); \
+		GAMECORE_EXPORT static void ProcessorFunc(const void*); \
+		GAMECORE_EXPORT static void CompletionFunc(const void*); \
 		IMPLEMENT_COMMAND_IMPL(ProcessorFunc, CompletionFunc)
 
 #define IMPLEMENT_COMMAND(ProcessorFunc) \
-		static void ProcessorFunc(const void*); \
-		static void CompletionStub(const void*){} \
+		GAMECORE_EXPORT static void ProcessorFunc(const void*); \
+		GAMECORE_EXPORT static void CompletionStub(const void*){} \
 		IMPLEMENT_COMMAND_IMPL(ProcessorFunc, CompletionStub)
 	} // Render
 

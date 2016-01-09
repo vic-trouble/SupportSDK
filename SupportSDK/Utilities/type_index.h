@@ -7,7 +7,7 @@ namespace std
 	class type_index {
 	public:
 		type_index(const type_info& rhs) { target = &rhs; }
-		bool operator==(const type_index& rhs) const { return *target == *rhs.target; }
+		bool operator==(const type_index& rhs) const { return target->hash_code() == rhs.target->hash_code(); }
 		bool operator!=(const type_index& rhs) const { return *target != *rhs.target; }
 		bool operator< (const type_index& rhs) const { return target->before(*rhs.target); }
 		bool operator<= (const type_index& rhs) const { return !rhs.target->before(*target); }

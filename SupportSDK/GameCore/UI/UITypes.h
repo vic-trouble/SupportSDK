@@ -22,15 +22,20 @@ namespace SDK
 
 		/////////////////////////////////////////////////////////////////////////////
 		// Events
-		enum class UIEventType
+		
+		struct UIButtonEvent : public Event
 		{
-			ButtonPressed
+			enum class Type : char
+			{
+				Pressed,
+				Released
+			} m_type;
+
+			UIButtonEvent(Type i_type)
+				: m_type(i_type)
+			{}
 		};
-		struct UIEvent : public Event
-		{
-			UIEventType m_ev_type;
-			UIEvent(UIEventType t) : m_ev_type(t) {}
-		};
+
 	} // UI
 } // SDK
 

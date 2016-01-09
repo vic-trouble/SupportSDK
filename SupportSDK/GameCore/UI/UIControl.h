@@ -4,10 +4,14 @@
 #include "../GameCoreAPI.h"
 #include "UITypes.h"
 
+#include "../Input/InputEvent.h"
+
+class MessageDispatcher;
+
 namespace SDK
 {
 	class PropertyElement;
-
+	
 	namespace UI
 	{
 		class UIControlSystem;
@@ -57,8 +61,19 @@ namespace SDK
 			GAMECORE_EXPORT Vector2i GetGlobalPosition() const;			
 			GAMECORE_EXPORT Vector2i GetGlobalSize() const;
 
-			virtual bool IsHited(const Vector2i& i_hit) const;
-			virtual void OnResize(const IRect& i_new_size);
+			GAMECORE_EXPORT virtual bool IsHited(const Vector2i& i_hit) const;
+			GAMECORE_EXPORT virtual void OnResize(const IRect& i_new_size);
+
+			//-------------------------------------------------------------
+			// Generating of events: override this methods to generate events
+			/// TODO: Should UI controls handle key events? Or only mouse
+			// virtual Event KeyPressed(const KeyEvent& i_evt) { return Event(); }
+			// virtual Event KeyReleased(const KeyEvent& i_evt) { return Event(); }
+			/// if need to post event; post event through o_ui_dispatcher
+			virtual void MouseMoved(MessageDispatcher& o_ui_dispatcher, const MouseEvent& i_evt) {}
+			virtual void MousePressed(MessageDispatcher& o_ui_dispatcher, const MouseEvent& i_evt) {}
+			virtual void MouseReleased(MessageDispatcher& o_ui_dispatcher, const MouseEvent& i_evt) {}
+			//-------------------------------------------------------------
 
 			// return [0, 1] values
 			Vector2 GetRelativeScale() const { return m_scale; }

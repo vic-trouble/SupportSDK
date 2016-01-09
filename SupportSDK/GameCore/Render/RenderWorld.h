@@ -16,7 +16,7 @@ namespace SDK
 	namespace Render 
 	{
 		// TODO: what type of global objects
-		extern Commands::CommandBucket<int64> gBuffer;
+		GAMECORE_EXPORT extern Commands::CommandBucket<int64> gBuffer;
 		// one render world contains render queus;
 		//	wraps submition process
 		class RenderWorld : Utilities::noncopyable

@@ -33,7 +33,8 @@ namespace SDK
 			{
 				InputSystem::Instance().SetUISubscriber(nullptr);
 			}
-
+			/*
+			/// TODO: Should UI controls handle key events? Or only mouse
 			virtual bool KeyPressed(const KeyEvent& i_evt) override
 			{
 				return false;
@@ -42,7 +43,7 @@ namespace SDK
 			{
 				return false;
 			}
-
+			*/
 			virtual bool MouseMoved(const MouseEvent& i_evt) override
 			{
 				return false;
@@ -58,10 +59,10 @@ namespace SDK
 				{
 					if (control.second == nullptr)
 						continue;
+					UIControl* p_control = control.second.get();
 					if (control.second->IsHited({ i_evt.m_x, i_evt.m_y }))
 					{
-						// TODO: need to return true/false based on HandleMessage result
-						g_ui_system.GetMessageDispatcher().HandleMessage(UIEvent{ UIEventType::ButtonPressed }, control.second->GetName());
+						p_control->MouseReleased(g_ui_system.m_message_dispatcher, i_evt);
 						return true;
 					}
 				}

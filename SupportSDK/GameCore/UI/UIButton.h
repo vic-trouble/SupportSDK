@@ -23,7 +23,9 @@ namespace SDK
 			GAMECORE_EXPORT UIButton();
 			GAMECORE_EXPORT virtual ~UIButton();
 
-
+			virtual void MouseMoved(MessageDispatcher& o_ui_dispatcher, const MouseEvent& i_evt) override;
+			virtual void MousePressed(MessageDispatcher& o_ui_dispatcher, const MouseEvent& i_evt) override;
+			virtual void MouseReleased(MessageDispatcher& o_ui_dispatcher, const MouseEvent& i_evt) override;
 		};
 
 	} // UI

@@ -4,6 +4,9 @@
 
 #include "Core.h"
 #include "Applications/ApplicationBase.h"
+
+#include <Patterns/MessageDispatcher/MessageDispatcher.h>
+
 // TODO: separate include for bufferes - mechanism of buffers...
 #include "Render/RenderWorld.h"
 #include "Render/Commands.h"
@@ -30,7 +33,6 @@ namespace SDK
 		void UIButton::DrawImpl()
 		{
 			using namespace Render;
-			auto rect = Core::GetRenderer()->GetTargetRectangle();
 			Commands::Transform* p_transform_cmd = Render::gBuffer.Create<Commands::Transform>();
 			p_transform_cmd->Translate(Vector3{ static_cast<float>(m_global_position[0]), static_cast<float>(m_global_position[1]), 0.f });
 
@@ -61,12 +63,20 @@ namespace SDK
 			m_batch.indices = p_mgr->CreateIndexBuffer(Render::HardwareIndexBuffer::IndexType::Byte, sizeof(inds) / sizeof(ubyte), Render::BufferUsageFormat::Static, inds);
 			m_batch.element = p_mgr->CreateElement(2, Render::VertexSemantic::Position, Render::PrimitiveType::Triangles, Render::ComponentType::Float, false);
 		}
-		/*
 		
-		button
-		message_system
-		handler
-		control_system
-		*/
+		void UIButton::MouseMoved(MessageDispatcher& o_ui_dispatcher, const MouseEvent& i_evt)
+		{
+		}
+
+		void UIButton::MousePressed(MessageDispatcher& o_ui_dispatcher, const MouseEvent& i_evt)
+		{
+			o_ui_dispatcher.HandleMessage(UIButtonEvent{ UIButtonEvent::Type::Pressed }, GetName());
+		}
+
+		void UIButton::MouseReleased(MessageDispatcher& o_ui_dispatcher, const MouseEvent& i_evt)
+		{
+			o_ui_dispatcher.HandleMessage(UIButtonEvent{ UIButtonEvent::Type::Released }, GetName());
+		}
+
 	} // UI
 } // SDK

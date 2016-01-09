@@ -3,6 +3,8 @@
 #include <GameCore/CoreDelegate.h>
 #include <GameCore/UI/UIScreen.h>
 #include <GameCore/UI/UIButton.h>
+#include <Patterns/MessageDispatcher/connection.h>
+
 namespace Game
 {
 	class CoreDelegateImpl : public SDK::CoreDelegate
@@ -11,7 +13,7 @@ namespace Game
 		SDK::UI::UIScreen* mp_screen;
 
 		SDK::UI::UIButton* mp_button;
-
+		SDK::Connection connection;
 	public:
 		virtual ~CoreDelegateImpl(){}
 
