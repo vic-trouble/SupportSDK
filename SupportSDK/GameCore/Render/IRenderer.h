@@ -12,6 +12,7 @@ namespace SDK
 	{
 		class HardwareBufferManagerBase;
 		class ShaderCompiler;
+		class LightsController;
 	}
 
 	struct Color
@@ -60,20 +61,11 @@ namespace SDK
 		IRenderer() : m_render_context_id(0){}
 		virtual ~IRenderer(){}
 
+		/////////////////////////////////////////////////////////////
+		// Main
+
 		SDK::uint64 GetRenderContextID() const { return m_render_context_id; }
-		
-		virtual void SetMatrixMode(MatrixMode i_matrix_mode) = 0;
-		virtual void SetMatrix(MatrixMode i_matrix_mode, const Matrix4f& i_matrix) = 0;
-		virtual void SetProjectionType(Render::ProjectionType i_projection_type) = 0;
-		virtual void PushMatrix() = 0;
-		virtual void PopMatrix() = 0;
-		// Chagne current matrix to i_translation_matrix
-		virtual void SetCurrentMatrix(const Matrix4f& i_translation_matrix) = 0;
-		// Apply i_multiplyer to current matrix
-		virtual void ModifyCurrentMatrix(const Matrix4f& i_multiplier) = 0;
-
-		// virtual void SetRenderTargets() = 0;
-
+				
 		virtual void Initialize() = 0;
 		virtual void Release() = 0;
 		virtual void Reshape() = 0;
@@ -84,8 +76,32 @@ namespace SDK
 
 		virtual Render::HardwareBufferManagerBase* GetHardwareBufferMgr() = 0;
 		virtual Render::ShaderCompiler* GetShaderCompiler() = 0;
+		virtual Render::LightsController* GetLightsController() = 0;
+		virtual void Draw(Render::Batch i_decl) = 0;
 
-		virtual void Draw(Render::Batch i_decl) = 0;		
+		/////////////////////////////////////////////////////////////
+		// Matrix manipulations
+
+		virtual void SetMatrixMode(MatrixMode i_matrix_mode) = 0;
+		virtual void SetMatrix(MatrixMode i_matrix_mode, const Matrix4f& i_matrix) = 0;
+		virtual void SetProjectionType(Render::ProjectionType i_projection_type) = 0;
+		virtual void PushMatrix() = 0;
+		virtual void PopMatrix() = 0;
+		// Chagne current matrix to i_translation_matrix
+		virtual void SetCurrentMatrix(const Matrix4f& i_translation_matrix) = 0;
+		// Apply i_multiplyer to current matrix
+		virtual void ModifyCurrentMatrix(const Matrix4f& i_multiplier) = 0;
+
+		/////////////////////////////////////////////////////////////
+		// Textures
+
+		// virtual void SetRenderTargets() = 0;
+
+		/////////////////////////////////////////////////////////////
+		// Shaders -> use shader manager?
+
+		/////////////////////////////////////////////////////////////
+		// Deprecated
 
 		////////////////////////////////////////////////////////////////////
 		// TODO: is it still needed

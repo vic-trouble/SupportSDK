@@ -272,6 +272,15 @@
     <ClInclude Include="UI\UITypes.h">
       <Filter>Core\UI</Filter>
     </ClInclude>
+    <ClInclude Include="Render\Light.h">
+      <Filter>Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\LightsController.h">
+      <Filter>Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\OpenGL\GLLightsController.h">
+      <Filter>Core\Renderer\OpenGL</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -372,6 +381,9 @@
     </ClCompile>
     <ClCompile Include="UI\UIRegistrar.cpp">
       <Filter>Core\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\OpenGL\GLLightsController.cpp">
+      <Filter>Core\Renderer\OpenGL</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

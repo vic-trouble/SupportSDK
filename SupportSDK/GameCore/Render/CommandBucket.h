@@ -28,8 +28,10 @@ namespace SDK
 					i_packet.m_executed = true;
 				}
 
+				// if not compile - check that ProcessorType is POD type
 				template <typename ProcessorType>
-				CommandPacket CreateImpl(size_t i_aux_mem_size)
+				CommandPacket CreateImpl(size_t i_aux_mem_size,
+					typename std::enable_if< std::is_pod<ProcessorType>::value >::type* = 0)
 				{
 					void* p_data = ::operator new(sizeof(ProcessorType) + i_aux_mem_size);
 					CommandPacket command;

@@ -7,8 +7,8 @@
 #include "Core.h"
 #include "IRenderer.h"
 
-#include <GL/glew.h>
 #include "Render/ShaderSystem.h"
+#include "Render/LightsController.h"
 
 namespace SDK
 {
@@ -50,7 +50,7 @@ namespace SDK
 			}
 
 			///////////////////////////////////////////////////////////////////////////
-			// Draw
+			// Transform
 
 			void Transform::SetDefaultValues()
 			{
@@ -82,6 +82,39 @@ namespace SDK
 				p_renderer->PopMatrix();
 			}
 
+			///////////////////////////////////////////////////////////////////////////
+			// SetLight
+
+			void SetLights::ApplyLights(const void* ip_data)
+			{
+				const SetLights* cmd = reinterpret_cast<const SetLights*>(ip_data);
+				auto p_lights = Core::GetRenderer()->GetLightsController();
+
+				cmd->m_was_enabled = p_lights->LightingEnabled();
+
+				if (cmd->m_enabled)
+					p_lights->EnableLighting();
+				else
+					p_lights->DisableLighting();
+			}
+
+			void SetLights::RestoreLightConfig(const void* ip_data)
+			{
+				const SetLights* cmd = reinterpret_cast<const SetLights*>(ip_data);
+				auto p_lights = Core::GetRenderer()->GetLightsController();
+
+				if (cmd->m_was_enabled)
+					p_lights->EnableLighting();
+				else
+					p_lights->DisableLighting();
+			}
+
+			void SetLights::SetDefaultValues()
+			{
+				m_enabled = false;
+				m_was_enabled = false;
+				m_handle = INVALID_LIGHT_HANDLE;
+			}
 
 		} // Commands
 	} // Render

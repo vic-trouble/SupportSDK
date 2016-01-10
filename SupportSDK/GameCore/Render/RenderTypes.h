@@ -4,6 +4,7 @@
 #include "../GameCoreAPI.h"
 
 #include "GameCore/GenericHandle.h"
+#include "Light.h"
 
 namespace SDK
 {
@@ -142,7 +143,9 @@ namespace SDK
 		// Shaders
 		struct ShaderHandlerTag {};
 		typedef GenericHandle<int, 12, 20, ShaderHandlerTag> ShaderHandler;
-
+		// Lights
+		using LightHandle = int;
+		constexpr LightHandle INVALID_LIGHT_HANDLE = -1;
 		// Commands
 		typedef void(*CommandExecutor)(const void*);
 

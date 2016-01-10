@@ -5,6 +5,7 @@
 
 #include "HardwareBufferManager.h"
 #include "GLShaderCompiler.h"
+#include "GLLightsController.h"
 
 namespace SDK
 {
@@ -22,6 +23,7 @@ namespace SDK
 
 		Render::HardwareBufferManager m_hardware_buffer_mgr;
 		Render::GLShaderCompiler m_shader_compiler;
+		Render::GLLightsController m_lights_controller;
 		
 		MatrixMode m_current_mode;
 		Matrix4f m_matrices[2];
@@ -58,7 +60,7 @@ namespace SDK
 
 		virtual Render::HardwareBufferManager* GetHardwareBufferMgr() override { return &m_hardware_buffer_mgr; }
 		virtual Render::ShaderCompiler* GetShaderCompiler() override { return &m_shader_compiler; }
-
+		virtual Render::LightsController* GetLightsController() override { return &m_lights_controller; }
 		////////////////////////////////////////////////////////////////////
 		// TODO: is it still needed
 

@@ -59,6 +59,16 @@ namespace SDK
 			};
 			static_assert(std::is_pod<Transform>::value == true, "Transform must be a POD.");
 
+			struct SetLights
+			{
+				IMPLEMENT_COMMAND_WITH_COMPLETION(ApplyLights, RestoreLightConfig);
+
+				bool m_enabled;
+				LightHandle m_handle;
+
+				mutable bool m_was_enabled;
+			};
+			static_assert(std::is_pod<SetLights>::value == true, "SetLights must be a POD.");
 		} // Commands
 	} // Render
 } // SDK

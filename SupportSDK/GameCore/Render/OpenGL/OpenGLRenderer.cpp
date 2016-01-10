@@ -95,23 +95,6 @@ namespace SDK
 
 	}
 
-	void initLights()
-	{
-		// set up light colors (ambient, diffuse, specular)
-		GLfloat lightKa[] = { .0f, .0f, .0f, 1.0f };      // ambient light
-		GLfloat lightKd[] = { .9f, .9f, .9f, 1.0f };      // diffuse light
-		GLfloat lightKs[] = { 1, 1, 1, 1 };               // specular light
-		glLightfv(GL_LIGHT0, GL_AMBIENT, lightKa);
-		glLightfv(GL_LIGHT0, GL_DIFFUSE, lightKd);
-		glLightfv(GL_LIGHT0, GL_SPECULAR, lightKs);
-
-		// position the light in eye space
-		float lightPos[4] = { 0, 0, 1, 0 };               // directional light
-		glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
-
-		glEnable(GL_LIGHT0);                            // MUST enable each light source after configuration
-	}
-
 	void OpenGLRenderer::ConfigureGl()
 	{
 		glShadeModel(GL_SMOOTH);                        // shading mathod: GL_SMOOTH or GL_FLAT
@@ -136,9 +119,29 @@ namespace SDK
 		glClearStencil(0);                              // clear stencil buffer
 		glClearDepth(1.0f);                             // 0 is near, 1 is far
 		glDepthFunc(GL_LEQUAL);
-
-		initLights();
 	}
+
+	// TODO: 
+	//	 Can we make all flags like FlagPair
+	///////////////////////////////////////////////////////////
+	typedef std::pair<GLenum, bool> FlagPair;
+	FlagPair default_flags[] = {
+		{GL_LIGHTING, true},
+		{GL_COLOR_MATERIAL, true},
+		{GL_DEPTH_TEST, true},
+		{GL_TEXTURE_2D, true},
+		{GL_BLEND, true},
+		{GL_SCISSOR_TEST, true}
+	};
+
+	void Apply(FlagPair i_pair)
+	{
+		if (i_pair.second)
+			glEnable(i_pair.first);
+		else
+			glDisable(i_pair.first);
+	}
+	///////////////////////////////////////////////////////////
 
 	void OpenGLRenderer::Initialize()
 	{
