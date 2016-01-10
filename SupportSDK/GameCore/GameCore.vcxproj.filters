@@ -281,6 +281,12 @@
     <ClInclude Include="Render\OpenGL\GLLightsController.h">
       <Filter>Core\Renderer\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="Render\ScopedMatrixTransformation.h">
+      <Filter>Core\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\ScopedLightSwitch.h">
+      <Filter>Core\Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

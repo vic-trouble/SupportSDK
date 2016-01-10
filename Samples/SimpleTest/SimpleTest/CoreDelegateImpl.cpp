@@ -27,7 +27,7 @@ static const GLfloat g_vertex_buffer_data[][3] = {
 	{ 20.0f, 20.0f, 0.0f },
 	{ 0.0f, 20.0f, 0.0f },
 };
-
+#include <GameCore/Render/ScopedMatrixTransformation.h>
 namespace Game
 {
 
@@ -172,55 +172,17 @@ namespace Game
 		m_time += step;
 	}
 
-	template <typename T>
-	struct ScopedHelper
-	{
-		static void Push();
-		static void Pop();
-	};
-
-	struct GlMatrix {};
-
-	template <>
-	struct ScopedHelper <GlMatrix>
-	{
-		static void Push()
-		{
-			Core::GetRenderer()->PushMatrix();
-		}
-
-		static void Pop()
-		{
-			Core::GetRenderer()->PopMatrix();
-		}
-	};
-
-	template <typename T>
-	struct CustomScopedObject
-	{
-		CustomScopedObject()
-		{
-			ScopedHelper<T>::Push();
-		}
-
-		~CustomScopedObject()
-		{
-			ScopedHelper<T>::Pop();
-		}
-	};
-
 	void CoreDelegateImpl::Draw()
 	{
 		auto p_renderer = Core::GetRenderer();
 		//p_renderer->SetMatrix(MatrixMode::Projection, Matrix4f::IDENTITY);
 		//p_renderer->SetMatrix(MatrixMode::ModelView, Matrix4f::IDENTITY);
 		p_renderer->SetProjectionType(Render::ProjectionType::Orthographic);
-
-		CustomScopedObject<GlMatrix> scopedMatrix;
+		Render::ScopedMatrixTransformation scopedMatrix(p_renderer);
 		m_ship.Draw();
 
 		{
-			CustomScopedObject<GlMatrix> scopedMatrix;
+			Render::ScopedMatrixTransformation scopedMatrix(p_renderer);
 			p_renderer->ModifyCurrentMatrix(Matrix4f::MakeTranslation(Vector3{ 150, 200, 0 }));
 			static Vector3 vec = Math::VectorConstructor<float>::Construct(10, 30, 0);
 			p_renderer->RenderLine(offset + first_point, offset + first_point + m_point, Color(255, 255, 255, 255));
@@ -234,7 +196,7 @@ namespace Game
 		}
 		//////////////////////////////////////
 		{
-			CustomScopedObject<GlMatrix> scopedMatrix;
+			Render::ScopedMatrixTransformation scopedMatrix(p_renderer);
 			p_renderer->ModifyCurrentMatrix(Matrix4f::MakeTranslation(Vector3{ 150, 150, 0 }));
 			glColor4f(0, 0.5f, 0., 1.f);
 

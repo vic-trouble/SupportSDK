@@ -93,6 +93,7 @@
     <ClInclude Include="any.h" />
     <ClInclude Include="ConstString.h" />
     <ClInclude Include="ConversionsUtilities.h" />
+    <ClInclude Include="CustomScopedObject.h" />
     <ClInclude Include="HashFunctions.h" />
     <ClInclude Include="lexical_cast.h" />
     <ClInclude Include="noncopyable.h" />

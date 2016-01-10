@@ -13,6 +13,8 @@
 #include "Input/InputSubscriber.h"
 
 #include "Render/Commands.h"
+#include "Render/IRenderer.h"
+#include "Render/ScopedLightSwitch.h"
 
 namespace SDK
 {
@@ -146,12 +148,10 @@ namespace SDK
 					continue;
 				control.second->Draw();
 			}
-			Render::Commands::SetLights lights;
-			lights.m_enabled = false;
-			Render::Commands::SetLights::ApplyLights(&lights);
+
+			Render::ScopedLightSwitch scopedLight(Core::GetRenderer()->GetLightsController());
 			auto& render_world = Core::GetApplication()->GetRenderWorld();
 			render_world.Submit({Render::ProjectionType::Orthographic, Matrix4f::IDENTITY, Matrix4f::IDENTITY });
-			Render::Commands::SetLights::RestoreLightConfig(&lights);
 		}
 		
 		void UIControlSystem::SetInputSystem(InputSystem& i_input_system)
