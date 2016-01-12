@@ -33,6 +33,9 @@
     <ClInclude Include="FactoryTests.h">
       <Filter>Tests</Filter>
     </ClInclude>
+    <ClInclude Include="TempTests.h">
+      <Filter>Tests</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

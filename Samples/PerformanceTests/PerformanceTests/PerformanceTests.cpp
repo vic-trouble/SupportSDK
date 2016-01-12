@@ -7,8 +7,11 @@
 #include "StateMachineTests.h"
 #include "FactoryTests.h"
 
+#include "TempTests.h"
+
 int main()
 {
+	TempTests::Test();
 	FactoryTests::Test();
 	StateMachineTests::Test();
 	CmdBucketTest::Test();	

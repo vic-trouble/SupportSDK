@@ -179,6 +179,7 @@
     <ClInclude Include="FactoryTests.h" />
     <ClInclude Include="StateMachineTests.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TempTests.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="commandBucketTests.cpp" />

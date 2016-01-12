@@ -287,6 +287,9 @@
     <ClInclude Include="Render\ScopedLightSwitch.h">
       <Filter>Core\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="GenericHandlesDynamicArray.h">
+      <Filter>Core\Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
