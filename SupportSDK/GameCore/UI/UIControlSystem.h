@@ -9,6 +9,8 @@
 #include <Patterns/MessageDispatcher/MessageDispatcher.h>
 #include <Patterns/Factory/Factory.h>
 
+#include "../GenericHandlesDynamicArray.h"
+
 namespace SDK
 {
 	class InputSystem;
@@ -80,19 +82,16 @@ namespace SDK
 				std::vector<UIControlHandler> m_handlers;
 				std::string m_name;
 				size_t m_name_hash;
-				UISchemeHandler m_handler;
 
 			public:
 				UIScheme()
 					: m_name_hash(0)
 					, m_name()
-					, m_handler{ -1, -1 }
 				{}
 
-				UIScheme(const std::string& i_name, size_t i_hash, UISchemeHandler i_handler)
+				UIScheme(const std::string& i_name, size_t i_hash)
 					: m_name(i_name)
 					, m_name_hash(i_hash)
-					, m_handler(i_handler)
 				{}
 
 				void AddControl(UIControlHandler i_handler)
@@ -108,7 +107,6 @@ namespace SDK
 
 				size_t GetHash() const { return m_name_hash; }
 				std::string GetName() const { return m_name; }
-				UISchemeHandler GetHandler() const { return m_handler; }
 			};
 
 			typedef Factory<UIControl, std::string, UIControlAccessor<UIControl>> UIFactory;
@@ -120,10 +118,14 @@ namespace SDK
 		private:
 			typedef std::unique_ptr<UIControl> UIControlPtr;
 			typedef std::pair<UIControlHandler, UIControlPtr> UIControlPair;
-			typedef std::vector<UIControlPair> UIControls;
+			//typedef std::vector<UIControlPair> UIControls;
+
+
+			using UIControls = SDK::GenericHandleDynamicArray<UIControlHandler, std::unique_ptr<UIControl>>;
 			UIControls m_controls;
 
-			std::vector<UIScheme> m_schemes;
+			using UISchemes = SDK::GenericHandleDynamicArray<UISchemeHandler, UIScheme>;
+			UISchemes m_schemes;
 			UISchemeHandler m_current_scheme;
 
 			MessageDispatcher m_message_dispatcher;
@@ -135,12 +137,18 @@ namespace SDK
 			UIControlSystem();
 			GAMECORE_EXPORT ~UIControlSystem();
 
-			GAMECORE_EXPORT UIControl* AccessControl(UIControlHandler i_handler) const;
+			GAMECORE_EXPORT UIControl* AccessControl(UIControlHandler i_handle);
 			GAMECORE_EXPORT UIControlHandler GetHandlerTo(UIControl* ip_pointer) const;
 
 			template <typename ControlType, typename... Args>
 			UIControlAccessor<ControlType> CreateControl(Args... args)
 			{
+				auto handle = m_controls.CreateNew<ControlType>(args...);
+				UIControl* p_raw = m_controls.Access(handle);
+				p_raw->InitializeThisHandler();
+
+				return UIControlAccessor<ControlType>(this, handle);
+/*
 				// Create control
 				UIControlPtr p_obj = std::make_unique<ControlType>(args...);
 				// get raw pointer and create handler
@@ -170,7 +178,7 @@ namespace SDK
 
 				// initialize this handler - can be done only after adding to m_controls
 				p_raw->InitializeThisHandler();
-				return UIControlAccessor<ControlType>(this, handler);
+				return UIControlAccessor<ControlType>(this, handler);*/
 			}
 
 			template <typename ControlType, typename... Args>

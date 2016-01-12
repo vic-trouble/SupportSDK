@@ -59,7 +59,7 @@ namespace SDK
 			virtual bool MouseReleased(const MouseEvent& i_evt) override
 			{
 				auto& controls = g_ui_system.m_controls;
-				for (auto& control : controls)
+				for (auto& control : controls.m_elements)
 				{
 					if (control.second == nullptr)
 						continue;
@@ -84,32 +84,29 @@ namespace SDK
 
 		UIControlSystem::~UIControlSystem()
 		{
-			for (auto& control : m_controls)
+			for (auto& control : m_controls.m_elements)
 			{
 				if (control.second == nullptr)
 					continue;
 				control.second->SetParent(INVALID_UI_HANDLER);
 			}
-			m_controls.clear();
+			m_controls.ClearAll();
 		}
 
 		UIControlHandler UIControlSystem::GetHandlerTo(UIControl* ip_pointer) const
 		{
-			auto it = std::find_if(m_controls.begin(), m_controls.end(), [ip_pointer](const UIControlPair& control)
+			auto it = std::find_if(m_controls.m_elements.begin(), m_controls.m_elements.end(), [ip_pointer](const UIControls::ArrayElement& control)
 			{
 				return control.second != nullptr && control.second.get() == ip_pointer;
 			});
-			if (it == m_controls.end())
+			if (it == m_controls.m_elements.end())
 				return INVALID_UI_HANDLER;
 			return it->first;
 		}
 
-		UIControl* UIControlSystem::AccessControl(UIControlHandler i_handler) const
+		UIControl* UIControlSystem::AccessControl(UIControlHandler i_handle)
 		{
-			if (!IsValid(i_handler, m_controls))
-				return nullptr;
-
-			return m_controls[i_handler.index].second.get();
+			return m_controls.Access(i_handle);
 		}
 
 		void UIControlSystem::Update(float i_elapsed_time)
@@ -117,17 +114,17 @@ namespace SDK
 			if (m_current_scheme == INVALID_UISCHEME_HANDLER)
 				return;
 
-			UIScheme& current = m_schemes[m_current_scheme.index];
+			UIScheme& current = m_schemes.m_elements[m_current_scheme.index].second;
 
 			for (auto& handler : current.m_handlers)
 			{
-				auto& control = m_controls[handler.index];
-				if (control.second == nullptr)
-					continue;
+				auto p_control = m_controls.Access(handler);
+				if (p_control == nullptr)
+					continue;				
 				// control is updated from parent
-				if (control.second->GetParent() != INVALID_UI_HANDLER)
+				if (p_control->GetParent() != INVALID_UI_HANDLER)
 					continue;
-				control.second->Update(i_elapsed_time);
+				p_control->Update(i_elapsed_time);
 			}
 		}
 
@@ -136,17 +133,17 @@ namespace SDK
 			if (m_current_scheme == INVALID_UISCHEME_HANDLER)
 				return;
 
-			UIScheme& current = m_schemes[m_current_scheme.index];
+			UIScheme& current = m_schemes.m_elements[m_current_scheme.index].second;
 
 			for (auto& handler : current.m_handlers)
 			{
-				auto& control = m_controls[handler.index];
-				if (control.second == nullptr)
+				auto p_control = m_controls.Access(handler);
+				if (p_control == nullptr)
 					continue;
 				// control is updated from parent
-				if (control.second->GetParent() != INVALID_UI_HANDLER)
+				if (p_control->GetParent() != INVALID_UI_HANDLER)
 					continue;
-				control.second->Draw();
+				p_control->Draw();
 			}
 
 			Render::ScopedLightSwitch scopedLight(Core::GetRenderer()->GetLightsController());
@@ -161,7 +158,7 @@ namespace SDK
 
 		void UIControlSystem::OnResize(const IRect& i_new_size)
 		{
-			for (auto& control : m_controls)
+			for (auto& control : m_controls.m_elements)
 			{
 				if (control.second == nullptr)
 					continue;
@@ -171,11 +168,7 @@ namespace SDK
 
 		void UIControlSystem::RemoveControl(UIControlHandler i_handler)
 		{
-			if (!IsValid(i_handler, m_controls))
-				return;
-
-			m_controls[i_handler.index].second.release();
-			m_controls[i_handler.index].first.index = -1;
+			m_controls.Destroy(i_handler);
 		}
 
 		void AddControlElement(UIControlSystem::UIScheme& o_scheme, const PropertyElement::iterator<PropertyElement>& i_it, UIControlHandler i_parent = INVALID_UI_HANDLER)
@@ -224,45 +217,26 @@ namespace SDK
 				}
 			}
 
-			UISchemeHandler scheme_handler{ static_cast<int>(m_schemes.size()), 0 };
-			// find empty slot
-			{
-				for (size_t i = 0; i < m_schemes.size(); ++i)
-				{
-					auto& scheme = m_schemes[i];
-					if (scheme.m_handler.index == -1)
-					{
-						scheme_handler = { static_cast<int>(i), scheme.m_handler.generation + 1 };
-						break;
-					}
-				}
-			}		
-
-			UIScheme scheme(scheme_name, hash, scheme_handler);
+			auto scheme_handle = m_schemes.CreateNew(scheme_name, hash);
+			UIScheme* p_scheme = m_schemes.Access(scheme_handle);			
 
 			const auto end = root.end<PropertyElement>();
 			for (auto it = root.begin<PropertyElement>(); it != end; ++it)
-				AddControlElement(scheme, it);
+				AddControlElement(*p_scheme, it);
 
-			// free slots not found -> push back new
-			if (scheme_handler.index == m_schemes.size())
-				m_schemes.push_back(scheme);
-			else
-				m_schemes[scheme_handler.index] = scheme;				
-
-			return scheme_handler;
+			return scheme_handle;
 		}
 
 		UISchemeHandler UIControlSystem::FindScheme(size_t i_hash)
 		{
-			auto it = std::find_if(m_schemes.begin(), m_schemes.end(), [i_hash](const UIScheme& scheme)
+			auto it = std::find_if(m_schemes.m_elements.begin(), m_schemes.m_elements.end(), [i_hash](const UISchemes::ArrayElement& scheme)
 			{
-				return scheme.GetHandler().index != -1 && scheme.GetHash() == i_hash;
+				return scheme.second.GetHash() == i_hash;
 			});
-			if (it == m_schemes.end())
+			if (it == m_schemes.m_elements.end())
 				return INVALID_UISCHEME_HANDLER;
 			else
-				return it->GetHandler();
+				return it->first;
 		}
 
 		void UIControlSystem::SetActiveScheme(const std::string& i_scheme_name)
@@ -271,15 +245,13 @@ namespace SDK
 		}
 
 		void UIControlSystem::SetActiveScheme(UISchemeHandler i_scheme)
-		{
-			auto it = std::find_if(m_schemes.begin(), m_schemes.end(), [i_scheme](const UIScheme& scheme)
-			{
-				return scheme.GetHandler() == i_scheme;
-			});
-			if (it == m_schemes.end())
+		{			
+			UIScheme* p_scheme = m_schemes.Access(i_scheme);
+
+			if (p_scheme == nullptr)
 				m_current_scheme = INVALID_UISCHEME_HANDLER;
 			else
-				m_current_scheme = it->GetHandler();
+				m_current_scheme = i_scheme;
 		}
 
 		void UIControlSystem::UnloadScheme(UISchemeHandler i_scheme)
@@ -287,15 +259,14 @@ namespace SDK
 			if (i_scheme == INVALID_UISCHEME_HANDLER)
 				return;
 
-			UIScheme& current = m_schemes[i_scheme.index];
+			auto p_scheme = m_schemes.Access(i_scheme);
+			if (p_scheme == nullptr)
+				return;
 
-			for (auto& handler : current.m_handlers)
+			for (auto& handler : p_scheme->m_handlers)
 				RemoveControl(handler);
 
-			if (m_current_scheme == current.m_handler)
-				m_current_scheme = INVALID_UISCHEME_HANDLER;
-
-			current.m_handler.index = -1;			
+			m_schemes.Destroy(i_scheme);			
 		}
 
 		void UIControlSystem::UnloadScheme(const std::string& i_scheme)
@@ -305,10 +276,7 @@ namespace SDK
 
 		const UIControlSystem::UIScheme* UIControlSystem::AccessScheme(UISchemeHandler i_scheme) const
 		{
-			if (i_scheme.index == -1 || static_cast<int>(m_schemes.size()) <= i_scheme.index)
-				return nullptr;
-
-			return &m_schemes[i_scheme.index];
+			return m_schemes.Access(i_scheme);
 		}
 
 	} // UI

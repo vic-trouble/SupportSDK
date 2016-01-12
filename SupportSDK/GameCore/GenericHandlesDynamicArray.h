@@ -32,6 +32,11 @@ namespace SDK
 			{
 				return i_data.get();
 			}
+
+			static const BaseType* Access(const DataType& i_data)
+			{
+				return i_data.get();
+			}
 		};
 
 		template <typename typename DataType, typename BaseType>
@@ -53,6 +58,11 @@ namespace SDK
 			{
 				return &i_data;
 			}
+
+			static const BaseType* Access(const DataType& i_data)
+			{
+				return &i_data;
+			}
 		};
 
 		template <typename T>
@@ -71,13 +81,12 @@ namespace SDK
 	template <typename HandleType, typename DataType, typename BaseType = detail::DetermineBase<DataType>::BaseType>
 	class GenericHandleDynamicArray
 	{
-	private:
+	public:
 		using ArrayElement = std::pair<HandleType, DataType>;
 		using TypeTraits = detail::TypeTraits<DataType, BaseType>;
 		std::vector<ArrayElement> m_elements;
 
-	public:
-		
+	public:		
 		template <typename ElementType = BaseType, typename... Args>
 		HandleType CreateNew(Args... args)
 		{
@@ -125,6 +134,14 @@ namespace SDK
 			return TypeTraits::Access(m_elements[i_handle.index].second);
 		}
 
+		const BaseType* Access(HandleType i_handle) const
+		{
+			if (!IsValid(i_handle))
+				return nullptr;
+
+			return TypeTraits::Access(m_elements[i_handle.index].second);
+		}
+
 		bool IsValid(HandleType i_handle) const
 		{
 			if (i_handle.index == -1 || static_cast<int>(m_elements.size()) <= i_handle.index)
@@ -133,6 +150,11 @@ namespace SDK
 				return false;
 
 			return true;
+		}
+
+		void ClearAll()
+		{
+			m_elements.clear();
 		}
 	};
 
