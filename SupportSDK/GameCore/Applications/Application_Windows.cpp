@@ -71,15 +71,15 @@ namespace
 		else if (buttsFlags & RI_MOUSE_LEFT_BUTTON_UP || buttsFlags & RI_MOUSE_RIGHT_BUTTON_UP || buttsFlags & RI_MOUSE_MIDDLE_BUTTON_UP)
 		{
 			m_ev.m_phase = SDK::MousePhase::ButtonReleased;
-			if (buttsFlags & RI_MOUSE_LEFT_BUTTON_DOWN)
+			if (buttsFlags & RI_MOUSE_LEFT_BUTTON_UP)
 			{
 				m_ev.m_buttons |= SDK::MouseButtonID::Left;
 			}
-			if (buttsFlags & RI_MOUSE_RIGHT_BUTTON_DOWN)
+			if (buttsFlags & RI_MOUSE_RIGHT_BUTTON_UP)
 			{
 				m_ev.m_buttons |= SDK::MouseButtonID::Right;
 			}
-			if (buttsFlags & RI_MOUSE_MIDDLE_BUTTON_DOWN)
+			if (buttsFlags & RI_MOUSE_MIDDLE_BUTTON_UP)
 			{
 				m_ev.m_buttons |= SDK::MouseButtonID::Middle;
 			}

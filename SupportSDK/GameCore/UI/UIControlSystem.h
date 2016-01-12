@@ -20,17 +20,6 @@ namespace SDK
 		class UIScreen;
 		class UIControl;		
 
-		// TODO: perform straight way to compare and validate handlers in collection
-		template <typename HType, typename Collection>
-		bool IsValid(const HType& i_handler, const Collection& i_collection)
-		{
-			if (i_handler.index == -1 || static_cast<int>(i_collection.size()) <= i_handler.index)
-				return false;
-			if (i_collection[i_handler.index].first.index != i_handler.index || i_collection[i_handler.index].first.generation != i_handler.generation)
-				return false;
-			return true;
-		}
-
 		class UIControlSystem : Utilities::noncopyable
 		{
 		public:
@@ -116,11 +105,6 @@ namespace SDK
 			friend class UI_InputSubscriber;
 
 		private:
-			typedef std::unique_ptr<UIControl> UIControlPtr;
-			typedef std::pair<UIControlHandler, UIControlPtr> UIControlPair;
-			//typedef std::vector<UIControlPair> UIControls;
-
-
 			using UIControls = SDK::GenericHandleDynamicArray<UIControlHandler, std::unique_ptr<UIControl>>;
 			UIControls m_controls;
 
