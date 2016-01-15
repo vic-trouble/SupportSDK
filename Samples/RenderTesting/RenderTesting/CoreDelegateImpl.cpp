@@ -36,7 +36,7 @@ using namespace SDK;
 
 namespace Game
 {
-	EntityHandler entity_handler;
+	EntityHandle entity_handler;
 	void CoreDelegateImpl::LoadModel()
 	{
 		//E:\Git_Projects\SupportSDK\Samples\Resources\Models\Box.obj
