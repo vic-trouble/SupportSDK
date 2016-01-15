@@ -36,7 +36,7 @@ namespace SDK
 	// 70368744177663 indices; 65535 generations
 	// TODO: this is too many; no?	
 	struct EntityTag {};
-	typedef GenericHandle<int64, 47, 17, EntityTag> EntityHandler;
+	typedef GenericHandle<int64, 47, 17, EntityTag> EntityHandle;
 
 } // SDK
 

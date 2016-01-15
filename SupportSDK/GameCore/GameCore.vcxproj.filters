@@ -290,6 +290,9 @@
     <ClInclude Include="GenericHandlesDynamicArray.h">
       <Filter>Core\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="ObjectSubset.h">
+      <Filter>Core\Utilities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

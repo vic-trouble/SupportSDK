@@ -10,13 +10,13 @@ namespace SDK
 	// TODO: global
 	EntityManager g_entity_manager;
 
-	EntityHandler EntityManager::CreateEntity()
+	EntityHandle EntityManager::CreateEntity()
 	{
 		// find free entity slot
 
 		// create entity
 		m_entities.push_back(Entity());
-		EntityHandler handler;
+		EntityHandle handler;
 		handler.index = m_entities.size() - 1;
 		handler.generation = 0;
 		m_handlers.push_back(handler);
@@ -24,7 +24,7 @@ namespace SDK
 		return handler;
 	}
 
-	void EntityManager::RemoveEntity(EntityHandler i_handler)
+	void EntityManager::RemoveEntity(EntityHandle i_handler)
 	{
 		if (m_handlers[i_handler.index].generation != i_handler.generation)
 		{
@@ -39,6 +39,18 @@ namespace SDK
 
 		m_handlers[i_handler.index].index = -1;
 		++m_handlers[i_handler.index].generation;
+	}
+
+	EntitySubset EntityManager::CreateSubset()
+	{
+		return EntitySubset();
+	}
+
+	void EntityManager::RemoveSubset(const EntitySubset& i_set)
+	{
+		const auto& entities = i_set.GetHandles();
+		for (auto& entity : entities)
+			RemoveEntity(entity);
 	}
 
 } // SDK

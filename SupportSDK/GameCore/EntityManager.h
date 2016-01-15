@@ -7,22 +7,25 @@
 
 #include "Component.h"
 #include "Entity.h"
+#include "ObjectSubset.h"
 
 namespace SDK
 {
+	using EntitySubset = ObjectSet<EntityHandle>;
+
 	class EntityManager
 	{
 	private:
 		std::vector<Entity> m_entities;
-		std::vector<EntityHandler> m_handlers;
+		std::vector<EntityHandle> m_handlers;
 
 	public:
 
-		GAMECORE_EXPORT EntityHandler CreateEntity();
-		GAMECORE_EXPORT void RemoveEntity(EntityHandler i_handler);
+		GAMECORE_EXPORT EntityHandle CreateEntity();
+		GAMECORE_EXPORT void RemoveEntity(EntityHandle i_handler);
 
 		template <typename ComponentClass, typename T, T N1, T N2, typename Tag>
-		void AddComponent(EntityHandler i_entity_handle, GenericHandle<T, N1, N2, Tag> i_component_handle)
+		void AddComponent(EntityHandle i_entity_handle, GenericHandle<T, N1, N2, Tag> i_component_handle)
 		{
 			Component component;
 			component.m_component_id = ComponentClass::ID;
@@ -37,7 +40,7 @@ namespace SDK
 			p_component->SetEntity(i_entity_handle);
 		}
 
-		Entity* GetEntity(EntityHandler i_handler)
+		Entity* GetEntity(EntityHandle i_handler)
 		{
 			if (i_handler.index != -1 && i_handler.generation != m_handlers[i_handler.index].generation)
 			{
@@ -46,6 +49,9 @@ namespace SDK
 			}
 			return &m_entities[i_handler.index];
 		}
+
+		GAMECORE_EXPORT EntitySubset CreateSubset();
+		GAMECORE_EXPORT void RemoveSubset(const EntitySubset& i_set);
 	};
 
 	// TODO: global variable

@@ -23,7 +23,7 @@ namespace SDK
 		private:
 			MeshHandler m_mesh;
 
-			EntityHandler m_entity;
+			EntityHandle m_entity;
 
 		public:
 			MeshComponent() {}
@@ -33,8 +33,8 @@ namespace SDK
 
 			MeshHandler GetHandler() const { return m_mesh; }
 
-			void SetEntity(EntityHandler i_entity) { m_entity = i_entity; }
-			EntityHandler GetEntity() const { return m_entity; }
+			void SetEntity(EntityHandle i_entity) { m_entity = i_entity; }
+			EntityHandle GetEntity() const { return m_entity; }
 		};
 
 	} // Render

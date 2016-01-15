@@ -114,6 +114,7 @@
     <ClInclude Include="CoreDelegate.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="ObjectSubset.h" />
     <ClInclude Include="FileSystem\FileStream.h" />
     <ClInclude Include="FileSystem\FileSystem.h" />
     <ClInclude Include="FileSystem\Stream.h" />

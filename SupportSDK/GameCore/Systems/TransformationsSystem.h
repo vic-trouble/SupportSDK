@@ -32,9 +32,9 @@ namespace SDK
 		{}
 
 		// Extension for EntityManager
-		EntityHandler m_entity;
-		void SetEntity(EntityHandler i_entity) { m_entity = i_entity; }
-		EntityHandler GetEntity() const { return m_entity; }
+		EntityHandle m_entity;
+		void SetEntity(EntityHandle i_entity) { m_entity = i_entity; }
+		EntityHandle GetEntity() const { return m_entity; }
 	};
 
 	struct TransformHandlerTag {};
