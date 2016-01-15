@@ -20,6 +20,10 @@ namespace SDK
 		class UIScreen;
 		class UIControl;		
 
+		class UIControlSystem;
+		// TODO: global object
+		GAMECORE_EXPORT extern UIControlSystem g_ui_system;
+
 		class UIControlSystem : Utilities::noncopyable
 		{
 		public:
@@ -197,8 +201,6 @@ namespace SDK
 			void OnResize(const IRect& i_new_size);
 		};
 
-		// TODO: global object
-		GAMECORE_EXPORT extern UIControlSystem g_ui_system;
 	} // UI
 } // SDK
 
