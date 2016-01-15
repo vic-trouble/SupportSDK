@@ -91,7 +91,11 @@ namespace SDK
 				{
 					auto it = std::find(m_handlers.begin(), m_handlers.end(), i_handler);
 					if (it != m_handlers.end())
+					{
+						// if control removed from scheme - it removed from UI system
+						g_ui_system.RemoveControl(i_handler);
 						m_handlers.erase(it);
+					}
 				}
 
 				size_t GetHash() const { return m_name_hash; }
