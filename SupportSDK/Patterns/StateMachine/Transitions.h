@@ -53,6 +53,11 @@ namespace SDK
 		}
 	};
 
+	template <typename FirstTrans, typename SecondTrans>
+	using _comp_tr = SDK::CompoundTransition<FirstTrans, SecondTrans>;
+	template <typename FrState, typename ToState, typename Event>
+	using _tr = SDK::Transition<FrState, ToState, Event>;
+
 } // SDK
 
 #endif
