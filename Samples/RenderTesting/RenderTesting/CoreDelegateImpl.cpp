@@ -158,7 +158,7 @@ namespace Game
 	GLUquadricObj* quadricId;
 	Render::ShaderHandler shader_handler;
 	
-
+	Render::Viewport g_vp;
 	void CoreDelegateImpl::OnCreate()
 	{
 		InputSystem::Instance().AddSubscriber(&m_input_subs);
@@ -174,7 +174,12 @@ namespace Game
 		camera.Pitch(21 * Math::DEG2RAD);
 		camera.Yaw(146 * Math::DEG2RAD);
 
+		camera.LookAt({ 0,0,-15 }, { -10,-10,-10 });
+
 		world.GetFrustum().SetFOV(60 * Math::DEG2RAD);
+		g_vp = { world.GetFrustum().GetProjectionType(),
+			world.GetFrustum().GetProjectionMatrix(),
+			world.GetCamera().GetModelViewMatrix() };
 		// create a GLU quadric object
 		quadricId = gluNewQuadric();
 		gluQuadricDrawStyle(quadricId, GLU_FILL);
@@ -660,9 +665,9 @@ namespace Game
 	}
 	void CoreDelegateImpl::Draw()
 	{
-		
-		//Render::Shader shader = Render::g_shader_system.Access(shader_handler);
-		
+		auto p_renderer = Core::GetRenderer();
+		p_renderer->SetMatrix(MatrixMode::Projection, g_vp.m_projection_matrix);
+		p_renderer->SetMatrix(MatrixMode::ModelView, g_vp.m_modelview_matrix);
 		draw3(true);
 		Render2D();
 	}

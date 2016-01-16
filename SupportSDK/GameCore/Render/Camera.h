@@ -22,13 +22,17 @@ namespace SDK
 
 		private:
 			GAMECORE_EXPORT void Calculate();
-			void CalculateModelView() const;
+			GAMECORE_EXPORT void CalculateModelView() const;
 		public:
 			Camera();
 
 			// Matrix that will be applied to transform object coordinates
 			//	to eye coordinates
-			Matrix4f GetModelViewMatrix() const;
+			Matrix4f GetModelViewMatrix() const
+			{
+				CalculateModelView();
+				return m_modelview_matrix;
+			}
 
 			void SetPosition(const Vector3& i_position) { m_position = i_position; Calculate(); }
 			Vector3 GetPosition() const { return m_position; }

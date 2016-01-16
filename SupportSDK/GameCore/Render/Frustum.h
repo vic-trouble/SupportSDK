@@ -106,7 +106,7 @@ namespace SDK
 				InvalidateFrustum();
 			}
 
-			Matrix4f GetProjectionMatrix() const;
+			Matrix4f GetProjectionMatrix() const { return m_projection_matrix; }
 
 			// in_abbs
 			//	return visible (or mark)

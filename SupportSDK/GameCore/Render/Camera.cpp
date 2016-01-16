@@ -31,12 +31,6 @@ namespace SDK
 			m_need_recalc = false;
 		}
 
-		Matrix4f Camera::GetModelViewMatrix() const
-		{
-			CalculateModelView();
-			return m_modelview_matrix;
-		}
-
 		void ComputeLefUpForward(Vector3& o_left, Vector3& o_up, Vector3& o_forward, const Vector3& i_position, const Vector3& i_target)
 		{
 			// compute the forward vector

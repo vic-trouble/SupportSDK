@@ -51,9 +51,6 @@
     <Filter Include="Core\Systems">
       <UniqueIdentifier>{1b62819e-1a61-4bf0-aa68-0d37ee82c517}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Renderer\Queues">
-      <UniqueIdentifier>{06d894e4-9ff4-4292-b9f6-974d317c96d7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Renderer\Shaders">
       <UniqueIdentifier>{516b8f6e-5d4e-4179-9e60-59ba6d460ee4}</UniqueIdentifier>
     </Filter>
@@ -65,6 +62,9 @@
     </Filter>
     <Filter Include="Core\Properties">
       <UniqueIdentifier>{289f0319-a67e-4bcc-8fee-b3481c4e7dc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Renderer\RenderWorld">
+      <UniqueIdentifier>{06d894e4-9ff4-4292-b9f6-974d317c96d7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -210,16 +210,16 @@
       <Filter>FileSystem</Filter>
     </ClInclude>
     <ClInclude Include="Render\CommandBucket.h">
-      <Filter>Core\Renderer\Queues</Filter>
+      <Filter>Core\Renderer\RenderWorld</Filter>
     </ClInclude>
     <ClInclude Include="Render\CommandPacket.h">
-      <Filter>Core\Renderer\Queues</Filter>
+      <Filter>Core\Renderer\RenderWorld</Filter>
     </ClInclude>
     <ClInclude Include="Render\RenderWorld.h">
-      <Filter>Core\Renderer\Queues</Filter>
+      <Filter>Core\Renderer\RenderWorld</Filter>
     </ClInclude>
     <ClInclude Include="Render\Commands.h">
-      <Filter>Core\Renderer\Queues</Filter>
+      <Filter>Core\Renderer\RenderWorld</Filter>
     </ClInclude>
     <ClInclude Include="Render\ShaderSystem.h">
       <Filter>Core\Renderer\Shaders</Filter>
@@ -359,10 +359,10 @@
       <Filter>FileSystem</Filter>
     </ClCompile>
     <ClCompile Include="Render\RenderWorld.cpp">
-      <Filter>Core\Renderer\Queues</Filter>
+      <Filter>Core\Renderer\RenderWorld</Filter>
     </ClCompile>
     <ClCompile Include="Render\Commands.cpp">
-      <Filter>Core\Renderer\Queues</Filter>
+      <Filter>Core\Renderer\RenderWorld</Filter>
     </ClCompile>
     <ClCompile Include="Render\ShaderSystem.cpp">
       <Filter>Core\Renderer\Shaders</Filter>

@@ -78,11 +78,6 @@ namespace SDK
 
 		}
 
-		Matrix4f Frustum::GetProjectionMatrix() const
-		{
-			return m_projection_matrix;
-		}
-
 	} // Render
 
 } // SDK
