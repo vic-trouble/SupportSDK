@@ -7,12 +7,9 @@
 
 #include "Component.h"
 #include "Entity.h"
-#include "ObjectSubset.h"
 
 namespace SDK
 {
-	using EntitySubset = ObjectSet<EntityHandle>;
-
 	class EntityManager
 	{
 	private:

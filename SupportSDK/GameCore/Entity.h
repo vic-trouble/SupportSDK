@@ -2,12 +2,13 @@
 #define __GAMECORE_ENTITY_H__
 
 #include "GenericHandle.h"
+#include "ObjectSubset.h"
+#include "Component.h"
 
 namespace SDK
 {
-
 	class EntityManager;
-
+	
 	class Entity
 	{
 		friend class EntityManager;
@@ -37,6 +38,8 @@ namespace SDK
 	// TODO: this is too many; no?	
 	struct EntityTag {};
 	typedef GenericHandle<int64, 47, 17, EntityTag> EntityHandle;
+
+	using EntitySubset = ObjectSet<EntityHandle>;
 
 } // SDK
 
