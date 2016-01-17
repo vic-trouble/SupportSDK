@@ -281,6 +281,8 @@ namespace SDK
 				return GL_MODELVIEW_MATRIX;
 			case MatrixMode::Projection:
 				return GL_PROJECTION_MATRIX;
+			default:
+				return GL_PROJECTION_MATRIX;
 		}
 	}
 
@@ -291,6 +293,8 @@ namespace SDK
 			case MatrixMode::ModelView:
 				return GL_MODELVIEW;
 			case MatrixMode::Projection:
+				return GL_PROJECTION;
+			default:
 				return GL_PROJECTION;
 		}
 	}

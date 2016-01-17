@@ -38,7 +38,7 @@ namespace SDK
 			auto file_size = io_stream.tellg();
 			io_stream.seekg(0, io_stream.beg);			
 			std::string result;
-			result.resize(file_size);
+			result.resize(static_cast<size_t>(file_size));
 			io_stream.read(&result[0], file_size);
 			return result;
 		}

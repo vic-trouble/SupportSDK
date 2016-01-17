@@ -31,7 +31,7 @@ namespace SDK
 
 		NodeRecord* PathFindingList::GetSmallestElement()
 			{
-			int smallest_cost = std::numeric_limits<int>::max();
+			float smallest_cost = std::numeric_limits<float>::max();
 			NodeRecord* p_smallest = nullptr;
 			for (NodeRecord* p_record : m_records)
 				{
