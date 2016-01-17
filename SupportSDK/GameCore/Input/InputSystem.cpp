@@ -50,6 +50,7 @@ namespace SDK
 				}
 				break;
 		}
+		return false;
 	}
 
 	void InputSystem::ProcessEvent(const InputEvent& i_evt)

@@ -45,7 +45,7 @@ namespace SDK
 		void UIButton::LoadImpl(const PropertyElement& i_element)
 		{
 			constexpr static float i_center[] = { 0, 0 };
-			const uint half_size[] = { m_global_size[0] / 2, m_global_size[1] / 2 };
+			const int half_size[] = { m_global_size[0] / 2, m_global_size[1] / 2 };
 			const float verts[] = {
 				i_center[0] - half_size[0], i_center[1] - half_size[1],
 				i_center[0] + half_size[0], i_center[1] - half_size[1],
