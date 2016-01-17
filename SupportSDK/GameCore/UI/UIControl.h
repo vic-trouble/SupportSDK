@@ -64,6 +64,10 @@ namespace SDK
 			GAMECORE_EXPORT virtual bool IsHited(const Vector2i& i_hit) const;
 			GAMECORE_EXPORT virtual void OnResize(const IRect& i_new_size);
 
+			// UI control can get controller; so it can call method so Data will be
+			//	pulled from controller in this moment
+			virtual void RecalculateData(){}
+
 			//-------------------------------------------------------------
 			// Generating of events: override this methods to generate events
 			/// TODO: Should UI controls handle key events? Or only mouse

@@ -151,6 +151,26 @@ namespace SDK
 			render_world.Submit({Render::ProjectionType::Orthographic, Matrix4f::IDENTITY, Matrix4f::IDENTITY });
 		}
 		
+		UIControl* UIControlSystem::FindControlInCurrentScheme(const std::string& i_control_name)
+		{
+			if (m_current_scheme == INVALID_UISCHEME_HANDLER)
+				return nullptr;
+
+			const UIScheme& current = m_schemes.m_elements[m_current_scheme.index].second;
+			const size_t hash = Utilities::hash_function(i_control_name);
+			for (auto& handler : current.m_handlers)
+			{
+				auto p_control = m_controls.Access(handler);
+				if (p_control == nullptr)
+					continue;
+				const size_t control_hash = Utilities::hash_function(p_control->GetName());
+				if (control_hash == hash)
+					return p_control;
+			}
+
+			return nullptr;
+		}
+
 		void UIControlSystem::SetInputSystem(InputSystem& i_input_system)
 		{
 			static UI_InputSubscriber g_subscriber(*this);			

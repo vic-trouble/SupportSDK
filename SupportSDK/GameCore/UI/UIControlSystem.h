@@ -140,37 +140,6 @@ namespace SDK
 				p_raw->InitializeThisHandler();
 
 				return UIControlAccessor<ControlType>(this, handle);
-/*
-				// Create control
-				UIControlPtr p_obj = std::make_unique<ControlType>(args...);
-				// get raw pointer and create handler
-				UIControl* p_raw = p_obj.get();
-
-				UIControlHandler handler{ static_cast<int>(m_controls.size()), 0 };
-				// find free control
-				{
-					for (size_t i = 0; i < m_controls.size(); ++i)
-					{
-						auto& control = m_controls[i];
-						if (control.first.index == -1)
-						{
-							handler = { static_cast<int>(i), control.first.generation + 1 };							
-							break;
-						}
-					}
-				}
-				// free slots not found -> push back new
-				if (handler.index == m_controls.size())					
-					m_controls.push_back(std::make_pair(handler, std::move(p_obj)));
-				else
-				{
-					m_controls[handler.index].first = handler;
-					m_controls[handler.index].second = std::move(p_obj);
-				}
-
-				// initialize this handler - can be done only after adding to m_controls
-				p_raw->InitializeThisHandler();
-				return UIControlAccessor<ControlType>(this, handler);*/
 			}
 
 			template <typename ControlType, typename... Args>
@@ -185,6 +154,8 @@ namespace SDK
 
 			void Update(float i_elapsed_time);
 			void Draw();
+
+			GAMECORE_EXPORT UIControl* FindControlInCurrentScheme(const std::string& i_control_name);
 
 			GAMECORE_EXPORT UISchemeHandler LoadScheme(const std::string& i_file_name);
 			GAMECORE_EXPORT void UnloadScheme(UISchemeHandler i_scheme);
