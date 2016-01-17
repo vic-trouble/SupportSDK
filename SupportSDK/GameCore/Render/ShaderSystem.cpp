@@ -131,7 +131,8 @@ namespace SDK
 
 		ShaderHandler ShaderSystem::Load(const std::string& i_res_name, const std::string& i_vertex_shader_file, const std::string& i_fragment_shader_file)
 		{
-			int index = Resources::g_load_manager.Load<Shader, 2>(i_res_name, { i_vertex_shader_file, i_fragment_shader_file }, nullptr);
+			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
+			int index = p_load_manager->Load<Shader, 2>(i_res_name, { i_vertex_shader_file, i_fragment_shader_file }, nullptr);
 
 			// resource is already loaded
 			if (index != -1)
@@ -148,7 +149,8 @@ namespace SDK
 
 		void ShaderSystem::Unload(ShaderHandler i_handler)
 		{
-			Resources::g_load_manager.Unload<Shader>(i_handler.index);
+			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
+			p_load_manager->Unload<Shader>(i_handler.index);
 		}
 
 	} // Render

@@ -3,6 +3,8 @@
 
 #include "../GameCoreAPI.h"
 
+#include "../GlobalObjectBase.h"
+
 #include "ResourceInformation.h"
 #include "../FileSystem/Stream.h"
 #include "../Render/Mesh.h"
@@ -43,7 +45,7 @@ namespace SDK
 
 		} // Serialization
 
-		class ResourceManager
+		class ResourceManager : public GlobalObjectBase
 		{
 		private:
 			std::vector<ResourceInformation> m_loaded_resources;
@@ -223,10 +225,6 @@ namespace SDK
 				// otherwise we do nothing
 			}
 		};
-
-		// global instance for loading
-		// TODO: decide in what format user should access objects like this
-		GAMECORE_EXPORT extern ResourceManager& g_load_manager;
 
 	} // Resources
 

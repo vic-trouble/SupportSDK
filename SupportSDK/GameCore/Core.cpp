@@ -44,9 +44,9 @@ namespace SDK
 
 	void Core::Run(std::unique_ptr<CoreDelegate>&& ip_delegate)
 	{
-		CreateSingletons();
 		SetGlobalObjectGetter(std::make_unique<DefaultGlobalObjectGetter>());
-
+		CreateSingletons();
+		
 		UI::g_ui_system.SetInputSystem(InputSystem::Instance());
 
 		mp_delegate = std::move(ip_delegate);

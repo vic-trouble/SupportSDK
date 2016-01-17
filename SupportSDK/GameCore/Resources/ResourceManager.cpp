@@ -15,9 +15,6 @@ namespace SDK
 
 	namespace Resources
 	{
-		static ResourceManager manager;
-		ResourceManager& g_load_manager = manager;
-
 		FS::StreamPtr ResourceManager::OpenStream(const std::string& i_file_name)
 		{			
 			FS::StreamPtr p_stream(new FS::FileStream(i_file_name));

@@ -302,7 +302,8 @@ namespace SDK
 		MeshHandler MeshSystem::Load(const std::string& i_file_name, Render::BufferUsageFormat i_vertices_usage, Render::BufferUsageFormat i_indices_usage)
 		{
 			MeshInformation info = { i_vertices_usage, i_indices_usage };
-			int index = Resources::g_load_manager.Load<Mesh>(i_file_name, info);
+			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
+			int index = p_load_manager->Load<Mesh>(i_file_name, info);
 
 			// resource is already loaded
 			if (index != -1)
@@ -319,7 +320,8 @@ namespace SDK
 
 		void MeshSystem::Unload(MeshHandler i_handler)
 		{
-			Resources::g_load_manager.Unload<Mesh>(i_handler.index);
+			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
+			p_load_manager->Unload<Mesh>(i_handler.index);
 		}
 
 		MeshComponentHandler MeshSystem::CreateInstance(MeshHandler i_handler)

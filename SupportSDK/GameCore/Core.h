@@ -43,6 +43,11 @@ namespace SDK
 			mp_object_getter = std::move(ip_getter);
 		}
 		static ObjectGetterBase* GetGlobalObjectGetter() { return mp_object_getter.get(); }
+		template <typename ObjectType>
+		static ObjectType* GetGlobalObject()
+		{
+			return mp_object_getter->GetGlobalObject<ObjectType>();
+		}
 	};
 
 } // SDK

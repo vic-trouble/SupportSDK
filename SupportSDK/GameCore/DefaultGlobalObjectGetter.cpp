@@ -7,7 +7,7 @@ namespace SDK
 
 	DefaultGlobalObjectGetter::DefaultGlobalObjectGetter()
 	{
-
+		m_cache_objects.push_back(&m_resource_manager);
 	}
 
 	GlobalObjectBase* DefaultGlobalObjectGetter::GetGlobalObjectImpl(const std::type_index& i_type) const

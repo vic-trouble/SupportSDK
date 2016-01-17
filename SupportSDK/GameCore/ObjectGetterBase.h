@@ -25,7 +25,12 @@ namespace SDK
 		template <typename ObjectType>
 		ObjectType* GetGlobalObject() const
 		{
-			return GetGlobalObjectImpl(typeid(ObjectType));
+#if defined(_DEBUG)
+			auto p_obj = GetGlobalObjectImpl(typeid(ObjectType));
+			assert(p_obj != nullptr && "There is no registered global object");
+			assert(dynamic_cast<ObjectType*>(p_obj) != nullptr && "Cannot convert type.");
+#endif
+			return static_cast<ObjectType*>(GetGlobalObjectImpl(typeid(ObjectType)));
 		}
 
 		template <typename ObjectType>
