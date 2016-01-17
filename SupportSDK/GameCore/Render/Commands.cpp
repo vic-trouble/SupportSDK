@@ -57,7 +57,7 @@ namespace SDK
 				m_position[0] = 0.f; m_position[1] = 0.f; m_position[2] = 0.f;
 				m_scale[0] = 1.f; m_scale[1] = 1.f; m_scale[2] = 1.f;
 				for (size_t i = 0; i < 9; ++i)
-					m_matrix[i] = i/3==i%3 ? 1.f : 0.f;
+					m_rotation[i] = i/3==i%3 ? 1.f : 0.f;
 			}
 
 			void Transform::PushTransformation(const void* ip_data)
@@ -71,7 +71,7 @@ namespace SDK
 				transformation.MakeTransform(
 						{ cmd->m_position[0], cmd->m_position[1], cmd->m_position[2] }, 
 						{ cmd->m_scale[0], cmd->m_scale[1], cmd->m_scale[2] },
-						Matrix3(cmd->m_matrix));
+						Matrix3(cmd->m_rotation));
 
 				p_renderer->ModifyCurrentMatrix(transformation);
 			}
