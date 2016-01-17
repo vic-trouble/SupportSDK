@@ -11,7 +11,7 @@ namespace SDK
 		{
 			struct Draw
 			{
-				IMPLEMENT_COMMAND(DrawFunction);
+				IMPLEMENT_COMMAND_EXPORT(DrawFunction);
 
 				// COMMAND OWN MEMBERS
 				uint vertexCount;
@@ -27,7 +27,7 @@ namespace SDK
 
 			struct Transform
 			{
-				IMPLEMENT_COMMAND_WITH_COMPLETION(PushTransformation, PopTransformation);
+				IMPLEMENT_COMMAND_WITH_COMPLETION_EXPORT(PushTransformation, PopTransformation);
 
 				enum Actions
 				{
@@ -61,7 +61,7 @@ namespace SDK
 
 			struct SetLights
 			{
-				IMPLEMENT_COMMAND_WITH_COMPLETION(ApplyLights, RestoreLightConfig);
+				IMPLEMENT_COMMAND_WITH_COMPLETION_EXPORT(ApplyLights, RestoreLightConfig);
 
 				bool m_enabled;
 				LightHandle m_handle;

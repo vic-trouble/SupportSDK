@@ -151,18 +151,33 @@ namespace SDK
 
 #define IMPLEMENT_COMMAND_IMPL(ProcessorFunc, CompletionFunc) \
 		static constexpr CommandExecutor EXECUTOR_FUNCTION = &ProcessorFunc; \
-		static constexpr CommandExecutor COMPLETION_FUNCTION = &CompletionFunc; \
-		GAMECORE_EXPORT void SetDefaultValues();
+		static constexpr CommandExecutor COMPLETION_FUNCTION = &CompletionFunc;		
 
-#define IMPLEMENT_COMMAND_WITH_COMPLETION(ProcessorFunc, CompletionFunc) \
+#define IMPLEMENT_COMMAND_WITH_COMPLETION_EXPORT(ProcessorFunc, CompletionFunc) \
 		GAMECORE_EXPORT static void ProcessorFunc(const void*); \
 		GAMECORE_EXPORT static void CompletionFunc(const void*); \
+		GAMECORE_EXPORT void SetDefaultValues(); \
+		IMPLEMENT_COMMAND_IMPL(ProcessorFunc, CompletionFunc)
+
+#define IMPLEMENT_COMMAND_EXPORT(ProcessorFunc) \
+		GAMECORE_EXPORT static void ProcessorFunc(const void*); \
+		static void CompletionStub(const void*){} \
+		GAMECORE_EXPORT void SetDefaultValues(); \
+		IMPLEMENT_COMMAND_IMPL(ProcessorFunc, CompletionStub)
+
+		// For use in library|exe only
+#define IMPLEMENT_COMMAND_WITH_COMPLETION(ProcessorFunc, CompletionFunc) \
+		static void ProcessorFunc(const void*); \
+		static void CompletionFunc(const void*); \
+		void SetDefaultValues(); \
 		IMPLEMENT_COMMAND_IMPL(ProcessorFunc, CompletionFunc)
 
 #define IMPLEMENT_COMMAND(ProcessorFunc) \
-		GAMECORE_EXPORT static void ProcessorFunc(const void*); \
-		GAMECORE_EXPORT static void CompletionStub(const void*){} \
+		static void ProcessorFunc(const void*); \
+		static void CompletionStub(const void*){} \
+		void SetDefaultValues(); \
 		IMPLEMENT_COMMAND_IMPL(ProcessorFunc, CompletionStub)
+
 	} // Render
 
 } // SDK
