@@ -23,8 +23,8 @@ public:
 	MessageDispatcher() {}
 	~MessageDispatcher() {}
 
-	template < class HandlerType, typename EventType, typename Param = const EventType& >
-	void RegisterHandler(HandlerType& i_instance, void (HandlerType::*member_function)(Param), const std::string& i_publisher);
+	template < class HandlerType, typename EventType>
+	void RegisterHandler(HandlerType& i_instance, void (HandlerType::*member_function)(const EventType&), const std::string& i_publisher);
 
 	template < class EventType >
 	void UnregisterHandler(const std::string& i_publisher);
@@ -53,10 +53,10 @@ public:
 
 //////////////////////////////////////////////////////////////////////////
 
-template < typename HandlerType, typename EventType, typename Param = const EventType& >
-void MessageDispatcher::RegisterHandler(HandlerType& i_instance, void (HandlerType::*member_function)(Param), const std::string& i_publisher)
+template < typename HandlerType, typename EventType>
+void MessageDispatcher::RegisterHandler(HandlerType& i_instance, void (HandlerType::*member_function)(const EventType&), const std::string& i_publisher)
 {
-	using FunctionHandler = MemberFunctionHandler<HandlerType, Param>;
+	using FunctionHandler = MemberFunctionHandler<HandlerType, const EventType&>;
 	auto p_handler = std::make_unique< FunctionHandler >(i_instance, member_function);
 	const size_t hash = SDK::Utilities::hash_function(i_publisher);
 	EventHandlers& handlers = m_handlers[typeid(EventType)];
