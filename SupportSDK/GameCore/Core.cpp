@@ -11,6 +11,9 @@
 
 #include "UI/UIControlSystem.h"
 
+// global object getter
+#include "DefaultGlobalObjectGetter.h"
+
 namespace SDK
 {
 
@@ -22,6 +25,7 @@ namespace SDK
 	std::unique_ptr<CoreDelegate> Core::mp_delegate = nullptr;
 	std::unique_ptr<ApplicationBase> Core::mp_application = nullptr;
 	std::unique_ptr<IRenderer> Core::mp_renderer = nullptr;
+	std::unique_ptr<ObjectGetterBase> Core::mp_object_getter = nullptr;
 
 	void Core::CreateSingletons()
 	{
@@ -41,6 +45,8 @@ namespace SDK
 	void Core::Run(std::unique_ptr<CoreDelegate>&& ip_delegate)
 	{
 		CreateSingletons();
+		SetGlobalObjectGetter(std::make_unique<DefaultGlobalObjectGetter>());
+
 		UI::g_ui_system.SetInputSystem(InputSystem::Instance());
 
 		mp_delegate = std::move(ip_delegate);

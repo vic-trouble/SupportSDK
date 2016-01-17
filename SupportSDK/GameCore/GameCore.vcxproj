@@ -112,6 +112,7 @@
     <ClInclude Include="Composer\IObjectComposer.h" />
     <ClInclude Include="Composer\ObjectSettings.h" />
     <ClInclude Include="CoreDelegate.h" />
+    <ClInclude Include="DefaultGlobalObjectGetter.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="ObjectSubset.h" />
@@ -167,9 +168,11 @@
     <ClInclude Include="Render\ScopedMatrixTransformation.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="System.h" />
+    <ClInclude Include="ObjectGetterBase.h" />
     <ClInclude Include="Systems\MeshSystem.h" />
     <ClInclude Include="Systems\TransformationsSystem.h" />
     <ClInclude Include="TimeController.h" />
+    <ClInclude Include="GlobalObjectBase.h" />
     <ClInclude Include="TypeDefinitions.h" />
     <ClInclude Include="UI\UIButton.h" />
     <ClInclude Include="UI\UIControl.h" />
@@ -184,6 +187,7 @@
     <ClCompile Include="Applications\Application_Windows.cpp" />
     <ClCompile Include="Core.cpp" />
     <ClCompile Include="Composer\ObjectSettings.cpp" />
+    <ClCompile Include="DefaultGlobalObjectGetter.cpp" />
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="FileSystem\FileStream.cpp" />
     <ClCompile Include="FileSystem\FileSystem.cpp" />

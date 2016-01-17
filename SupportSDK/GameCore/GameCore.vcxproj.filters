@@ -66,6 +66,9 @@
     <Filter Include="Core\Renderer\RenderWorld">
       <UniqueIdentifier>{06d894e4-9ff4-4292-b9f6-974d317c96d7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\GlobalObjects">
+      <UniqueIdentifier>{f07f4b3e-7868-4ebc-a006-66160ea53b46}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -293,6 +296,15 @@
     <ClInclude Include="ObjectSubset.h">
       <Filter>Core\Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="ObjectGetterBase.h">
+      <Filter>Core\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalObjectBase.h">
+      <Filter>Core\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="DefaultGlobalObjectGetter.h">
+      <Filter>Core\GlobalObjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -396,6 +408,9 @@
     </ClCompile>
     <ClCompile Include="Render\OpenGL\GLLightsController.cpp">
       <Filter>Core\Renderer\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="DefaultGlobalObjectGetter.cpp">
+      <Filter>Core\GlobalObjects</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
