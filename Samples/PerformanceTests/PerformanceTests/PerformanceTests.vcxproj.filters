@@ -36,7 +36,7 @@
     <ClInclude Include="TempTests.h">
       <Filter>Tests</Filter>
     </ClInclude>
-    <ClInclude Include="GkibalObjectGetterTests.h">
+    <ClInclude Include="GlobalObjectGetterTests.h">
       <Filter>Tests</Filter>
     </ClInclude>
   </ItemGroup>

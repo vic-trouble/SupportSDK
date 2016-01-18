@@ -18,6 +18,8 @@
 #include <algorithm>
 #include <string>
 #include <time.h>
+#include <assert.h>
+#include <functional>
 
 // From SDK
 

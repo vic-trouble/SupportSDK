@@ -22,12 +22,12 @@ namespace SDK
 		Resources::ResourceManager m_resource_manager;
 
 	private:
-		virtual GlobalObjectBase* GetGlobalObjectImpl(const std::type_index& i_type) const override;
+		virtual GlobalObjectBase* GetGlobalObjectImpl(size_t i_type_code) const override;
 		virtual void AddGlobalObjectImpl(std::unique_ptr<GlobalObjectBase> ip_object) override;
-		virtual void RemoveGlobalObjectImpl(const std::type_index& i_type) override;
+		virtual void RemoveGlobalObjectImpl(size_t i_type_code) override;
 
 	public:
-		GAMECORE_EXPORT DefaultGlobalObjectGetter();		
+		GAMECORE_EXPORT DefaultGlobalObjectGetter();
 	};
 
 } // SDK

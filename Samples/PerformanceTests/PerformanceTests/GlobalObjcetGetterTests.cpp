@@ -8,32 +8,77 @@
 namespace GlobalObjectGetterTests
 {
 
-	struct First : public SDK::GlobalObjectBase
+	struct Dummy : public SDK::GlobalObjectBase
 	{
 		bool x;
+	};
+	struct Dummy1 : public SDK::GlobalObjectBase
+	{
+		bool x;
+	};
+	struct Dummy2 : public SDK::GlobalObjectBase
+	{
+		bool x;
+	};
+	struct Dummy3 : public SDK::GlobalObjectBase
+	{
+		bool x;
+	};
+	struct Dummy4 : public SDK::GlobalObjectBase
+	{
+		bool x;
+	};
+
+	struct First : public SDK::GlobalObjectBase
+	{
+		int x;
+		void SetX(bool val)
+		{
+			x = rand()%1;
+		}
 	};
 
 	struct First0 : public SDK::GlobalObjectBase
 	{
-		bool x;
+		int x;
+		void SetX(bool val)
+		{
+			x = rand() % 1;
+		}
 	};
 
 	struct First1 : public SDK::GlobalObjectBase
 	{
-		bool x;
+		int x;
+		void SetX(bool val)
+		{
+			x = rand() % 1;
+		}
 	};
 
 	struct Second : public SDK::GlobalObjectBase
 	{
-		bool x;
+		int x;
+		void SetX(bool val)
+		{
+			x = rand() % 1;
+		}
 	};
 	struct Second0 : public SDK::GlobalObjectBase
 	{
-		bool x;
+		int x;
+		void SetX(bool val)
+		{
+			x = rand() % 1;
+		}
 	};
 	struct Second1 : public SDK::GlobalObjectBase
 	{
-		bool x;
+		int x;
+		void SetX(bool val)
+		{
+			x = rand() % 1;
+		}
 	};
 	constexpr size_t NUMBER = 15;
 	size_t indices[NUMBER];
@@ -58,54 +103,51 @@ namespace GlobalObjectGetterTests
 		{
 			if (i < NUMBER_3)
 			{
-				g_first[i].x = true;
-				g_second[i].x = false;
+				g_first[i].SetX(true);
+				g_second[i].SetX(false);
 			}
 			else if (i < NUMBER_3 * 2)
 			{
-				g_first_0[i].x = true;
-				g_second_0[i].x = false;
+				g_first_0[i].SetX(true);
+				g_second_0[i].SetX(false);
 			}
 			else
 			{
-				g_first_1[i].x = true;
-				g_second_1[i].x = false;
+				g_first_1[i].SetX(true);
+				g_second_1[i].SetX(false);
 			}
 		}
 	}
 
-	SDK::DefaultGlobalObjectGetter g_getter;
-	void TestGetter()
+	void TestGetter(SDK::ObjectGetterBase& i_getter)
 	{
 		constexpr static size_t NUMBER_3 = NUMBER / 3;
 		for (size_t i = 0; i < NUMBER; ++i)
 		{
 			if (i < NUMBER_3)
 			{
-				g_getter.GetGlobalObject<First>()->x = true;
-				g_getter.GetGlobalObject<Second>()->x = false;
+				i_getter.GetGlobalObject<First>()->SetX(true);
+				i_getter.GetGlobalObject<Second>()->SetX(false);
 			}
 			else if (i < NUMBER_3 * 2)
 			{
-				g_getter.GetGlobalObject<First0>()->x = true;
-				g_getter.GetGlobalObject<Second0>()->x = false;
+				i_getter.GetGlobalObject<First0>()->SetX(true);
+				i_getter.GetGlobalObject<Second0>()->SetX(false);
 			}
 			else
 			{
-				g_getter.GetGlobalObject<First1>()->x = true;
-				g_getter.GetGlobalObject<Second1>()->x = false;
+				i_getter.GetGlobalObject<First1>()->SetX(true);
+				i_getter.GetGlobalObject<Second1>()->SetX(false);
 			}
 		}
-
-		g_getter.GetGlobalObject<First>()->x = true;
 	}
 
-	clock_t Runner(void(*Func)(), size_t i_nums)
+	clock_t Runner(std::function<void()> func, size_t i_nums)
 	{
 		clock_t begin = clock();
 		for (size_t i = 0; i < i_nums; ++i)
 		{
-			Func();
+			func();
 		}
 		return clock() - begin;
 	}
@@ -115,32 +157,25 @@ namespace GlobalObjectGetterTests
 		std::cout << "==========================================================" << std::endl
 			<< "\t\t\Global objects getter tests" << std::endl;
 		ConstructIndices();
+		SDK::DefaultGlobalObjectGetter g_getter;
 		{
 			constexpr static size_t NUMBER_3 = NUMBER / 3;
-			for (size_t i = 0; i < NUMBER; ++i)
-			{
-				if (i < NUMBER_3)
-				{
-					g_getter.AddGlobalObject<First>();
-					g_getter.AddGlobalObject<Second>();					
-				}
-				else if (i < NUMBER_3 * 2)
-				{
-					g_getter.AddGlobalObject<First0>();
-					g_getter.AddGlobalObject<Second0>();
-				}
-				else
-				{
-					g_getter.AddGlobalObject<First1>();
-					g_getter.AddGlobalObject<Second1>();
-				}
-			}
-			
+			g_getter.AddGlobalObject<First>();
+			g_getter.AddGlobalObject<Dummy>();
+			g_getter.AddGlobalObject<Second>();
+			g_getter.AddGlobalObject<Dummy1>();
+			g_getter.AddGlobalObject<First0>();
+			g_getter.AddGlobalObject<Dummy2>();
+			g_getter.AddGlobalObject<Second0>();
+			g_getter.AddGlobalObject<Dummy3>();
+			g_getter.AddGlobalObject<First1>();
+			g_getter.AddGlobalObject<Dummy4>();
+			g_getter.AddGlobalObject<Second1>();
 		}
 
 		constexpr static size_t CALL_COUNT = 1000000;
 		const clock_t gl_obj = Runner(&TestGlobalVars, CALL_COUNT);
-		const clock_t getter_t = Runner(&TestGetter, CALL_COUNT);
+		const clock_t getter_t = Runner([&g_getter]() { TestGetter(g_getter); }, CALL_COUNT);
 		std::cout << "\tGlobal object: " << gl_obj << std::endl
 			<< "\tGetter: " << getter_t << std::endl;
 	}

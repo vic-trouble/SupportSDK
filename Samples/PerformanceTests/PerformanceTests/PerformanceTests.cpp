@@ -6,7 +6,7 @@
 #include "CommandBucketTests.h"
 #include "StateMachineTests.h"
 #include "FactoryTests.h"
-#include "GkibalObjectGetterTests.h"
+#include "GlobalObjectGetterTests.h"
 #include "TempTests.h"
 
 int main()

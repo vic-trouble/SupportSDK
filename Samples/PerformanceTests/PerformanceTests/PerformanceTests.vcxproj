@@ -177,7 +177,7 @@
   <ItemGroup>
     <ClInclude Include="CommandBucketTests.h" />
     <ClInclude Include="FactoryTests.h" />
-    <ClInclude Include="GkibalObjectGetterTests.h" />
+    <ClInclude Include="GlobalObjectGetterTests.h" />
     <ClInclude Include="StateMachineTests.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TempTests.h" />
