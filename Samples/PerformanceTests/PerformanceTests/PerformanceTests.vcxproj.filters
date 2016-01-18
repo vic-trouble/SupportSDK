@@ -36,6 +36,9 @@
     <ClInclude Include="TempTests.h">
       <Filter>Tests</Filter>
     </ClInclude>
+    <ClInclude Include="GkibalObjectGetterTests.h">
+      <Filter>Tests</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -51,6 +54,9 @@
       <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="FactoryTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="GlobalObjcetGetterTests.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
   </ItemGroup>

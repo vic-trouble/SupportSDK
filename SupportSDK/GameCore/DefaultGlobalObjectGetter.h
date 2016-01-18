@@ -1,6 +1,8 @@
 #ifndef	__GAMECORE_DEFAULTGLOBALOBJECTGETTER_H__
 #define __GAMECORE_DEFAULTGLOBALOBJECTGETTER_H__
 
+#include "GameCoreAPI.h"
+
 #include "ObjectGetterBase.h"
 
 // objects
@@ -25,7 +27,7 @@ namespace SDK
 		virtual void RemoveGlobalObjectImpl(const std::type_index& i_type) override;
 
 	public:
-		DefaultGlobalObjectGetter();		
+		GAMECORE_EXPORT DefaultGlobalObjectGetter();		
 	};
 
 } // SDK

@@ -177,6 +177,7 @@
   <ItemGroup>
     <ClInclude Include="CommandBucketTests.h" />
     <ClInclude Include="FactoryTests.h" />
+    <ClInclude Include="GkibalObjectGetterTests.h" />
     <ClInclude Include="StateMachineTests.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="TempTests.h" />
@@ -184,6 +185,7 @@
   <ItemGroup>
     <ClCompile Include="commandBucketTests.cpp" />
     <ClCompile Include="FactoryTests.cpp" />
+    <ClCompile Include="GlobalObjcetGetterTests.cpp" />
     <ClCompile Include="PerformanceTests.cpp" />
     <ClCompile Include="StateMachineTests.cpp" />
     <ClCompile Include="stdafx.cpp">

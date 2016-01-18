@@ -6,11 +6,12 @@
 #include "CommandBucketTests.h"
 #include "StateMachineTests.h"
 #include "FactoryTests.h"
-
+#include "GkibalObjectGetterTests.h"
 #include "TempTests.h"
 
 int main()
 {
+	GlobalObjectGetterTests::Test();
 	TempTests::Test();
 	FactoryTests::Test();
 	StateMachineTests::Test();
