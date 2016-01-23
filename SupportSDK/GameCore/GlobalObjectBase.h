@@ -7,13 +7,13 @@ namespace SDK
 	class GlobalObjectBase
 	{
 	private:
-		friend class ObjectGetterBase;
 		size_t m_hash_code;
 
 	public:		
 		virtual ~GlobalObjectBase() {}
 
 		__forceinline size_t GetTypeHashCode() const { return m_hash_code; }
+		__forceinline void RecalcHashCode() { m_hash_code = typeid(*this).hash_code(); }
 	};
 
 } // SDK

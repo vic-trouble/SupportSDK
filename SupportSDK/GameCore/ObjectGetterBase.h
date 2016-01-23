@@ -20,7 +20,7 @@ namespace SDK
 		void AddGlobalObject()
 		{
 			auto p_object = std::make_unique<ObjectType>();
-			p_object->m_hash_code = typeid(ObjectType).hash_code();
+			p_object->RecalcHashCode();
 			AddGlobalObjectImpl(std::move(p_object));
 		}
 
@@ -28,7 +28,7 @@ namespace SDK
 		ObjectType* GetGlobalObject() const
 		{
 #if defined(_DEBUG)
-			auto p_obj = GetGlobalObjectImpl(typeid(ObjectType));
+			auto p_obj = GetGlobalObjectImpl(typeid(ObjectType).hash_code());
 			assert(p_obj != nullptr && "There is no registered global object");
 			assert(dynamic_cast<ObjectType*>(p_obj) != nullptr && "Cannot convert type.");
 #endif

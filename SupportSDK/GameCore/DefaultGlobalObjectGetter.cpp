@@ -7,6 +7,10 @@ namespace SDK
 
 	DefaultGlobalObjectGetter::DefaultGlobalObjectGetter()
 	{
+		// Recalculate hash
+		m_resource_manager.RecalcHashCode();
+
+		// Add to cache
 		m_cache_objects.push_back(&m_resource_manager);
 	}
 
@@ -23,7 +27,7 @@ namespace SDK
 	void DefaultGlobalObjectGetter::AddGlobalObjectImpl(std::unique_ptr<GlobalObjectBase> ip_object)
 	{
 #if defined(_DEBUG)
-		if (GetGlobalObjectImpl(typeid(*ip_object.get())) != nullptr)
+		if (GetGlobalObjectImpl(typeid(*ip_object.get()).hash_code()) != nullptr)
 		{
 			assert(false);
 			return;
