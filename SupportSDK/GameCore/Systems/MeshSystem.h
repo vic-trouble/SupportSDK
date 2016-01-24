@@ -45,6 +45,7 @@ namespace SDK
 			// Own
 			GAMECORE_EXPORT MeshHandler Load(const std::string& i_file_name, Render::BufferUsageFormat i_vertices_usage, Render::BufferUsageFormat i_indices_usage);
 			GAMECORE_EXPORT void Unload(MeshHandler i_handler);
+			GAMECORE_EXPORT void Unload(const std::string& i_file_name) { throw std::exception("Not realized"); }
 			
 			GAMECORE_EXPORT MeshComponentHandler CreateInstance(MeshHandler i_handler);
 			// if you want to change something - use this method. On one frame it is guaranteed that 

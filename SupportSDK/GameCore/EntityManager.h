@@ -39,7 +39,7 @@ namespace SDK
 
 		Entity* GetEntity(EntityHandle i_handler)
 		{
-			if (i_handler.index != -1 && i_handler.generation != m_handlers[i_handler.index].generation)
+			if (i_handler.index == -1 || i_handler.generation != m_handlers[i_handler.index].generation)
 			{
 				//assert(false && "Generations are not identical");
 				return nullptr;

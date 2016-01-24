@@ -16,13 +16,14 @@
 namespace SDK
 {
 	class InputSubscriber;
-
-	class InputSystem : public Singleton<InputSystem>
+	// need to export class as singleton
+	// TODO: remove singlton
+	class GAMECORE_EXPORT InputSystem : public Singleton<InputSystem>
 	{
 		friend void Core::CreateSingletons();
 	private:
-		GAMECORE_EXPORT InputSystem();
-		GAMECORE_EXPORT virtual ~InputSystem();
+		InputSystem();
+		virtual ~InputSystem();
 
 	private:
 		std::vector<InputSubscriber*> m_subscribers;
@@ -30,15 +31,15 @@ namespace SDK
 		InputSubscriber* mp_ui_subscriber;
 
 	private:
-		GAMECORE_EXPORT bool ProcessUI(const InputEvent& i_event);
+		bool ProcessUI(const InputEvent& i_event);
 
 	public:
-		GAMECORE_EXPORT void ProcessEvent(const InputEvent& i_event);
+		void ProcessEvent(const InputEvent& i_event);
 
-		GAMECORE_EXPORT void AddSubscriber(InputSubscriber* ip_subscriber);
-		GAMECORE_EXPORT void RemoveSubscriber(InputSubscriber* ip_subscriber);
+		void AddSubscriber(InputSubscriber* ip_subscriber);
+		void RemoveSubscriber(InputSubscriber* ip_subscriber);
 
-		GAMECORE_EXPORT void SetUISubscriber(InputSubscriber* ip_subscriber);
+		void SetUISubscriber(InputSubscriber* ip_subscriber);
 	};
 
 } // SDK
