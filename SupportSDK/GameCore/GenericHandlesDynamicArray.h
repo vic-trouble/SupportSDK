@@ -25,7 +25,7 @@ namespace SDK
 
 			static void Destroy(DataType& o_data)
 			{
-				o_data.release();
+				o_data.reset();
 			}
 
 			static BaseType* Access(DataType& i_data)
