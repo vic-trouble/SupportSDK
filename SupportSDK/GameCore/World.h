@@ -14,7 +14,6 @@ namespace SDK
 	class World : Utilities::noncopyable
 	{
 	private:
-		typedef std::unique_ptr<System> SystemPtr;
 		std::vector<System*> m_systems;
 
 		Render::Camera m_camera;
@@ -26,6 +25,10 @@ namespace SDK
 		void SubmitDrawCommands();
 
 		void RegisterSystem(System* ip_system) { m_systems.push_back(ip_system); }
+		void UnregisterSystem(System* ip_system)
+		{
+			
+		}
 		void ClearSystems() { m_systems.clear(); }
 
 		Render::Camera& GetCamera() { return m_camera; }

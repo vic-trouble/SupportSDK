@@ -1,9 +1,9 @@
 #ifndef __GAMECORE_ENTITY_H__
 #define __GAMECORE_ENTITY_H__
 
-#include "GenericHandle.h"
-#include "ObjectSubset.h"
 #include "Component.h"
+
+#include "EntityDefines.h"
 
 namespace SDK
 {
@@ -34,13 +34,7 @@ namespace SDK
 		}
 	};
 
-	// 70368744177663 indices; 65535 generations
-	// TODO: this is too many; no?	
-	struct EntityTag {};
-	typedef GenericHandle<int64, 47, 17, EntityTag> EntityHandle;
-
-	using EntitySubset = ObjectSet<EntityHandle>;
-
+	
 } // SDK
 
 #endif

@@ -18,7 +18,7 @@ namespace SDK
 		static std::unique_ptr<CoreDelegate> mp_delegate;
 		static std::unique_ptr<ApplicationBase> mp_application;
 		static std::unique_ptr<IRenderer> mp_renderer;
-		static std::unique_ptr<ObjectGetterBase> mp_object_getter;
+		GAMECORE_EXPORT static std::unique_ptr<ObjectGetterBase> mp_object_getter;
 
 	private:
 		static void SetApplication(std::unique_ptr<ApplicationBase> ip_application);

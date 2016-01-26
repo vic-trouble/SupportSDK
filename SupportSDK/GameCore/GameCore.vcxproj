@@ -113,6 +113,7 @@
     <ClInclude Include="Composer\ObjectSettings.h" />
     <ClInclude Include="CoreDelegate.h" />
     <ClInclude Include="DefaultGlobalObjectGetter.h" />
+    <ClInclude Include="EntityDefines.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="ObjectSubset.h" />

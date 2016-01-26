@@ -305,6 +305,9 @@
     <ClInclude Include="DefaultGlobalObjectGetter.h">
       <Filter>Core\GlobalObjects</Filter>
     </ClInclude>
+    <ClInclude Include="EntityDefines.h">
+      <Filter>Core\Entities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

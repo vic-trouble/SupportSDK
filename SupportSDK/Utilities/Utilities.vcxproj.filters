@@ -62,10 +62,10 @@
     <ClInclude Include="lexical_cast.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="type_index.h">
-      <Filter>_Maintanance</Filter>
-    </ClInclude>
     <ClInclude Include="CustomScopedObject.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="type_index.h">
       <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>

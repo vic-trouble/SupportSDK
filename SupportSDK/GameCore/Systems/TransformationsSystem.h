@@ -19,6 +19,7 @@ namespace SDK
 	public:
 		static constexpr int ID = static_cast<int>(ComponentClass::TransformClass);
 		typedef TransformationsSystem ProcessorSystem;
+		//ENTITY_DEFINITION(TransformationsSystem, "Transform");
 
 	public:
 		Vector3 m_position;
