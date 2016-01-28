@@ -27,7 +27,9 @@ namespace SDK
 		void RegisterSystem(System* ip_system) { m_systems.push_back(ip_system); }
 		void UnregisterSystem(System* ip_system)
 		{
-			
+			auto it = std::find(m_systems.begin(), m_systems.end(), ip_system);
+			if (it != m_systems.end())
+				m_systems.erase(it);
 		}
 		void ClearSystems() { m_systems.clear(); }
 

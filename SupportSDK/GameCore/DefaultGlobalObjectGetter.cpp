@@ -40,21 +40,26 @@ namespace SDK
 	}
 
 	void DefaultGlobalObjectGetter::RemoveGlobalObjectImpl(size_t i_type_code)
-	{
-		const auto it = std::find_if(m_cache_objects.begin(), m_cache_objects.end(), [i_type_code](GlobalObjectBase* p_obj)
-		{
-			return typeid(*p_obj).hash_code() == i_type_code;
-		});
-
-		if (it != m_cache_objects.end())
-			m_cache_objects.erase(it);
-
+	{	
 		const auto it_dyn = std::find_if(m_dynamic_objects.begin(), m_dynamic_objects.end(), [i_type_code](ObjPtr& p_obj)
 		{
 			return typeid(*p_obj.get()).hash_code() == i_type_code;
 		});
-		if (it != m_cache_objects.end())
+		// we can delete from cache only dynamic objects - not static which are defined inside this class
+		//	and will be removed with destruction of getter
+		if (it_dyn != m_dynamic_objects.end())
+		{
+			// remove from cache
+			const auto it = std::find_if(m_cache_objects.begin(), m_cache_objects.end(), [i_type_code](GlobalObjectBase* p_obj)
+			{
+				return typeid(*p_obj).hash_code() == i_type_code;
+			});
+
+			if (it != m_cache_objects.end())
+				m_cache_objects.erase(it);
+
 			m_dynamic_objects.erase(it_dyn);
+		}
 	}
 
 } // SDK

@@ -356,7 +356,8 @@ namespace SDK
 			}
 			
 			//////////////////
-			// set data for MeshComponent			
+			// set data for MeshComponent
+			// TODO: increase use count for mesh
 			m_instances[new_index] = MeshComponent(i_handler);			
 			assert(m_instances.size() == m_component_handlers.size());
 			return m_component_handlers[new_index];
@@ -374,6 +375,7 @@ namespace SDK
 
 		void MeshSystem::RemoveInstance(MeshComponentHandler i_handler)
 		{
+			// TODO: decrease use count for mesh
 			m_component_handlers[i_handler.index].index = -1;
 			++m_component_handlers[i_handler.index].generation;
 		}

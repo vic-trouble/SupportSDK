@@ -48,6 +48,7 @@ namespace SDK
 			GAMECORE_EXPORT void Unload(const std::string& i_file_name) { throw std::exception("Not realized"); }
 			
 			GAMECORE_EXPORT MeshComponentHandler CreateInstance(MeshHandler i_handler);
+			GAMECORE_EXPORT MeshComponentHandler CreateInstance(const std::string& i_file_name) { throw std::exception("Not realized"); }
 			// if you want to change something - use this method. On one frame it is guaranteed that 
 			//	pointer will be valid if not nullptr
 			GAMECORE_EXPORT MeshComponent* GetInstance(MeshComponentHandler i_handler);

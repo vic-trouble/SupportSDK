@@ -17,12 +17,9 @@ namespace SDK
 	using EntitySubset = ObjectSet<EntityHandle>;
 
 
-#pragma warning( push )
-#pragma warning( disable : 4307)
 #define ENTITY_DEFINITION(ProcessorSystem_, ComponentName) \
 	typedef ProcessorSystem_ ProcessorSystem; \
 	static constexpr int ID = static_cast<int>(SDK::Utilities::hash_str(ComponentName));
-#pragma warning ( pop )
 
 } // SDK
 
