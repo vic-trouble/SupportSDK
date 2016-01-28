@@ -11,15 +11,11 @@ namespace SDK
 
 	namespace Render
 	{
-
 		class MeshSystem;
-
+		
 		class MeshComponent
 		{
 		public:
-			//static constexpr int ID = static_cast<int>(ComponentClass::MeshClass);
-			//typedef MeshSystem ProcessorSystem;
-
 			ENTITY_DEFINITION(MeshSystem, "MeshComponent")
 
 		private:
