@@ -147,6 +147,7 @@ namespace SDK
 			}
 
 			Render::ScopedLightSwitch scopedLight(Core::GetRenderer()->GetLightsController());
+			Core::GetRenderer()->GetLightsController()->DisableLighting();
 			auto& render_world = Core::GetApplication()->GetRenderWorld();
 			render_world.Submit({Render::ProjectionType::Orthographic, Matrix4f::IDENTITY, Matrix4f::IDENTITY });
 		}

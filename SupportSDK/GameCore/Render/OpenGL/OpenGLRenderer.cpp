@@ -406,8 +406,8 @@ namespace SDK
 		glColor4f(color[0], color[1], color[2], color[3]);
 		glLineWidth(i_width);
 		glBegin(GL_LINES);
-		glVertex2d(i_first_point[0], i_first_point[1]);
-		glVertex2d(i_second_point[0], i_second_point[1]);
+		glVertex3f(i_first_point[0], i_first_point[1], i_first_point[2]);
+		glVertex3f(i_second_point[0], i_second_point[1], i_second_point[2]);
 		glEnd();
 	}
 

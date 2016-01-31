@@ -33,6 +33,8 @@ using namespace SDK;
 
 #include <GameCore/Render/ShaderSystem.h>
 #include <GameCore/EntityManager.h>
+#include <GameCore/Render/LightsController.h>
+#include <GameCore/Render/ScopedLightSwitch.h>
 
 namespace Game
 {
@@ -169,10 +171,6 @@ namespace Game
 
 		auto& world = Core::GetApplication()->GetWorld();
 		auto& camera = world.GetCamera();
-		
-		camera.SetPosition({ 0,0,-15 });
-		camera.Pitch(21 * Math::DEG2RAD);
-		camera.Yaw(146 * Math::DEG2RAD);
 
 		camera.LookAt({ 0,0,-15 }, { -10,-10,-10 });
 
@@ -388,39 +386,24 @@ namespace Game
 
 		void drawGrid(float size, float step)
 		{
+			auto p_render = SDK::Core::GetRenderer();
+			SDK::Render::ScopedLightSwitch scopedLight(Core::GetRenderer()->GetLightsController());
+			Core::GetRenderer()->GetLightsController()->DisableLighting();
 			// disable lighting
-			glDisable(GL_LIGHTING);
-
-			glBegin(GL_LINES);
-
-			glColor3f(0.3f, 0.3f, 0.3f);
 			for (float i = step; i <= size; i += step)
 			{
-				glVertex3f(-size, 0, i);   // lines parallel to X-axis
-				glVertex3f(size, 0, i);
-				glVertex3f(-size, 0, -i);   // lines parallel to X-axis
-				glVertex3f(size, 0, -i);
+				p_render->RenderLine(SDK::Vector3{ -size, 0, i }, SDK::Vector3{ size, 0, i }, SDK::Color(76, 76, 76, 200));
+				p_render->RenderLine(SDK::Vector3{ -size, 0, -i }, SDK::Vector3{ size, 0, -i }, SDK::Color(76, 76, 76, 200));
 
-				glVertex3f(i, 0, -size);   // lines parallel to Z-axis
-				glVertex3f(i, 0, size);
-				glVertex3f(-i, 0, -size);   // lines parallel to Z-axis
-				glVertex3f(-i, 0, size);
+				p_render->RenderLine(SDK::Vector3{ i, 0, -size }, SDK::Vector3{ i, 0, size }, SDK::Color(76, 76, 76, 200));
+				p_render->RenderLine(SDK::Vector3{ -i, 0, -size }, SDK::Vector3{ -i, 0, size }, SDK::Color(76, 76, 76, 200));
 			}
 
 			// x-axis
-			glColor3f(0.5f, 0, 0);
-			glVertex3f(-size, 0, 0);
-			glVertex3f(size, 0, 0);
+			p_render->RenderLine(SDK::Vector3{ -size, 0, 0 }, SDK::Vector3{ size, 0, 0 }, SDK::Color(127, 0, 0, 200));
 
 			// z-axis
-			glColor3f(0, 0, 0.5f);
-			glVertex3f(0, 0, -size);
-			glVertex3f(0, 0, size);
-
-			glEnd();
-
-			// enable lighting back
-			glEnable(GL_LIGHTING);
+			p_render->RenderLine(SDK::Vector3{ 0, 0, -size }, SDK::Vector3{ 0, 0, size }, SDK::Color(0, 0, 127, 200));
 		}
 
 		void draw1()
