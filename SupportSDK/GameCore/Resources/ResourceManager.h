@@ -65,6 +65,7 @@ namespace SDK
 
 		public:
 
+			// if one of i_file_names is empty than on that index nullptr pointer will be set
 			template <typename ResType, size_t parts_count>
 			int Load(
 				const std::string& i_res_name,
@@ -99,7 +100,14 @@ namespace SDK
 				std::istream* p_streams[parts_count];
 				for (size_t i = 0; i < parts_count; ++i)
 				{
-					streams[i] = OpenStream(*(i_file_names.begin() + i));
+					const std::string& file_name = *(i_file_names.begin() + i);
+					// optional part and empty
+					if (file_name.empty())
+					{
+						p_streams[i] = nullptr;
+						continue;
+					}
+					streams[i] = OpenStream(file_name);
 					if (streams[i] == nullptr)
 					{
 						Loader::RemoveHandle(handle);

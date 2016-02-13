@@ -415,5 +415,8 @@
     <ClCompile Include="DefaultGlobalObjectGetter.cpp">
       <Filter>Core\GlobalObjects</Filter>
     </ClCompile>
+    <ClCompile Include="Render\Shader.cpp">
+      <Filter>Core\Renderer\Shaders</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

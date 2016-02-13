@@ -6,6 +6,7 @@
 #include "Render/Commands.h"
 #include "Render/ShaderCompiler.h"
 #include "Render/IRenderer.h"
+#include "Render/Shader.h"
 #include "Applications/ApplicationBase.h"
 #include "Render/RenderWorld.h"
 #include "Resources/ResourceManager.h"
@@ -19,7 +20,6 @@ namespace SDK
 	{
 		namespace Serialization
 		{
-
 			template <>
 			struct Definition <Render::Shader>
 			{
@@ -30,25 +30,31 @@ namespace SDK
 			struct LoaderImpl < Render::Shader >
 			{
 				// TODO: is it possible to catch error like ip_streams[3] in compile time?
-				static std::pair<LoadResult, Render::Shader> Load(std::istream* ip_streams[2], void*)
+				static std::pair<LoadResult, Render::Shader> Load(std::istream* ip_streams[Render::Shader::TypesNumber], void*)
 				{
 					using namespace Render;
 					auto p_compiler = Core::GetRenderer()->GetShaderCompiler();
 
-					const auto vertex_source = FS::ReadFileToString(*ip_streams[0]);
-					const auto fragment_source = FS::ReadFileToString(*ip_streams[1]);
-					Shader shader = p_compiler->Compile(vertex_source, fragment_source);
-					return std::make_pair(shader.IsValid() ? LoadResult::Success : LoadResult::Failure, shader);
-				}
+					std::string shader_sources[Render::Shader::TypesNumber];
+					for (size_t i = 0; i < Render::Shader::TypesNumber; ++i)
+					{
+						// check for optional
+						if (ip_streams[i] == nullptr)
+						{
+							// ensure that we will have empty source
+							shader_sources[i].clear();
+							continue;
+						}
+						shader_sources[i] = FS::ReadFileToString(*ip_streams[i]);
+					}
+					const char* p_vertex = !shader_sources[Shader::Vertex].empty() ? shader_sources[Shader::Vertex].c_str() : nullptr;
+					const char* p_tess_control = !shader_sources[Shader::TesselationConrol].empty() ? shader_sources[Shader::TesselationConrol].c_str() : nullptr;
+					const char* p_tess_eval = !shader_sources[Shader::TesselationEvaluation].empty() ? shader_sources[Shader::TesselationEvaluation].c_str() : nullptr;
+					const char* p_geom = !shader_sources[Shader::Geometry].empty() ? shader_sources[Shader::Geometry].c_str() : nullptr;
+					const char* p_fragment = !shader_sources[Shader::Fragment].empty() ? shader_sources[Shader::Fragment].c_str() : nullptr;
+					const char* p_compute = !shader_sources[Shader::Compute].empty() ? shader_sources[Shader::Compute].c_str() : nullptr;
 
-				static std::pair<LoadResult, Render::Shader> Load(std::istream& io_stream, std::string& i_fragment_path)
-				{
-					using namespace Render;
-					auto p_compiler = Core::GetRenderer()->GetShaderCompiler();
-
-					const auto vertex_source = FS::ReadFileToString(io_stream);
-					const auto fragment_source = FS::ReadFileToString(i_fragment_path);
-					Shader shader = p_compiler->Compile(vertex_source, fragment_source);					
+					Shader shader = p_compiler->Compile(p_vertex, p_tess_control, p_tess_eval, p_geom, p_fragment, p_compute);
 					return std::make_pair(shader.IsValid() ? LoadResult::Success : LoadResult::Failure, shader);
 				}
 
@@ -129,10 +135,13 @@ namespace SDK
 			}
 		}
 
-		ShaderHandler ShaderSystem::Load(const std::string& i_res_name, const std::string& i_vertex_shader_file, const std::string& i_fragment_shader_file)
+		ShaderHandler ShaderSystem::Load(const std::string& i_resource_name, ShaderSource i_source)
 		{
 			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
-			int index = p_load_manager->Load<Shader, 2>(i_res_name, { i_vertex_shader_file, i_fragment_shader_file }, nullptr);
+			int index = p_load_manager->Load<Shader, Shader::TypesNumber>(i_resource_name, 
+				{ i_source.vertex_shader_file, i_source.tess_control_shader_file, i_source.tess_compute_shader_file,
+					i_source.geometry_shader_file, i_source.fragment_shader_file, i_source.compute_shader_file }, 
+				nullptr);
 
 			// resource is already loaded
 			if (index != -1)

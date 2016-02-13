@@ -26,7 +26,57 @@ namespace SDK
 
 		public:
 			ShaderSystem();
-			GAMECORE_EXPORT ShaderHandler Load(const std::string& i_resource_name, const std::string& i_vertex_shader_file, const std::string& i_fragment_shader_file);
+			struct ShaderSource
+			{
+				std::string vertex_shader_file;
+				std::string tess_control_shader_file;
+				std::string tess_compute_shader_file;
+				std::string geometry_shader_file;
+				std::string fragment_shader_file;
+				std::string compute_shader_file;
+				ShaderSource(std::string&& i_vertex, std::string&& i_tess_control, std::string&& i_tess_compute, std::string&& i_geom, std::string&& i_fragment, std::string&& i_compute)
+					: vertex_shader_file(std::move(i_vertex))
+					, tess_control_shader_file(std::move(i_tess_control))
+					, tess_compute_shader_file(std::move(i_tess_compute))
+					, geometry_shader_file(std::move(i_geom))
+					, fragment_shader_file(std::move(i_fragment))
+					, compute_shader_file(std::move(i_compute))
+				{}
+				ShaderSource(std::string&& i_vertex, std::string&& i_fragment)
+					: vertex_shader_file(std::move(i_vertex))
+					, fragment_shader_file(std::move(i_fragment))
+				{}
+				using ShaderSourceEntry = std::pair<Shader::ShaderType, std::string>;
+				ShaderSource(std::initializer_list<ShaderSourceEntry> i_entries)
+				{
+					for (auto entry : i_entries)
+					{
+						switch (entry.first)
+						{
+							case Shader::Vertex:
+								vertex_shader_file = std::move(entry.second);
+								break;
+							case Shader::TesselationConrol:
+								tess_control_shader_file = std::move(entry.second);
+								break;
+							case Shader::TesselationEvaluation:
+								tess_compute_shader_file = std::move(entry.second);
+								break;
+							case Shader::Geometry:
+								geometry_shader_file = std::move(entry.second);
+								break;
+							case Shader::Fragment:
+								fragment_shader_file = std::move(entry.second);
+								break;
+							case Shader::Compute:
+								compute_shader_file = std::move(entry.second);
+								break;
+						}
+					}
+				}
+				
+			};
+			GAMECORE_EXPORT ShaderHandler Load(const std::string& i_resource_name, ShaderSource i_source);
 			GAMECORE_EXPORT void Unload(ShaderHandler i_handler);
 			inline Shader Access(ShaderHandler i_handler)
 			{
