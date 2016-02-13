@@ -33,11 +33,10 @@ namespace SDK
 					// The maxLength includes the NULL character
 					std::vector<GLchar> errorLog(maxLength);
 					glGetShaderInfoLog(shader, maxLength, &maxLength, &errorLog[0]);
-
+					OutputDebugStringA(&errorLog[0]);
 					// Provide the infolog in whatever manor you deem best.
 					// TODO: Log
-					// printf("%s\n", &VertexShaderErrorMessage[0]);                
-
+					
 					// Exit with failure.
 					glDeleteShader(shader); // Don't leak the shader.
 					return 0;
@@ -82,6 +81,8 @@ namespace SDK
 					//The maxLength includes the NULL character
 					std::vector<GLchar> infoLog(maxLength);
 					glGetProgramInfoLog(program_id, maxLength, &maxLength, &infoLog[0]);
+
+					OutputDebugStringA(&infoLog[0]);
 
 					//We don't need the program anymore.
 					glDeleteProgram(program_id);

@@ -296,6 +296,8 @@ namespace SDK
 				p_cmd->vertices = mesh.GetVertices();
 				p_cmd->layout = mesh.GetLayout();
 				p_cmd->indices = mesh.GetIndices();
+				if (!mesh_instance.GetMaterials().empty())
+					p_cmd->program = m_materials.Access(mesh_instance.GetMaterials()[0])->m_shader;
 			}
 		}
 		
@@ -363,7 +365,41 @@ namespace SDK
 			return m_component_handlers[new_index];
 		}
 
-		MeshComponent* MeshSystem::GetInstance(MeshComponentHandler i_handler)
+		MaterialHandle MeshSystem::CreateMaterial(const std::string& i_name, Render::BufferUsageFormat i_usage)
+		{
+			auto material_handle = m_materials.CreateNew(i_name, Utilities::hash_function(i_name));
+			return material_handle;
+		}
+
+		Material* MeshSystem::AccessMaterial(MaterialHandle i_handle)
+		{
+			return m_materials.Access(i_handle);
+		}
+
+		void MeshSystem::RemoveMaterial(MaterialHandle i_handle)
+		{
+			m_materials.Destroy(i_handle);
+		}
+
+		void MeshSystem::AddMaterialTo(MeshComponentHandler i_component, MaterialHandle i_material)
+		{
+			auto p_material = m_materials.Access(i_material);
+			if (p_material == nullptr)
+			{
+				assert(false && "There is no such material");
+				return;
+			}
+			if (i_component.index >= m_component_handlers.size() || i_component.generation != m_component_handlers[i_component.index].generation)
+			{
+				assert(false && "There is no such mesh component");
+				return;
+			}
+
+			auto& mesh_instance = m_instances[i_component.index];
+			mesh_instance.AddMaterial(i_material);
+		}
+
+		MeshComponent* MeshSystem::AccessComponent(MeshComponentHandler i_handler)
 		{
 			if (m_component_handlers[i_handler.index].generation != i_handler.generation)
 			{
@@ -386,7 +422,7 @@ namespace SDK
 		MeshComponent* MeshSystem::Get(int i_in_system_id, int i_in_system_generation)
 		{
 			MeshComponentHandler inst_handler{ i_in_system_id, i_in_system_generation };
-			MeshComponent* component = g_mesh_system.GetInstance(inst_handler);
+			MeshComponent* component = g_mesh_system.AccessComponent(inst_handler);
 			return component;
 		}
 

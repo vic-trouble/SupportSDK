@@ -39,6 +39,7 @@ using namespace SDK;
 namespace Game
 {
 	EntityHandle entity_handler;
+	Render::ShaderHandler shader_handler;
 	void CoreDelegateImpl::LoadModel()
 	{
 		//E:\Git_Projects\SupportSDK\Samples\Resources\Models\Box.obj
@@ -59,8 +60,18 @@ namespace Game
 		g_entity_manager.AddComponent<Transform>(entity_handler, trans_handler);
 
 		// test getting of entity and component
-		auto entity = g_entity_manager.GetEntity(entity_handler);
-		entity->GetComponent<Render::MeshComponent>();
+		auto entity = g_entity_manager.GetEntity(entity_handler);		
+		shader_handler = Render::g_shader_system.Load("SimpleShader",
+			{ //{ Render::Shader::Vertex, "..\\..\\Resources\\Shaders\\Sample.vertexshader" },
+			{ Render::Shader::Fragment, "..\\..\\Resources\\Shaders\\Sample.fragmentshader" }
+		});
+
+		auto material_handle = Render::g_mesh_system.CreateMaterial("SampleMaterial");
+		auto p_material = Render::g_mesh_system.AccessMaterial(material_handle);
+		p_material->m_shader = shader_handler;
+
+		Render::g_mesh_system.AddMaterialTo(mesh_handler, material_handle);
+
 		/*auto p_mgr = Core::GetRenderer()->GetHardwareBufferMgr();
 
 		const float verts[] = {
@@ -158,7 +169,7 @@ namespace Game
 	}	
 
 	GLUquadricObj* quadricId;
-	Render::ShaderHandler shader_handler;
+	
 	
 	Render::Viewport g_vp;
 	void CoreDelegateImpl::OnCreate()
@@ -180,12 +191,7 @@ namespace Game
 			world.GetCamera().GetModelViewMatrix() };
 		// create a GLU quadric object
 		quadricId = gluNewQuadric();
-		gluQuadricDrawStyle(quadricId, GLU_FILL);
-		shader_handler = Render::g_shader_system.Load("SimpleShader", 
-			{ {Render::Shader::Vertex, "..\\..\\Resources\\Shaders\\SimpleShader.vertexshader"}, 
-			  {Render::Shader::Geometry, "..\\..\\Resources\\Shaders\\SimpleShader.geomshader"},
-			  {Render::Shader::Fragment, "..\\..\\Resources\\Shaders\\SimpleShader.fragmentshader"} 
-			});
+		gluQuadricDrawStyle(quadricId, GLU_FILL);		
 	}
 
 	void CoreDelegateImpl::OnTerminate()
@@ -655,8 +661,8 @@ namespace Game
 		auto p_renderer = Core::GetRenderer();
 		p_renderer->SetMatrix(MatrixMode::Projection, g_vp.m_projection_matrix);
 		p_renderer->SetMatrix(MatrixMode::ModelView, g_vp.m_modelview_matrix);
-		draw3(true);
-		Render2D();
+		//draw3(true);
+		//Render2D();
 	}
 
 } // Game

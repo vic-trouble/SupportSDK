@@ -146,6 +146,9 @@ namespace SDK
 		// Lights
 		using LightHandle = int;
 		constexpr LightHandle INVALID_LIGHT_HANDLE = -1;
+		// Material
+		struct MaterialTag {};
+		typedef GenericHandle<int, 12, 20, MaterialTag> MaterialHandle;
 		// Commands
 		typedef void(*CommandExecutor)(const void*);
 

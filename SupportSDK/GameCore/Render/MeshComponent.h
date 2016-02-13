@@ -23,6 +23,9 @@ namespace SDK
 
 			EntityHandle m_entity;
 
+			// set of materials
+			std::vector<MaterialHandle> m_materials;
+
 		public:
 			MeshComponent() {}
 			MeshComponent(MeshHandler i_handler)
@@ -30,6 +33,9 @@ namespace SDK
 			{}			
 
 			MeshHandler GetHandler() const { return m_mesh; }
+
+			void AddMaterial(MaterialHandle i_material) { m_materials.emplace_back(i_material); }
+			const std::vector<MaterialHandle>& GetMaterials() const { return m_materials; }
 
 			void SetEntity(EntityHandle i_entity) { m_entity = i_entity; }
 			EntityHandle GetEntity() const { return m_entity; }

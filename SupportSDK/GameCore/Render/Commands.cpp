@@ -33,20 +33,14 @@ namespace SDK
 			{
 				auto p_renderer = Core::GetRenderer();
 				const Draw* cmd = reinterpret_cast<const Draw*>(ip_data);
-
-				auto shader = g_shader_system.Access(cmd->program);
-				//if (shader.IsValid())					
-				//	glUseProgram(shader.GetId());
-
 				Batch b;
 				b.vertices = cmd->vertices;
 				b.element = cmd->layout;
 				b.indices = cmd->indices;
 				
+				p_renderer->UseShader(cmd->program);
 				p_renderer->Draw(b);
-
-				//if (shader.IsValid())
-				//	glUseProgram(0);
+				p_renderer->UseShader({ -1, -1 });
 			}
 
 			///////////////////////////////////////////////////////////////////////////

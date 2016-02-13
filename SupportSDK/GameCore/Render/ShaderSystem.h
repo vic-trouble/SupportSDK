@@ -34,18 +34,6 @@ namespace SDK
 				std::string geometry_shader_file;
 				std::string fragment_shader_file;
 				std::string compute_shader_file;
-				ShaderSource(std::string&& i_vertex, std::string&& i_tess_control, std::string&& i_tess_compute, std::string&& i_geom, std::string&& i_fragment, std::string&& i_compute)
-					: vertex_shader_file(std::move(i_vertex))
-					, tess_control_shader_file(std::move(i_tess_control))
-					, tess_compute_shader_file(std::move(i_tess_compute))
-					, geometry_shader_file(std::move(i_geom))
-					, fragment_shader_file(std::move(i_fragment))
-					, compute_shader_file(std::move(i_compute))
-				{}
-				ShaderSource(std::string&& i_vertex, std::string&& i_fragment)
-					: vertex_shader_file(std::move(i_vertex))
-					, fragment_shader_file(std::move(i_fragment))
-				{}
 				using ShaderSourceEntry = std::pair<Shader::ShaderType, std::string>;
 				ShaderSource(std::initializer_list<ShaderSourceEntry> i_entries)
 				{
@@ -78,11 +66,11 @@ namespace SDK
 			};
 			GAMECORE_EXPORT ShaderHandler Load(const std::string& i_resource_name, ShaderSource i_source);
 			GAMECORE_EXPORT void Unload(ShaderHandler i_handler);
-			inline Shader Access(ShaderHandler i_handler)
+			inline const Shader* Access(ShaderHandler i_handler) const
 			{
 				if (i_handler.index == -1 || i_handler.generation != m_shaders.m_handlers[i_handler.index].generation)
-					return Shader(0);
-				return m_shaders.m_buffer[i_handler.index];
+					return nullptr;
+				return &m_shaders.m_buffer[i_handler.index];
 			}
 		};
 

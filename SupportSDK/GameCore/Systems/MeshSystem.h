@@ -3,9 +3,12 @@
 
 #include "../GameCoreAPI.h"
 
-#include "../System.h"
-#include "../Render/Mesh.h"
-#include "../Render/MeshComponent.h"
+#include "System.h"
+#include "Render/Material.h"
+#include "Render/Mesh.h"
+#include "Render/MeshComponent.h"
+
+#include "GenericHandlesDynamicArray.h"
 
 namespace SDK
 {
@@ -32,6 +35,9 @@ namespace SDK
 			std::vector<MeshComponent> m_instances;
 			std::vector<MeshComponentHandler> m_component_handlers;
 
+			using Materials = SDK::GenericHandleDynamicArray<MaterialHandle, Material>;
+			Materials m_materials;
+
 		public:
 			MeshSystem();
 			virtual ~MeshSystem();
@@ -43,19 +49,30 @@ namespace SDK
 			virtual bool Requires(Action i_aciton) const { return i_aciton == Action::SubmitDrawCommands || i_aciton == Action::Update; }
 
 			// Own
-			GAMECORE_EXPORT MeshHandler Load(const std::string& i_file_name, Render::BufferUsageFormat i_vertices_usage, Render::BufferUsageFormat i_indices_usage);
+			GAMECORE_EXPORT MeshHandler Load(const std::string& i_file_name, BufferUsageFormat i_vertices_usage, BufferUsageFormat i_indices_usage);
 			GAMECORE_EXPORT void Unload(MeshHandler i_handler);
 			GAMECORE_EXPORT void Unload(const std::string& i_file_name) { throw std::exception("Not realized"); }
 			
 			GAMECORE_EXPORT MeshComponentHandler CreateInstance(MeshHandler i_handler);
 			GAMECORE_EXPORT MeshComponentHandler CreateInstance(const std::string& i_file_name) { throw std::exception("Not realized"); }
-			// if you want to change something - use this method. On one frame it is guaranteed that 
-			//	pointer will be valid if not nullptr
-			GAMECORE_EXPORT MeshComponent* GetInstance(MeshComponentHandler i_handler);
-			GAMECORE_EXPORT void RemoveInstance(MeshComponentHandler i_handler);
 
 			// TODO: Custom mesh
-			//MeshHandler Register(const std::string& i_name, Mesh i_mesh);
+			//MeshHandler Create(const std::string& i_name, Mesh i_mesh);
+
+			/////////////////////////////////////////////////////////
+			// Materials block
+			GAMECORE_EXPORT MaterialHandle CreateMaterial(const std::string& i_name, BufferUsageFormat i_usage = BufferUsageFormat::Dynamic);
+			GAMECORE_EXPORT Material* AccessMaterial(MaterialHandle i_handle);
+			GAMECORE_EXPORT void RemoveMaterial(MaterialHandle i_handle);
+
+			GAMECORE_EXPORT void AddMaterialTo(MeshComponentHandler i_component, MaterialHandle i_material);
+
+			/////////////////////////////////////////////////////////
+			
+			// if you want to change something - use this method. On one frame it is guaranteed that 
+			//	pointer will be valid if not nullptr
+			GAMECORE_EXPORT MeshComponent* AccessComponent(MeshComponentHandler i_handler);
+			GAMECORE_EXPORT void RemoveInstance(MeshComponentHandler i_handler);			
 
 		// Extension for entity manager
 		public:

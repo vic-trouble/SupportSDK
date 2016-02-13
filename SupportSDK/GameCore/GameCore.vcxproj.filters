@@ -308,6 +308,9 @@
     <ClInclude Include="EntityDefines.h">
       <Filter>Core\Entities</Filter>
     </ClInclude>
+    <ClInclude Include="Render\Material.h">
+      <Filter>Core\Renderer\Mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

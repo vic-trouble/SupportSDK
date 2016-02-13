@@ -1,9 +1,9 @@
 #ifndef __GAMECORE_IRENDERER_H__
 #define __GAMECORE_IRENDERER_H__
 
-#include "GameCore/Render/RenderTypes.h"
+#include "RenderTypes.h"
 
-#include "GameCore/Render/VertexDeclaration.h"
+#include "VertexDeclaration.h"
 
 namespace SDK
 {
@@ -99,6 +99,7 @@ namespace SDK
 
 		/////////////////////////////////////////////////////////////
 		// Shaders -> use shader manager?
+		virtual void UseShader(Render::ShaderHandler i_shader) = 0;
 
 		/////////////////////////////////////////////////////////////
 		// Deprecated

@@ -3,6 +3,8 @@
 #include "OpenGLRenderer.h"
 #include "GlUitlities.h"
 
+#include "Render/ShaderSystem.h"
+
 #include <Math/VectorConstructor.h>
 
 #include <GL/glew.h>
@@ -78,7 +80,7 @@ namespace
 	}
 
 } // namespace
-#include "../ShaderSystem.h"
+
 namespace SDK
 {
 
@@ -312,8 +314,7 @@ namespace SDK
 			assert(false && "Invalid parameters. Have buffers been created?");
 			return;
 		}
-
-		glEnableVertexAttribArray(0);
+				
 		glBindBuffer(GL_ARRAY_BUFFER, ver_buf.m_hardware_id);
 		glVertexAttribPointer(0, // index for shader attribute
 			element.m_vertex_size, // size
@@ -321,6 +322,7 @@ namespace SDK
 			element.m_normalized ? GL_TRUE : GL_FALSE, // normalized
 			element.m_stride, // stride
 			0); // pointer
+		glEnableVertexAttribArray(0);
 		CHECK_GL_ERRORS;
 
 
@@ -385,6 +387,7 @@ namespace SDK
 
 	void OpenGLRenderer::SetCurrentMatrix(const Matrix4f& i_translation_matrix)
 	{
+		m_matrices[(int)m_current_mode] = i_translation_matrix;
 		GLfloat gl_matrix[16];
 		makeGlMatrix(gl_matrix, i_translation_matrix);
 		glLoadMatrixf(gl_matrix);
@@ -396,6 +399,23 @@ namespace SDK
 		GLfloat gl_matrix[16];
 		makeGlMatrix(gl_matrix, m_matrices[(int)m_current_mode]);
 		glLoadMatrixf(gl_matrix);
+	}
+
+	/////////////////////////////////////////////////////////////////////////////
+
+	void OpenGLRenderer::UseShader(Render::ShaderHandler i_shader)
+	{
+		m_current_shader = i_shader;
+		auto p_shader = Render::g_shader_system.Access(i_shader);
+		// TODO: use standard shader?
+		if (p_shader == nullptr)
+		{		
+			glUseProgram(0);
+			return;
+		}
+		
+		glUseProgram(p_shader->GetId());
+		CHECK_GL_ERRORS;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////

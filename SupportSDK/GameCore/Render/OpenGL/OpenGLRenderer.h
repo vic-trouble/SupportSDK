@@ -29,6 +29,8 @@ namespace SDK
 		Matrix4f m_matrices[2];
 		std::vector<int> m_pushed_matrices;
 
+		Render::ShaderHandler m_current_shader;
+
 	private:
 		// TODO: more precise configurations
 		void ConfigureGl();
@@ -61,6 +63,9 @@ namespace SDK
 		virtual Render::HardwareBufferManager* GetHardwareBufferMgr() override { return &m_hardware_buffer_mgr; }
 		virtual Render::ShaderCompiler* GetShaderCompiler() override { return &m_shader_compiler; }
 		virtual Render::LightsController* GetLightsController() override { return &m_lights_controller; }
+
+		virtual void UseShader(Render::ShaderHandler i_shader) override;
+
 		////////////////////////////////////////////////////////////////////
 		// TODO: is it still needed
 
