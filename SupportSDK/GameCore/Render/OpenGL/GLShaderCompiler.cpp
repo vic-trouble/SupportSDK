@@ -106,6 +106,31 @@ namespace SDK
 				return program_id;
 			}
 
+			void FetchAttributes(Shader& o_shader, GLuint i_program)
+			{
+				constexpr static GLenum properties[] = { GL_NAME_LENGTH, GL_LOCATION, GL_TYPE };
+
+				GLint num_uniforms = 0;
+				glGetProgramInterfaceiv(i_program, GL_PROGRAM_INPUT, GL_ACTIVE_RESOURCES, &num_uniforms);
+				GLint max_length = 0;
+				glGetProgramInterfaceiv(i_program, GL_PROGRAM_INPUT, GL_MAX_NAME_LENGTH, &max_length);
+				CHECK_GL_ERRORS;
+
+				o_shader.ResetUniformsNumber(num_uniforms);
+
+				std::string name_data;
+				name_data.resize(max_length);
+				for (int unif = 0; unif < num_uniforms; ++unif)
+				{
+					GLint values[3];
+					glGetProgramResourceiv(i_program, GL_PROGRAM_INPUT, unif, sizeof(properties) / sizeof(GLenum), properties, sizeof(values) / sizeof(GLint), NULL, values);
+					CHECK_GL_ERRORS;
+					name_data.resize(values[0]);
+					glGetProgramResourceName(i_program, GL_PROGRAM_INPUT, unif, name_data.size(), NULL, &name_data[0]);
+					o_shader.AddUniform(name_data, values[1], values[2]);
+				}
+			}
+
 			void FetchUniforms(Shader& o_shader, GLuint i_program)
 			{
 				constexpr static GLenum properties[4] = { GL_BLOCK_INDEX, GL_NAME_LENGTH, GL_LOCATION, GL_TYPE };
@@ -190,6 +215,7 @@ namespace SDK
 			if (shader.IsValid())
 			{
 				ShaderCompilerDetails::FetchUniforms(shader, program_id);
+				ShaderCompilerDetails::FetchAttributes(shader, program_id);
 			}
 			return shader;
 		}

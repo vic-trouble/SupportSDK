@@ -62,7 +62,7 @@ namespace Game
 		// test getting of entity and component
 		auto entity = g_entity_manager.GetEntity(entity_handler);		
 		shader_handler = Render::g_shader_system.Load("SimpleShader",
-			{ //{ Render::Shader::Vertex, "..\\..\\Resources\\Shaders\\Sample.vertexshader" },
+			{ { Render::Shader::Vertex, "..\\..\\Resources\\Shaders\\Sample.vertexshader" },
 			{ Render::Shader::Fragment, "..\\..\\Resources\\Shaders\\Sample.fragmentshader" }
 		});
 
@@ -661,7 +661,7 @@ namespace Game
 		auto p_renderer = Core::GetRenderer();
 		p_renderer->SetMatrix(MatrixMode::Projection, g_vp.m_projection_matrix);
 		p_renderer->SetMatrix(MatrixMode::ModelView, g_vp.m_modelview_matrix);
-		//draw3(true);
+		draw3(true);
 		//Render2D();
 	}
 

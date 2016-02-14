@@ -314,23 +314,33 @@ namespace SDK
 			assert(false && "Invalid parameters. Have buffers been created?");
 			return;
 		}
-				
+
 		glBindBuffer(GL_ARRAY_BUFFER, ver_buf.m_hardware_id);
-		glVertexAttribPointer(0, // index for shader attribute
+		auto pos_size = 0;
+		auto p_shader = Render::g_shader_system.Access(m_current_shader);
+		if (p_shader != nullptr)
+		{
+			auto mv_loc = p_shader->GetUniformLocation("mv");
+			auto proj_loc = p_shader->GetUniformLocation("proj");
+			pos_size = p_shader->GetUniformLocation("posSize");
+			glUniformMatrix4fv(proj_loc, 1, GL_FALSE, m_matrices[(int)MatrixMode::Projection][0]);
+			glUniformMatrix4fv(mv_loc, 1, GL_TRUE, m_matrices[(int)MatrixMode::ModelView][0]);
+			CHECK_GL_ERRORS;
+		}
+
+		glVertexAttribPointer(pos_size, // index for shader attribute
 			element.m_vertex_size, // size
 			GetComponentType(element.m_component), // type
 			element.m_normalized ? GL_TRUE : GL_FALSE, // normalized
 			element.m_stride, // stride
 			0); // pointer
-		glEnableVertexAttribArray(0);
-		CHECK_GL_ERRORS;
-
+		glEnableVertexAttribArray(pos_size);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ind_buf.m_hardware_id);
 		glDrawElements(GetPrimitiveType(element.m_primitive), ind_buf.m_num_indices, GetIndexType(ind_buf.m_index_type), 0);
 		CHECK_GL_ERRORS;
 
-		glDisableVertexAttribArray(0);
+		glDisableVertexAttribArray(pos_size);
 	}
 
 	void OpenGLRenderer::SetMatrix(MatrixMode i_matrix_mode, const Matrix4f& i_matrix)

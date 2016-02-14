@@ -4,13 +4,13 @@ uniform mat4 proj;
 uniform mat4 mv;
 uniform	vec3 eye;		// eye position
 
-in  vec4  posSize;		// position in xyz, size in w
+in  vec3 posSize;		// position in xyz, size in w
 out float size;
 out vec3  v;
 
 void main(void)
 {
-    gl_Position  = proj * mv * vec4 ( posSize.xyz, 1.0 );
-    size         = 0.5 * posSize.w;
+    gl_Position  = proj * mv * vec4 ( posSize, 1.0 );
+    size         = 0.5 * 1;
     v            = -normalize ( gl_Position.xyz );
 }

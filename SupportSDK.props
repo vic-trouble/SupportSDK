@@ -3,7 +3,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <IncludePath>$(SUPPORTSDK_ROOT)\SupportSDK;$(IncludePath)</IncludePath>
+    <IncludePath>$(SUPPORTSDK_ROOT)\SupportSDK;$(SUPPORTSDK_ROOT)\SupportSDK\GameCore;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemGroup />
 </Project>

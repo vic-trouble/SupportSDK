@@ -11,7 +11,8 @@ namespace SDK
 
 		void Shader::AddUniform(const std::string& i_name, int i_location, int i_type)
 		{
-			const name_hash hash = Utilities::hash_function(i_name);
+			// hash without \0 in the end
+			const name_hash hash = Utilities::hash_function(i_name.substr(0, i_name.size() - 1));
 			m_uniforms.emplace_back(hash, i_location, i_type);
 		}
 
