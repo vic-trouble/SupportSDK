@@ -16,28 +16,35 @@ namespace SDK
 			m_uniforms.emplace_back(hash, i_location, i_type);
 		}
 
-		int Shader::GetUniformLocation(const std::string& i_name) const
+		Shader::input_entry Shader::GetUniform(const std::string& i_name) const
 		{
 			const name_hash hash = Utilities::hash_function(i_name);
-			auto it = std::find_if(m_uniforms.begin(), m_uniforms.end(), [hash](const uniform& uni)
+			auto it = std::find_if(m_uniforms.begin(), m_uniforms.end(), [hash](const input_entry& uni)
 			{
 				return uni.name_hash == hash;
 			});
 			if (it != m_uniforms.end())
-				return it->location;
-			return 0;
+				return *it;
+			return input_entry();
 		}
 
-		int Shader::GetUniformType(const std::string& i_name) const
+		void Shader::AddAttribute(const std::string& i_name, int i_location, int i_type)
+		{
+			// hash without \0 in the end
+			const name_hash hash = Utilities::hash_function(i_name.substr(0, i_name.size() - 1));
+			m_attributes.emplace_back(hash, i_location, i_type);
+		}
+
+		Shader::input_entry Shader::GetAttribute(const std::string& i_name) const
 		{
 			const name_hash hash = Utilities::hash_function(i_name);
-			auto it = std::find_if(m_uniforms.begin(), m_uniforms.end(), [hash](const uniform& uni)
+			auto it = std::find_if(m_attributes.begin(), m_attributes.end(), [hash](const input_entry& uni)
 			{
 				return uni.name_hash == hash;
 			});
-			if (it != m_uniforms.end())
-				return it->type;
-			return 0;
+			if (it != m_attributes.end())
+				return *it;
+			return input_entry();
 		}
 
 	}

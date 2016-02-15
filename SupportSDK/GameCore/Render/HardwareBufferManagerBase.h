@@ -4,6 +4,7 @@
 #include "RenderTypes.h"
 #include "HardwareVertexBuffer.h"
 #include "HardwareIndexBuffer.h"
+#include "HardwareBuffer.h"
 
 namespace SDK
 {
@@ -25,15 +26,24 @@ namespace SDK
 			reads and writes will be done to the shadow buffer, and the shadow buffer will
 			be synchronised with the real buffer at an appropriate time.
 			*/
-			// can simultaneously hold 4096  buffers with usage = Static
-			virtual VertexBufferHandle CreateVertexBuffer(uint i_num_verts, uint i_stride, BufferUsageFormat i_usage, const void* ip_initial_data = nullptr) = 0;
+			// can simultaneously hold 4096  buffers with usage = Static			
+			virtual VertexBufferHandle CreateHardwareBuffer(uint i_buffer_size, 
+															BufferUsageFormat i_usage, 
+															const void* ip_initial_data = nullptr) = 0;
 			virtual void DestroyBuffer(VertexBufferHandle i_handle) = 0;
 			// can simultaneously hold 4096  buffers with usage = Static
-			virtual IndexBufferHandle CreateIndexBuffer(HardwareIndexBuffer::IndexType i_type, size_t i_num_indices, BufferUsageFormat i_usage, const void* ip_initial_data = nullptr) = 0;
+			virtual IndexBufferHandle CreateIndexBuffer(HardwareIndexBuffer::IndexType i_type, size_t i_num_indices, BufferUsageFormat i_usage, PrimitiveType i_primitive, const void* ip_initial_data = nullptr) = 0;
 			virtual void DestroyBuffer(IndexBufferHandle i_handle) = 0;
-			// for elements we can provide compose allocation strategy - FreList with malloc
-			virtual VertexLayoutHandle CreateElement(uint i_ver_size, VertexSemantic i_semantic, PrimitiveType i_primitive, ComponentType i_component, bool i_normalized) = 0;
-			virtual void DestroyBuffer(VertexLayoutHandle i_handle) = 0;
+			
+			virtual VertexLayoutHandle CreateLayout(
+				VertexBufferHandle i_source,
+				uint i_ver_size,
+				VertexSemantic i_semantic,
+				ComponentType i_component,
+				bool i_normalized,
+				uint i_stride,
+				uint i_offset) = 0;
+			virtual void DestroyLayout(VertexLayoutHandle i_layout) = 0;
 		};
 	}
 

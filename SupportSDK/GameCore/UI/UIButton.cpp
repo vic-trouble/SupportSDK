@@ -59,9 +59,9 @@ namespace SDK
 			};
 			// TODO: can optimize allocations?
 			auto p_mgr = Core::GetRenderer()->GetHardwareBufferMgr();
-			m_batch.vertices = p_mgr->CreateVertexBuffer(sizeof(verts) / sizeof(float), sizeof(float) * 2, Render::BufferUsageFormat::Static, verts);
-			m_batch.indices = p_mgr->CreateIndexBuffer(Render::HardwareIndexBuffer::IndexType::Byte, sizeof(inds) / sizeof(ubyte), Render::BufferUsageFormat::Static, inds);
-			m_batch.element = p_mgr->CreateElement(2, Render::VertexSemantic::Position, Render::PrimitiveType::Triangles, Render::ComponentType::Float, false);
+			m_batch.vertices = p_mgr->CreateHardwareBuffer(sizeof(verts) / sizeof(float), Render::BufferUsageFormat::Static, verts);			
+			m_batch.indices = p_mgr->CreateIndexBuffer(Render::HardwareIndexBuffer::IndexType::Byte, sizeof(inds) / sizeof(ubyte), Render::BufferUsageFormat::Static, Render::PrimitiveType::Triangles, inds);
+			m_batch.element = p_mgr->CreateLayout(m_batch.vertices, 2, Render::VertexSemantic::Position, Render::ComponentType::Float, false, 0, 0);
 		}
 		
 		void UIButton::MouseMoved(MessageDispatcher& o_ui_dispatcher, const MouseEvent& i_evt)

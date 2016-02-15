@@ -18,6 +18,7 @@ namespace SDK
 			};
 			size_t m_size_in_bytes;
 			BufferUsageFormat m_usage;
+			PrimitiveType m_primitive;
 			IndexType m_index_type;
 			uint m_hardware_id;
 			// number of vertices in array

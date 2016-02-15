@@ -148,7 +148,7 @@ namespace SDK
 					}
 					
 					auto p_mgr = Core::GetRenderer()->GetHardwareBufferMgr();
-					auto ver_buf = p_mgr->CreateVertexBuffer(vertices.size(), sizeof(float), i_info.m_ver_usage, &vertices[0]);
+					auto hardware_buf = p_mgr->CreateHardwareBuffer(vertices.size(), i_info.m_ind_usage, &vertices[0]);
 					HardwareIndexBuffer::IndexType ind_type = HardwareIndexBuffer::IndexType::Int;
 					/*
 					TODO: correct determination of vertex types
@@ -156,10 +156,10 @@ namespace SDK
 					ind_type = HardwareIndexBuffer::IndexType::Short;
 					else if(indices.size() < 255)
 					ind_type = HardwareIndexBuffer::IndexType::Byte;*/
-					auto ind_buf = p_mgr->CreateIndexBuffer(ind_type, indices.size(), i_info.m_ind_usage, &indices[0]);
-					auto ver_layout = p_mgr->CreateElement(3, Render::VertexSemantic::Position, Render::PrimitiveType::Triangles, Render::ComponentType::Float, false);
+					auto ind_buf = p_mgr->CreateIndexBuffer(ind_type, indices.size(), i_info.m_ind_usage, Render::PrimitiveType::Triangles, &indices[0]);
+					auto ver_layout = p_mgr->CreateLayout(hardware_buf, 3, Render::VertexSemantic::Position, Render::ComponentType::Float, false, 0, 0);
 
-					return std::make_pair(LoadResult::Success, Mesh(ver_buf, ind_buf, ver_layout));
+					return std::make_pair(LoadResult::Success, Mesh(hardware_buf, ind_buf, ver_layout));
 				}
 
 				// TODO: need some limitations on size of loaded meshes?
@@ -213,7 +213,7 @@ namespace SDK
 					auto p_mgr = Core::GetRenderer()->GetHardwareBufferMgr();
 					Render::Mesh& mesh = meshes[i_handle];
 					p_mgr->DestroyBuffer(mesh.GetVertices());
-					p_mgr->DestroyBuffer(mesh.GetLayout());
+					p_mgr->DestroyLayout(mesh.GetLayout());
 					p_mgr->DestroyBuffer(mesh.GetIndices());
 				}
 

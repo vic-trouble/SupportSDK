@@ -14,7 +14,7 @@ namespace SDK
 	namespace Render
 	{
 
-		Render::VertexBufferHandle HardwareBufferManager::CreateVertexBuffer(uint i_num_verts, uint i_stride, BufferUsageFormat i_usage, const void* ip_initial_data /*= nullptr*/)
+		/*Render::VertexBufferHandle HardwareBufferManager::CreateVertexBuffer(uint i_num_verts, uint i_stride, BufferUsageFormat i_usage, const void* ip_initial_data /*= nullptr* /)
 		{
 			if (i_usage != BufferUsageFormat::Static)
 				return VertexBufferHandle();
@@ -40,7 +40,6 @@ namespace SDK
 
 			buffer.m_usage = i_usage;
 			buffer.m_num_vertices = i_num_verts;
-			buffer.m_stride = i_stride;
 
 			// create buffer
 			glGenBuffers(1, &id);
@@ -56,6 +55,48 @@ namespace SDK
 			CHECK_GL_ERRORS;
 
 			m_static_vertices.m_current_index = cur_index + 1;
+			return handle;
+		}*/
+		
+		VertexBufferHandle HardwareBufferManager::CreateHardwareBuffer(uint i_buffer_size,
+			BufferUsageFormat i_usage,
+			const void* ip_initial_data /*= nullptr*/)
+		{
+			if (i_usage != BufferUsageFormat::Static)
+				return VertexBufferHandle();
+
+			auto cur_index = m_static_vertices.m_current_index;
+
+			// if maximum we can hold
+			if (cur_index == VertexBuffers::Size)
+			{
+				// if first buffer is not empty - we cannot hold one more allocation
+				// TODO: user should be notified about error
+				if (m_static_vertices.m_buffer[0].m_hardware_id != 0)
+				{
+					assert(false && "More static vertex buffers than can hold");
+				}
+				// if not - all is good and move further just flush index
+				cur_index = 0;
+			}
+
+			auto handle = m_static_vertices.m_handlers[cur_index];
+			auto& buffer = m_static_vertices.m_buffer[cur_index];
+			auto& id = buffer.m_hardware_id;
+			buffer.m_usage = i_usage;
+			buffer.m_size_in_bytes = i_buffer_size;
+
+			// create buffer
+			glGenBuffers(1, &id);
+			CHECK_GL_ERRORS;
+
+			glBindBuffer(GL_ARRAY_BUFFER, id);
+			CHECK_GL_ERRORS;
+			glBufferData(GL_ARRAY_BUFFER, i_buffer_size, ip_initial_data, GL_STATIC_DRAW);
+			CHECK_GL_ERRORS;
+
+			m_static_vertices.m_current_index = cur_index + 1;
+			
 			return handle;
 		}
 
@@ -78,7 +119,7 @@ namespace SDK
 			++m_static_vertices.m_handlers[cur_index].generation;
 		}
 
-		IndexBufferHandle HardwareBufferManager::CreateIndexBuffer(HardwareIndexBuffer::IndexType i_type, size_t i_num_indices, BufferUsageFormat i_usage, const void* ip_initial_data /*= nullptr*/)
+		IndexBufferHandle HardwareBufferManager::CreateIndexBuffer(HardwareIndexBuffer::IndexType i_type, size_t i_num_indices, BufferUsageFormat i_usage, PrimitiveType i_primitive, const void* ip_initial_data /*= nullptr*/)
 		{
 			if (i_usage != BufferUsageFormat::Static)
 				return IndexBufferHandle();
@@ -100,11 +141,11 @@ namespace SDK
 
 			auto handle = m_static_indices.m_handlers[cur_index];
 			auto& buffer = m_static_indices.m_buffer[cur_index];
-			auto& id = buffer.m_hardware_id;
-
+			auto& id = buffer.m_hardware_id;			
 			buffer.m_num_indices = i_num_indices;
 			buffer.m_index_type = i_type;
 			buffer.m_usage = i_usage;
+			buffer.m_primitive = i_primitive;
 
 			// create buffer
 			glGenBuffers(1, &id);
@@ -152,7 +193,7 @@ namespace SDK
 			if (i_handle.index < VertexBuffers::Size && m_static_vertices.m_buffer[i_handle.index].m_usage == BufferUsageFormat::Static)
 				return m_static_vertices.m_buffer[i_handle.index];
 
-			return HardwareVertexBuffer{ 0, BufferUsageFormat::Static, 0, 0, 0 };
+			return HardwareVertexBuffer{ 0, BufferUsageFormat::Static, 0 };
 		}
 
 		HardwareIndexBuffer HardwareBufferManager::AccessIndexBuffer(IndexBufferHandle i_handle) const
@@ -166,9 +207,9 @@ namespace SDK
 			return hib;
 		}
 
-		VertexLayout HardwareBufferManager::AccessElement(VertexLayoutHandle i_handle) const
+		VertexLayout HardwareBufferManager::AccessLayout(VertexLayoutHandle i_handle) const
 		{
-			if (i_handle.index < VertexLayoutBuffers::Size && m_static_indices.m_buffer[i_handle.index].m_usage == BufferUsageFormat::Static)
+			if (i_handle.index < VertexLayoutBuffers::Size)
 				return m_static_elements.m_buffer[i_handle.index];
 
 			VertexLayout vl;
@@ -178,8 +219,18 @@ namespace SDK
 
 		/////////////////////////////////////////////////////////////////////////////////////
 
-		VertexLayoutHandle HardwareBufferManager::CreateElement(uint i_ver_size, VertexSemantic i_semantic, PrimitiveType i_primitive, ComponentType i_component, bool i_normalized)
+		VertexLayoutHandle HardwareBufferManager::CreateLayout(
+			VertexBufferHandle i_source,
+			uint i_ver_size,
+			VertexSemantic i_semantic,
+			ComponentType i_component,
+			bool i_normalized,
+			uint i_stride,
+			uint i_offset)
 		{
+			if (i_source.index >= VertexBuffers::Size || m_static_vertices.m_buffer[i_source.index].m_usage != BufferUsageFormat::Static)
+				return VertexLayoutHandle{ 0, 0 };
+
 			auto cur_index = m_static_elements.m_current_index;
 
 			// if maximum we can hold
@@ -188,7 +239,7 @@ namespace SDK
 				// if first buffer is not empty - we cannot hold one more allocation
 				// TODO: user should be notified about error
 				// TODO: definition of error - not as compare with enum value
-				if (m_static_elements.m_buffer[0].m_semantic != VertexSemantic::Count)
+				if (m_static_elements.m_buffer[0].m_vertex_size != 0)
 				{
 					assert(false && "More static elements than can hold");
 				}
@@ -197,35 +248,34 @@ namespace SDK
 			}
 
 			auto handle = m_static_elements.m_handlers[cur_index];
-			auto& buffer = m_static_elements.m_buffer[cur_index];
+			auto& layout = m_static_elements.m_buffer[cur_index];
 
-			buffer.m_vertex_size = i_ver_size;
-			buffer.m_semantic = i_semantic;
-			buffer.m_primitive = i_primitive;
-			buffer.m_component = i_component;
-			buffer.m_normalized = i_normalized;
-			buffer.m_stride = 0;
-			buffer.m_offset = 0;
+			layout.m_source = i_source.index;
+			layout.m_vertex_size = i_ver_size;
+			layout.m_semantic = i_semantic;
+			layout.m_component = i_component;
+			layout.m_normalized = i_normalized;
+			layout.m_stride = i_stride;
+			layout.m_offset = i_offset;
 
-			// create element
-			
 			m_static_elements.m_current_index = cur_index + 1;
 			return handle;
 		}
 
-		void HardwareBufferManager::DestroyBuffer(VertexLayoutHandle i_handle)
+		void HardwareBufferManager::DestroyLayout(VertexLayoutHandle i_layout)
 		{
-			auto cur_index = i_handle.index;
+			auto cur_index = i_layout.index;
 			assert(cur_index < VertexLayoutBuffers::Size);
 
 			auto& buffer = m_static_elements.m_buffer[cur_index];
 
 			// destroy buffer
-			buffer.m_semantic = VertexSemantic::Count;
+			buffer.m_vertex_size = 0;
 
 			// increment generation after destroying
 			++m_static_indices.m_handlers[cur_index].generation;
 		}
+
 
 	} // Render
 

@@ -38,29 +38,22 @@ namespace SDK
 		//static_assert(std::is_pod<VertexDeclaration>::value == true, "Draw must be a POD.");
 		struct Batch
 		{
-			VertexBufferHandle		vertices;
+			constexpr static int MAX_STREAMS_COUNT = 5;
+			VertexBufferHandle		vertices;		
 			VertexLayoutHandle		element;
 			IndexBufferHandle		indices;
+
+			VertexBufferHandle		vertex_arrays[MAX_STREAMS_COUNT];
+			VertexLayoutHandle		elements[MAX_STREAMS_COUNT];
+
+			Batch()
+			{
+				for (auto& ver_array : vertex_arrays)
+				{
+					ver_array.index = -1;
+				}
+			}
 		};
-
-
-		//////////////////////////////////////////////////////////
-		// Common declarations
-
-		struct PosStaticBuffer
-		{
-			VertexBufferHandle handle;
-		};
-
-
-		template <>
-		uint DeclHelper<PosStaticBuffer>::ElementsSize = 1;
-
-		template <>
-		VertexLayout DeclHelper<PosStaticBuffer>::Elements[] =
-		{
-			{ 3, VertexSemantic::Position, ComponentType::Float, false, PrimitiveType::Points, sizeof(PosStaticBuffer), offsetof(PosStaticBuffer, handle) }
-		};		
 
 	} // Render
 

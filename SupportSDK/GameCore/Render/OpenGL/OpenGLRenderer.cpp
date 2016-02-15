@@ -301,13 +301,34 @@ namespace SDK
 		}
 	}
 
+	namespace GLDetails
+	{
+
+		void SetupShader(Render::ShaderHandler i_shader, Render::Batch i_batch, Render::HardwareBufferManager& i_mgr)
+		{
+			auto p_shader = Render::g_shader_system.Access(i_shader);
+			
+			for (int i = 0; i < i_batch.MAX_STREAMS_COUNT; ++i)
+			{
+				if (i_batch.vertex_arrays[i].index == -1)
+					break;
+
+				auto ver_buf = i_mgr.AccessVertexBuffer(i_batch.vertex_arrays[i]);
+				auto element = i_mgr.AccessLayout(i_batch.elements[i]);
+
+			}
+
+		}
+
+	} // GLDetails
+
 	/////////////////////////////////////////////////////////////////////////////
 
 	void OpenGLRenderer::Draw(Render::Batch i_batch)
 	{
 		auto ver_buf = m_hardware_buffer_mgr.AccessVertexBuffer(i_batch.vertices);
 		auto ind_buf = m_hardware_buffer_mgr.AccessIndexBuffer(i_batch.indices);
-		auto element = m_hardware_buffer_mgr.AccessElement(i_batch.element);
+		auto element = m_hardware_buffer_mgr.AccessLayout(i_batch.element);
 
 		if (ver_buf.m_hardware_id == 0 || ind_buf.m_hardware_id == 0 || element.m_vertex_size == 0)
 		{
@@ -320,12 +341,12 @@ namespace SDK
 		auto p_shader = Render::g_shader_system.Access(m_current_shader);
 		if (p_shader != nullptr)
 		{
-			auto mv_loc = p_shader->GetUniformLocation("mv");
+			/*auto mv_loc = p_shader->GetUniformLocation("mv");
 			auto proj_loc = p_shader->GetUniformLocation("proj");
 			pos_size = p_shader->GetUniformLocation("posSize");
 			glUniformMatrix4fv(proj_loc, 1, GL_FALSE, m_matrices[(int)MatrixMode::Projection][0]);
 			glUniformMatrix4fv(mv_loc, 1, GL_TRUE, m_matrices[(int)MatrixMode::ModelView][0]);
-			CHECK_GL_ERRORS;
+			CHECK_GL_ERRORS;*/
 		}
 
 		glVertexAttribPointer(pos_size, // index for shader attribute

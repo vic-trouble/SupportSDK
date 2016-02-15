@@ -32,15 +32,24 @@ namespace SDK
 					be synchronised with the real buffer at an appropriate time.
 			*/
 			// can simultaneously hold 4096  buffers with usage = Static
-			virtual VertexBufferHandle CreateVertexBuffer(uint i_num_verts, uint i_stride, BufferUsageFormat i_usage, const void* ip_initial_data = nullptr) override;
+			//virtual VertexBufferHandle CreateVertexBuffer(uint i_num_verts, uint i_stride, BufferUsageFormat i_usage, const void* ip_initial_data = nullptr) override;
+			virtual VertexBufferHandle CreateHardwareBuffer(uint i_buffer_size,
+															BufferUsageFormat i_usage,
+															const void* ip_initial_data = nullptr);
 			virtual void DestroyBuffer(VertexBufferHandle i_handle) override;
 			// can simultaneously hold 4096  buffers with usage = Static
-			virtual IndexBufferHandle CreateIndexBuffer(HardwareIndexBuffer::IndexType i_type, size_t i_num_indices, BufferUsageFormat i_usage, const void* ip_initial_data = nullptr) override;
+			virtual IndexBufferHandle CreateIndexBuffer(HardwareIndexBuffer::IndexType i_type, size_t i_num_indices, BufferUsageFormat i_usage, PrimitiveType i_primitive, const void* ip_initial_data = nullptr) override;
 			virtual void DestroyBuffer(IndexBufferHandle i_handle) override;
 
-			// for elements we can provide compose allocation strategy - FreList with malloc
-			virtual VertexLayoutHandle CreateElement(uint i_ver_size, VertexSemantic i_semantic, PrimitiveType i_primitive, ComponentType i_component, bool i_normalized) override;
-			virtual void DestroyBuffer(VertexLayoutHandle i_handle) override;
+			virtual VertexLayoutHandle CreateLayout(
+				VertexBufferHandle i_source,
+				uint i_ver_size,
+				VertexSemantic i_semantic,
+				ComponentType i_component,
+				bool i_normalized,
+				uint i_stride,
+				uint i_offset) override;
+			virtual void DestroyLayout(VertexLayoutHandle i_layout) override;
 
 			////////////////////////////////////////////////////////////////////////////////////
 			// Part that available to render backent - OpenGL, DirectX, other
@@ -48,7 +57,7 @@ namespace SDK
 			// TODO: should return some struct or ? - not all information about ver./ind. buffer
 			HardwareVertexBuffer AccessVertexBuffer(VertexBufferHandle i_handle) const;
 			HardwareIndexBuffer AccessIndexBuffer(IndexBufferHandle i_handle) const;
-			VertexLayout AccessElement(VertexLayoutHandle i_handle) const;
+			VertexLayout AccessLayout(VertexLayoutHandle i_handle) const;
 
 			// use for other buffers - colors/uvs/deepth...
 			/*typedef int BufHandle;

@@ -163,9 +163,9 @@ namespace Game
 		};
 
 		// 1st
-		batch[0].vertices = p_mgr->CreateVertexBuffer(sizeof(verts)/sizeof(float), sizeof(float) * 3, Render::BufferUsageFormat::Static, verts);
-		batch[0].indices = p_mgr->CreateIndexBuffer(Render::HardwareIndexBuffer::IndexType::Int, sizeof(inds) / sizeof(uint), Render::BufferUsageFormat::Static, inds);
-		batch[0].element = p_mgr->CreateElement(3, Render::VertexSemantic::Position, Render::PrimitiveType::Triangles, Render::ComponentType::Float, false);
+		batch[0].vertices = p_mgr->CreateHardwareBuffer(sizeof(verts) / sizeof(float), Render::BufferUsageFormat::Static, verts);
+		batch[0].indices = p_mgr->CreateIndexBuffer(Render::HardwareIndexBuffer::IndexType::Int, sizeof(inds) / sizeof(uint), Render::BufferUsageFormat::Static, Render::PrimitiveType::Triangles, inds);
+		batch[0].element = p_mgr->CreateLayout(batch[0].vertices, 3, Render::VertexSemantic::Position, Render::ComponentType::Float, false, 0, 0);
 	}	
 
 	GLUquadricObj* quadricId;
@@ -625,11 +625,10 @@ namespace Game
 				3, 0, 2
 			};
 
-			auto p_mgr = p_renderer->GetHardwareBufferMgr();
-			batch.vertices = p_mgr->CreateVertexBuffer(sizeof(verts) / sizeof(float), sizeof(float) * 2, Render::BufferUsageFormat::Static, verts);
-			batch.indices = p_mgr->CreateIndexBuffer(Render::HardwareIndexBuffer::IndexType::Int, sizeof(inds) / sizeof(uint), Render::BufferUsageFormat::Static, inds);
-			batch.element = p_mgr->CreateElement(2, Render::VertexSemantic::Position, Render::PrimitiveType::Triangles, Render::ComponentType::Float, false);
-
+			auto p_mgr = p_renderer->GetHardwareBufferMgr();			
+			batch.vertices = p_mgr->CreateHardwareBuffer(sizeof(verts) / sizeof(float), Render::BufferUsageFormat::Static, verts);
+			batch.indices = p_mgr->CreateIndexBuffer(Render::HardwareIndexBuffer::IndexType::Int, sizeof(inds) / sizeof(uint), Render::BufferUsageFormat::Static, Render::PrimitiveType::Triangles, inds);
+			batch.element = p_mgr->CreateLayout(batch.vertices, 3, Render::VertexSemantic::Position, Render::ComponentType::Float, false, 0, 0);
 			once = false;
 		}
 

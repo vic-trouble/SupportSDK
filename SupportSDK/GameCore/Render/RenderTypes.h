@@ -113,7 +113,7 @@ namespace SDK
 		struct VertexLayout
 		{
 			/// The source vertex buffer, as bound to an index using VertexBufferBinding
-			//unsigned short	m_source;
+			int	m_source;
 			// 1, 2, 3 or 4
 			uint			m_vertex_size;
 			/// The meaning of the element
@@ -125,6 +125,8 @@ namespace SDK
 			uint			m_stride;
 			/// Offset of field in input data
 			uint			m_offset;
+
+			//VertexLayout(uint i_ver_size, )
 		};
 		static_assert(std::is_pod<VertexLayout>::value == true, "VertexLayout must be a POD.");
 		///////////////////////////////////////////////////////////////

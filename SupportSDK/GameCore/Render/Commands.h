@@ -69,6 +69,20 @@ namespace SDK
 				mutable bool m_was_enabled;
 			};
 			static_assert(std::is_pod<SetLights>::value == true, "SetLights must be a POD.");
+
+			struct SetShaderUniforms
+			{
+				//IMPLEMENT_COMMAND_EXPORT(SetParameters);
+
+				ShaderHandler m_shader;
+				enum Parameters
+				{
+					ModelView,
+					Projection,
+
+				};
+			};
+			static_assert(std::is_pod<SetLights>::value == true, "SetLights must be a POD.");
 		} // Commands
 	} // Render
 } // SDK

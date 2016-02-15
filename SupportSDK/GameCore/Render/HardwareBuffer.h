@@ -12,8 +12,12 @@ namespace SDK
 		class HardwareBuffer
 		{
 		protected:
-			size_t m_size_in_bytes;
+			uint m_size_in_bytes;
 			BufferUsageFormat m_usage;
+			uint m_hardware_id;
+			// number of vertices in array
+			uint m_num_vertices;
+			uint m_stride;
 
 		};
 

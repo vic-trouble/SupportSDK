@@ -47,9 +47,9 @@ namespace Game
 		auto p_renderer = Core::GetRenderer();
 		auto p_mgr = p_renderer->GetHardwareBufferMgr();
 		// 1st
-		batch[0].vertices = p_mgr->CreateVertexBuffer(4, sizeof(float) * 3, Render::BufferUsageFormat::Static, g_vertex_buffer_data);
-		batch[0].indices = p_mgr->CreateIndexBuffer(Render::HardwareIndexBuffer::IndexType::Int, 6, Render::BufferUsageFormat::Static, cubeIndices);
-		batch[0].element = p_mgr->CreateElement(3, Render::VertexSemantic::Position, Render::PrimitiveType::Triangles, Render::ComponentType::Float, false);
+		batch[0].vertices = p_mgr->CreateHardwareBuffer(4, Render::BufferUsageFormat::Static, g_vertex_buffer_data);
+		batch[0].indices = p_mgr->CreateIndexBuffer(Render::HardwareIndexBuffer::IndexType::Int, 6, Render::BufferUsageFormat::Static, Render::PrimitiveType::Triangles, cubeIndices);
+		batch[0].element = p_mgr->CreateLayout(batch[0].vertices, 3, Render::VertexSemantic::Position, Render::ComponentType::Float, false, 0, 0);
 
 		{
 			constexpr static float i_center[] = { 0, 0 };
@@ -66,10 +66,10 @@ namespace Game
 				3, 0, 2
 			};
 			// TODO: can optimize allocations?
-			auto p_mgr = Core::GetRenderer()->GetHardwareBufferMgr();
-			batch[1].vertices = p_mgr->CreateVertexBuffer(sizeof(verts) / sizeof(float), sizeof(float) * 2, Render::BufferUsageFormat::Static, verts);
-			batch[1].indices = p_mgr->CreateIndexBuffer(Render::HardwareIndexBuffer::IndexType::Byte, sizeof(inds) / sizeof(ubyte), Render::BufferUsageFormat::Static, inds);
-			batch[1].element = p_mgr->CreateElement(2, Render::VertexSemantic::Position, Render::PrimitiveType::Triangles, Render::ComponentType::Float, false);			
+			auto p_mgr = Core::GetRenderer()->GetHardwareBufferMgr();			
+			batch[1].vertices = p_mgr->CreateHardwareBuffer(sizeof(verts) / sizeof(float), Render::BufferUsageFormat::Static, verts);
+			batch[1].indices = p_mgr->CreateIndexBuffer(Render::HardwareIndexBuffer::IndexType::Byte, sizeof(inds) / sizeof(ubyte), Render::BufferUsageFormat::Static, Render::PrimitiveType::Triangles, inds);
+			batch[1].element = p_mgr->CreateLayout(batch[1].vertices, 2, Render::VertexSemantic::Position, Render::ComponentType::Float, false, sizeof(float) * 2, 0);
 		}		
 	}
 
