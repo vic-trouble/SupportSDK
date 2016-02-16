@@ -314,8 +314,8 @@ namespace SDK
 			const auto& attributes = i_shader.GetAttributes();
 			for (const auto& attr : attributes)
 			{
-				//if (attr.element_semantic != element.m_semantic)
-				//	continue;
+				if (attr.element_semantic != element.m_semantic)
+					continue;
 				glVertexAttribPointer(attr.location, // index for shader attribute
 					element.m_vertex_size, // size
 					GetComponentType(element.m_component), // type
@@ -353,6 +353,23 @@ namespace SDK
 			glDisableVertexAttribArray(0);
 		}
 
+		void SetupKnownUniforms(const Render::Shader& i_shader, Matrix4f& i_mv, Matrix4f& i_proj)
+		{
+			const auto& uniforms = i_shader.GetUniforms();
+			for (const auto& uni : uniforms)
+			{
+				switch (uni.uniform_type)
+				{
+					case Render::UniformType::ModelviewMatrix:
+						glUniformMatrix4fv(uni.location, 1, GL_TRUE, i_mv[0]);
+						break;
+					case Render::UniformType::ProjectionMatrix:
+						glUniformMatrix4fv(uni.location, 1, GL_FALSE, i_proj[0]);
+						break;
+				}
+			}
+		}
+
 	} // GLDetails
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -368,17 +385,6 @@ namespace SDK
 			assert(false && "Invalid parameters. Have buffers been created?");
 			return;
 		}
-		
-		auto p_shader = Render::g_shader_system.Access(m_current_shader);
-		if (p_shader != nullptr)
-		{
-			auto mv_loc = p_shader->GetUniform("mv");
-			auto proj_loc = p_shader->GetUniform("proj");
-			glUniformMatrix4fv(proj_loc.location, 1, GL_FALSE, m_matrices[(int)MatrixMode::Projection][0]);
-			glUniformMatrix4fv(mv_loc.location, 1, GL_TRUE, m_matrices[(int)MatrixMode::ModelView][0]);
-			CHECK_GL_ERRORS;
-		}
-
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ind_buf.m_hardware_id);
 		glDrawElements(GetPrimitiveType(ind_buf.m_primitive), ind_buf.m_num_indices, GetIndexType(ind_buf.m_index_type), 0);
@@ -471,6 +477,7 @@ namespace SDK
 		CHECK_GL_ERRORS;
 
 		GLDetails::SetupShaderAttributes(*p_shader, i_layouts, m_hardware_buffer_mgr);
+		GLDetails::SetupKnownUniforms(*p_shader, m_matrices[(int)MatrixMode::ModelView], m_matrices[(int)MatrixMode::Projection]);
 	}
 
 	void OpenGLRenderer::UnbindShader()

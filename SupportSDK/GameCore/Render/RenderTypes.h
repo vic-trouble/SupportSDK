@@ -103,13 +103,22 @@ namespace SDK
 			BlendWeights,
 			BlendIndices,
 			Normal,
-			Diffuse5,
+			Diffuse,
 			Specular,
+			Ambient,
 			TextureCoordinates,
 			Binomial,
 			Tangent,
 
 			Count
+		};
+
+		enum class UniformType
+		{
+			ProjectionMatrix,
+			ModelviewMatrix,
+
+			Dynamic
 		};
 
 		struct VertexLayout

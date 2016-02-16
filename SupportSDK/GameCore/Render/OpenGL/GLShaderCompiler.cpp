@@ -110,6 +110,26 @@ namespace SDK
 				return program_id;
 			}
 
+			VertexSemantic DetectSemantic(const std::string& i_attr_name)
+			{
+				if (i_attr_name == "pos" || i_attr_name == "position")
+					return VertexSemantic::Position;
+				if (i_attr_name == "uv")
+					return VertexSemantic::TextureCoordinates;
+				if (i_attr_name == "normal")
+					return VertexSemantic::Normal;
+				if (i_attr_name == "color")
+					return VertexSemantic::Color;
+				if (i_attr_name == "diffuse")
+					return VertexSemantic::Diffuse;
+				if (i_attr_name == "specular")
+					return VertexSemantic::Specular;
+				if (i_attr_name == "ambient")
+					return VertexSemantic::Ambient;
+
+				return VertexSemantic::Dynamic;
+			}
+
 			void FetchAttributes(Shader& o_shader, GLuint i_program)
 			{
 				constexpr static GLenum properties[] = { GL_NAME_LENGTH, GL_LOCATION, GL_TYPE };
@@ -133,9 +153,23 @@ namespace SDK
 					glGetProgramResourceName(i_program, GL_PROGRAM_INPUT, unif, name_data.size(), NULL, &name_data[0]);
 					// in case of structures uniforms can contain not needed symbols
 					std::string real_name(name_data);
-					real_name = real_name.substr(0, real_name.find_first_of("[]", 0, 1));
-					o_shader.AddAttribute(real_name, values[1], values[2], VertexSemantic::Dynamic);
+					real_name = real_name.substr(0, real_name.size() - 1);
+					o_shader.AddAttribute(real_name, values[1], values[2], DetectSemantic(real_name));
 				}
+			}
+
+			constexpr static char* names[] = {
+				""
+			};
+
+			UniformType DetectUniform(const std::string& i_uni_name)
+			{
+				if (i_uni_name == "projection_matrix" || i_uni_name == "proj_m")
+					return UniformType::ProjectionMatrix;
+				if (i_uni_name == "modelview_matrix" || i_uni_name == "mv_m")
+					return UniformType::ModelviewMatrix;
+
+				return UniformType::Dynamic;
 			}
 
 			void FetchUniforms(Shader& o_shader, GLuint i_program)
@@ -165,8 +199,8 @@ namespace SDK
 					glGetProgramResourceName(i_program, GL_UNIFORM, unif, name_data.size(), NULL, &name_data[0]);
 					// in case of structures uniforms can contain not needed symbols
 					std::string real_name(name_data);
-					real_name = real_name.substr(0, real_name.find_first_of("[]", 0, 1));
-					o_shader.AddUniform(real_name, values[2], values[3], VertexSemantic::Dynamic);
+					real_name = real_name.substr(0, real_name.size() - 1);
+					o_shader.AddUniform(real_name, values[2], values[3], DetectUniform(real_name));
 				}
 			}
 
