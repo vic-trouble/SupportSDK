@@ -5,6 +5,10 @@
 #include "GlUitlities.h"
 
 #include "Render/Shader.h"
+#include "Render/irenderer.h"
+#include "Render/HardwareBufferManagerBase.h"
+
+#include "Core.h"
 
 #include <GL/glew.h>
 #include <GL/GL.h>
@@ -127,7 +131,10 @@ namespace SDK
 					CHECK_GL_ERRORS;
 					name_data.resize(values[0]);
 					glGetProgramResourceName(i_program, GL_PROGRAM_INPUT, unif, name_data.size(), NULL, &name_data[0]);
-					o_shader.AddUniform(name_data, values[1], values[2]);
+					// in case of structures uniforms can contain not needed symbols
+					std::string real_name(name_data);
+					real_name = real_name.substr(0, real_name.find_first_of("[]", 0, 1));
+					o_shader.AddAttribute(real_name, values[1], values[2], VertexSemantic::Dynamic);
 				}
 			}
 
@@ -156,7 +163,10 @@ namespace SDK
 
 					name_data.resize(values[1]);
 					glGetProgramResourceName(i_program, GL_UNIFORM, unif, name_data.size(), NULL, &name_data[0]);
-					o_shader.AddUniform(name_data, values[2], values[3]);
+					// in case of structures uniforms can contain not needed symbols
+					std::string real_name(name_data);
+					real_name = real_name.substr(0, real_name.find_first_of("[]", 0, 1));
+					o_shader.AddUniform(real_name, values[2], values[3], VertexSemantic::Dynamic);
 				}
 			}
 

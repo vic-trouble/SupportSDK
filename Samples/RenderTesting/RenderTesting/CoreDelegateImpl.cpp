@@ -51,16 +51,16 @@ namespace Game
 		auto mesh_handler = Render::g_mesh_system.CreateInstance(loaded_mesh);
 		auto trans_handler = g_transforms_system.CreateInstance();
 		auto p_transform = g_transforms_system.GetInstance(trans_handler);
-		p_transform->m_position[0] = 1.f;
-		p_transform->m_position[1] = -1.5f;
-		p_transform->m_position[2] = -2.5f;
+		p_transform->m_position[0] = 1.5f;
+		p_transform->m_position[1] = 1.5f;
+		p_transform->m_position[2] = -5.5f;
 
 		entity_handler = g_entity_manager.CreateEntity();
 		g_entity_manager.AddComponent<Render::MeshComponent>(entity_handler, mesh_handler);
 		g_entity_manager.AddComponent<Transform>(entity_handler, trans_handler);
 
 		// test getting of entity and component
-		auto entity = g_entity_manager.GetEntity(entity_handler);		
+		auto entity = g_entity_manager.GetEntity(entity_handler);
 		shader_handler = Render::g_shader_system.Load("SimpleShader",
 			{ { Render::Shader::Vertex, "..\\..\\Resources\\Shaders\\Sample.vertexshader" },
 			{ Render::Shader::Fragment, "..\\..\\Resources\\Shaders\\Sample.fragmentshader" }

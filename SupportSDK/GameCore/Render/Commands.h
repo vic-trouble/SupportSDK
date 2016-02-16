@@ -70,19 +70,35 @@ namespace SDK
 			};
 			static_assert(std::is_pod<SetLights>::value == true, "SetLights must be a POD.");
 
-			struct SetShaderUniforms
+			namespace SetupShaderDetails
 			{
-				//IMPLEMENT_COMMAND_EXPORT(SetParameters);
-
-				ShaderHandler m_shader;
-				enum Parameters
+				void BindShader(ShaderHandler i_shader, VertexLayoutHandle i_layout);
+				void UnbindShader();
+			} // SetupShaderDetails
+			template <size_t layouts_count>
+			struct SetupShader
+			{
+				static void Bind(const void* ip_data)
 				{
-					ModelView,
-					Projection,
-
-				};
+					const SetupShader<layouts_count>* cmd = reinterpret_cast<const SetupShader<layouts_count>*>(ip_data);
+					SetupShaderDetails::BindShader(cmd->m_shader, cmd->m_layouts[0]);
+				}
+				static void Unbind(const void*)
+				{
+					SetupShaderDetails::UnbindShader();
+				}
+				void SetDefaultValues()
+				{
+					m_shader.index = -1;
+				}
+				IMPLEMENT_COMMAND_IMPL(Bind, Unbind);
+				
+				ShaderHandler m_shader;
+				std::array<VertexLayoutHandle, layouts_count> m_layouts;
 			};
-			static_assert(std::is_pod<SetLights>::value == true, "SetLights must be a POD.");
+			
+			static_assert(std::is_pod<SetupShader<1>>::value == true, "SetupShader must be a POD.");
+
 		} // Commands
 	} // Render
 } // SDK

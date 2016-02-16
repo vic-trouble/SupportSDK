@@ -20,6 +20,7 @@
 #include <time.h>
 #include <assert.h>
 #include <functional>
+#include <array>
 
 // From SDK
 

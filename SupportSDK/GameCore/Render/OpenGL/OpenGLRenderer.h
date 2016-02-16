@@ -64,8 +64,8 @@ namespace SDK
 		virtual Render::ShaderCompiler* GetShaderCompiler() override { return &m_shader_compiler; }
 		virtual Render::LightsController* GetLightsController() override { return &m_lights_controller; }
 
-		virtual void UseShader(Render::ShaderHandler i_shader) override;
-
+		virtual void Bind(Render::ShaderHandler, Render::VertexLayoutHandle i_layouts) override;
+		virtual void UnbindShader() override;
 		////////////////////////////////////////////////////////////////////
 		// TODO: is it still needed
 

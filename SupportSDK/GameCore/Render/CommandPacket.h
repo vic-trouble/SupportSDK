@@ -22,6 +22,7 @@ namespace SDK
 				CommandExecutor m_executor;
 				CommandExecutor m_completion;
 				CommandHandler m_next;
+				bool m_has_parent;
 				bool m_executed;
 
 				CommandPacket(const CommandPacket&) = delete;
@@ -32,6 +33,7 @@ namespace SDK
 					, m_data_size(0)
 					, m_executed(false)
 					, m_next(-1)
+					, m_has_parent(false)
 				{}
 
 				CommandPacket(CommandPacket&& i_other)
@@ -41,6 +43,7 @@ namespace SDK
 					, m_executed(i_other.m_executed)
 					, m_completion(i_other.m_completion)
 					, m_next(i_other.m_next)
+					, m_has_parent(i_other.m_has_parent)
 				{
 					i_other.mp_data = nullptr;
 					i_other.m_data_size = 0;

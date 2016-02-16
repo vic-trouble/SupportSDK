@@ -97,15 +97,17 @@ namespace SDK
 
 		enum class VertexSemantic : char
 		{
-			Position = 1,
-			BlendWeights = 2,
-			BlendIndices = 3,
-			Normal = 4,
-			Diffuse = 5,
-			Specular = 6,
-			TextureCoordinates = 7,
-			Binomial = 8,
-			Tangent = 9,
+			Dynamic = 0,
+			Position,
+			Color,
+			BlendWeights,
+			BlendIndices,
+			Normal,
+			Diffuse5,
+			Specular,
+			TextureCoordinates,
+			Binomial,
+			Tangent,
 
 			Count
 		};
@@ -121,7 +123,6 @@ namespace SDK
 			/// The type of element
 			ComponentType	m_component;
 			bool			m_normalized;
-			PrimitiveType	m_primitive;
 			uint			m_stride;
 			/// Offset of field in input data
 			uint			m_offset;

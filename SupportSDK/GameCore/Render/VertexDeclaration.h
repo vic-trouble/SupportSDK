@@ -42,17 +42,6 @@ namespace SDK
 			VertexBufferHandle		vertices;		
 			VertexLayoutHandle		element;
 			IndexBufferHandle		indices;
-
-			VertexBufferHandle		vertex_arrays[MAX_STREAMS_COUNT];
-			VertexLayoutHandle		elements[MAX_STREAMS_COUNT];
-
-			Batch()
-			{
-				for (auto& ver_array : vertex_arrays)
-				{
-					ver_array.index = -1;
-				}
-			}
 		};
 
 	} // Render

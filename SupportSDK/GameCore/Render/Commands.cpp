@@ -33,14 +33,10 @@ namespace SDK
 			{
 				auto p_renderer = Core::GetRenderer();
 				const Draw* cmd = reinterpret_cast<const Draw*>(ip_data);
-				Batch b;
-				b.vertices = cmd->vertices;
-				b.element = cmd->layout;
-				b.indices = cmd->indices;
-				
-				p_renderer->UseShader(cmd->program);
-				p_renderer->Draw(b);
-				p_renderer->UseShader({ -1, -1 });
+
+				// TODO: setup uniforms
+
+				p_renderer->Draw({cmd->vertices,cmd->layout,cmd->indices});
 			}
 
 			///////////////////////////////////////////////////////////////////////////
@@ -109,6 +105,22 @@ namespace SDK
 				m_was_enabled = false;
 				m_handle = INVALID_LIGHT_HANDLE;
 			}
+
+			///////////////////////////////////////////////////////////////////////////
+			// SetupShader
+
+			namespace SetupShaderDetails
+			{
+				void BindShader(ShaderHandler i_shader, VertexLayoutHandle i_layout)
+				{					
+					Core::GetRenderer()->Bind(i_shader, i_layout);
+				}
+
+				void UnbindShader()
+				{
+					Core::GetRenderer()->UnbindShader();
+				}
+			} // SetupShaderDetails
 
 		} // Commands
 	} // Render

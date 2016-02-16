@@ -304,20 +304,53 @@ namespace SDK
 	namespace GLDetails
 	{
 
-		void SetupShader(Render::ShaderHandler i_shader, Render::Batch i_batch, Render::HardwareBufferManager& i_mgr)
+		void SetupShaderAttributes(const Render::Shader& i_shader, Render::VertexLayoutHandle i_layout, Render::HardwareBufferManager& i_mgr)
 		{
-			auto p_shader = Render::g_shader_system.Access(i_shader);
+			auto element = i_mgr.AccessLayout(i_layout);
+			auto ver_buf = i_mgr.AccessVertexBuffer(Render::VertexBufferHandle{ static_cast<size_t>(element.m_source), 0 });
+
+			glBindBuffer(GL_ARRAY_BUFFER, ver_buf.m_hardware_id);
 			
-			for (int i = 0; i < i_batch.MAX_STREAMS_COUNT; ++i)
+			const auto& attributes = i_shader.GetAttributes();
+			for (const auto& attr : attributes)
 			{
-				if (i_batch.vertex_arrays[i].index == -1)
-					break;
-
-				auto ver_buf = i_mgr.AccessVertexBuffer(i_batch.vertex_arrays[i]);
-				auto element = i_mgr.AccessLayout(i_batch.elements[i]);
-
+				//if (attr.element_semantic != element.m_semantic)
+				//	continue;
+				glVertexAttribPointer(attr.location, // index for shader attribute
+					element.m_vertex_size, // size
+					GetComponentType(element.m_component), // type
+					element.m_normalized ? GL_TRUE : GL_FALSE, // normalized
+					element.m_stride, // stride
+					reinterpret_cast<GLvoid*>(element.m_offset)); // pointer
+				glEnableVertexAttribArray(attr.location);
 			}
+		}
 
+		void SetupDefaultAttributes(Render::VertexLayoutHandle i_layout, Render::HardwareBufferManager& i_mgr)
+		{
+			auto element = i_mgr.AccessLayout(i_layout);
+			auto ver_buf = i_mgr.AccessVertexBuffer(Render::VertexBufferHandle{ (size_t)element.m_source, 0 });
+			glBindBuffer(GL_ARRAY_BUFFER, ver_buf.m_hardware_id);
+			glVertexAttribPointer(0, // index for shader attribute
+				element.m_vertex_size, // size
+				GetComponentType(element.m_component), // type
+				element.m_normalized ? GL_TRUE : GL_FALSE, // normalized
+				element.m_stride, // stride
+				reinterpret_cast<GLvoid*>(element.m_offset)); // pointer
+			glEnableVertexAttribArray(0);
+		}
+		
+		void ClearShaderSetups(const Render::Shader& i_shader)
+		{
+			const auto& attributes = i_shader.GetAttributes();
+			for (const auto& attr : attributes)
+				glDisableVertexAttribArray(attr.location);
+			CHECK_GL_ERRORS;
+		}
+
+		void ClearDefaultSetups()
+		{
+			glDisableVertexAttribArray(0);
 		}
 
 	} // GLDetails
@@ -330,38 +363,26 @@ namespace SDK
 		auto ind_buf = m_hardware_buffer_mgr.AccessIndexBuffer(i_batch.indices);
 		auto element = m_hardware_buffer_mgr.AccessLayout(i_batch.element);
 
-		if (ver_buf.m_hardware_id == 0 || ind_buf.m_hardware_id == 0 || element.m_vertex_size == 0)
+		if (ind_buf.m_hardware_id == 0)
 		{
 			assert(false && "Invalid parameters. Have buffers been created?");
 			return;
 		}
-
-		glBindBuffer(GL_ARRAY_BUFFER, ver_buf.m_hardware_id);
-		auto pos_size = 0;
+		
 		auto p_shader = Render::g_shader_system.Access(m_current_shader);
 		if (p_shader != nullptr)
 		{
-			/*auto mv_loc = p_shader->GetUniformLocation("mv");
-			auto proj_loc = p_shader->GetUniformLocation("proj");
-			pos_size = p_shader->GetUniformLocation("posSize");
-			glUniformMatrix4fv(proj_loc, 1, GL_FALSE, m_matrices[(int)MatrixMode::Projection][0]);
-			glUniformMatrix4fv(mv_loc, 1, GL_TRUE, m_matrices[(int)MatrixMode::ModelView][0]);
-			CHECK_GL_ERRORS;*/
+			auto mv_loc = p_shader->GetUniform("mv");
+			auto proj_loc = p_shader->GetUniform("proj");
+			glUniformMatrix4fv(proj_loc.location, 1, GL_FALSE, m_matrices[(int)MatrixMode::Projection][0]);
+			glUniformMatrix4fv(mv_loc.location, 1, GL_TRUE, m_matrices[(int)MatrixMode::ModelView][0]);
+			CHECK_GL_ERRORS;
 		}
 
-		glVertexAttribPointer(pos_size, // index for shader attribute
-			element.m_vertex_size, // size
-			GetComponentType(element.m_component), // type
-			element.m_normalized ? GL_TRUE : GL_FALSE, // normalized
-			element.m_stride, // stride
-			0); // pointer
-		glEnableVertexAttribArray(pos_size);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ind_buf.m_hardware_id);
-		glDrawElements(GetPrimitiveType(element.m_primitive), ind_buf.m_num_indices, GetIndexType(ind_buf.m_index_type), 0);
+		glDrawElements(GetPrimitiveType(ind_buf.m_primitive), ind_buf.m_num_indices, GetIndexType(ind_buf.m_index_type), 0);
 		CHECK_GL_ERRORS;
-
-		glDisableVertexAttribArray(pos_size);
 	}
 
 	void OpenGLRenderer::SetMatrix(MatrixMode i_matrix_mode, const Matrix4f& i_matrix)
@@ -434,19 +455,34 @@ namespace SDK
 
 	/////////////////////////////////////////////////////////////////////////////
 
-	void OpenGLRenderer::UseShader(Render::ShaderHandler i_shader)
+	void OpenGLRenderer::Bind(Render::ShaderHandler i_shader, Render::VertexLayoutHandle i_layouts)
 	{
 		m_current_shader = i_shader;
 		auto p_shader = Render::g_shader_system.Access(i_shader);
 		// TODO: use standard shader?
 		if (p_shader == nullptr)
-		{		
+		{
+			GLDetails::SetupDefaultAttributes(i_layouts, m_hardware_buffer_mgr);
 			glUseProgram(0);
 			return;
-		}
-		
+		}			
+
 		glUseProgram(p_shader->GetId());
 		CHECK_GL_ERRORS;
+
+		GLDetails::SetupShaderAttributes(*p_shader, i_layouts, m_hardware_buffer_mgr);
+	}
+
+	void OpenGLRenderer::UnbindShader()
+	{
+		auto p_shader = Render::g_shader_system.Access(m_current_shader);
+		if (p_shader != nullptr)
+			GLDetails::ClearShaderSetups(*p_shader);
+		else
+			GLDetails::ClearDefaultSetups();
+
+		glUseProgram(0);		
+		m_current_shader.index = -1;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////

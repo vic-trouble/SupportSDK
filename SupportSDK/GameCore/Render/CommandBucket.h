@@ -64,13 +64,19 @@ namespace SDK
 					CommandPacket command = CreateImpl<ProcessorType>(i_aux_mem_size);
 					void* p_data = command.mp_data;
 					m_packets.push_back(std::move(command));
-					auto it = std::find_if(m_packets.begin(), m_packets.end(), [ip_command](const CommandPacket& cmd_packet)
+					if (ip_command != nullptr)
 					{
-						return cmd_packet.mp_data == ip_command;
-					});
-					// TODO: notify user about error
-					if (it != m_packets.end())
-						it->m_next = m_packets.size() - 1;
+						auto it = std::find_if(m_packets.begin(), m_packets.end(), [ip_command](const CommandPacket& cmd_packet)
+						{
+							return cmd_packet.mp_data == ip_command;
+						});
+						// TODO: notify user about error
+						if (it != m_packets.end())
+						{
+							it->m_next = m_packets.size() - 1;
+							m_packets[m_packets.size() - 1].m_has_parent = true;
+						}
+					}
 					return reinterpret_cast<ProcessorType*>(p_data);
 				}
 
@@ -86,7 +92,7 @@ namespace SDK
 				{
 					for (auto& packet : m_packets)
 					{
-						if (packet.m_executed)
+						if (packet.m_executed || packet.m_has_parent)
 							continue;
 						Submit(packet);
 					}

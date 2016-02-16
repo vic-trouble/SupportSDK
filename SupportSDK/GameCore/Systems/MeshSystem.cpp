@@ -148,7 +148,7 @@ namespace SDK
 					}
 					
 					auto p_mgr = Core::GetRenderer()->GetHardwareBufferMgr();
-					auto hardware_buf = p_mgr->CreateHardwareBuffer(vertices.size(), i_info.m_ind_usage, &vertices[0]);
+					auto hardware_buf = p_mgr->CreateHardwareBuffer(vertices.size()*sizeof(float), i_info.m_ver_usage, &vertices[0]);
 					HardwareIndexBuffer::IndexType ind_type = HardwareIndexBuffer::IndexType::Int;
 					/*
 					TODO: correct determination of vertex types
@@ -157,7 +157,7 @@ namespace SDK
 					else if(indices.size() < 255)
 					ind_type = HardwareIndexBuffer::IndexType::Byte;*/
 					auto ind_buf = p_mgr->CreateIndexBuffer(ind_type, indices.size(), i_info.m_ind_usage, Render::PrimitiveType::Triangles, &indices[0]);
-					auto ver_layout = p_mgr->CreateLayout(hardware_buf, 3, Render::VertexSemantic::Position, Render::ComponentType::Float, false, 0, 0);
+					auto ver_layout = p_mgr->CreateLayout(hardware_buf, 3, Render::VertexSemantic::Position, Render::ComponentType::Float, false, sizeof(float)*3/*cam be 0*/, 0);
 
 					return std::make_pair(LoadResult::Success, Mesh(hardware_buf, ind_buf, ver_layout));
 				}
@@ -292,12 +292,22 @@ namespace SDK
 					p_transform_cmd->Translate(p_transform->m_position);
 				}
 
-				Commands::Draw* p_cmd = Render::gBuffer.Append<Commands::Draw>(p_transform_cmd);
+				Commands::SetupShader<1>* p_shader_cmd = Render::gBuffer.Append<Commands::SetupShader<1>>(p_transform_cmd);				
+				p_shader_cmd->m_layouts[0] = mesh.GetLayout();
+				if (!mesh_instance.GetMaterials().empty())
+				{					
+					p_shader_cmd->m_shader = m_materials.Access(mesh_instance.GetMaterials()[0])->m_shader;
+				}
+
+				void* p_parent_cmd = p_shader_cmd != nullptr ? (void*)p_shader_cmd : (void*)p_transform_cmd;
+				Commands::Draw* p_cmd = Render::gBuffer.Append<Commands::Draw>(p_parent_cmd);
 				p_cmd->vertices = mesh.GetVertices();
 				p_cmd->layout = mesh.GetLayout();
 				p_cmd->indices = mesh.GetIndices();
 				if (!mesh_instance.GetMaterials().empty())
+				{
 					p_cmd->program = m_materials.Access(mesh_instance.GetMaterials()[0])->m_shader;
+				}
 			}
 		}
 		
