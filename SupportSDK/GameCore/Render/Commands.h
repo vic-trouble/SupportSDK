@@ -72,8 +72,8 @@ namespace SDK
 
 			namespace SetupShaderDetails
 			{
-				void BindShader(ShaderHandler i_shader, VertexLayoutHandle i_layout);
-				void UnbindShader();
+				GAMECORE_EXPORT void BindShader(ShaderHandler i_shader, VertexLayoutHandle i_layout);
+				GAMECORE_EXPORT void UnbindShader();
 			} // SetupShaderDetails
 			template <size_t layouts_count>
 			struct SetupShader

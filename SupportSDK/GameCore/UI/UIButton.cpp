@@ -36,7 +36,11 @@ namespace SDK
 			Commands::Transform* p_transform_cmd = Render::gBuffer.Create<Commands::Transform>();
 			p_transform_cmd->Translate(Vector3{ static_cast<float>(m_global_position[0]), static_cast<float>(m_global_position[1]), 0.f });
 
-			Commands::Draw* p_cmd = Render::gBuffer.Append<Commands::Draw>(p_transform_cmd);
+			Commands::SetupShader<1>* p_shader_cmd = Render::gBuffer.Append<Commands::SetupShader<1>>(p_transform_cmd);
+			p_shader_cmd->m_shader.index = -1;
+			p_shader_cmd->m_layouts[0] = m_batch.element;
+
+			Commands::Draw* p_cmd = Render::gBuffer.Append<Commands::Draw>(p_shader_cmd);
 			p_cmd->vertices = m_batch.vertices;
 			p_cmd->layout = m_batch.element;
 			p_cmd->indices = m_batch.indices;
@@ -59,7 +63,7 @@ namespace SDK
 			};
 			// TODO: can optimize allocations?
 			auto p_mgr = Core::GetRenderer()->GetHardwareBufferMgr();
-			m_batch.vertices = p_mgr->CreateHardwareBuffer(sizeof(verts) / sizeof(float), Render::BufferUsageFormat::Static, verts);			
+			m_batch.vertices = p_mgr->CreateHardwareBuffer(sizeof(verts), Render::BufferUsageFormat::Static, verts);			
 			m_batch.indices = p_mgr->CreateIndexBuffer(Render::HardwareIndexBuffer::IndexType::Byte, sizeof(inds) / sizeof(ubyte), Render::BufferUsageFormat::Static, Render::PrimitiveType::Triangles, inds);
 			m_batch.element = p_mgr->CreateLayout(m_batch.vertices, 2, Render::VertexSemantic::Position, Render::ComponentType::Float, false, 0, 0);
 		}
