@@ -287,24 +287,136 @@ namespace SDK
 
 		void GLShaderCompiler::SetUniform(uint i_location, ShaderVariableType i_type, const void* const ip_value, bool i_transposed) const
 		{
+			using SVT = ShaderVariableType;
 			switch (i_type)
 			{
-				case ShaderVariableType::Int:
-					glUniform1i(i_location, reinterpret_cast<int>(ip_value));					
+				case SVT::Int:
+					{
+						glUniform1i(i_location, reinterpret_cast<int>(ip_value));
+					}
 					break;
-				case ShaderVariableType::Float:
-					glUniform1f(i_location, *reinterpret_cast<const float*>(ip_value));
+				case SVT::IntVec2:
+					{
+						const int* p_val = reinterpret_cast<const int*>(ip_value);
+						glUniform2i(i_location, p_val[0], p_val[1]);
+					}
 					break;
-				case ShaderVariableType::FloatVec4:
+				case SVT::IntVec3:
+					{
+						const int* p_val = reinterpret_cast<const int*>(ip_value);
+						glUniform3i(i_location, p_val[0], p_val[1], p_val[2]);
+					}
+					break;
+				case SVT::IntVec4:
+					{
+						const int* p_val = reinterpret_cast<const int*>(ip_value);
+						glUniform4i(i_location, p_val[0], p_val[1], p_val[2], p_val[3]);
+					}
+					break;
+				case SVT::Float:
+					{
+						glUniform1f(i_location, *reinterpret_cast<const float*>(ip_value));
+					}
+					break;
+				case SVT::FloatVec2:
+					{
+						const float* p_val = reinterpret_cast<const float*>(ip_value);
+						glUniform2f(i_location, p_val[0], p_val[1]);
+					}
+					break;
+				case SVT::FloatVec3:
+					{
+						const float* p_val = reinterpret_cast<const float*>(ip_value);
+						glUniform3f(i_location, p_val[0], p_val[1], p_val[2]);
+					}
+					break;
+				case SVT::FloatVec4:
 					{
 						const float* p_val = reinterpret_cast<const float*>(ip_value);
 						glUniform4f(i_location, p_val[0], p_val[1], p_val[2], p_val[3]);
 					}
+					break;				
+				case SVT::Double:
+					{
+						glUniform1d(i_location, *reinterpret_cast<const double*>(ip_value));
+					}
 					break;
-				case ShaderVariableType::FloatMat4:
+				case SVT::DoubleVec2:
+					{
+						const double* p_val = reinterpret_cast<const double*>(ip_value);
+						glUniform2d(i_location, p_val[0], p_val[1]);
+					}
+					break;
+				case SVT::DoubleVec3:
+					{
+						const double* p_val = reinterpret_cast<const double*>(ip_value);
+						glUniform3d(i_location, p_val[0], p_val[1], p_val[2]);
+					}
+					break;
+				case SVT::DoubleVec4:
+					{
+						const double* p_val = reinterpret_cast<const double*>(ip_value);
+						glUniform4d(i_location, p_val[0], p_val[1], p_val[2], p_val[3]);
+					}
+					break;
+				case SVT::UInt:
+					{
+						const uint* p_val = reinterpret_cast<const uint*>(ip_value);
+						glUniform1ui(i_location, *reinterpret_cast<const uint*>(ip_value));
+					}
+					break;
+				case SVT::UIntVec2:
+					{
+						const uint* p_val = reinterpret_cast<const uint*>(ip_value);
+						glUniform2ui(i_location, p_val[0], p_val[1]);
+					}
+					break;
+				case SVT::UIntVec3:
+					{
+						const uint* p_val = reinterpret_cast<const uint*>(ip_value);
+						glUniform3ui(i_location, p_val[0], p_val[1], p_val[2]);
+					}
+					break;
+				case SVT::UIntVec4:
+					{
+						const uint* p_val = reinterpret_cast<const uint*>(ip_value);
+						glUniform4ui(i_location, p_val[0], p_val[1], p_val[2], p_val[3]);
+					}
+					break;
+				case SVT::Bool:
+					{
+						const bool* p_val = reinterpret_cast<const bool*>(ip_value);
+						glUniform1i(i_location, *p_val ? GL_TRUE : GL_FALSE);
+					}
+					break;
+				case SVT::FloatMat2:
+					glUniformMatrix2fv(i_location, 1, Convert(i_transposed), reinterpret_cast<const float*>(ip_value));
+					break;
+				case SVT::FloatMat3:
+					glUniformMatrix3fv(i_location, 1, Convert(i_transposed), reinterpret_cast<const float*>(ip_value));
+					break;
+				case SVT::FloatMat4:
 					glUniformMatrix4fv(i_location, 1, Convert(i_transposed), reinterpret_cast<const float*>(ip_value));
 					break;
-			}
+				case SVT::FloatMat2x3:
+					glUniformMatrix2x3fv(i_location, 1, Convert(i_transposed), reinterpret_cast<const float*>(ip_value));
+					break;
+				case SVT::FloatMat2x4:
+					glUniformMatrix2x4fv(i_location, 1, Convert(i_transposed), reinterpret_cast<const float*>(ip_value));
+					break;
+				case SVT::FloatMat3x2:
+					glUniformMatrix3x2fv(i_location, 1, Convert(i_transposed), reinterpret_cast<const float*>(ip_value));
+					break;
+				case SVT::FloatMat3x4:
+					glUniformMatrix3x4fv(i_location, 1, Convert(i_transposed), reinterpret_cast<const float*>(ip_value));
+					break;
+				case SVT::FloatMat4x2:
+					glUniformMatrix4x2fv(i_location, 1, Convert(i_transposed), reinterpret_cast<const float*>(ip_value));
+					break;
+				case SVT::FloatMat4x3:
+					glUniformMatrix4x3fv(i_location, 1, Convert(i_transposed), reinterpret_cast<const float*>(ip_value));
+					break;
+			} // switch
 			CHECK_GL_ERRORS;
 		}
 

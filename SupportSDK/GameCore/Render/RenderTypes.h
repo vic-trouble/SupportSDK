@@ -120,7 +120,7 @@ namespace SDK
 			FloatVec3,
 			FloatVec4,
 			Double,
-			DouvleVec2,
+			DoubleVec2,
 			DoubleVec3,
 			DoubleVec4,
 			Int,
