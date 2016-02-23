@@ -8,6 +8,8 @@
 #include "Render/irenderer.h"
 #include "Render/HardwareBufferManagerBase.h"
 
+#include <Utilities/HashFunctions.h>
+
 #include "Core.h"
 
 #include <GL/glew.h>
@@ -157,18 +159,30 @@ namespace SDK
 					o_shader.AddAttribute(real_name, values[1], values[2], DetectSemantic(real_name));
 				}
 			}
+			
+			struct KnownUniform
+			{
+				UniformType uni_type;
+				std::array<const char*, 2> names;
+				std::array<size_t, 2> name_hashes;
+			};			
 
-			constexpr static char* names[] = {
-				""
+			static KnownUniform known_uniforms[] = {
+				{UniformType::ProjectionMatrix, {"projection_matrix", "proj_m"}, {Utilities::hash_function(std::string("projection_matrix")), Utilities::hash_function(std::string("proj_m"))}},
+				{UniformType::ModelviewMatrix, { "modelview_matrix", "mv_m" },{ Utilities::hash_function(std::string("modelview_matrix")), Utilities::hash_function(std::string("mv_m")) } }
 			};
 
 			UniformType DetectUniform(const std::string& i_uni_name)
 			{
-				if (i_uni_name == "projection_matrix" || i_uni_name == "proj_m")
-					return UniformType::ProjectionMatrix;
-				if (i_uni_name == "modelview_matrix" || i_uni_name == "mv_m")
-					return UniformType::ModelviewMatrix;
-
+				const size_t target_hash = Utilities::hash_function(i_uni_name);
+				for (KnownUniform uni : known_uniforms)
+				{
+					for (size_t hash : uni.name_hashes)
+					{
+						if (hash == target_hash)
+							return uni.uni_type;
+					}
+				}				
 				return UniformType::Dynamic;
 			}
 
@@ -319,6 +333,29 @@ namespace SDK
 			uint size = 16;
 			GLsizei uniform_count = size / uniform_size;
 			SetUniformImpl(uniform.location, i_matrix[0], uniform_count);
+		}
+
+		void GLShaderCompiler::SetUniform(uint i_location, ShaderVariableType i_type, const void* const ip_value, bool i_transposed) const
+		{
+			switch (i_type)
+			{
+				case ShaderVariableType::Int:
+					glUniform1i(i_location, reinterpret_cast<int>(ip_value));					
+					break;
+				case ShaderVariableType::Float:
+					glUniform1f(i_location, *reinterpret_cast<const float*>(ip_value));
+					break;
+				case ShaderVariableType::FloatVec4:
+					{
+						const float* p_val = reinterpret_cast<const float*>(ip_value);
+						glUniform4f(i_location, p_val[0], p_val[1], p_val[2], p_val[3]);
+					}
+					break;
+				case ShaderVariableType::FloatMat4:
+					glUniformMatrix4fv(i_location, 1, Convert(i_transposed), reinterpret_cast<const float*>(ip_value));
+					break;
+			}
+			CHECK_GL_ERRORS;
 		}
 
 	} // Render

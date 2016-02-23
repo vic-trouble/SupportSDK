@@ -113,13 +113,42 @@ namespace SDK
 			Count
 		};
 
+		enum class ShaderVariableType
+		{
+			Float,
+			FloatVec2,
+			FloatVec3,
+			FloatVec4,
+			Double,
+			DouvleVec2,
+			DoubleVec3,
+			DoubleVec4,
+			Int,
+			IntVec2,
+			IntVec3,
+			IntVec4,
+			UInt,
+			UIntVec2,
+			UIntVec3,
+			UIntVec4,
+			Bool,
+			FloatMat2,
+			FloatMat3,
+			FloatMat4,
+			FloatMat2x3,
+			FloatMat2x4,
+			FloatMat3x2,
+			FloatMat3x4,
+			FloatMat4x2,
+			FloatMat4x3
+		};
+
 		enum class UniformType
 		{
 			ProjectionMatrix,
 			ModelviewMatrix,
-
 			Dynamic
-		};
+		};		
 
 		struct VertexLayout
 		{

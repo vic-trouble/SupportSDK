@@ -8,6 +8,10 @@
 
 namespace SDK
 {
+	namespace Render {
+		class ShaderCompiler;
+	}
+
 	namespace Resources {	namespace Serialization {
 			template <typename ResInfo>
 			struct LoaderImpl;
@@ -23,7 +27,7 @@ namespace SDK
 			// TODO: limitations to 1024 shader loaded - is it enough?
 			typedef GenericBuffersArray<ShaderHandler, Shader, 1024> Shaders;
 			Shaders m_shaders;
-
+			ShaderCompiler* mp_current_shader_compiler;
 		public:
 			ShaderSystem();
 			struct ShaderSource
@@ -72,6 +76,9 @@ namespace SDK
 					return nullptr;
 				return &m_shaders.m_buffer[i_handler.index];
 			}
+
+			GAMECORE_EXPORT void SetKnownUniforms(ShaderHandler i_handle);
+			GAMECORE_EXPORT void SetUniform(ShaderHandler i_handle, const ShaderUniformValue& i_value);
 		};
 
 		// TODO: global object

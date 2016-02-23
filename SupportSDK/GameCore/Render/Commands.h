@@ -2,6 +2,7 @@
 #define __GAMECORE_COMMANDS_H__
 
 #include "../Render/RenderTypes.h"
+#include "../Render/Shader.h"
 
 namespace SDK
 {
@@ -74,14 +75,20 @@ namespace SDK
 			{
 				GAMECORE_EXPORT void BindShader(ShaderHandler i_shader, VertexLayoutHandle i_layout);
 				GAMECORE_EXPORT void UnbindShader();
+				GAMECORE_EXPORT void SetDynamicUniform(ShaderHandler i_shader, const ShaderUniformValue& i_value);
 			} // SetupShaderDetails
-			template <size_t layouts_count>
+			template <size_t layouts_count, size_t dynamic_uniforms_count = 1>
 			struct SetupShader
 			{
+				static const size_t LayoutsCount = layouts_count;
+				static const size_t DynUniCount = dynamic_uniforms_count;
+
 				static void Bind(const void* ip_data)
 				{
-					const SetupShader<layouts_count>* cmd = reinterpret_cast<const SetupShader<layouts_count>*>(ip_data);
+					const SetupShader<LayoutsCount, DynUniCount>* cmd = reinterpret_cast<const SetupShader<LayoutsCount, DynUniCount>*>(ip_data);
 					SetupShaderDetails::BindShader(cmd->m_shader, cmd->m_layouts[0]);
+					for (size_t i = 0; i < cmd->current_value; ++i)
+						SetupShaderDetails::SetDynamicUniform(cmd->m_shader, cmd->m_dynamic_uniforms[i]);
 				}
 				static void Unbind(const void*)
 				{
@@ -89,12 +96,40 @@ namespace SDK
 				}
 				void SetDefaultValues()
 				{
+					current_value = 0;
 					m_shader.index = -1;
+					for (auto& val : m_dynamic_uniforms)
+						val.Reset();
 				}
 				IMPLEMENT_COMMAND_IMPL(Bind, Unbind);
 				
+				///////////////////////////////////////////////////
+				// Own
+
 				ShaderHandler m_shader;
-				std::array<VertexLayoutHandle, layouts_count> m_layouts;
+				std::array<VertexLayoutHandle, LayoutsCount> m_layouts;
+				std::array<ShaderUniformValue, DynUniCount> m_dynamic_uniforms;
+				size_t current_value;
+
+				template <typename T>
+				void SetValue(const std::string& i_name, ShaderVariableType i_type, const T& i_value, bool i_transposed)
+				{
+					if (current_value >= DynUniCount)
+					{
+						assert(false && "Try to set more than allocated");
+						return;
+					}
+					const size_t hash = Utilities::hash_function(i_name);
+					m_dynamic_uniforms[current_value] = ShaderUniformValue::Construct(hash, i_type, i_value, i_transposed);
+
+					++current_value;
+				}
+
+				template <typename T>
+				void SetValue(const std::string& i_name, ShaderVariableType i_type, const T& i_value)
+				{
+					SetValue(i_name, i_type, i_value, false);
+				}
 			};
 			
 			static_assert(std::is_pod<SetupShader<1>>::value == true, "SetupShader must be a POD.");

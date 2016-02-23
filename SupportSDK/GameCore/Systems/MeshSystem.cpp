@@ -295,8 +295,11 @@ namespace SDK
 				Commands::SetupShader<1>* p_shader_cmd = Render::gBuffer.Append<Commands::SetupShader<1>>(p_transform_cmd);				
 				p_shader_cmd->m_layouts[0] = mesh.GetLayout();
 				if (!mesh_instance.GetMaterials().empty())
-				{					
-					p_shader_cmd->m_shader = m_materials.Access(mesh_instance.GetMaterials()[0])->m_shader;
+				{
+					auto material_handle = mesh_instance.GetMaterials()[0];
+					auto* p_material = m_materials.Access(material_handle);
+					p_shader_cmd->m_shader = p_material->m_shader;
+					p_shader_cmd->SetValue("input_color", ShaderVariableType::FloatVec4, p_material->m_color);
 				}
 
 				void* p_parent_cmd = p_shader_cmd != nullptr ? (void*)p_shader_cmd : (void*)p_transform_cmd;

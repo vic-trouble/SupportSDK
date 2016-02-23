@@ -114,11 +114,17 @@ namespace SDK
 				void BindShader(ShaderHandler i_shader, VertexLayoutHandle i_layout)
 				{					
 					Core::GetRenderer()->Bind(i_shader, i_layout);
+					Render::g_shader_system.SetKnownUniforms(i_shader);
 				}
 
 				void UnbindShader()
 				{
 					Core::GetRenderer()->UnbindShader();
+				}
+
+				void SetDynamicUniform(ShaderHandler i_shader, const ShaderUniformValue& i_value)
+				{
+					Render::g_shader_system.SetUniform(i_shader, i_value);
 				}
 			} // SetupShaderDetails
 

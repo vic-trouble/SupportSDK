@@ -69,6 +69,10 @@ namespace Game
 		auto material_handle = Render::g_mesh_system.CreateMaterial("SampleMaterial");
 		auto p_material = Render::g_mesh_system.AccessMaterial(material_handle);
 		p_material->m_shader = shader_handler;
+		p_material->m_color[0] = 0.49f;
+		p_material->m_color[1] = 0.059f;
+		p_material->m_color[2] = 0.97f;
+		p_material->m_color[3] = 1.f;
 
 		Render::g_mesh_system.AddMaterialTo(mesh_handler, material_handle);
 

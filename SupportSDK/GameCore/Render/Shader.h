@@ -3,7 +3,7 @@
 
 #include "../GameCoreAPI.h"
 
-#include "Render/RenderTypes.h"
+#include "../Render/RenderTypes.h"
 
 namespace SDK
 {
@@ -104,7 +104,94 @@ namespace SDK
 
 			const std::vector<attribute>& GetAttributes() const { return m_attributes; }
 			const std::vector<uniform>& GetUniforms() const { return m_uniforms; }
+			uniform GetUniform(size_t i_name_hash) const;
 		};
+#if defined(_DEBUG)
+		template <typename T>
+		void CheckType(ShaderVariableType i_type, const T& i_value)
+		{
+			using SVT = ShaderVariableType;
+			switch (i_type)
+			{
+				case SVT::Float:
+					assert(typeid(T).hash_code() == typeid(float).hash_code());
+					break;
+				case SVT::FloatVec4:
+					assert(typeid(float[4]).hash_code() == typeid(T).hash_code());
+					assert(sizeof(i_value) == sizeof(float)*4);
+					break;
+				case SVT::FloatMat4:
+					// TODO: check type
+					assert(sizeof(i_value) == sizeof(float) * 16);
+					break;
+			}
+		}
+#endif
+		struct ShaderUniformValue
+		{
+			size_t name_hash;
+			ShaderVariableType type;
+			bool transposed;
+			char* p_data;
+			size_t size;			
+			constexpr static int MAX_BUFFER_SIZE = 8;
+			char buffer[MAX_BUFFER_SIZE];
+
+			template <typename T>
+			void SetValue(size_t i_hash, ShaderVariableType i_type, const T& i_value)
+			{
+				SetValue(i_hash, i_type, i_value, false);
+			}
+
+			template <typename T>
+			void SetValue(size_t i_hash, ShaderVariableType i_type, const T& i_value, bool i_transposed)
+			{
+				// TODO: own macro for such checks
+#if defined(_DEBUG)
+				CheckType(i_type, i_value);
+#endif
+				name_hash = i_hash;
+				type = i_type;
+				transposed = i_transposed;
+				std::fill(std::begin(buffer), std::end(buffer), 0);
+				p_data = nullptr;
+
+				const char* p_val = reinterpret_cast<const char*>(&i_value);
+				size = sizeof(T);
+				if (size <= MAX_BUFFER_SIZE)
+				{
+					memcpy(buffer, p_val, size);
+				}
+				else
+				{
+					p_data = new char[size];
+					std::fill(p_data, p_data+size, 0);
+					memcpy(p_data, p_val, size);
+				}
+			}
+
+			const void* GetDataPtr() const
+			{
+				if (p_data)
+					return p_data;
+				return buffer;
+			}
+
+			template <typename T>
+			static ShaderUniformValue Construct(size_t i_hash, ShaderVariableType i_type, const T& i_value, bool i_transposed)
+			{
+				ShaderUniformValue val;
+				val.SetValue(i_hash, i_type, i_value, i_transposed);
+				return val;
+			}
+			void Reset()
+			{
+				size = 0;
+				p_data = nullptr;
+				name_hash = 0;
+			}
+		};
+		static_assert(std::is_pod<ShaderUniformValue>::value, "");
 
 	} // Render
 } // SDK

@@ -22,6 +22,8 @@ namespace SDK
 			virtual void Release(Shader& io_shader) override;
 
 			virtual void SetUniform(const Shader& i_shader, const std::string& i_name, const Matrix4f& i_matrix) override;
+
+			virtual void SetUniform(uint i_location, ShaderVariableType i_type, const void* const ip_value, bool i_transposed) const override;
 		};
 	}
 

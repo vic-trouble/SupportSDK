@@ -91,6 +91,7 @@ namespace SDK
 		virtual void SetCurrentMatrix(const Matrix4f& i_translation_matrix) = 0;
 		// Apply i_multiplyer to current matrix
 		virtual void ModifyCurrentMatrix(const Matrix4f& i_multiplier) = 0;
+		virtual const Matrix4f& GetMatrix(MatrixMode i_matrix_mode) const = 0;
 
 		/////////////////////////////////////////////////////////////
 		// Textures

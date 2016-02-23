@@ -28,6 +28,17 @@ namespace SDK
 			return uniform();
 		}
 
+		Shader::uniform Shader::GetUniform(size_t i_name_hash) const
+		{
+			auto it = std::find_if(m_uniforms.begin(), m_uniforms.end(), [i_name_hash](const uniform& uni)
+			{
+				return uni.name_hash == i_name_hash;
+			});
+			if (it != m_uniforms.end())
+				return *it;
+			return uniform();
+		}
+
 		void Shader::AddAttribute(const std::string& i_name, int i_location, int i_type, VertexSemantic i_semantic)
 		{
 			// hash without \0 in the end

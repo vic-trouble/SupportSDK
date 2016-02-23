@@ -31,7 +31,7 @@ void CheckGlErrors(const char *filename, int line) {
 	OutputDebugStringA(ss.str().c_str());
 }
 
-void makeGlMatrix(float gl_matrix[16], const SDK::Matrix4f& m)
+void makeGlMatrix(GLfloat gl_matrix[16], const SDK::Matrix4f& m)
 {
 	size_t x = 0;
 	for (size_t i = 0; i < 4; i++)

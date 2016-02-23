@@ -59,6 +59,7 @@ namespace SDK
 		virtual void PopMatrix() override;		
 		virtual void SetCurrentMatrix(const Matrix4f& i_translation_matrix) override;
 		virtual void ModifyCurrentMatrix(const Matrix4f& i_multiplier) override;
+		virtual const Matrix4f& GetMatrix(MatrixMode i_matrix_mode) const override { return m_matrices[(int)i_matrix_mode]; }
 
 		virtual Render::HardwareBufferManager* GetHardwareBufferMgr() override { return &m_hardware_buffer_mgr; }
 		virtual Render::ShaderCompiler* GetShaderCompiler() override { return &m_shader_compiler; }

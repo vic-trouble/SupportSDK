@@ -477,7 +477,7 @@ namespace SDK
 		CHECK_GL_ERRORS;
 
 		GLDetails::SetupShaderAttributes(*p_shader, i_layouts, m_hardware_buffer_mgr);
-		GLDetails::SetupKnownUniforms(*p_shader, m_matrices[(int)MatrixMode::ModelView], m_matrices[(int)MatrixMode::Projection]);
+		//GLDetails::SetupKnownUniforms(*p_shader, m_matrices[(int)MatrixMode::ModelView], m_matrices[(int)MatrixMode::Projection]);
 	}
 
 	void OpenGLRenderer::UnbindShader()
