@@ -168,8 +168,8 @@ namespace SDK
 			};			
 
 			static KnownUniform known_uniforms[] = {
-				{UniformType::ProjectionMatrix, {"projection_matrix", "proj_m"}, {Utilities::hash_function(std::string("projection_matrix")), Utilities::hash_function(std::string("proj_m"))}},
-				{UniformType::ModelviewMatrix, { "modelview_matrix", "mv_m" },{ Utilities::hash_function(std::string("modelview_matrix")), Utilities::hash_function(std::string("mv_m")) } }
+				{ UniformType::ProjectionMatrix, {"projection_matrix", "proj_m"}, {Utilities::hash_function(std::string("projection_matrix")), Utilities::hash_function(std::string("proj_m")) } },
+				{ UniformType::ModelviewMatrix, { "modelview_matrix", "mv_m" },{ Utilities::hash_function(std::string("modelview_matrix")), Utilities::hash_function(std::string("mv_m")) } }
 			};
 
 			UniformType DetectUniform(const std::string& i_uni_name)
@@ -283,56 +283,6 @@ namespace SDK
 			glDeleteProgram(io_shader.GetId());
 			CHECK_GL_ERRORS;
 			io_shader.Reset();
-		}
-
-		void SetUniformImpl(uint i_location, const float* i_values, uint i_count)
-		{
-			glUniformMatrix4fv(i_location, i_count, GL_FALSE, i_values);
-		}
-		struct Uniform
-		{
-			uint location;
-		};
-		void GLShaderCompiler::SetUniform(const Shader& i_shader, const std::string& i_name, const Matrix4f& i_matrix)
-		{
-			Uniform uniform;
-			{
-				auto _program = i_shader.GetId();
-				const int CONST_UNIFORM_NAME_MAX_LENGTH = 256;
-				char uniformName[CONST_UNIFORM_NAME_MAX_LENGTH];
-
-				int activeUniformsCount = 0;
-				glGetProgramiv(_program, GL_ACTIVE_UNIFORMS, &activeUniformsCount);
-				CHECK_GL_ERRORS;
-
-				for (int i = 0; i < activeUniformsCount; i++) {
-					GLsizei nameLen;
-					GLint uniformSize;
-					GLenum uniformType;
-
-					glGetActiveUniform(_program, (GLuint)i, CONST_UNIFORM_NAME_MAX_LENGTH, &nameLen, &uniformSize, &uniformType, uniformName);
-					CHECK_GL_ERRORS;
-
-					GLint uniformLocation = glGetUniformLocation(_program, uniformName);
-
-					// Имя юниформы в случае структур или массивов может содержать лишние символы,
-					// поэтому их надо обрезать
-					std::string realName(uniformName);
-					realName = realName.substr(0, realName.find_first_of("[]", 0, 1));
-					if (realName == i_name)
-					{
-						uniform.location = uniformLocation;
-						break;
-					}
-				}
-			}
-
-
-			
-			uint uniform_size = 16;
-			uint size = 16;
-			GLsizei uniform_count = size / uniform_size;
-			SetUniformImpl(uniform.location, i_matrix[0], uniform_count);
 		}
 
 		void GLShaderCompiler::SetUniform(uint i_location, ShaderVariableType i_type, const void* const ip_value, bool i_transposed) const

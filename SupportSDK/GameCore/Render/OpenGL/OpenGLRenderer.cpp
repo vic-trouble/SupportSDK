@@ -353,23 +353,6 @@ namespace SDK
 			glDisableVertexAttribArray(0);
 		}
 
-		void SetupKnownUniforms(const Render::Shader& i_shader, Matrix4f& i_mv, Matrix4f& i_proj)
-		{
-			const auto& uniforms = i_shader.GetUniforms();
-			for (const auto& uni : uniforms)
-			{
-				switch (uni.uniform_type)
-				{
-					case Render::UniformType::ModelviewMatrix:
-						glUniformMatrix4fv(uni.location, 1, GL_TRUE, i_mv[0]);
-						break;
-					case Render::UniformType::ProjectionMatrix:
-						glUniformMatrix4fv(uni.location, 1, GL_FALSE, i_proj[0]);
-						break;
-				}
-			}
-		}
-
 	} // GLDetails
 
 	/////////////////////////////////////////////////////////////////////////////
@@ -477,7 +460,6 @@ namespace SDK
 		CHECK_GL_ERRORS;
 
 		GLDetails::SetupShaderAttributes(*p_shader, i_layouts, m_hardware_buffer_mgr);
-		//GLDetails::SetupKnownUniforms(*p_shader, m_matrices[(int)MatrixMode::ModelView], m_matrices[(int)MatrixMode::Projection]);
 	}
 
 	void OpenGLRenderer::UnbindShader()

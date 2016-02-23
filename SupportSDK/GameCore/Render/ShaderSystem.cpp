@@ -181,7 +181,6 @@ namespace SDK
 							auto p_renderer = Core::GetRenderer();
 							const Matrix4f& mv = p_renderer->GetMatrix(MatrixMode::ModelView);
 							mp_current_shader_compiler->SetUniform(uni.location, ShaderVariableType::FloatMat4, mv[0], true);
-							assert(sizeof(mv) == 64);
 						}						
 						break;
 					case Render::UniformType::ProjectionMatrix:
