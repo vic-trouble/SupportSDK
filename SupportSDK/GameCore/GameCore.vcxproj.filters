@@ -69,6 +69,9 @@
     <Filter Include="Core\GlobalObjects">
       <UniqueIdentifier>{f07f4b3e-7868-4ebc-a006-66160ea53b46}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Renderer\Texture">
+      <UniqueIdentifier>{009220f8-056c-46b7-ac9a-c4756a3048be}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -310,6 +313,15 @@
     </ClInclude>
     <ClInclude Include="Render\Material.h">
       <Filter>Core\Renderer\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\TextureManager.h">
+      <Filter>Core\Renderer\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="GenericHandlesStaticArray.h">
+      <Filter>Core\Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\OpenGL\GLTextureManager.h">
+      <Filter>Core\Renderer\OpenGL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

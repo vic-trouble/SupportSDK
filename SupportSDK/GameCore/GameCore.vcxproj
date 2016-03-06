@@ -44,11 +44,13 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(THIRD_PARTIES_NEW)\props\opengl.props" />
     <Import Project="$(THIRD_PARTIES_NEW)\props\tinyxml.props" />
+    <Import Project="$(THIRD_PARTIES_NEW)\props\soil.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(THIRD_PARTIES_NEW)\props\opengl.props" />
     <Import Project="$(THIRD_PARTIES_NEW)\props\tinyxml.props" />
+    <Import Project="$(THIRD_PARTIES_NEW)\props\soil.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -116,6 +118,7 @@
     <ClInclude Include="EntityDefines.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="GenericHandlesStaticArray.h" />
     <ClInclude Include="ObjectSubset.h" />
     <ClInclude Include="FileSystem\FileStream.h" />
     <ClInclude Include="FileSystem\FileSystem.h" />
@@ -148,6 +151,7 @@
     <ClInclude Include="Render\Material.h" />
     <ClInclude Include="Render\OpenGL\GLLightsController.h" />
     <ClInclude Include="Render\OpenGL\GLShaderCompiler.h" />
+    <ClInclude Include="Render\OpenGL\GLTextureManager.h" />
     <ClInclude Include="Render\RenderWorld.h" />
     <ClInclude Include="Render\OpenGL\HardwareBufferManager.h" />
     <ClInclude Include="Render\HardwareIndexBuffer.h" />
@@ -163,6 +167,7 @@
     <ClInclude Include="Render\Shader.h" />
     <ClInclude Include="Render\ShaderCompiler.h" />
     <ClInclude Include="Render\ShaderSystem.h" />
+    <ClInclude Include="Render\TextureManager.h" />
     <ClInclude Include="Render\VertexDeclaration.h" />
     <ClInclude Include="Render\Viewport.h" />
     <ClInclude Include="Resources\ResourceManager.h" />

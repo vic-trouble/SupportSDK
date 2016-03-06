@@ -12,6 +12,11 @@ namespace SDK
 	{
 		T index : N1;
 		T generation : N2;
+		//using _HandleType = GenericHandle<T, N1, N2, Tag, std::true_type>;
+		inline static GenericHandle InvalidHandle()
+		{
+			return{ -1, -1 };
+		}
 	};
 	template <typename T, T N1, T N2, typename Tag>
 	bool operator == (const GenericHandle<T, N1, N2, Tag>& left, const GenericHandle<T, N1, N2, Tag>& right)
