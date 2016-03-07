@@ -68,7 +68,7 @@ namespace SDK
 		virtual Render::LightsController* GetLightsController() override { return &m_lights_controller; }
 		virtual Render::TextureManager* GetTextureManager() override { return &m_texture_manager; }
 
-		virtual void Bind(Render::ShaderHandler, Render::VertexLayoutHandle i_layouts) override;
+		virtual void Bind(Render::ShaderHandler i_shader, const Render::VertexLayoutHandle* i_layouts, size_t i_number) override;
 		virtual void UnbindShader() override;
 		////////////////////////////////////////////////////////////////////
 		// TODO: is it still needed

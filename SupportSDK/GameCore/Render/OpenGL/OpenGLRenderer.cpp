@@ -304,42 +304,48 @@ namespace SDK
 	namespace GLDetails
 	{
 
-		void SetupShaderAttributes(const Render::Shader& i_shader, Render::VertexLayoutHandle i_layout, Render::HardwareBufferManager& i_mgr)
+		void SetupShaderAttributes(const Render::Shader& i_shader, const Render::VertexLayoutHandle* i_layouts, size_t i_number, Render::HardwareBufferManager& i_mgr)
 		{
-			auto element = i_mgr.AccessLayout(i_layout);
-			auto ver_buf = i_mgr.AccessVertexBuffer(Render::VertexBufferHandle{ static_cast<size_t>(element.m_source), 0 });
-
-			glBindBuffer(GL_ARRAY_BUFFER, ver_buf.m_hardware_id);
-			
-			const auto& attributes = i_shader.GetAttributes();
-			for (const auto& attr : attributes)
+			for (size_t i = 0; i < i_number; ++i)
 			{
-				if (attr.element_semantic != element.m_semantic)
-					continue;
-				glVertexAttribPointer(attr.location, // index for shader attribute
+				auto element = i_mgr.AccessLayout(i_layouts[0]);
+				auto hd_buf = i_mgr.AccessVertexBuffer(Render::VertexBufferHandle{ static_cast<size_t>(element.m_source), 0 });
+
+				glBindBuffer(GL_ARRAY_BUFFER, hd_buf.m_hardware_id);
+
+				const auto& attributes = i_shader.GetAttributes();
+				for (const auto& attr : attributes)
+				{
+					if (attr.element_semantic != element.m_semantic)
+						continue;
+					glVertexAttribPointer(attr.location, // index for shader attribute
+						element.m_vertex_size, // size
+						GetComponentType(element.m_component), // type
+						element.m_normalized ? GL_TRUE : GL_FALSE, // normalized
+						element.m_stride, // stride
+						reinterpret_cast<GLvoid*>(element.m_offset)); // pointer
+					glEnableVertexAttribArray(attr.location);
+				}
+			}			
+		}
+
+		void SetupDefaultAttributes(const Render::VertexLayoutHandle* i_layout, size_t i_number, Render::HardwareBufferManager& i_mgr)
+		{
+			for (size_t i = 0; i < i_number; ++i)
+			{
+				auto element = i_mgr.AccessLayout(i_layout[i]);
+				auto hd_buf = i_mgr.AccessVertexBuffer(Render::VertexBufferHandle{ (size_t)element.m_source, 0 });
+				glBindBuffer(GL_ARRAY_BUFFER, hd_buf.m_hardware_id);
+				glVertexAttribPointer(i, // index for shader attribute
 					element.m_vertex_size, // size
 					GetComponentType(element.m_component), // type
 					element.m_normalized ? GL_TRUE : GL_FALSE, // normalized
 					element.m_stride, // stride
 					reinterpret_cast<GLvoid*>(element.m_offset)); // pointer
-				glEnableVertexAttribArray(attr.location);
-			}
+				glEnableVertexAttribArray(0);
+			}			
 		}
 
-		void SetupDefaultAttributes(Render::VertexLayoutHandle i_layout, Render::HardwareBufferManager& i_mgr)
-		{
-			auto element = i_mgr.AccessLayout(i_layout);
-			auto ver_buf = i_mgr.AccessVertexBuffer(Render::VertexBufferHandle{ (size_t)element.m_source, 0 });
-			glBindBuffer(GL_ARRAY_BUFFER, ver_buf.m_hardware_id);
-			glVertexAttribPointer(0, // index for shader attribute
-				element.m_vertex_size, // size
-				GetComponentType(element.m_component), // type
-				element.m_normalized ? GL_TRUE : GL_FALSE, // normalized
-				element.m_stride, // stride
-				reinterpret_cast<GLvoid*>(element.m_offset)); // pointer
-			glEnableVertexAttribArray(0);
-		}
-		
 		void ClearShaderSetups(const Render::Shader& i_shader)
 		{
 			const auto& attributes = i_shader.GetAttributes();
@@ -444,22 +450,22 @@ namespace SDK
 
 	/////////////////////////////////////////////////////////////////////////////
 
-	void OpenGLRenderer::Bind(Render::ShaderHandler i_shader, Render::VertexLayoutHandle i_layouts)
+	void OpenGLRenderer::Bind(Render::ShaderHandler i_shader, const Render::VertexLayoutHandle* i_layouts, size_t i_number)
 	{
 		m_current_shader = i_shader;
 		auto p_shader = Render::g_shader_system.Access(i_shader);
 		// TODO: use standard shader?
 		if (p_shader == nullptr)
 		{
-			GLDetails::SetupDefaultAttributes(i_layouts, m_hardware_buffer_mgr);
+			GLDetails::SetupDefaultAttributes(i_layouts, i_number, m_hardware_buffer_mgr);
 			glUseProgram(0);
 			return;
-		}			
+		}
 
 		glUseProgram(p_shader->GetId());
 		CHECK_GL_ERRORS;
 
-		GLDetails::SetupShaderAttributes(*p_shader, i_layouts, m_hardware_buffer_mgr);
+		GLDetails::SetupShaderAttributes(*p_shader, i_layouts, i_number, m_hardware_buffer_mgr);
 	}
 
 	void OpenGLRenderer::UnbindShader()

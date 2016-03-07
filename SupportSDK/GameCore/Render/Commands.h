@@ -73,7 +73,7 @@ namespace SDK
 
 			namespace SetupShaderDetails
 			{
-				GAMECORE_EXPORT void BindShader(ShaderHandler i_shader, VertexLayoutHandle i_layout);
+				GAMECORE_EXPORT void BindShader(ShaderHandler i_shader, const VertexLayoutHandle* i_layouts, size_t i_size);
 				GAMECORE_EXPORT void UnbindShader();
 				GAMECORE_EXPORT void SetDynamicUniform(ShaderHandler i_shader, const ShaderUniformValue& i_value);
 			} // SetupShaderDetails
@@ -86,7 +86,7 @@ namespace SDK
 				static void Bind(const void* ip_data)
 				{
 					const SetupShader<LayoutsCount, DynUniCount>* cmd = reinterpret_cast<const SetupShader<LayoutsCount, DynUniCount>*>(ip_data);
-					SetupShaderDetails::BindShader(cmd->m_shader, cmd->m_layouts[0]);
+					SetupShaderDetails::BindShader(cmd->m_shader, &cmd->m_layouts[0], LayoutsCount);
 					for (size_t i = 0; i < cmd->current_value; ++i)
 						SetupShaderDetails::SetDynamicUniform(cmd->m_shader, cmd->m_dynamic_uniforms[i]);
 				}

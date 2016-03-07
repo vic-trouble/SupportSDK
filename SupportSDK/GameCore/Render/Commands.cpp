@@ -111,9 +111,9 @@ namespace SDK
 
 			namespace SetupShaderDetails
 			{
-				void BindShader(ShaderHandler i_shader, VertexLayoutHandle i_layout)
-				{					
-					Core::GetRenderer()->Bind(i_shader, i_layout);
+				void BindShader(ShaderHandler i_shader, const VertexLayoutHandle* i_layouts, size_t i_size)
+				{
+					Core::GetRenderer()->Bind(i_shader, i_layouts, i_size);
 					Render::g_shader_system.SetKnownUniforms(i_shader);
 				}
 

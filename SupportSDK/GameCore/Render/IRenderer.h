@@ -102,8 +102,7 @@ namespace SDK
 
 		/////////////////////////////////////////////////////////////
 		// Shaders -> use shader manager?
-		//	 use array of layouts instead of one entry
-		virtual void Bind(Render::ShaderHandler i_shader, Render::VertexLayoutHandle i_layouts) = 0;
+		virtual void Bind(Render::ShaderHandler i_shader, const Render::VertexLayoutHandle* i_layouts, size_t i_number) = 0;
 		virtual void UnbindShader() = 0;
 
 		/////////////////////////////////////////////////////////////
