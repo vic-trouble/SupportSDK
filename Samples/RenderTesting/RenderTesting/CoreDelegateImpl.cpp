@@ -7,6 +7,7 @@
 #include <GameCore/Render/HardwareBufferManagerBase.h>
 #include <GameCore/Input/inputsystem.h>
 #include <GameCore/Render/OpenGL/GlUitlities.h>
+#include <GameCore/Render/TextureManager.h>
 
 // for test
 #include <GL/glew.h>
@@ -172,6 +173,12 @@ namespace Game
 		batch[0].element = p_mgr->CreateLayout(batch[0].vertices, 3, Render::VertexSemantic::Position, Render::ComponentType::Float, false, 0, 0);
 	}	
 
+	void LoadTexture()
+	{
+		auto p_mgr = Core::GetRenderer()->GetTextureManager();
+		p_mgr->Load("..\\..\\Resources\\Textures\\img_test.png");
+	}
+
 	GLUquadricObj* quadricId;
 	
 	
@@ -196,6 +203,8 @@ namespace Game
 		// create a GLU quadric object
 		quadricId = gluNewQuadric();
 		gluQuadricDrawStyle(quadricId, GLU_FILL);		
+
+		LoadTexture();
 	}
 
 	void CoreDelegateImpl::OnTerminate()

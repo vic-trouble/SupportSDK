@@ -7,6 +7,16 @@
 
 namespace SDK
 {
+
+	namespace Resources {
+		namespace Serialization {
+
+			template <typename ResInfo>
+			struct LoaderImpl;
+
+		} // Serialization
+	} // Resources
+
 	namespace Render
 	{
 		enum class TextureType
@@ -26,7 +36,7 @@ namespace SDK
 
 		enum class ImageFormat
 		{
-
+			RGBA
 		};		
 
 		enum class Swizzle
@@ -53,11 +63,16 @@ namespace SDK
 		class GLTextureManager : public TextureManager
 		{
 		private:
+			friend struct Resources::Serialization::LoaderImpl<Texture>;
+
+		private:
 			using TexturesArray = GenericHandlesStaticArray<TextureHandle, Texture, 4096>;
 			TexturesArray m_textures;
 
 		public:
+			virtual ~GLTextureManager();
 
+			virtual TextureHandle Load(const std::string& i_file_name) override;
 		};
 
 	} // Render

@@ -433,5 +433,8 @@
     <ClCompile Include="Render\Shader.cpp">
       <Filter>Core\Renderer\Shaders</Filter>
     </ClCompile>
+    <ClCompile Include="Render\OpenGL\GLTextureManager.cpp">
+      <Filter>Core\Renderer\OpenGL</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -13,6 +13,7 @@ namespace SDK
 		class HardwareBufferManagerBase;
 		class ShaderCompiler;
 		class LightsController;
+		class TextureManager;
 	}
 
 	struct Color
@@ -77,6 +78,7 @@ namespace SDK
 		virtual Render::HardwareBufferManagerBase* GetHardwareBufferMgr() = 0;
 		virtual Render::ShaderCompiler* GetShaderCompiler() = 0;
 		virtual Render::LightsController* GetLightsController() = 0;
+		virtual Render::TextureManager* GetTextureManager() = 0;
 		virtual void Draw(Render::Batch i_decl) = 0;
 
 		/////////////////////////////////////////////////////////////

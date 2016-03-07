@@ -14,9 +14,9 @@ namespace SDK
 		class TextureManager
 		{
 		public:
-			virtual ~TextureManager();
+			virtual ~TextureManager() {}
 
-			
+			virtual TextureHandle Load(const std::string& i_file_name) = 0;
 		};
 
 	} // Render

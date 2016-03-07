@@ -207,6 +207,7 @@
     <ClCompile Include="Render\Frustum.cpp" />
     <ClCompile Include="Render\OpenGL\GLLightsController.cpp" />
     <ClCompile Include="Render\OpenGL\GLShaderCompiler.cpp" />
+    <ClCompile Include="Render\OpenGL\GLTextureManager.cpp" />
     <ClCompile Include="Render\OpenGL\HardwareBufferManager.cpp" />
     <ClCompile Include="Render\OpenGL\OpenGLRenderer.cpp" />
     <ClCompile Include="Render\OpenGL\GLUtilities.cpp" />

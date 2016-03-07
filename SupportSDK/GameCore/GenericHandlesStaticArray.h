@@ -2,13 +2,13 @@
 #define __GAMECORE_GENERICHANDLESSTATICARRAY_H__
 
 #include "GenericHandle.h"
-
+#include "GenericHandlesDynamicArray.h"
 #include <vector>
 
 namespace SDK
 {
 
-	namespace detail
+	/*namespace detail
 	{
 		template <typename DataType, typename BaseType, class Enable = void>
 		struct TypeTraits;
@@ -76,7 +76,7 @@ namespace SDK
 		{
 			typedef T BaseType;
 		};
-	}
+	}*/
 
 	template <typename HandleType, typename DataType, size_t size>
 	class GenericHandlesStaticArray
