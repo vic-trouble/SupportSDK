@@ -15,6 +15,8 @@ namespace SDK
 
 				virtual const std::type_info& type() const = 0;
 				virtual holder_base* clone() const = 0;
+				virtual const void* get_raw_ptr() const = 0;
+				virtual size_t get_size() const = 0;
 			};
 			template <typename ValueType>
 			struct holder : public holder_base
@@ -37,6 +39,16 @@ namespace SDK
 				virtual holder_base* clone() const override
 				{
 					return new holder(m_value);
+				}
+
+				virtual const void* get_raw_ptr() const override
+				{
+					return &m_value;
+				}
+
+				virtual size_t get_size() const override
+				{
+					return sizeof(ValueType);
 				}
 			};
 
@@ -80,6 +92,16 @@ namespace SDK
 				return mp_value->type() == typeid(TargetType)
 					? &static_cast<const holder<TargetType>*>(mp_value.get())->m_value
 					: nullptr;
+			}
+
+			const void* get_raw_ptr() const
+			{
+				return mp_value->get_raw_ptr();
+			}
+
+			size_t get_size() const
+			{
+				return mp_value->get_size();
 			}
 		};
 

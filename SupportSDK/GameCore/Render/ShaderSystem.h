@@ -70,6 +70,7 @@ namespace SDK
 			};
 			GAMECORE_EXPORT ShaderHandler Load(const std::string& i_resource_name, ShaderSource i_source);
 			GAMECORE_EXPORT void Unload(ShaderHandler i_handler);
+			GAMECORE_EXPORT const Shader* Access(const std::string& i_name) const;
 			inline const Shader* Access(ShaderHandler i_handler) const
 			{
 				if (i_handler.index == -1 || i_handler.generation != m_shaders.m_handlers[i_handler.index].generation)
@@ -78,7 +79,8 @@ namespace SDK
 			}
 
 			GAMECORE_EXPORT void SetKnownUniforms(ShaderHandler i_handle);
-			GAMECORE_EXPORT void SetUniform(ShaderHandler i_handle, const ShaderUniformValue& i_value);
+			GAMECORE_EXPORT void SetUniform(ShaderHandler i_handle, const std::string& i_var_name, const ShaderUniformValue& i_value) const;
+			GAMECORE_EXPORT void SetUniform(int i_location, const ShaderUniformValue& i_value) const;
 		};
 
 		// TODO: global object

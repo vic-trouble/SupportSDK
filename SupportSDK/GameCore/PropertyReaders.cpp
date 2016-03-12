@@ -15,7 +15,7 @@ namespace SDK
 	////////////////////////////////////////////////////
 	// XML
 
-	PropertyElement PropretyReader <(int)ReaderType::XML>::Parse(const std::string& x)
+	PropertyElement PropretyReader <(int)ReaderType::XML>::Parse(const std::string& x) const
 	{
 		return PropertyElement();
 	}
@@ -147,6 +147,23 @@ namespace SDK
 		return end_val;
 	}
 
+	size_t FindFirstOf(std::string i_search_symbols, const std::string& i_str, size_t i_begin)
+	{
+		size_t pos = std::string::npos;
+		for (char c : i_search_symbols)
+		{
+			for (size_t i = i_begin; i < i_str.size(); ++i)
+			{
+				if (i_str[i] == c)
+				{
+					pos = std::min(pos, i);
+					break;
+				}
+			}
+		}
+		return pos;
+	}
+
 	size_t ParseProperty(PropertyElement& o_element, const std::string& value, size_t i_offset = 0)
 	{
 		if (value.size() == i_offset)
@@ -175,9 +192,31 @@ namespace SDK
 				break;
 			case ValueType::Int:
 				{
-					size_t end_val = value.find_first_of("\n\0", value_begin);
+					size_t end_val = FindFirstOf("\n\r\0", value, value_begin);
 					new_offset = end_val;
 					o_element.AddValue<int>(name, Utilities::lexical_cast<int>(value.substr(value_begin, end_val - value_begin)));
+				}
+				break;
+			case ValueType::Float:
+				{
+					size_t end_val = FindFirstOf("\n\r\0", value, value_begin);
+					new_offset = end_val;
+					o_element.AddValue<float>(name, Utilities::lexical_cast<float>(value.substr(value_begin, end_val - value_begin)));
+				}
+				break;
+			case ValueType::Double:
+				{
+					size_t end_val = FindFirstOf("\n\r\0", value, value_begin);
+					new_offset = end_val;
+					o_element.AddValue<double>(name, Utilities::lexical_cast<double>(value.substr(value_begin, end_val - value_begin)));
+				}
+				break;
+			case ValueType::Boolean:
+				{
+					size_t end_val = FindFirstOf("\n\r\0", value, value_begin);
+					new_offset = end_val;
+					std::string bool_str = value.substr(value_begin, end_val - value_begin);
+					o_element.AddValue<bool>(name, Utilities::lexical_cast<bool>(value.substr(value_begin, end_val - value_begin)));
 				}
 				break;
 			case ValueType::String:
@@ -215,24 +254,28 @@ namespace SDK
 	}
 
 
-	PropertyElement PropretyReader <(int)ReaderType::SDKFormat>::Parse(const std::string& i_file_name)
+	PropertyElement PropretyReader <(int)ReaderType::SDKFormat>::Parse(const std::string& i_file_name) const 
 	{
 		FS::StreamPtr p_stream(new FS::FileStream(i_file_name));
 		if (!p_stream->IsValid())
 			return PropertyElement();
 
 		std::istream& io_stream = p_stream->Get();
+		return Parse(io_stream);
+	}
+
+	PropertyElement PropretyReader <(int)ReaderType::SDKFormat>::Parse(std::istream& io_stream) const
+	{
 		std::string file_text = FS::ReadFileToString(io_stream);
 		PropertyElement root;
 		ParseProperty(root, file_text);
-
 		return root;
 	}
 
 	////////////////////////////////////////////////////
 	// Binary
 
-	PropertyElement PropretyReader <(int)ReaderType::Binary>::Parse(const std::string& x)
+	PropertyElement PropretyReader <(int)ReaderType::Binary>::Parse(const std::string& x) const 
 	{
 		return PropertyElement();
 	}

@@ -31,6 +31,32 @@ namespace SDK
 			};
 
 			template <>
+			struct Converter <double>
+			{
+				static double convert_to(const std::string& i_value)
+				{
+					return std::stod(i_value.c_str());
+				}
+				static std::string convert_from(const double& i_value)
+				{
+					return std::to_string(i_value);
+				}
+			};
+
+			template <>
+			struct Converter <bool>
+			{
+				static bool convert_to(const std::string& i_value)
+				{
+					return i_value == "true" ? true : false;
+				}
+				static std::string convert_from(const bool& i_value)
+				{
+					return std::to_string(i_value);
+				}
+			};
+
+			template <>
 			struct Converter <int>
 			{
 				static int convert_to(const std::string& i_value)

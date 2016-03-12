@@ -10,21 +10,24 @@ namespace SDK
 	class PropretyReader <(int)ReaderType::XML>
 	{
 	public:
-		PropertyElement Parse(const std::string& i_file_name);
+		PropertyElement Parse(const std::string& i_file_name) const;
+		PropertyElement Parse(std::istream& i_stream) const;
 	};
 
 	template <>
 	class PropretyReader <(int)ReaderType::SDKFormat>
 	{
 	public:
-		PropertyElement Parse(const std::string& i_file_name);
+		PropertyElement Parse(const std::string& i_file_name) const;
+		PropertyElement Parse(std::istream& i_stream) const;
 	};
 
 	template <>
 	class PropretyReader <(int)ReaderType::Binary>
 	{
 	public:
-		PropertyElement Parse(const std::string& i_file_name);
+		PropertyElement Parse(const std::string& i_file_name) const;
+		PropertyElement Parse(std::istream& i_stream) const;
 	};
 
 } // SDK

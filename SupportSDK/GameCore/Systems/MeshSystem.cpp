@@ -8,6 +8,7 @@
 #include "Render/IRenderer.h"
 #include "Applications/ApplicationBase.h"
 #include "Render/RenderWorld.h"
+#include "Render/MaterialManager.h"
 #include "Resources/ResourceManager.h"
 
 #include "TransformationsSystem.h"
@@ -292,14 +293,15 @@ namespace SDK
 					p_transform_cmd->Translate(p_transform->m_position);
 				}
 
-				Commands::SetupShader<1>* p_shader_cmd = Render::gBuffer.Append<Commands::SetupShader<1>>(p_transform_cmd);				
+				Commands::SetupShader<1, 2>* p_shader_cmd = Render::gBuffer.Append<Commands::SetupShader<1, 2>>(p_transform_cmd);				
 				p_shader_cmd->m_layouts[0] = mesh.GetLayout();
 				if (!mesh_instance.GetMaterials().empty())
 				{
-					auto material_handle = mesh_instance.GetMaterials()[0];
-					auto* p_material = m_materials.Access(material_handle);
-					p_shader_cmd->m_shader = p_material->m_shader;
-					p_shader_cmd->SetValue("input_color", ShaderVariableType::FloatVec4, p_material->m_color);
+					auto material_handle = mesh_instance.GetMaterials()[0];					
+					auto* p_material = Render::g_material_mgr.AccessMaterial(material_handle);;
+					p_shader_cmd->m_shader = p_material->m_shader;					
+					for (auto& entry : p_material->m_entries)
+						p_shader_cmd->SetValue(entry.shader_var_location, entry.type, entry.container.GetDataPtr(), entry.container.size, false);
 				}
 
 				void* p_parent_cmd = p_shader_cmd != nullptr ? (void*)p_shader_cmd : (void*)p_transform_cmd;
@@ -307,10 +309,6 @@ namespace SDK
 				p_cmd->vertices = mesh.GetVertices();
 				p_cmd->layout = mesh.GetLayout();
 				p_cmd->indices = mesh.GetIndices();
-				if (!mesh_instance.GetMaterials().empty())
-				{
-					p_cmd->program = m_materials.Access(mesh_instance.GetMaterials()[0])->m_shader;
-				}
 			}
 		}
 		
@@ -378,25 +376,9 @@ namespace SDK
 			return m_component_handlers[new_index];
 		}
 
-		MaterialHandle MeshSystem::CreateMaterial(const std::string& i_name, Render::BufferUsageFormat i_usage)
-		{
-			auto material_handle = m_materials.CreateNew(i_name, Utilities::hash_function(i_name));
-			return material_handle;
-		}
-
-		Material* MeshSystem::AccessMaterial(MaterialHandle i_handle)
-		{
-			return m_materials.Access(i_handle);
-		}
-
-		void MeshSystem::RemoveMaterial(MaterialHandle i_handle)
-		{
-			m_materials.Destroy(i_handle);
-		}
-
 		void MeshSystem::AddMaterialTo(MeshComponentHandler i_component, MaterialHandle i_material)
 		{
-			auto p_material = m_materials.Access(i_material);
+			auto p_material = Render::g_material_mgr.AccessMaterial(i_material);
 			if (p_material == nullptr)
 			{
 				assert(false && "There is no such material");

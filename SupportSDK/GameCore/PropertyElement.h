@@ -91,6 +91,41 @@ namespace SDK
 			return Utilities::any_cast<TargetType>(&it->value);
 		}
 
+		const void* GetRawPtr(const std::string& i_name) const
+		{
+			const size_t hash = Utilities::hash_function(i_name);
+			return GetRawPtr(hash);
+		}
+
+		const void* GetRawPtr(size_t i_hash) const
+		{
+			auto it = std::find_if(m_values.begin(), m_values.end(), [i_hash](const ElementVal& a)
+			{
+				return a.hash == i_hash;
+			});
+			if (it == m_values.end())
+				return nullptr;
+			return it->value.get_raw_ptr();
+		}
+
+		const Utilities::any* GetAnyPtr(const std::string& i_name) const
+		{
+			const size_t hash = Utilities::hash_function(i_name);
+			return GetAnyPtr(hash);
+		}
+
+		const Utilities::any* GetAnyPtr(size_t i_hash) const
+		{
+			auto it = std::find_if(m_values.begin(), m_values.end(), [i_hash](const ElementVal& a)
+			{
+				return a.hash == i_hash;
+			});
+			if (it == m_values.end())
+				return nullptr;
+			return &it->value;
+		}
+
+
 		template <typename TargetType>
 		TargetType GetValue(const std::string& i_name) const
 		{
@@ -128,7 +163,17 @@ namespace SDK
 			iterator(const PropertyElement& i_element)
 				: m_element(i_element)
 				, m_position(0)
-			{}
+			{
+				for (size_t i = m_position; i < m_element.m_values.size(); ++i)
+				{
+					auto p_value = m_element.m_values[i].value.get_val_ptr<ValueType>();
+					if (p_value != nullptr)
+					{
+						m_position = i;
+						break;
+					}
+				}
+			}
 			
 			std::string element_name() const
 			{

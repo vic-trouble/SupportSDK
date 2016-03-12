@@ -113,7 +113,7 @@ namespace SDK
 			Count
 		};
 
-		enum class ShaderVariableType
+		enum class ShaderVariableType : char
 		{
 			Float,
 			FloatVec2,
@@ -140,7 +140,10 @@ namespace SDK
 			FloatMat3x2,
 			FloatMat3x4,
 			FloatMat4x2,
-			FloatMat4x3
+			FloatMat4x3,
+			Sampler2D,
+
+			Undefined
 		};
 
 		enum class UniformType

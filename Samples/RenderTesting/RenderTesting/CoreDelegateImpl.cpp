@@ -30,6 +30,7 @@ using namespace SDK;
 #include <GameCore/Applications/ApplicationBase.h>
 
 #include <GameCore/Systems/MeshSystem.h>
+#include <GameCore/Render/MaterialManager.h>
 #include <GameCore/Systems/TransformationsSystem.h>
 
 #include <GameCore/Render/ShaderSystem.h>
@@ -67,13 +68,8 @@ namespace Game
 			{ Render::Shader::Fragment, "..\\..\\Resources\\Shaders\\Sample.fragmentshader" }
 		});
 
-		auto material_handle = Render::g_mesh_system.CreateMaterial("SampleMaterial");
-		auto p_material = Render::g_mesh_system.AccessMaterial(material_handle);
-		p_material->m_shader = shader_handler;
-		p_material->m_color[0] = 0.49f;
-		p_material->m_color[1] = 0.059f;
-		p_material->m_color[2] = 0.97f;
-		p_material->m_color[3] = 1.f;
+		auto material_handle = Render::g_material_mgr.Load("Sample_material", "..\\..\\Resources\\sample.material");		
+		auto p_material = Render::g_material_mgr.AccessMaterial(material_handle);
 
 		Render::g_mesh_system.AddMaterialTo(mesh_handler, material_handle);
 

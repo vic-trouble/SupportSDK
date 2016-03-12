@@ -156,6 +156,16 @@ namespace SDK
 			return ShaderHandler{ -1, 0 };
 		}
 
+		const Shader* ShaderSystem::Access(const std::string& i_name) const
+		{
+			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
+
+			auto handle = p_load_manager->GetHandleToResource(i_name);
+			if (handle.first == -1)
+				return nullptr;
+			return &m_shaders.m_buffer[handle.first];
+		}
+
 		void ShaderSystem::Unload(ShaderHandler i_handler)
 		{
 			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
@@ -194,26 +204,28 @@ namespace SDK
 			}
 		}
 
-		void ShaderSystem::SetUniform(ShaderHandler i_handle, const ShaderUniformValue& i_value)
+		void ShaderSystem::SetUniform(ShaderHandler i_handle, const std::string& i_var_name, const ShaderUniformValue& i_value) const
 		{
-			const size_t data_size = i_value.size;
-			const void* p_data_ptr = i_value.GetDataPtr();			
-			// catch data - it will be deleted after setting
-			std::unique_ptr<char> p_data(i_value.p_data);
-
 			if (i_handle.index == -1 || i_handle.generation != m_shaders.m_handlers[i_handle.index].generation)
 				return;
+			const Shader& shader = m_shaders.m_buffer[i_handle.index];
 
-			if (mp_current_shader_compiler == nullptr)
-				return;
-
-			Shader& shader = m_shaders.m_buffer[i_handle.index];
-
-			Shader::uniform uni = shader.GetUniform(i_value.name_hash);
+			Shader::uniform uni = shader.GetUniform(Utilities::hash_function(i_var_name));
 			if (uni.name_hash == -1)
 				return;
-					
-			mp_current_shader_compiler->SetUniform(uni.location, i_value.type, p_data_ptr, i_value.transposed);
+
+			SetUniform(uni.location, i_value);
+		}
+
+		void ShaderSystem::SetUniform(int i_location, const ShaderUniformValue& i_value) const
+		{
+			if (mp_current_shader_compiler == nullptr)
+				return;
+			const size_t data_size = i_value.size;
+			const void* p_data_ptr = i_value.GetDataPtr();
+			// catch data - it will be deleted after setting
+			std::unique_ptr<char> p_data(i_value.p_data);
+			mp_current_shader_compiler->SetUniform(i_location, i_value.type, p_data_ptr, i_value.transposed);
 		}
 
 	} // Render

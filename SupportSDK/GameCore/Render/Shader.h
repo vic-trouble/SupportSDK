@@ -129,7 +129,7 @@ namespace SDK
 #endif
 		struct ShaderUniformValue
 		{
-			size_t name_hash;
+			int location;
 			ShaderVariableType type;
 			bool transposed;
 			char* p_data;
@@ -138,26 +138,31 @@ namespace SDK
 			char buffer[MAX_BUFFER_SIZE];
 
 			template <typename T>
-			void SetValue(size_t i_hash, ShaderVariableType i_type, const T& i_value)
+			void SetValue(int i_location, ShaderVariableType i_type, const T& i_value)
 			{
-				SetValue(i_hash, i_type, i_value, false);
+				SetValue(i_location, i_type, i_value, false);
 			}
 
 			template <typename T>
-			void SetValue(size_t i_hash, ShaderVariableType i_type, const T& i_value, bool i_transposed)
+			void SetValue(int i_location, ShaderVariableType i_type, const T& i_value, bool i_transposed)
 			{
 				// TODO: own macro for such checks
 #if defined(_DEBUG)
 				CheckType(i_type, i_value);
 #endif
-				name_hash = i_hash;
+				SetValue(i_location, i_type, &i_value, sizeof(T), i_transposed);				
+			}
+
+			void SetValue(int i_location, ShaderVariableType i_type, const void* ip_value, size_t i_size, bool i_transposed)
+			{
+				location = i_location;
 				type = i_type;
 				transposed = i_transposed;
 				std::fill(std::begin(buffer), std::end(buffer), 0);
 				p_data = nullptr;
 
-				const char* p_val = reinterpret_cast<const char*>(&i_value);
-				size = sizeof(T);
+				const char* p_val = reinterpret_cast<const char*>(ip_value);
+				size = i_size;
 				if (size <= MAX_BUFFER_SIZE)
 				{
 					memcpy(buffer, p_val, size);
@@ -165,7 +170,7 @@ namespace SDK
 				else
 				{
 					p_data = new char[size];
-					std::fill(p_data, p_data+size, 0);
+					std::fill(p_data, p_data + size, 0);
 					memcpy(p_data, p_val, size);
 				}
 			}
@@ -177,18 +182,17 @@ namespace SDK
 				return buffer;
 			}
 
-			template <typename T>
-			static ShaderUniformValue Construct(size_t i_hash, ShaderVariableType i_type, const T& i_value, bool i_transposed)
+			static ShaderUniformValue Construct(int i_location, ShaderVariableType i_type, const void* ip_raw_data, size_t i_size, bool i_transposed)
 			{
 				ShaderUniformValue val;
-				val.SetValue(i_hash, i_type, i_value, i_transposed);
+				val.SetValue(i_location, i_type, ip_raw_data, i_size, i_transposed);
 				return val;
 			}
 			void Reset()
 			{
 				size = 0;
 				p_data = nullptr;
-				name_hash = 0;
+				location = -1;
 			}
 		};
 		static_assert(std::is_pod<ShaderUniformValue>::value, "");

@@ -17,7 +17,8 @@ namespace SDK
 	class PropretyReader
 	{
 	public:
-		PropertyElement Parse(const std::string& i_file_name);
+		PropertyElement Parse(const std::string& i_file_name) const;
+		PropertyElement Parse(std::istream& i_stream) const;
 	};
 
 } // SDK

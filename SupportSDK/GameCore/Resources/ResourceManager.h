@@ -191,7 +191,7 @@ namespace SDK
 				// auto it = std::find(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(hash));
 				auto& res_info = m_loaded_resources.back();
 				res_info.m_state = ResourceInformation::State::Loaded;
-				Register<ResType>(res_info, load_res.second);
+				Register<ResType>(res_info, std::move(load_res.second));
 
 				return handle;
 			}			
@@ -203,7 +203,7 @@ namespace SDK
 				auto it = std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(i_handle));
 				if (it == m_loaded_resources.end())
 				{
-					Serialization::LoaderImpl<ResType>::Register(i_handle, i_resource);
+					Serialization::LoaderImpl<ResType>::Register(i_handle, std::move(i_resource));
 					m_loaded_resources.emplace_back(hash, 1, ResourceInformation::State::Loaded, i_handle);
 				}
 				else
@@ -231,6 +231,18 @@ namespace SDK
 					m_loaded_resources.erase(it, m_loaded_resources.end());
 				}
 				// otherwise we do nothing
+			}
+
+			std::pair<int, int> GetHandleToResource(const std::string& i_res_name) const
+			{
+				const size_t hash = Utilities::hash_function(i_res_name);
+				// check if handle already exist
+				auto it = std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(hash));
+				if (it != m_loaded_resources.end())
+				{
+					return{ it->m_handle, 0 };
+				}
+				return{ -1,-1 };
 			}
 		};
 

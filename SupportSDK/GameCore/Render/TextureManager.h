@@ -17,6 +17,7 @@ namespace SDK
 			virtual ~TextureManager() {}
 
 			virtual TextureHandle Load(const std::string& i_file_name) = 0;
+			virtual void Bind(int i_target, TextureHandle) {}
 		};
 
 	} // Render

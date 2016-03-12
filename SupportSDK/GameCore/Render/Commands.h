@@ -75,7 +75,7 @@ namespace SDK
 			{
 				GAMECORE_EXPORT void BindShader(ShaderHandler i_shader, const VertexLayoutHandle* i_layouts, size_t i_size);
 				GAMECORE_EXPORT void UnbindShader();
-				GAMECORE_EXPORT void SetDynamicUniform(ShaderHandler i_shader, const ShaderUniformValue& i_value);
+				GAMECORE_EXPORT void SetDynamicUniform(const ShaderUniformValue& i_value);
 			} // SetupShaderDetails
 			template <size_t layouts_count, size_t dynamic_uniforms_count = 1>
 			struct SetupShader
@@ -88,7 +88,7 @@ namespace SDK
 					const SetupShader<LayoutsCount, DynUniCount>* cmd = reinterpret_cast<const SetupShader<LayoutsCount, DynUniCount>*>(ip_data);
 					SetupShaderDetails::BindShader(cmd->m_shader, &cmd->m_layouts[0], LayoutsCount);
 					for (size_t i = 0; i < cmd->current_value; ++i)
-						SetupShaderDetails::SetDynamicUniform(cmd->m_shader, cmd->m_dynamic_uniforms[i]);
+						SetupShaderDetails::SetDynamicUniform(cmd->m_dynamic_uniforms[i]);
 				}
 				static void Unbind(const void*)
 				{
@@ -112,23 +112,27 @@ namespace SDK
 				size_t current_value;
 
 				template <typename T>
-				void SetValue(const std::string& i_name, ShaderVariableType i_type, const T& i_value, bool i_transposed)
+				void SetValue(int i_location, ShaderVariableType i_type, const T& i_value, bool i_transposed)
+				{				
+					SetValue(i_location, i_type, &i_value, sizeof(T), i_transposed);
+				}
+
+				template <typename T>
+				void SetValue(int i_location, ShaderVariableType i_type, const T& i_value)
+				{
+					SetValue(i_location, i_type, i_value, false);
+				}
+
+				inline void SetValue(int i_location, ShaderVariableType i_type, const void* ip_raw_data, size_t i_size, bool i_transposed)
 				{
 					if (current_value >= DynUniCount)
 					{
 						assert(false && "Try to set more than allocated");
 						return;
 					}
-					const size_t hash = Utilities::hash_function(i_name);
-					m_dynamic_uniforms[current_value] = ShaderUniformValue::Construct(hash, i_type, i_value, i_transposed);
+					m_dynamic_uniforms[current_value] = ShaderUniformValue::Construct(i_location, i_type, ip_raw_data, i_size, i_transposed);
 
 					++current_value;
-				}
-
-				template <typename T>
-				void SetValue(const std::string& i_name, ShaderVariableType i_type, const T& i_value)
-				{
-					SetValue(i_name, i_type, i_value, false);
 				}
 			};
 			

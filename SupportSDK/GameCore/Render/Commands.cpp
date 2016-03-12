@@ -122,9 +122,9 @@ namespace SDK
 					Core::GetRenderer()->UnbindShader();
 				}
 
-				void SetDynamicUniform(ShaderHandler i_shader, const ShaderUniformValue& i_value)
+				void SetDynamicUniform(const ShaderUniformValue& i_value)
 				{
-					Render::g_shader_system.SetUniform(i_shader, i_value);
+					Render::g_shader_system.SetUniform(i_value.location, i_value);
 				}
 			} // SetupShaderDetails
 

@@ -72,6 +72,9 @@
     <Filter Include="Core\Renderer\Texture">
       <UniqueIdentifier>{009220f8-056c-46b7-ac9a-c4756a3048be}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Renderer\Materials">
+      <UniqueIdentifier>{88c86b88-2857-4d54-ba5f-fbd443654489}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -311,9 +314,6 @@
     <ClInclude Include="EntityDefines.h">
       <Filter>Core\Entities</Filter>
     </ClInclude>
-    <ClInclude Include="Render\Material.h">
-      <Filter>Core\Renderer\Mesh</Filter>
-    </ClInclude>
     <ClInclude Include="Render\TextureManager.h">
       <Filter>Core\Renderer\Texture</Filter>
     </ClInclude>
@@ -322,6 +322,12 @@
     </ClInclude>
     <ClInclude Include="Render\OpenGL\GLTextureManager.h">
       <Filter>Core\Renderer\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\MaterialManager.h">
+      <Filter>Core\Renderer\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Material.h">
+      <Filter>Core\Renderer\Materials</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -435,6 +441,9 @@
     </ClCompile>
     <ClCompile Include="Render\OpenGL\GLTextureManager.cpp">
       <Filter>Core\Renderer\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\MaterialManager.cpp">
+      <Filter>Core\Renderer\Materials</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

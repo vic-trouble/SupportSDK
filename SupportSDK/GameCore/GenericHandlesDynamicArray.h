@@ -46,7 +46,7 @@ namespace SDK
 			template <typename ElementType, typename... Args>
 			static DataType CreateImpl(Args... args)
 			{
-				return DataType(args...);
+				return std::move(DataType(args...));
 			}
 
 			static void Destroy(DataType& o_data)
@@ -91,7 +91,7 @@ namespace SDK
 		HandleType CreateNew(Args... args)
 		{
 			// Create control
-			DataType obj = TypeTraits::CreateImpl<ElementType>(args...);
+			DataType obj = std::move(TypeTraits::CreateImpl<ElementType>(args...));
 
 			HandleType handle{ static_cast<int>(m_elements.size()), 0 };
 			// find free control

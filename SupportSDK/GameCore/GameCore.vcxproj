@@ -149,6 +149,7 @@
     <ClInclude Include="Render\Light.h" />
     <ClInclude Include="Render\LightsController.h" />
     <ClInclude Include="Render\Material.h" />
+    <ClInclude Include="Render\MaterialManager.h" />
     <ClInclude Include="Render\OpenGL\GLLightsController.h" />
     <ClInclude Include="Render\OpenGL\GLShaderCompiler.h" />
     <ClInclude Include="Render\OpenGL\GLTextureManager.h" />
@@ -205,6 +206,7 @@
     <ClCompile Include="Render\Camera.cpp" />
     <ClCompile Include="Render\Commands.cpp" />
     <ClCompile Include="Render\Frustum.cpp" />
+    <ClCompile Include="Render\MaterialManager.cpp" />
     <ClCompile Include="Render\OpenGL\GLLightsController.cpp" />
     <ClCompile Include="Render\OpenGL\GLShaderCompiler.cpp" />
     <ClCompile Include="Render\OpenGL\GLTextureManager.cpp" />

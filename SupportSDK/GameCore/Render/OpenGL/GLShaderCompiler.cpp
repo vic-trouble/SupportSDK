@@ -291,6 +291,7 @@ namespace SDK
 			switch (i_type)
 			{
 				case SVT::Int:
+				case SVT::Sampler2D:
 					{
 						glUniform1i(i_location, reinterpret_cast<int>(ip_value));
 					}

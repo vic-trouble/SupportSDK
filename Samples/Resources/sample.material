@@ -1,0 +1,34 @@
+Material = {
+	name = "Sample_material"
+	Shader = {
+		name = "SimpleShader"
+		diffuse_tex = {
+			shader_semantic = "uniform"
+			type = "sampler2D"
+			value = "box_diffuse.png"
+
+			show_name = "Diffuse"
+		}		
+		specular_tex = {
+			shader_semantic = "uniform"
+			type = "sampler2D"
+			value = "box_specular.png"
+
+			show_name = "Specular"
+		}
+		transparency = {
+			shader_semantic = "uniform"
+			type = "float"
+			value = 4.2f
+			
+			show_name = "Transparency"
+		}
+		input_color = {
+			shader_semantic = "uniform"
+			type = "vec4"
+			value = [ 0.49f 0.059f 0.87f 1.0f ]
+
+			show_name = "Color"
+		}
+	}
+}

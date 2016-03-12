@@ -35,9 +35,6 @@ namespace SDK
 			std::vector<MeshComponent> m_instances;
 			std::vector<MeshComponentHandler> m_component_handlers;
 
-			using Materials = SDK::GenericHandleDynamicArray<MaterialHandle, Material>;
-			Materials m_materials;
-
 		public:
 			MeshSystem();
 			virtual ~MeshSystem();
@@ -58,12 +55,6 @@ namespace SDK
 
 			// TODO: Custom mesh
 			//MeshHandler Create(const std::string& i_name, Mesh i_mesh);
-
-			/////////////////////////////////////////////////////////
-			// Materials block
-			GAMECORE_EXPORT MaterialHandle CreateMaterial(const std::string& i_name, BufferUsageFormat i_usage = BufferUsageFormat::Dynamic);
-			GAMECORE_EXPORT Material* AccessMaterial(MaterialHandle i_handle);
-			GAMECORE_EXPORT void RemoveMaterial(MaterialHandle i_handle);
 
 			GAMECORE_EXPORT void AddMaterialTo(MeshComponentHandler i_component, MaterialHandle i_material);
 
