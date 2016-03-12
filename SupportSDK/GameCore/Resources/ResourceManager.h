@@ -38,9 +38,10 @@ namespace SDK
 				static std::pair<LoadResult, ResourceType> Load(std::istream&, InfoType);
 				static std::pair<LoadResult, ResourceType> Load(std::istream*, InfoType);
 				static int CreateNewHandle();
-				static void RemoveHandle(int i_handle);
-				static void UnloadResource(int i_handle);
-				static void Register(int i_handle, ResType i_resource);				
+				static void RemoveHandle(InternalHandle i_handle);
+				static void UnloadResource(InternalHandle i_handle);
+				static void Register(int i_handle, ResType i_resource);
+				static void Register(InternalHandle i_handle, ResType i_resource);
 			};
 
 		} // Serialization
@@ -67,7 +68,7 @@ namespace SDK
 
 			// if one of i_file_names is empty than on that index nullptr pointer will be set
 			template <typename ResType, size_t parts_count>
-			int Load(
+			InternalHandle Load(
 				const std::string& i_res_name,
 				std::initializer_list<std::string> i_file_names,
 				typename Serialization::Definition<ResType>::InfoType i_info				
@@ -77,7 +78,7 @@ namespace SDK
 				assert(parts_count == i_file_names.size());
 				// TODO: is it needed?
 				if (parts_count != i_file_names.size())
-					return -1;
+					return InternalHandle::InvalidHandle();
 				///	
 				using Loader = LoaderImpl<ResType>;
 
@@ -90,7 +91,7 @@ namespace SDK
 					return it->m_handle;
 				}
 				// handle not exist - this file was not loaded before			
-				const int handle = Loader::CreateNewHandle();
+				InternalHandle handle = Loader::CreateNewHandle();
 				{
 					ResourceInformation res_info = { hash, 0, ResourceInformation::State::Unloaded, handle };
 					m_loaded_resources.emplace_back(res_info);
@@ -114,7 +115,7 @@ namespace SDK
 						m_loaded_resources.erase(
 							std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(hash)),
 							m_loaded_resources.end());
-						return -1;
+						return InternalHandle::InvalidHandle();
 					}
 
 					p_streams[i] = &streams[i]->Get();
@@ -128,14 +129,14 @@ namespace SDK
 					m_loaded_resources.erase(
 						std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(hash)),
 						m_loaded_resources.end());
-					return -1;
+					return InternalHandle::InvalidHandle();
 				}
 
 				// TODO: when will be async - this will not be reference to back element
 				// auto it = std::find(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(hash));
 				auto& res_info = m_loaded_resources.back();
 				res_info.m_state = ResourceInformation::State::Loaded;
-				Register<ResType>(res_info, load_res.second);
+				Register<ResType>(res_info, std::move(load_res.second));
 
 				return handle;
 			}
@@ -147,7 +148,7 @@ namespace SDK
 
 			// for now: i_file_name - relative path which depends on executable
 			template <typename ResType>
-			int Load(const std::string& i_file_name,
+			InternalHandle Load(const std::string& i_file_name,
 					typename Serialization::Definition<ResType>::InfoType i_info)
 			{
 				using namespace Serialization;
@@ -160,7 +161,7 @@ namespace SDK
 					return it->m_handle;
 				}
 				// handle not exist - this file was not loaded before			
-				const int handle = LoaderImpl<ResType>::CreateNewHandle();
+				InternalHandle handle = LoaderImpl<ResType>::CreateNewHandle();
 				{
 					ResourceInformation res_info = { hash, 0, ResourceInformation::State::Unloaded, handle };
 					m_loaded_resources.emplace_back(res_info);
@@ -173,7 +174,7 @@ namespace SDK
 					m_loaded_resources.erase(
 						std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(hash)),
 						m_loaded_resources.end());
-					return -1;
+					return InternalHandle::InvalidHandle();
 				}
 
 				auto load_res = LoaderImpl<ResType>::Load(p_stream->Get(), i_info);
@@ -184,7 +185,7 @@ namespace SDK
 					m_loaded_resources.erase(
 						std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(hash)),
 						m_loaded_resources.end());
-					return -1;
+					return InternalHandle::InvalidHandle();
 				}
 
 				// TODO: when will be async - this will not be reference to back element
@@ -213,7 +214,7 @@ namespace SDK
 			}
 
 			template <typename ResType>
-			void Unload(int i_handle)
+			void Unload(InternalHandle i_handle)
 			{
 				auto it = std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(i_handle));
 				// <PANIC> Who creates this? It`s not ours; so we do nothing!
@@ -233,16 +234,16 @@ namespace SDK
 				// otherwise we do nothing
 			}
 
-			std::pair<int, int> GetHandleToResource(const std::string& i_res_name) const
+			InternalHandle GetHandleToResource(const std::string& i_res_name) const
 			{
 				const size_t hash = Utilities::hash_function(i_res_name);
 				// check if handle already exist
 				auto it = std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(hash));
 				if (it != m_loaded_resources.end())
 				{
-					return{ it->m_handle, 0 };
+					return{ it->m_handle.index, it->m_handle.generation };
 				}
-				return{ -1,-1 };
+				return InternalHandle::InvalidHandle();
 			}
 		};
 

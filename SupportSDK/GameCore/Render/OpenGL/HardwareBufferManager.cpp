@@ -250,7 +250,7 @@ namespace SDK
 			auto handle = m_static_elements.m_handlers[cur_index];
 			auto& layout = m_static_elements.m_buffer[cur_index];
 
-			layout.m_source = i_source.index;
+			layout.m_source = { i_source.index, i_source.generation };
 			layout.m_vertex_size = i_ver_size;
 			layout.m_semantic = i_semantic;
 			layout.m_component = i_component;

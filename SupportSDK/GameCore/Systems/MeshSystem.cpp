@@ -164,64 +164,66 @@ namespace SDK
 				}
 
 				// TODO: need some limitations on size of loaded meshes?
-				static int CreateNewHandle()
+				static InternalHandle CreateNewHandle()
 				{
 					auto& handlers = Render::g_mesh_system.m_handlers;
 
-					int new_index = -1;
+					InternalHandle new_index{ -1, -1 };
 					for (size_t i = 0; i < handlers.size(); ++i)
 					{
 						if (handlers[i].index == -1)
 						{
-							new_index = static_cast<int>(i);
+							new_index.index = i;
+							new_index.generation = handlers[i].generation;
 							handlers[i].index = i;
 							break;
 						}
 					}
 
-					if (new_index == -1)
+					if (new_index.index == -1)
 					{
 						// TODO: resize vector normally - with some strategy - not push_back
-						handlers.push_back(Render::MeshHandler());						
-						new_index = handlers.size() - 1;
+						handlers.push_back(Render::MeshHandler());
+						const int index = handlers.size() - 1;						
+						handlers[index].generation = 0;
+						handlers[index].index = index;
 
-						handlers[new_index].generation = 0;
-						handlers[new_index].index = new_index;
+						new_index.index = index;
+						new_index.generation = 0;
 					}
 
 					return new_index;
 				}
 
-				static void RemoveHandle(int i_handle)
+				static void RemoveHandle(InternalHandle i_handle)
 				{
 					auto& handlers = Render::g_mesh_system.m_handlers;
-					assert(i_handle < static_cast<int>(handlers.size()));
-					++handlers[i_handle].generation;
-					handlers[i_handle].index = -1;
+					assert(i_handle.index < static_cast<int>(handlers.size()));
+					++handlers[i_handle.index].generation;
+					handlers[i_handle.index].index = -1;
 				}
 
-				static void UnloadResource(int i_handle)
+				static void UnloadResource(InternalHandle i_handle)
 				{
 					auto& handlers = Render::g_mesh_system.m_handlers;
-					assert(i_handle < static_cast<int>(handlers.size()));
-					++handlers[i_handle].generation;
-					handlers[i_handle].index = -1;
-
+					assert(i_handle.index < static_cast<int>(handlers.size()));
+					++handlers[i_handle.index].generation;
+					handlers[i_handle.index].index = -1;
 
 					auto& meshes = Render::g_mesh_system.m_meshes;
-					assert(i_handle < static_cast<int>(meshes.size()));
+					assert(i_handle.index < static_cast<int>(meshes.size()));
 					// release resources for mesh
 					auto p_mgr = Core::GetRenderer()->GetHardwareBufferMgr();
-					Render::Mesh& mesh = meshes[i_handle];
+					Render::Mesh& mesh = meshes[i_handle.index];
 					p_mgr->DestroyBuffer(mesh.GetVertices());
 					p_mgr->DestroyLayout(mesh.GetLayout());
 					p_mgr->DestroyBuffer(mesh.GetIndices());
 				}
 
-				static void Register(int i_handle, Render::Mesh i_mesh)
+				static void Register(InternalHandle i_handle, Render::Mesh i_mesh)
 				{					
 					auto& meshes = Render::g_mesh_system.m_meshes;					
-					if (static_cast<int>(meshes.size()) < i_handle)
+					if (static_cast<int>(meshes.size()) < i_handle.index)
 					{
 						// TODO: increase buffer strategy
 						const size_t RANGE = 1000;
@@ -232,7 +234,7 @@ namespace SDK
 					}
 					
 
-					meshes[i_handle] = i_mesh;
+					meshes[i_handle.index] = i_mesh;
 				}
 			};
 		
@@ -316,25 +318,22 @@ namespace SDK
 		{
 			MeshInformation info = { i_vertices_usage, i_indices_usage };
 			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
-			int index = p_load_manager->Load<Mesh>(i_file_name, info);
+			InternalHandle handle = p_load_manager->Load<Mesh>(i_file_name, info);
 
 			// resource is already loaded
-			if (index != -1)
+			if (handle.index != -1)
 			{
-				assert(index < static_cast<int>(m_handlers.size()));
-				return m_handlers[index];
+				assert(handle.index < static_cast<int>(m_handlers.size()));
+				return m_handlers[handle.index];
 			}
-			
-			MeshHandler handler;
-			handler.generation = 0;
-			handler.index = -1;
-			return handler;
+
+			return MeshHandler::InvalidHandle();
 		}
 
 		void MeshSystem::Unload(MeshHandler i_handler)
 		{
 			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
-			p_load_manager->Unload<Mesh>(i_handler.index);
+			p_load_manager->Unload<Mesh>({ i_handler.index, i_handler.generation });
 		}
 
 		MeshComponentHandler MeshSystem::CreateInstance(MeshHandler i_handler)

@@ -163,8 +163,9 @@ namespace SDK
 			o_material.m_name = i_material_elem.GetValue<std::string>("name");
 			o_material.m_name_hash = Utilities::hash_function(o_material.m_name);
 			std::string shader_name = p_shader_elem->GetValue<std::string>("name");
-			o_material.m_shader.index = Core::GetGlobalObject<Resources::ResourceManager>()->GetHandleToResource(shader_name).first;
-			o_material.m_shader.generation = 0;
+			InternalHandle handle = Core::GetGlobalObject<Resources::ResourceManager>()->GetHandleToResource(shader_name);
+			o_material.m_shader.index = handle.index;
+			o_material.m_shader.generation = handle.generation;
 			if (o_material.m_shader.index == -1)
 				return false;
 
@@ -173,7 +174,7 @@ namespace SDK
 			return true;
 		}
 
-	}
+	} // namespace
 
 	namespace Resources
 	{
@@ -203,27 +204,25 @@ namespace SDK
 					return std::make_pair(result ? LoadResult::Success : LoadResult::Failure, std::move(material));
 				}
 
-				static int CreateNewHandle()
+				static InternalHandle CreateNewHandle()
 				{
 					auto handle = Render::g_material_mgr.m_materials.CreateNew();
-					return handle.index;
+					return{ handle.index, handle.generation };
 				}
 
-				static void RemoveHandle(int i_handle)
+				static void RemoveHandle(InternalHandle i_handle)
 				{
-					Render::g_material_mgr.m_materials.Destroy({ i_handle, 0 });
+					Render::g_material_mgr.m_materials.Destroy({ i_handle.index, i_handle.generation });
 				}
 
-				static void UnloadResource(int i_handle)
+				static void UnloadResource(InternalHandle i_handle)
 				{
-					Render::g_material_mgr.m_materials.m_elements[i_handle].second = Render::Material();
-					Render::g_material_mgr.m_materials.m_elements[i_handle].first.index = -1;
-					Render::g_material_mgr.m_materials.m_elements[i_handle].first.generation;
+					Render::g_material_mgr.m_materials.Destroy({ i_handle.index, i_handle.generation });
 				}
 
-				static void Register(int i_handle, Render::Material i_material)
+				static void Register(InternalHandle i_handle, Render::Material i_material)
 				{
-					Render::g_material_mgr.m_materials.m_elements[i_handle].second = std::move(i_material);
+					Render::g_material_mgr.m_materials.m_elements[i_handle.index].second = std::move(i_material);
 				}
 			};
 
@@ -241,13 +240,13 @@ namespace SDK
 		MaterialHandle MaterialManager::Load(const std::string& i_resource_name, const std::string& i_path)
 		{
 			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
-			int index = p_load_manager->Load<Material>(i_path, nullptr);
+			InternalHandle handle = p_load_manager->Load<Material>(i_path, nullptr);
 
 			// resource is already loaded
-			if (index != -1)
+			if (handle.index != -1)
 			{
-				assert(index >= 0 && index < static_cast<int>(m_materials.m_elements.size()));
-				return m_materials.m_elements[index].first;
+				assert(handle.index >= 0 && handle.index < static_cast<int>(m_materials.m_elements.size()));
+				return m_materials.m_elements[handle.index].first;
 			}
 
 			return MaterialHandle::InvalidHandle();
@@ -260,7 +259,8 @@ namespace SDK
 
 		void MaterialManager::RemoveMaterial(MaterialHandle i_handle)
 		{
-			m_materials.Destroy(i_handle);
+			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
+			p_load_manager->Unload<Material>({ i_handle.index, i_handle.generation });			
 		}
 
 		void MaterialManager::CreateCommand(MaterialHandle i_material, const void* ip_parent_command) const

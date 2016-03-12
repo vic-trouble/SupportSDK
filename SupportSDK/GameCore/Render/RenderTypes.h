@@ -156,7 +156,7 @@ namespace SDK
 		struct VertexLayout
 		{
 			/// The source vertex buffer, as bound to an index using VertexBufferBinding
-			int	m_source;
+			InternalHandle	m_source;
 			// 1, 2, 3 or 4
 			uint			m_vertex_size;
 			/// The meaning of the element
@@ -174,11 +174,11 @@ namespace SDK
 		///////////////////////////////////////////////////////////////
 		
 		struct VertexHandleTag {};
-		typedef GenericHandle<size_t, 12, 20, VertexHandleTag> VertexBufferHandle;
+		typedef GenericHandle<int, 12, 20, VertexHandleTag> VertexBufferHandle;
 		struct IndexHandleTag {};
-		typedef GenericHandle<size_t, 12, 20, IndexHandleTag> IndexBufferHandle;
+		typedef GenericHandle<int, 12, 20, IndexHandleTag> IndexBufferHandle;
 		struct VerLayoutHandleTag {};
-		typedef GenericHandle<size_t, 12, 20, VerLayoutHandleTag> VertexLayoutHandle;
+		typedef GenericHandle<int, 12, 20, VerLayoutHandleTag> VertexLayoutHandle;
 		// Meshes
 		struct MeshHandlerTag{};
 		typedef GenericHandle<int, 12, 20, MeshHandlerTag> MeshHandler;

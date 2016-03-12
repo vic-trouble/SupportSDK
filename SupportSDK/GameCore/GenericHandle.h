@@ -5,7 +5,7 @@ namespace SDK
 {
 
 	template<typename T, T N1, T N2, typename Tag, class Enable = void>
-	struct GenericHandle;
+	struct GenericHandle;		
 
 	template <typename T, T N1, T N2, typename Tag>
 	struct GenericHandle <T, N1, N2, Tag, typename std::enable_if<std::is_integral<T>::value>::type>
@@ -18,6 +18,10 @@ namespace SDK
 			return{ -1, -1 };
 		}
 	};
+
+	struct InternalHandleTag {};
+	using InternalHandle = GenericHandle<int, 12, 20, InternalHandleTag>;
+
 	template <typename T, T N1, T N2, typename Tag>
 	bool operator == (const GenericHandle<T, N1, N2, Tag>& left, const GenericHandle<T, N1, N2, Tag>& right)
 	{

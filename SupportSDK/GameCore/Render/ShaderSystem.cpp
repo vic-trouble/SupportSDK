@@ -57,7 +57,7 @@ namespace SDK
 					return std::make_pair(shader.IsValid() ? LoadResult::Success : LoadResult::Failure, shader);
 				}
 
-				static int CreateNewHandle()
+				static InternalHandle CreateNewHandle()
 				{
 					auto cur_index = Render::g_shader_system.m_shaders.m_current_index;
 					auto& handlers = Render::g_shader_system.m_shaders.m_handlers;
@@ -77,7 +77,7 @@ namespace SDK
 						// TODO: hold error
 						//	not found
 						if (cur_index == -1)
-							return -1;
+							return InternalHandle::InvalidHandle();
 					}					
 					else
 					{				
@@ -86,33 +86,33 @@ namespace SDK
 					}
 
 					handlers[cur_index].index = cur_index;
-					return handlers[cur_index].index;
+					return{ handlers[cur_index].index, handlers[cur_index].generation };
 				}
 
-				static void RemoveHandle(int i_handle)
+				static void RemoveHandle(InternalHandle i_handle)
 				{
 					auto& handlers = Render::g_shader_system.m_shaders.m_handlers;
-					assert(i_handle < static_cast<int>(Render::ShaderSystem::Shaders::Size));
-					++handlers[i_handle].generation;
-					handlers[i_handle].index = -1;
+					assert(i_handle.index < static_cast<int>(Render::ShaderSystem::Shaders::Size));
+					++handlers[i_handle.index].generation;
+					handlers[i_handle.index].index = -1;
 				}
 
-				static void UnloadResource(int i_handle)
+				static void UnloadResource(InternalHandle i_handle)
 				{
 					using namespace Render;
 
 					auto& handlers = Render::g_shader_system.m_shaders;
-					assert(i_handle < static_cast<int>(Render::ShaderSystem::Shaders::Size));
-					++handlers.m_handlers[i_handle].generation;
-					handlers.m_handlers[i_handle].index = -1;
+					assert(i_handle.index < static_cast<int>(Render::ShaderSystem::Shaders::Size));
+					++handlers.m_handlers[i_handle.index].generation;
+					handlers.m_handlers[i_handle.index].index = -1;
 
 					auto p_compiler = Core::GetRenderer()->GetShaderCompiler();
-					p_compiler->Release(handlers.m_buffer[i_handle]);					
+					p_compiler->Release(handlers.m_buffer[i_handle.index]);
 				}
 
-				static void Register(int i_handle, Render::Shader i_shader)
+				static void Register(InternalHandle i_handle, Render::Shader i_shader)
 				{
-					Render::g_shader_system.m_shaders.m_buffer[i_handle] = i_shader;
+					Render::g_shader_system.m_shaders.m_buffer[i_handle.index] = i_shader;
 				}
 			};
 
@@ -141,19 +141,19 @@ namespace SDK
 				mp_current_shader_compiler = Core::GetRenderer()->GetShaderCompiler();
 
 			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
-			int index = p_load_manager->Load<Shader, Shader::TypesNumber>(i_resource_name, 
+			InternalHandle handle = p_load_manager->Load<Shader, Shader::TypesNumber>(i_resource_name, 
 				{ i_source.vertex_shader_file, i_source.tess_control_shader_file, i_source.tess_compute_shader_file,
 					i_source.geometry_shader_file, i_source.fragment_shader_file, i_source.compute_shader_file }, 
 				mp_current_shader_compiler);
 
 			// resource is already loaded
-			if (index != -1)
+			if (handle.index != -1)
 			{
-				assert(index < static_cast<int>(Render::ShaderSystem::Shaders::Size));
-				return m_shaders.m_handlers[index];
+				assert(handle.index < static_cast<int>(Render::ShaderSystem::Shaders::Size));
+				return m_shaders.m_handlers[handle.index];
 			}
 
-			return ShaderHandler{ -1, 0 };
+			return ShaderHandler::InvalidHandle();
 		}
 
 		const Shader* ShaderSystem::Access(const std::string& i_name) const
@@ -161,15 +161,15 @@ namespace SDK
 			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
 
 			auto handle = p_load_manager->GetHandleToResource(i_name);
-			if (handle.first == -1)
+			if (handle.index == -1)
 				return nullptr;
-			return &m_shaders.m_buffer[handle.first];
+			return &m_shaders.m_buffer[handle.index];
 		}
 
 		void ShaderSystem::Unload(ShaderHandler i_handler)
 		{
 			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
-			p_load_manager->Unload<Shader>(i_handler.index);
+			p_load_manager->Unload<Shader>({ i_handler.index, i_handler.generation });
 		}
 
 		void ShaderSystem::SetKnownUniforms(ShaderHandler i_handle)

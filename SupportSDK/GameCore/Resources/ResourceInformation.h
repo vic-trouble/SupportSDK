@@ -2,6 +2,7 @@
 #define __GAMECORE_RESOURCEINFORMATION_H__
 
 #include "../TypeDefinitions.h"
+#include "../GenericHandle.h"
 
 namespace SDK
 {
@@ -21,25 +22,25 @@ namespace SDK
 			State		m_state;
 
 			// 
-			int			m_handle;
+			InternalHandle	m_handle;
 
 			struct FindPredicate
 			{
 				size_t id;
-				int handle;
+				InternalHandle handle;
 				explicit FindPredicate(size_t i_id)
 					: id(i_id)
-					, handle(-1)
+					, handle(InternalHandle::InvalidHandle())
 				{}
 
-				explicit FindPredicate(int i_handle)
+				explicit FindPredicate(InternalHandle i_handle)
 					: handle(i_handle)
 					, id(0)
 				{}
 
 				bool operator () (const ResourceInformation& i_res) const
 				{
-					return handle == -1 ? i_res.m_resource_id == id : handle == i_res.m_handle;
+					return handle.index == -1 ? i_res.m_resource_id == id : handle == i_res.m_handle;
 				}
 			};
 		};

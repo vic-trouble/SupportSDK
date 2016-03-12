@@ -52,35 +52,35 @@ namespace SDK
 					return std::make_pair(LoadResult::Success, t);
 				}
 
-				static int CreateNewHandle()
+				static InternalHandle CreateNewHandle()
 				{
 					Render::GLTextureManager* p_mgr = static_cast<Render::GLTextureManager*>(Core::GetRenderer()->GetTextureManager());
 					Render::TextureHandle handle = p_mgr->m_textures.Create();
 
-					return handle.index;
+					return{ handle.index, handle.generation };
 				}
 
-				static void RemoveHandle(int i_handle)
+				static void RemoveHandle(InternalHandle i_handle)
 				{
 					Render::GLTextureManager* p_mgr = static_cast<Render::GLTextureManager*>(Core::GetRenderer()->GetTextureManager());
-					p_mgr->m_textures.m_elements[i_handle].second = Render::Texture();
-					p_mgr->m_textures.m_elements[i_handle].first.index = -1;
-					++p_mgr->m_textures.m_elements[i_handle].first.generation;
+					p_mgr->m_textures.m_elements[i_handle.index].second = Render::Texture();
+					p_mgr->m_textures.m_elements[i_handle.index].first.index = -1;
+					++p_mgr->m_textures.m_elements[i_handle.index].first.generation;
 				}
 
-				static void UnloadResource(int i_handle)
+				static void UnloadResource(InternalHandle i_handle)
 				{
 					Render::GLTextureManager* p_mgr = static_cast<Render::GLTextureManager*>(Core::GetRenderer()->GetTextureManager());
-					p_mgr->m_textures.m_elements[i_handle].second = Render::Texture();
-					p_mgr->m_textures.m_elements[i_handle].first.index = -1;
-					++p_mgr->m_textures.m_elements[i_handle].first.generation;
+					p_mgr->m_textures.m_elements[i_handle.index].second = Render::Texture();
+					p_mgr->m_textures.m_elements[i_handle.index].first.index = -1;
+					++p_mgr->m_textures.m_elements[i_handle.index].first.generation;
 					
 				}
 
-				static void Register(int i_handle, Render::Texture i_texture)
+				static void Register(InternalHandle i_handle, Render::Texture i_texture)
 				{
 					Render::GLTextureManager* p_mgr = static_cast<Render::GLTextureManager*>(Core::GetRenderer()->GetTextureManager());
-					p_mgr->m_textures.m_elements[i_handle].second = i_texture;
+					p_mgr->m_textures.m_elements[i_handle.index].second = i_texture;
 				}
 			};
 
@@ -99,12 +99,12 @@ namespace SDK
 			const auto app_path = FS::GetApplicationPath();
 			auto path = app_path;
 			path.append("\\").append(i_file_name);
-			int index = p_load_manager->Load<Texture>(i_file_name, path);
+			InternalHandle handle = p_load_manager->Load<Texture>(i_file_name, path);
 			// resource is already loaded
-			if (index != -1)
+			if (handle.index != -1)
 			{
-				assert(index < static_cast<int>(TexturesArray::Size));
-				return m_textures.m_elements[index].first;
+				assert(handle.index < static_cast<int>(TexturesArray::Size));
+				return m_textures.m_elements[handle.index].first;
 			}
 			
 			return TextureHandle::InvalidHandle();

@@ -309,7 +309,7 @@ namespace SDK
 			for (size_t i = 0; i < i_number; ++i)
 			{
 				auto element = i_mgr.AccessLayout(i_layouts[0]);
-				auto hd_buf = i_mgr.AccessVertexBuffer(Render::VertexBufferHandle{ static_cast<size_t>(element.m_source), 0 });
+				auto hd_buf = i_mgr.AccessVertexBuffer(Render::VertexBufferHandle{ element.m_source.index, element.m_source.generation });
 
 				glBindBuffer(GL_ARRAY_BUFFER, hd_buf.m_hardware_id);
 
@@ -334,7 +334,7 @@ namespace SDK
 			for (size_t i = 0; i < i_number; ++i)
 			{
 				auto element = i_mgr.AccessLayout(i_layout[i]);
-				auto hd_buf = i_mgr.AccessVertexBuffer(Render::VertexBufferHandle{ (size_t)element.m_source, 0 });
+				auto hd_buf = i_mgr.AccessVertexBuffer(Render::VertexBufferHandle{ element.m_source.index, element.m_source.generation });
 				glBindBuffer(GL_ARRAY_BUFFER, hd_buf.m_hardware_id);
 				glVertexAttribPointer(i, // index for shader attribute
 					element.m_vertex_size, // size
