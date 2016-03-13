@@ -295,18 +295,25 @@ namespace SDK
 					p_transform_cmd->Translate(p_transform->m_position);
 				}
 
-				Commands::SetupShader<1, 2>* p_shader_cmd = Render::gBuffer.Append<Commands::SetupShader<1, 2>>(p_transform_cmd);				
+				// TODO: need dynamic here and not static :`(
+				// for now buffer place for 6 unis
+				Commands::SetupShader<1, 6>* p_shader_cmd = Render::gBuffer.Append<Commands::SetupShader<1, 6>>(p_transform_cmd);				
 				p_shader_cmd->m_layouts[0] = mesh.GetLayout();
+				void* p_parent_cmd = (void*)p_shader_cmd;
 				if (!mesh_instance.GetMaterials().empty())
 				{
 					auto material_handle = mesh_instance.GetMaterials()[0];					
-					auto* p_material = Render::g_material_mgr.AccessMaterial(material_handle);;
+					const auto p_material = Render::g_material_mgr.AccessMaterial(material_handle);;
 					p_shader_cmd->m_shader = p_material->m_shader;					
 					for (auto& entry : p_material->m_entries)
-						p_shader_cmd->SetValue(entry.shader_var_location, entry.type, entry.container.GetDataPtr(), entry.container.size, false);
+					{
+						if (entry.type != ShaderVariableType::Sampler2D)
+							p_shader_cmd->SetValue(entry.shader_var_location, entry.type, entry.container.GetDataPtr(), entry.container.size, false);
+					}
+					
+					p_parent_cmd = Render::g_material_mgr.SetupShaderAndCreateCommands(&p_shader_cmd->m_dynamic_uniforms[p_shader_cmd->current_value], 6 - p_shader_cmd->current_value, *p_material, p_shader_cmd);
 				}
 
-				void* p_parent_cmd = p_shader_cmd != nullptr ? (void*)p_shader_cmd : (void*)p_transform_cmd;
 				Commands::Draw* p_cmd = Render::gBuffer.Append<Commands::Draw>(p_parent_cmd);
 				p_cmd->vertices = mesh.GetVertices();
 				p_cmd->layout = mesh.GetLayout();
@@ -362,9 +369,7 @@ namespace SDK
 				m_instances.resize(new_count);
 				new_index = new_count - 1;
 				m_component_handlers[new_index].generation = 0;
-				m_component_handlers[new_index].index = new_index;
-
-				
+				m_component_handlers[new_index].index = new_index;				
 			}
 			
 			//////////////////

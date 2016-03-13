@@ -329,6 +329,9 @@
     <ClInclude Include="Render\Material.h">
       <Filter>Core\Renderer\Materials</Filter>
     </ClInclude>
+    <ClInclude Include="Render\Texture.h">
+      <Filter>Core\Renderer\Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

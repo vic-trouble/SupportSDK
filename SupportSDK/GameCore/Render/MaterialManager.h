@@ -33,7 +33,7 @@ namespace SDK
 			GAMECORE_EXPORT const Material* AccessMaterial(MaterialHandle i_handle) const;
 			GAMECORE_EXPORT void RemoveMaterial(MaterialHandle i_handle);
 
-			void CreateCommand(MaterialHandle i_material, const void* ip_parent_command) const;
+			void* SetupShaderAndCreateCommands(ShaderUniformValue* op_dynamic_unis, size_t i_unis_size, const Material& i_material, void* ip_shader_command) const;
 		};
 
 		// TODO: global

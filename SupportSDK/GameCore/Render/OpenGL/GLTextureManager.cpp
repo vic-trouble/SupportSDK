@@ -5,6 +5,7 @@
 #include "Core.h"
 #include "Render/IRenderer.h"
 #include "Resources/ResourceManager.h"
+#include "Render/OpenGL/GlUitlities.h"
 
 #include "FileSystem/FileSystem.h"
 
@@ -29,8 +30,8 @@ namespace SDK
 			struct LoaderImpl < Render::Texture >
 			{
 				static std::pair<LoadResult, Render::Texture> Load(std::istream& io_stream, std::string i_path)
-				{					
-					int width, height;				
+				{
+					int width, height;
 					unsigned char* image = SOIL_load_image(i_path.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
 					if (image == nullptr)
 						return std::make_pair(LoadResult::Failure, Render::Texture());
@@ -43,7 +44,7 @@ namespace SDK
 					glBindTexture(GL_TEXTURE_2D, 0);
 
 					SOIL_free_image_data(image);
-					
+
 					Render::Texture t;
 					t.hardware_id = texture;
 					t.type = Render::TextureType::TwoD;
@@ -74,7 +75,7 @@ namespace SDK
 					p_mgr->m_textures.m_elements[i_handle.index].second = Render::Texture();
 					p_mgr->m_textures.m_elements[i_handle.index].first.index = -1;
 					++p_mgr->m_textures.m_elements[i_handle.index].first.generation;
-					
+
 				}
 
 				static void Register(InternalHandle i_handle, Render::Texture i_texture)
@@ -93,7 +94,7 @@ namespace SDK
 		{
 		}
 
-		TextureHandle GLTextureManager::Load(const std::string & i_file_name)
+		TextureHandle GLTextureManager::Load(const std::string& i_resource_name, const std::string & i_file_name)
 		{
 			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
 			const auto app_path = FS::GetApplicationPath();
@@ -106,8 +107,43 @@ namespace SDK
 				assert(handle.index < static_cast<int>(TexturesArray::Size));
 				return m_textures.m_elements[handle.index].first;
 			}
-			
+
 			return TextureHandle::InvalidHandle();
 		}
+
+		Texture* GLTextureManager::Access(TextureHandle i_texture)
+		{
+			return m_textures.Access(i_texture);
+		}
+
+		void GLTextureManager::Unload(TextureHandle i_texture)
+		{
+			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
+			p_load_manager->Unload<Texture>({ i_texture.index, i_texture.generation });
+		}
+
+		void GLTextureManager::Bind(int i_target, TextureHandle i_handle)
+		{
+			const auto p_texture = m_textures.Access(i_handle);
+			if (p_texture == nullptr || p_texture->hardware_id == -1)
+			{
+				// TODO: insert blank texture
+				assert(false && "No texture");
+				return;
+			}
+
+			glActiveTexture(GL_TEXTURE0 + i_target);	// Activate the texture unit first before binding texture
+			// TODO: p_texture->type
+			glBindTexture(GL_TEXTURE_2D, p_texture->hardware_id);
+			CHECK_GL_ERRORS;
+		}
+
+		void GLTextureManager::Release(int i_target)
+		{
+			glActiveTexture(GL_TEXTURE0 + i_target);
+			glBindTexture(GL_TEXTURE_2D, 0);
+			CHECK_GL_ERRORS;
+		}
+
 	} // Render
 } // SDK

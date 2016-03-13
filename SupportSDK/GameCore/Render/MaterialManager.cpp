@@ -8,6 +8,9 @@
 #include "Render/IRenderer.h"
 #include "Render/TextureManager.h"
 #include "Render/ShaderCompiler.h"
+#include "Render/RenderWorld.h"
+#include "Render/Commands.h"
+#include "Resources/ResourceManager.h"
 
 #include "Resources/ResourceManager.h"
 
@@ -17,169 +20,172 @@
 
 namespace SDK
 {	
-	namespace
-	{
-		using namespace Render;
-		using namespace details;
-
-		ShaderVariableType StringToSVT(const std::string& i_type)
-		{
-			using SVT = ShaderVariableType;
-			if (i_type == "sampler2D")
-				return SVT::Sampler2D;
-			if (i_type == "float")
-				return SVT::Float;
-			if (i_type == "vec4")
-				return SVT::FloatVec4;
-			return SVT::Undefined;
-		}
-
-		ValueContainer GetPreprocessedValue(const PropertyElement& i_var_elem, ShaderVariableType i_type)
-		{
-			ValueContainer container;
-			using SVT = ShaderVariableType;
-			switch (i_type)
-			{
-				case SVT::Sampler2D:
-					{
-						auto p_mgr = Core::GetRenderer()->GetTextureManager();
-						const auto p_tex_name = i_var_elem.GetValuePtr<std::string>("value");
-						if (p_tex_name == nullptr)
-						{
-							assert(false);
-							return std::move(container);
-						}
-						auto handle = p_mgr->Load(*p_tex_name);
-						container.SetValue<TextureHandle>(0, handle);
-					}
-					break;
-				case SVT::IntVec2:
-				case SVT::IntVec3:
-				case SVT::IntVec4:
-					{
-						const auto p_vec = i_var_elem.GetValuePtr<std::vector<int>>("value");
-						if (p_vec == nullptr)
-						{
-							assert(false);
-							break;
-						}
-						const size_t size = p_vec->size()*sizeof(int);
-						container.SetValue(0, (const void*)&(*p_vec)[0], size);
-					}
-					break;
-				case SVT::FloatVec2:
-				case SVT::FloatVec3:
-				case SVT::FloatVec4:
-					{
-						const auto p_vec = i_var_elem.GetValuePtr<std::vector<float>>("value");
-						if (p_vec == nullptr)
-						{
-							assert(false);
-							break;
-						}
-						const size_t size = p_vec->size()*sizeof(int);
-						container.SetValue(0, (const void*)&(*p_vec)[0], size);
-					}
-					break;
-				case SVT::DoubleVec2:
-				case SVT::DoubleVec3:
-				case SVT::DoubleVec4:
-					{
-						const auto p_vec = i_var_elem.GetValuePtr<std::vector<double>>("value");
-						if (p_vec == nullptr)
-						{
-							assert(false);
-							break;
-						}
-						const size_t size = p_vec->size()*sizeof(int);
-						container.SetValue(0, (const void*)&(*p_vec)[0], size);
-					}
-					break;
-				default:
-					{
-						const auto p_any = i_var_elem.GetAnyPtr("value");
-						if (p_any == nullptr)
-						{
-							assert(false);
-							break;
-						}
-						container.SetValue(0, p_any->get_raw_ptr(), p_any->get_size());
-					}
-					break;
-			}
-			return std::move(container);
-		}
-
-		std::vector<MaterialEntry> ParseShaderElement(const PropertyElement& i_shader_elem)
-		{
-			std::string shader_name = i_shader_elem.GetValue<std::string>("name");
-			const auto p_shader = Render::g_shader_system.Access(shader_name);
-			if (p_shader == nullptr)
-				return std::vector<MaterialEntry>();
-
-			std::vector<MaterialEntry> shader_properties;
-			const auto end = i_shader_elem.end<PropertyElement>();
-			for (auto it = i_shader_elem.begin<PropertyElement>(); it != end; ++it)
-			{
-				auto shader_var_name = it.element_name();
-				auto uniform = p_shader->GetUniform(shader_var_name);
-				// no such uniform
-				if (uniform.location == -1)
-				{
-					assert(false);
-					continue;
-				}
-
-				const PropertyElement& element = *it;
-				const std::string* p_type = element.GetValuePtr<std::string>("type");
-				if (p_type == nullptr)
-				{
-					// no type property
-					assert(false);
-					continue;
-				}
-				ShaderVariableType type = StringToSVT(*p_type);
-				if (type == ShaderVariableType::Undefined)
-				{
-					// unknown type
-					assert(false);
-					continue;
-				}
-
-				std::string show_name = element.GetValue<std::string>("show_name");
-				ValueContainer value = std::move(GetPreprocessedValue(element, type));
-
-				shader_properties.emplace_back(uniform.location, std::move(value), type, show_name);
-			}
-			return std::move(shader_properties);
-		}
-
-		bool ParseMaterial(Material& o_material, const PropertyElement& i_material_elem)
-		{
-			const PropertyElement* p_shader_elem = i_material_elem.GetValuePtr<PropertyElement>("Shader");
-			if (p_shader_elem == nullptr)
-				return false;
-
-			o_material.m_name = i_material_elem.GetValue<std::string>("name");
-			o_material.m_name_hash = Utilities::hash_function(o_material.m_name);
-			std::string shader_name = p_shader_elem->GetValue<std::string>("name");
-			InternalHandle handle = Core::GetGlobalObject<Resources::ResourceManager>()->GetHandleToResource(shader_name);
-			o_material.m_shader.index = handle.index;
-			o_material.m_shader.generation = handle.generation;
-			if (o_material.m_shader.index == -1)
-				return false;
-
-			o_material.m_entries = std::move(ParseShaderElement(*p_shader_elem));
-
-			return true;
-		}
-
-	} // namespace
-
+	
 	namespace Resources
 	{
 		namespace Serialization
 		{
+			namespace
+			{
+				using namespace Render;
+				using namespace details;
+
+				ShaderVariableType StringToSVT(const std::string& i_type)
+				{
+					using SVT = ShaderVariableType;
+					if (i_type == "sampler2D")
+						return SVT::Sampler2D;
+					if (i_type == "float")
+						return SVT::Float;
+					if (i_type == "vec4")
+						return SVT::FloatVec4;
+					return SVT::Undefined;
+				}
+
+				ValueContainer GetPreprocessedValue(const PropertyElement& i_var_elem, ShaderVariableType i_type)
+				{
+					ValueContainer container;
+					using SVT = ShaderVariableType;
+					switch (i_type)
+					{
+						case SVT::Sampler2D:
+							{
+								auto p_mgr = Core::GetRenderer()->GetTextureManager();
+								const auto p_tex_name = i_var_elem.GetValuePtr<std::string>("value");
+								if (p_tex_name == nullptr)
+								{
+									assert(false);
+									return std::move(container);
+								}
+								auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
+								auto handle = p_load_manager->GetHandleToResource(*p_tex_name);
+								p_load_manager->Use(handle);
+								container.SetValue<InternalHandle>(0, handle);
+							}
+							break;
+						case SVT::IntVec2:
+						case SVT::IntVec3:
+						case SVT::IntVec4:
+							{
+								const auto p_vec = i_var_elem.GetValuePtr<std::vector<int>>("value");
+								if (p_vec == nullptr)
+								{
+									assert(false);
+									break;
+								}
+								const size_t size = p_vec->size()*sizeof(int);
+								container.SetValue(0, (const void*)&(*p_vec)[0], size);
+							}
+							break;
+						case SVT::FloatVec2:
+						case SVT::FloatVec3:
+						case SVT::FloatVec4:
+							{
+								const auto p_vec = i_var_elem.GetValuePtr<std::vector<float>>("value");
+								if (p_vec == nullptr)
+								{
+									assert(false);
+									break;
+								}
+								const size_t size = p_vec->size()*sizeof(int);
+								container.SetValue(0, (const void*)&(*p_vec)[0], size);
+							}
+							break;
+						case SVT::DoubleVec2:
+						case SVT::DoubleVec3:
+						case SVT::DoubleVec4:
+							{
+								const auto p_vec = i_var_elem.GetValuePtr<std::vector<double>>("value");
+								if (p_vec == nullptr)
+								{
+									assert(false);
+									break;
+								}
+								const size_t size = p_vec->size()*sizeof(int);
+								container.SetValue(0, (const void*)&(*p_vec)[0], size);
+							}
+							break;
+						default:
+							{
+								const auto p_any = i_var_elem.GetAnyPtr("value");
+								if (p_any == nullptr)
+								{
+									assert(false);
+									break;
+								}
+								container.SetValue(0, p_any->get_raw_ptr(), p_any->get_size());
+							}
+							break;
+					}
+					return std::move(container);
+				}
+
+				std::vector<MaterialEntry> ParseShaderElement(const PropertyElement& i_shader_elem)
+				{
+					std::string shader_name = i_shader_elem.GetValue<std::string>("name");
+					const auto p_shader = Render::g_shader_system.Access(shader_name);
+					if (p_shader == nullptr)
+						return std::vector<MaterialEntry>();
+
+					std::vector<MaterialEntry> shader_properties;
+					const auto end = i_shader_elem.end<PropertyElement>();
+					for (auto it = i_shader_elem.begin<PropertyElement>(); it != end; ++it)
+					{
+						auto shader_var_name = it.element_name();
+						auto uniform = p_shader->GetUniform(shader_var_name);
+						// no such uniform
+						if (uniform.location == -1)
+						{
+							assert(false);
+							continue;
+						}
+
+						const PropertyElement& element = *it;
+						const std::string* p_type = element.GetValuePtr<std::string>("type");
+						if (p_type == nullptr)
+						{
+							// no type property
+							assert(false);
+							continue;
+						}
+						ShaderVariableType type = StringToSVT(*p_type);
+						if (type == ShaderVariableType::Undefined)
+						{
+							// unknown type
+							assert(false);
+							continue;
+						}
+
+						std::string show_name = element.GetValue<std::string>("show_name");
+						ValueContainer value = std::move(GetPreprocessedValue(element, type));
+
+						shader_properties.emplace_back(uniform.location, std::move(value), type, show_name);
+					}
+					return std::move(shader_properties);
+				}
+
+				bool ParseMaterial(Material& o_material, const PropertyElement& i_material_elem)
+				{
+					const PropertyElement* p_shader_elem = i_material_elem.GetValuePtr<PropertyElement>("Shader");
+					if (p_shader_elem == nullptr)
+						return false;
+
+					o_material.m_name = i_material_elem.GetValue<std::string>("name");
+					o_material.m_name_hash = Utilities::hash_function(o_material.m_name);
+					std::string shader_name = p_shader_elem->GetValue<std::string>("name");
+					InternalHandle handle = Core::GetGlobalObject<Resources::ResourceManager>()->GetHandleToResource(shader_name);
+					o_material.m_shader.index = handle.index;
+					o_material.m_shader.generation = handle.generation;
+					if (o_material.m_shader.index == -1)
+						return false;
+
+					o_material.m_entries = std::move(ParseShaderElement(*p_shader_elem));
+
+					return true;
+				}
+
+			} // namespace
+
 			template <>
 			struct Definition <Render::Material>
 			{
@@ -230,7 +236,6 @@ namespace SDK
 
 	} // Resources
 
-
 	namespace Render
 	{
 		static MaterialManager material_mgr;
@@ -263,9 +268,43 @@ namespace SDK
 			p_load_manager->Unload<Material>({ i_handle.index, i_handle.generation });			
 		}
 
-		void MaterialManager::CreateCommand(MaterialHandle i_material, const void* ip_parent_command) const
+		void* MaterialManager::SetupShaderAndCreateCommands(ShaderUniformValue* op_dynamic_unis, size_t i_unis_size, const Material& i_material, void* ip_shader_command) const
 		{
+			// bind textures
+			void* p_parent = ip_shader_command;
+			int target = 0;
+			size_t uni_index = 0;
+			for (auto& entry : i_material.m_entries)
+			{
+				if (uni_index >= i_unis_size)
+				{
+					assert(false && "Unis is not enough");
+					return p_parent;
+				}
 
+				if (entry.type != ShaderVariableType::Sampler2D)
+					continue;
+
+				Commands::BindTexture* p_bind_texture = Render::gBuffer.Append<Commands::BindTexture>(p_parent);
+				const InternalHandle* p_handle = reinterpret_cast<const InternalHandle*>(entry.container.GetDataPtr());
+				if (p_handle == nullptr)
+				{
+					assert(false && "Material manager: Null handle to texture");
+					continue;
+				}
+				
+				p_bind_texture->texture_handle = *p_handle;
+				p_bind_texture->target = target;
+				op_dynamic_unis[uni_index] = ShaderUniformValue::Construct(entry.shader_var_location, entry.type, &target, sizeof(int), false);
+
+				// increase target and uni_index
+				++target;
+				++uni_index;
+				// newly created command will be parent to next
+				p_parent = p_bind_texture;
+			}
+
+			return p_parent;
 		}
 
 	} // Render

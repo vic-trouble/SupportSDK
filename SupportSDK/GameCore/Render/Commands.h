@@ -138,6 +138,14 @@ namespace SDK
 			
 			static_assert(std::is_pod<SetupShader<1>>::value == true, "SetupShader must be a POD.");
 
+			struct BindTexture
+			{
+				IMPLEMENT_COMMAND_WITH_COMPLETION_EXPORT(Bind, Release);
+
+				int target;
+				InternalHandle texture_handle;
+			};
+
 		} // Commands
 	} // Render
 } // SDK

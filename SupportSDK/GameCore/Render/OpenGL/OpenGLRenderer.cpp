@@ -452,6 +452,8 @@ namespace SDK
 
 	void OpenGLRenderer::Bind(Render::ShaderHandler i_shader, const Render::VertexLayoutHandle* i_layouts, size_t i_number)
 	{
+		if (m_current_shader == i_shader)
+			return;
 		m_current_shader = i_shader;
 		auto p_shader = Render::g_shader_system.Access(i_shader);
 		// TODO: use standard shader?

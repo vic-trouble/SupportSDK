@@ -195,6 +195,10 @@ namespace SDK
 		typedef GenericHandle<int, 12, 20, MaterialTag> MaterialHandle;
 		// Commands
 		typedef void(*CommandExecutor)(const void*);
+		// Textures
+		struct TextureHandleTag {};
+		typedef GenericHandle<int, 12, 20, TextureHandleTag> TextureHandle;
+
 
 #define IMPLEMENT_COMMAND_IMPL(ProcessorFunc, CompletionFunc) \
 		static constexpr CommandExecutor EXECUTOR_FUNCTION = &ProcessorFunc; \

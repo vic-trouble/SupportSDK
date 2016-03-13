@@ -68,7 +68,7 @@ namespace Game
 			{ Render::Shader::Fragment, "..\\..\\Resources\\Shaders\\Sample.fragmentshader" }
 		});
 
-		auto material_handle = Render::g_material_mgr.Load("Sample_material", "..\\..\\Resources\\sample.material");		
+		auto material_handle = Render::g_material_mgr.Load("Sample_material", "..\\..\\Resources\\sample.material");
 		auto p_material = Render::g_material_mgr.AccessMaterial(material_handle);
 
 		Render::g_mesh_system.AddMaterialTo(mesh_handler, material_handle);
@@ -172,7 +172,7 @@ namespace Game
 	void LoadTexture()
 	{
 		auto p_mgr = Core::GetRenderer()->GetTextureManager();
-		p_mgr->Load("..\\..\\Resources\\Textures\\img_test.png");
+		p_mgr->Load("diffuse_tex", "..\\..\\Resources\\Textures\\img_test.png");
 	}
 
 	GLUquadricObj* quadricId;
@@ -182,6 +182,8 @@ namespace Game
 	void CoreDelegateImpl::OnCreate()
 	{
 		InputSystem::Instance().AddSubscriber(&m_input_subs);
+
+		LoadTexture();
 
 		LoadModel();
 
@@ -199,8 +201,6 @@ namespace Game
 		// create a GLU quadric object
 		quadricId = gluNewQuadric();
 		gluQuadricDrawStyle(quadricId, GLU_FILL);		
-
-		LoadTexture();
 	}
 
 	void CoreDelegateImpl::OnTerminate()

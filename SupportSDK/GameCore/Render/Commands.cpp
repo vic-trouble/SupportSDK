@@ -9,6 +9,7 @@
 
 #include "Render/ShaderSystem.h"
 #include "Render/LightsController.h"
+#include "Render/TextureManager.h"
 
 namespace SDK
 {
@@ -18,7 +19,7 @@ namespace SDK
 		{
 			///////////////////////////////////////////////////////////////////////////
 			// Draw
-			
+
 			void Draw::SetDefaultValues()
 			{
 				vertices.index = 0;
@@ -36,7 +37,7 @@ namespace SDK
 
 				// TODO: setup uniforms
 
-				p_renderer->Draw({cmd->vertices,cmd->layout,cmd->indices});
+				p_renderer->Draw({ cmd->vertices,cmd->layout,cmd->indices });
 			}
 
 			///////////////////////////////////////////////////////////////////////////
@@ -47,7 +48,7 @@ namespace SDK
 				m_position[0] = 0.f; m_position[1] = 0.f; m_position[2] = 0.f;
 				m_scale[0] = 1.f; m_scale[1] = 1.f; m_scale[2] = 1.f;
 				for (size_t i = 0; i < 9; ++i)
-					m_rotation[i] = i/3==i%3 ? 1.f : 0.f;
+					m_rotation[i] = i / 3 == i % 3 ? 1.f : 0.f;
 			}
 
 			void Transform::PushTransformation(const void* ip_data)
@@ -56,12 +57,12 @@ namespace SDK
 				const Transform* cmd = reinterpret_cast<const Transform*>(ip_data);
 
 				p_renderer->PushMatrix();
-				
+
 				Matrix4f transformation;
 				transformation.MakeTransform(
-						{ cmd->m_position[0], cmd->m_position[1], cmd->m_position[2] }, 
-						{ cmd->m_scale[0], cmd->m_scale[1], cmd->m_scale[2] },
-						Matrix3(cmd->m_rotation));
+				{ cmd->m_position[0], cmd->m_position[1], cmd->m_position[2] },
+				{ cmd->m_scale[0], cmd->m_scale[1], cmd->m_scale[2] },
+					Matrix3(cmd->m_rotation));
 
 				p_renderer->ModifyCurrentMatrix(transformation);
 			}
@@ -127,6 +128,33 @@ namespace SDK
 					Render::g_shader_system.SetUniform(i_value.location, i_value);
 				}
 			} // SetupShaderDetails
+
+			///////////////////////////////////////////////////////////////////////////
+			// BindTexture
+
+			void BindTexture::SetDefaultValues()
+			{
+				target = 0;
+				texture_handle = InternalHandle::InvalidHandle();
+			}
+
+			void BindTexture::Bind(const void* ip_data)
+			{
+				auto p_renderer = Core::GetRenderer();
+				const BindTexture* p_cmd = reinterpret_cast<const BindTexture*>(ip_data);
+
+				auto p_tex_mgr = p_renderer->GetTextureManager();
+				p_tex_mgr->Bind(p_cmd->target, { p_cmd->texture_handle.index, p_cmd->texture_handle.generation });
+			}
+
+			void BindTexture::Release(const void* ip_data)
+			{
+				auto p_renderer = Core::GetRenderer();
+				const BindTexture* p_cmd = reinterpret_cast<const BindTexture*>(ip_data);
+
+				auto p_tex_mgr = p_renderer->GetTextureManager();
+				p_tex_mgr->Release(p_cmd->target);
+			}
 
 		} // Commands
 	} // Render

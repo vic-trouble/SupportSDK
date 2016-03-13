@@ -234,6 +234,17 @@ namespace SDK
 				// otherwise we do nothing
 			}
 
+			void Use(InternalHandle i_handle)
+			{
+				auto it = std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(i_handle));
+				if (it != m_loaded_resources.end())
+					++it->m_use_count;
+				else
+				{
+					assert(false && "No resource with such handle");
+				}
+			}			
+
 			InternalHandle GetHandleToResource(const std::string& i_res_name) const
 			{
 				const size_t hash = Utilities::hash_function(i_res_name);

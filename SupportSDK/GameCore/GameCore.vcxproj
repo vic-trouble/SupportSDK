@@ -168,6 +168,7 @@
     <ClInclude Include="Render\Shader.h" />
     <ClInclude Include="Render\ShaderCompiler.h" />
     <ClInclude Include="Render\ShaderSystem.h" />
+    <ClInclude Include="Render\Texture.h" />
     <ClInclude Include="Render\TextureManager.h" />
     <ClInclude Include="Render\VertexDeclaration.h" />
     <ClInclude Include="Render\Viewport.h" />
