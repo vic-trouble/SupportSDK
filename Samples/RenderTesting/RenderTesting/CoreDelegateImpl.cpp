@@ -68,7 +68,7 @@ namespace Game
 			{ Render::Shader::Fragment, "..\\..\\Resources\\Shaders\\Sample.fragmentshader" }
 		});
 
-		auto material_handle = Render::g_material_mgr.Load("Sample_material", "..\\..\\Resources\\sample.material");
+		auto material_handle = Render::g_material_mgr.Load("Sample_material", "..\\..\\Resources\\Materials\\sample.material");
 		auto p_material = Render::g_material_mgr.AccessMaterial(material_handle);
 
 		Render::g_mesh_system.AddMaterialTo(mesh_handler, material_handle);
