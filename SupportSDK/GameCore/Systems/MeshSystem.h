@@ -46,7 +46,7 @@ namespace SDK
 			virtual bool Requires(Action i_aciton) const { return i_aciton == Action::SubmitDrawCommands || i_aciton == Action::Update; }
 
 			// Own
-			GAMECORE_EXPORT MeshHandler Load(const std::string& i_file_name, BufferUsageFormat i_vertices_usage, BufferUsageFormat i_indices_usage);
+			GAMECORE_EXPORT MeshHandler Load(const std::string& i_name, const std::string& i_path, BufferUsageFormat i_vertices_usage, BufferUsageFormat i_indices_usage);
 			GAMECORE_EXPORT void Unload(MeshHandler i_handler);
 			GAMECORE_EXPORT void Unload(const std::string& i_file_name) { throw std::exception("Not realized"); }
 			

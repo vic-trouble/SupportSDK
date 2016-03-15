@@ -321,11 +321,11 @@ namespace SDK
 			}
 		}
 		
-		MeshHandler MeshSystem::Load(const std::string& i_file_name, Render::BufferUsageFormat i_vertices_usage, Render::BufferUsageFormat i_indices_usage)
+		MeshHandler MeshSystem::Load(const std::string& i_name, const std::string& i_path, Render::BufferUsageFormat i_vertices_usage, Render::BufferUsageFormat i_indices_usage)
 		{
 			MeshInformation info = { i_vertices_usage, i_indices_usage };
 			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
-			InternalHandle handle = p_load_manager->Load<Mesh>(i_file_name, { i_file_name }, info);
+			InternalHandle handle = p_load_manager->Load<Mesh>(i_name, { i_path }, info);
 
 			// resource is already loaded
 			if (handle.index != -1)
