@@ -59,7 +59,7 @@ namespace SDK
 								}
 								auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
 								auto handle = p_load_manager->GetHandleToResource(*p_tex_name);
-								p_load_manager->Use(handle);
+								p_load_manager->Use(*p_tex_name);
 								container.SetValue<InternalHandle>(0, handle);
 							}
 							break;

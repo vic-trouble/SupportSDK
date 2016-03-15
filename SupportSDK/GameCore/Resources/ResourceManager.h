@@ -7,7 +7,6 @@
 
 #include "ResourceInformation.h"
 #include "../FileSystem/Stream.h"
-#include "../Render/Mesh.h"
 
 #include <Utilities/HashFunctions.h>
 
@@ -52,8 +51,6 @@ namespace SDK
 			std::vector<ResourceInformation> m_loaded_resources;
 
 		private:
-			static Render::Mesh LoadObj(const std::string& i_file_name, Render::BufferUsageFormat i_vertices_usage, Render::BufferUsageFormat i_indices_usage);
-
 			static FS::StreamPtr OpenStream(const std::string& i_file_name);
 
 			// already registered internally - reload and increase counter
@@ -71,7 +68,7 @@ namespace SDK
 			InternalHandle Load(
 				const std::string& i_res_name,
 				std::initializer_list<std::string> i_file_names,
-				typename Serialization::Definition<ResType>::InfoType i_info				
+				typename Serialization::Definition<ResType>::InfoType i_info
 				)
 			{
 				using namespace Serialization;
@@ -120,7 +117,7 @@ namespace SDK
 
 					p_streams[i] = &streams[i]->Get();
 				}
-								
+
 				auto load_res = Loader::Load(p_streams, i_info);
 
 				if (load_res.first == LoadResult::Failure)
@@ -149,7 +146,7 @@ namespace SDK
 			// for now: i_file_name - relative path which depends on executable
 			template <typename ResType>
 			InternalHandle Load(const std::string& i_file_name,
-					typename Serialization::Definition<ResType>::InfoType i_info)
+				typename Serialization::Definition<ResType>::InfoType i_info)
 			{
 				using namespace Serialization;
 				const size_t hash = Utilities::hash_function(i_file_name);
@@ -195,7 +192,7 @@ namespace SDK
 				Register<ResType>(res_info, std::move(load_res.second));
 
 				return handle;
-			}			
+			}
 
 			template <typename ResType>
 			void Register(int i_handle, const std::string& i_name, ResType i_resource)
@@ -234,28 +231,9 @@ namespace SDK
 				// otherwise we do nothing
 			}
 
-			void Use(InternalHandle i_handle)
-			{
-				auto it = std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(i_handle));
-				if (it != m_loaded_resources.end())
-					++it->m_use_count;
-				else
-				{
-					assert(false && "No resource with such handle");
-				}
-			}			
+			GAMECORE_EXPORT InternalHandle GetHandleToResource(const std::string& i_res_name) const;
 
-			InternalHandle GetHandleToResource(const std::string& i_res_name) const
-			{
-				const size_t hash = Utilities::hash_function(i_res_name);
-				// check if handle already exist
-				auto it = std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(hash));
-				if (it != m_loaded_resources.end())
-				{
-					return{ it->m_handle.index, it->m_handle.generation };
-				}
-				return InternalHandle::InvalidHandle();
-			}
+			GAMECORE_EXPORT void Use(const std::string& i_res_name);
 		};
 
 	} // Resources

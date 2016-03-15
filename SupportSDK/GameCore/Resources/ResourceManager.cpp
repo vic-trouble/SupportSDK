@@ -23,6 +23,29 @@ namespace SDK
 			return p_stream;
 		}
 
+		InternalHandle ResourceManager::GetHandleToResource(const std::string& i_res_name) const
+		{
+			const size_t hash = Utilities::hash_function(i_res_name);
+			// check if handle already exist
+			auto it = std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(hash));
+			if (it != m_loaded_resources.end())
+				return{ it->m_handle.index, it->m_handle.generation };
+			return InternalHandle::InvalidHandle();
+		}
+
+		void ResourceManager::Use(const std::string& i_res_name)
+		{
+			const size_t hash = Utilities::hash_function(i_res_name);
+			// check if handle already exist
+			auto it = std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(hash));
+			if (it != m_loaded_resources.end())
+				++it->m_use_count;
+			else
+			{
+				assert(false && "No resource with such handle");
+			}
+		}
+
 	} // Resources
 
 } // SDK
