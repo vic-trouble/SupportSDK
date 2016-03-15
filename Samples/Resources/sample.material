@@ -5,14 +5,14 @@ Material = {
 		diffuse_tex = {
 			shader_semantic = "uniform"
 			type = "sampler2D"
-			value = "..\..\Resources\Textures\img_test.png"
+			value = "diffuse_tex"
 
 			show_name = "Diffuse"
 		}		
 		specular_tex = {
 			shader_semantic = "uniform"
 			type = "sampler2D"
-			value = "box_specular.png"
+			value = "specular_tex"
 
 			show_name = "Specular"
 		}

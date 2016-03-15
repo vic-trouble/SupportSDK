@@ -34,12 +34,10 @@ namespace SDK
 				typedef typename Definition<ResType>::InfoType InfoType;
 				typedef ResType ResourceType;
 
-				static std::pair<LoadResult, ResourceType> Load(std::istream&, InfoType);
 				static std::pair<LoadResult, ResourceType> Load(std::istream*, InfoType);
 				static int CreateNewHandle();
 				static void RemoveHandle(InternalHandle i_handle);
 				static void UnloadResource(InternalHandle i_handle);
-				static void Register(int i_handle, ResType i_resource);
 				static void Register(InternalHandle i_handle, ResType i_resource);
 			};
 
@@ -63,8 +61,11 @@ namespace SDK
 
 		public:
 
+			// TODO: comments
+			// returns handler to resource if success, -1 otherwise
+			// For systems it can be transformed to Handler<>
 			// if one of i_file_names is empty than on that index nullptr pointer will be set
-			template <typename ResType, size_t parts_count>
+			template <typename ResType, size_t parts_count = 1>
 			InternalHandle Load(
 				const std::string& i_res_name,
 				std::initializer_list<std::string> i_file_names,
@@ -136,63 +137,7 @@ namespace SDK
 				Register<ResType>(res_info, std::move(load_res.second));
 
 				return handle;
-			}
-
-
-			// TODO: comments
-			// returns handler to resource if success, -1 otherwise
-			// For systems it can be transformed to Handler<>
-
-			// for now: i_file_name - relative path which depends on executable
-			template <typename ResType>
-			InternalHandle Load(const std::string& i_file_name,
-				typename Serialization::Definition<ResType>::InfoType i_info)
-			{
-				using namespace Serialization;
-				const size_t hash = Utilities::hash_function(i_file_name);
-				// check if handle already exist
-				auto it = std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(hash));
-				if (it != m_loaded_resources.end())
-				{
-					++it->m_use_count;
-					return it->m_handle;
-				}
-				// handle not exist - this file was not loaded before			
-				InternalHandle handle = LoaderImpl<ResType>::CreateNewHandle();
-				{
-					ResourceInformation res_info = { hash, 0, ResourceInformation::State::Unloaded, handle };
-					m_loaded_resources.emplace_back(res_info);
-				}
-
-				auto p_stream = OpenStream(i_file_name);
-				if (p_stream == nullptr)
-				{
-					LoaderImpl<ResType>::RemoveHandle(handle);
-					m_loaded_resources.erase(
-						std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(hash)),
-						m_loaded_resources.end());
-					return InternalHandle::InvalidHandle();
-				}
-
-				auto load_res = LoaderImpl<ResType>::Load(p_stream->Get(), i_info);
-
-				if (load_res.first == LoadResult::Failure)
-				{
-					LoaderImpl<ResType>::RemoveHandle(handle);
-					m_loaded_resources.erase(
-						std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(hash)),
-						m_loaded_resources.end());
-					return InternalHandle::InvalidHandle();
-				}
-
-				// TODO: when will be async - this will not be reference to back element
-				// auto it = std::find(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(hash));
-				auto& res_info = m_loaded_resources.back();
-				res_info.m_state = ResourceInformation::State::Loaded;
-				Register<ResType>(res_info, std::move(load_res.second));
-
-				return handle;
-			}
+			}						
 
 			template <typename ResType>
 			void Register(int i_handle, const std::string& i_name, ResType i_resource)

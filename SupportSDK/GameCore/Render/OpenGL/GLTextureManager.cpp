@@ -29,7 +29,7 @@ namespace SDK
 			template <>
 			struct LoaderImpl < Render::Texture >
 			{
-				static std::pair<LoadResult, Render::Texture> Load(std::istream& io_stream, std::string i_path)
+				static std::pair<LoadResult, Render::Texture> Load(std::istream* ip_streams[1], std::string i_path)
 				{
 					int width, height;
 					unsigned char* image = SOIL_load_image(i_path.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
@@ -97,10 +97,12 @@ namespace SDK
 		TextureHandle GLTextureManager::Load(const std::string& i_resource_name, const std::string & i_file_name)
 		{
 			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
+			// TODO: now it is needed to open file with another library that does not now about our streams
+			//	so we need to pass thre correct path
 			const auto app_path = FS::GetApplicationPath();
 			auto path = app_path;
 			path.append("\\").append(i_file_name);
-			InternalHandle handle = p_load_manager->Load<Texture>(i_file_name, path);
+			InternalHandle handle = p_load_manager->Load<Texture>(i_resource_name, { i_file_name }, path);
 			// resource is already loaded
 			if (handle.index != -1)
 			{

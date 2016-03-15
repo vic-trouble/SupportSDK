@@ -99,7 +99,7 @@ namespace SDK
 			template <>
 			struct LoaderImpl < Render::Mesh >
 			{
-				static std::pair<LoadResult, Render::Mesh> Load(std::istream& io_stream, MeshInformation i_info)
+				static std::pair<LoadResult, Render::Mesh> Load(std::istream* ip_streams[1], MeshInformation i_info)
 				{
 					using namespace Render;
 
@@ -108,42 +108,42 @@ namespace SDK
 					std::vector<uint> indices;
 					std::string model_name;
 					/////////////////
-
+					std::istream& stream = *ip_streams[0];
 					Vector3 temp_vec;
 					Math::Vector<uint, 3> temp_byte_vec;
-					while (io_stream.good())
+					while (ip_streams[0]->good())
 					{
 						char buffer[255];
-						io_stream >> buffer;
+						stream >> buffer;
 
 						switch (buffer[0])
 						{
 							case 'v':
 								if (buffer[1] == '\0')
 								{
-									io_stream >> temp_vec;
+									stream >> temp_vec;
 									for (size_t i = 0; i < 3; ++i)
 										vertices.push_back(temp_vec[i]);
 									break;
 								}
 								if (buffer[1] == 't')
 								{
-									io_stream >> temp_vec;
+									*ip_streams[0] >> temp_vec;
 									// TODO
 								}
 								break;
 							case 'o':
-								io_stream >> model_name;
+								stream >> model_name;
 								break;
 							case 'f':
 								if (buffer[1] != '\0')
 									break;
-								io_stream >> temp_byte_vec;
+								stream >> temp_byte_vec;
 								for (size_t i = 0; i < 3; ++i)
 									indices.push_back(temp_byte_vec[i]);
 								break;
 							default:
-								io_stream.getline(buffer, 254);
+								stream.getline(buffer, 254);
 								break;
 						}
 					}
@@ -325,7 +325,7 @@ namespace SDK
 		{
 			MeshInformation info = { i_vertices_usage, i_indices_usage };
 			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
-			InternalHandle handle = p_load_manager->Load<Mesh>(i_file_name, info);
+			InternalHandle handle = p_load_manager->Load<Mesh>(i_file_name, { i_file_name }, info);
 
 			// resource is already loaded
 			if (handle.index != -1)

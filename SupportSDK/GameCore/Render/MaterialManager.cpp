@@ -196,13 +196,13 @@ namespace SDK
 			struct LoaderImpl < Render::Material >
 			{
 				// TODO: is it possible to catch error like ip_streams[3] in compile time?
-				static std::pair<LoadResult, Render::Material> Load(std::istream& i_stream, void*)
+				static std::pair<LoadResult, Render::Material> Load(std::istream* ip_streams[1], void*)
 				{
 					using namespace Render;
 					Material material;
 					
 					PropretyReader<(int)ReaderType::SDKFormat> reader;
-					PropertyElement root = reader.Parse(i_stream);
+					PropertyElement root = reader.Parse(*ip_streams[0]);
 					const PropertyElement* p_material_elem = root.GetValuePtr<PropertyElement>("Material");
 					if (p_material_elem == nullptr)
 						return std::make_pair(LoadResult::Failure, material);
@@ -245,7 +245,7 @@ namespace SDK
 		MaterialHandle MaterialManager::Load(const std::string& i_resource_name, const std::string& i_path)
 		{
 			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
-			InternalHandle handle = p_load_manager->Load<Material>(i_path, nullptr);
+			InternalHandle handle = p_load_manager->Load<Material>(i_resource_name, { i_path }, nullptr);
 
 			// resource is already loaded
 			if (handle.index != -1)
