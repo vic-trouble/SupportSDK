@@ -22,8 +22,8 @@ namespace SDK
 		void RemoveEntity(HandleType i_handle)
 		{
 			auto it = std::find(m_handles.begin(), m_handles.end(), i_handle);
-			if (it != m_handlers.end())
-				m_handlers.erase(it);
+			if (it != m_handles.end())
+				m_handles.erase(it);
 		}
 
 		const std::vector<HandleType>& GetHandles() const

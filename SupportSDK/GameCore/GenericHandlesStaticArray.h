@@ -139,7 +139,7 @@ namespace SDK
 			if (!IsValid(i_handle))
 				return;
 			
-			m_elements[i_handle.index] = DType();
+			m_elements[i_handle.index].second = DType();
 			m_elements[i_handle.index].first.index = -1;
 		}
 

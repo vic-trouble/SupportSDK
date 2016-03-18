@@ -6,16 +6,7 @@
 #include "GenericHandlesStaticArray.h"
 
 namespace SDK
-{
-
-	namespace Resources {
-		namespace Serialization {
-
-			template <typename ResInfo>
-			struct LoaderImpl;
-
-		} // Serialization
-	} // Resources
+{	
 
 	namespace Render
 	{
@@ -37,6 +28,10 @@ namespace SDK
 			virtual Texture* Access(TextureHandle i_texture) override;
 			virtual void Bind(int i_target, TextureHandle i_texture) override;
 			virtual void Release(int i_target) override;
+
+			virtual void Initialize() override;
+			virtual void Release() override;
+			virtual void Load(const PropertyElement& i_resource_element) override;
 		};
 
 	} // Render

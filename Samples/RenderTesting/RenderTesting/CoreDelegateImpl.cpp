@@ -37,6 +37,8 @@ using namespace SDK;
 #include <GameCore/EntityManager.h>
 #include <GameCore/Render/LightsController.h>
 #include <GameCore/Render/ScopedLightSwitch.h>
+#include <GameCore/PropertyElement.h>
+#include <GameCore/Resources/ResourceManager.h>
 
 namespace Game
 {
@@ -122,7 +124,7 @@ namespace Game
 	}
 
 	void CoreDelegateImpl::CreateMesh()
-	{
+	{	
 		auto p_renderer = Core::GetRenderer();
 		auto p_mgr = p_renderer->GetHardwareBufferMgr();
 
@@ -167,7 +169,7 @@ namespace Game
 		batch[0].vertices = p_mgr->CreateHardwareBuffer(sizeof(verts) / sizeof(float), Render::BufferUsageFormat::Static, verts);
 		batch[0].indices = p_mgr->CreateIndexBuffer(Render::HardwareIndexBuffer::IndexType::Int, sizeof(inds) / sizeof(uint), Render::BufferUsageFormat::Static, Render::PrimitiveType::Triangles, inds);
 		batch[0].element = p_mgr->CreateLayout(batch[0].vertices, 3, Render::VertexSemantic::Position, Render::ComponentType::Float, false, 0, 0);
-	}	
+	}
 
 	void LoadTexture()
 	{
@@ -182,7 +184,8 @@ namespace Game
 	void CoreDelegateImpl::OnCreate()
 	{
 		InputSystem::Instance().AddSubscriber(&m_input_subs);
-
+		auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
+		p_load_manager->LoadResourceSet("..\\..\\Resources\\ResourceSets\\render_testing.res");
 		LoadTexture();
 
 		LoadModel();

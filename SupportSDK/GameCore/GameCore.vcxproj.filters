@@ -448,5 +448,8 @@
     <ClCompile Include="Render\MaterialManager.cpp">
       <Filter>Core\Renderer\Materials</Filter>
     </ClCompile>
+    <ClCompile Include="Resources\LoadersRegistrar.cpp">
+      <Filter>Core\Resources</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

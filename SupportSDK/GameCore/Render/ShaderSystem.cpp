@@ -135,8 +135,57 @@ namespace SDK
 			}
 		}
 
+		void ShaderSystem::Initialize()
+		{
+			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
+			p_load_manager->RegisterLoader<ShaderSystem, Shader>(*this, &ShaderSystem::Load, "shader_program");
+		}
+
+		void ShaderSystem::Release()
+		{
+			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
+			p_load_manager->Unregister<ShaderSystem, Shader>("shader_program");
+		}
+		Shader::ShaderType StringToType(const std::string& i_type)
+		{
+			if (i_type == "vertex")
+				return Shader::ShaderType::Vertex;
+			if (i_type == "tesselation_control")
+				return Shader::ShaderType::TesselationConrol;
+			if (i_type == "tesselation_evaluation")
+				return Shader::ShaderType::TesselationEvaluation;
+			if (i_type == "geometry")
+				return Shader::ShaderType::Geometry;
+			if (i_type == "fragment")
+				return Shader::ShaderType::Fragment;
+			if (i_type == "compute")
+				return Shader::ShaderType::Compute;
+
+			return Shader::ShaderType::TypesNumber;
+		}
+		void ShaderSystem::Load(const PropertyElement& i_resource_element)
+		{
+			const std::string resource_name = i_resource_element.GetValue<std::string>("resource_name");
+			ShaderSource source{};
+			const auto end = i_resource_element.end<PropertyElement>();
+			for (auto it = i_resource_element.begin<PropertyElement>(); it != end; ++it)
+			{
+				const auto type = it->GetValue<std::string>("type");
+				Shader::ShaderType t = StringToType(type);
+				if (t == Shader::ShaderType::TypesNumber)
+					continue;
+				const std::string path = it->GetValue<std::string>("path");
+				if (path.empty())
+					continue;
+				source.AddEntry({ t, path });
+			}
+			Load(resource_name, source);
+		}
+
 		ShaderHandler ShaderSystem::Load(const std::string& i_resource_name, ShaderSource i_source)
 		{
+			if (i_source.empty)
+				return ShaderHandler::InvalidHandle();
 			if (mp_current_shader_compiler == nullptr)
 				mp_current_shader_compiler = Core::GetRenderer()->GetShaderCompiler();
 

@@ -11,6 +11,8 @@
 #include <memory.h>
 #include <tchar.h>
 
+#include <array>
+#include <assert.h>
 #include <memory>
 #include <iostream>
 

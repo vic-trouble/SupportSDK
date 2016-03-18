@@ -10,18 +10,19 @@
 #include <Utilities/HashFunctions.h>
 #include <Utilities/type_index.h>
 
-class MessageDispatcher
+template <typename EventBase = Event>
+class MessageDispatcherBase
 {
 private:
-	typedef std::unique_ptr<MessageHandlerBase> HandlerPtr;
+	typedef std::unique_ptr<MessageHandlerBase<EventBase>> HandlerPtr;
 	typedef std::pair<size_t/*hash*/, HandlerPtr> HandlerPair;
 	typedef std::vector<HandlerPair> EventHandlers;	 // one event and different publishers needs different handlers
 	typedef std::unordered_map<std::type_index, EventHandlers> Handlers;
 	Handlers m_handlers;
 
 public:
-	MessageDispatcher() {}
-	~MessageDispatcher() {}
+	MessageDispatcherBase() {}
+	~MessageDispatcherBase() {}
 
 	template < class HandlerType, typename EventType>
 	void RegisterHandler(HandlerType& i_instance, void (HandlerType::*member_function)(const EventType&), const std::string& i_publisher);
@@ -53,24 +54,27 @@ public:
 
 //////////////////////////////////////////////////////////////////////////
 
+template <typename EventBase>
 template < typename HandlerType, typename EventType>
-void MessageDispatcher::RegisterHandler(HandlerType& i_instance, void (HandlerType::*member_function)(const EventType&), const std::string& i_publisher)
+void MessageDispatcherBase<EventBase>::RegisterHandler(HandlerType& i_instance, void (HandlerType::*member_function)(const EventType&), const std::string& i_publisher)
 {
-	using FunctionHandler = MemberFunctionHandler<HandlerType, const EventType&>;
+	using FunctionHandler = MemberFunctionHandler<HandlerType, const EventType&, EventBase>;
 	auto p_handler = std::make_unique< FunctionHandler >(i_instance, member_function);
 	const size_t hash = SDK::Utilities::hash_function(i_publisher);
 	EventHandlers& handlers = m_handlers[typeid(EventType)];
 	handlers.push_back(std::make_pair(hash, std::move(p_handler)));
 }
 
+template <typename EventBase>
 template < typename EventType >
-void MessageDispatcher::UnregisterHandler(const std::string& i_publisher)
+void MessageDispatcherBase<EventBase>::UnregisterHandler(const std::string& i_publisher)
 {
 	UnregisterHandler(typeid(EventType), i_publisher);
 }
 
+template <typename EventBase>
 template < typename EventType >
-void MessageDispatcher::HandleMessage(const EventType& i_event, const std::string& i_publisher)
+void MessageDispatcherBase<EventBase>::HandleMessage(const EventType& i_event, const std::string& i_publisher)
 {
 	Handlers::iterator handlers_it = m_handlers.find(std::type_index(typeid(i_event)));
 	if (handlers_it != m_handlers.end())
@@ -86,3 +90,5 @@ void MessageDispatcher::HandleMessage(const EventType& i_event, const std::strin
 	}
 
 }
+
+using MessageDispatcher = MessageDispatcherBase<>;

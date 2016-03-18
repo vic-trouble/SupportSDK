@@ -5,10 +5,14 @@
 
 #include "../GlobalObjectBase.h"
 
+#include "../ObjectSubset.h"
+#include "../GenericHandlesStaticArray.h"
 #include "ResourceInformation.h"
+#include "../PropertyElement.h"
 #include "../FileSystem/Stream.h"
 
 #include <Utilities/HashFunctions.h>
+#include <Patterns/MessageDispatcher/MessageDispatcher.h>
 
 namespace SDK
 {
@@ -43,11 +47,36 @@ namespace SDK
 
 		} // Serialization
 
+		using ResourcesSubset = ObjectSet<size_t>;		
+
 		class ResourceManager : public GlobalObjectBase
 		{
 		private:
 			std::vector<ResourceInformation> m_loaded_resources;
+			MessageDispatcherBase<PropertyElement> m_dispatcher;
+			struct ResourceSet
+			{
+				ResourcesSubset subset;
+				std::string name;
+				size_t name_hash;
+				ResourceSet() = default;
+				ResourceSet(const std::string& i_name)
+					: name(i_name)
+					, name_hash(Utilities::hash_function(i_name))
+				{}
+			};
 
+			using ResourceSets = SDK::GenericHandlesStaticArray<ResourceSetHandle, ResourceSet, 128>;
+			ResourceSets m_resource_sets;
+			ResourceSetHandle m_current_set;
+
+			struct AdditionalFunctions
+			{
+				std::type_index res_type;
+				void(*Unload)(InternalHandle);
+				//void(*Reload)(InternalHandle);
+			};
+			std::vector<AdditionalFunctions> m_additional_functions;
 		private:
 			static FS::StreamPtr OpenStream(const std::string& i_file_name);
 
@@ -55,12 +84,17 @@ namespace SDK
 			template <typename ResType>
 			void Register(ResourceInformation& io_info, ResType i_resource)
 			{
-				Serialization::LoaderImpl<ResType>::Register(io_info.m_handle, i_resource);
+				Serialization::LoaderImpl<ResType>::Register(io_info.m_handle, std::move(i_resource));
 				++io_info.m_use_count;
 			}
 
-		public:
+			void AddToSet(ResourceSetHandle i_set, size_t i_res_hash);
+			void RemoveFromSet(ResourceSetHandle i_set, size_t i_res_hash);
 
+		public:
+			ResourceManager()
+				: m_current_set(ResourceSetHandle::InvalidHandle())
+			{}
 			// TODO: comments
 			// returns handler to resource if success, -1 otherwise
 			// For systems it can be transformed to Handler<>
@@ -91,7 +125,7 @@ namespace SDK
 				// handle not exist - this file was not loaded before			
 				InternalHandle handle = Loader::CreateNewHandle();
 				{
-					ResourceInformation res_info = { hash, 0, ResourceInformation::State::Unloaded, handle };
+					ResourceInformation res_info = { hash, 0, ResourceInformation::State::Unloaded, handle, typeid(ResType), m_current_set };
 					m_loaded_resources.emplace_back(res_info);
 				}
 
@@ -135,24 +169,9 @@ namespace SDK
 				auto& res_info = m_loaded_resources.back();
 				res_info.m_state = ResourceInformation::State::Loaded;
 				Register<ResType>(res_info, std::move(load_res.second));
-
+				// add to current set
+				AddToSet(res_info.m_belongs_to_set, hash);
 				return handle;
-			}						
-
-			template <typename ResType>
-			void Register(int i_handle, const std::string& i_name, ResType i_resource)
-			{
-				const size_t hash = hash_function(i_name);
-				auto it = std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(i_handle));
-				if (it == m_loaded_resources.end())
-				{
-					Serialization::LoaderImpl<ResType>::Register(i_handle, std::move(i_resource));
-					m_loaded_resources.emplace_back(hash, 1, ResourceInformation::State::Loaded, i_handle);
-				}
-				else
-				{
-					++it->m_use_count;
-				}
 			}
 
 			template <typename ResType>
@@ -169,16 +188,47 @@ namespace SDK
 				--it->m_use_count;
 				// the last one -> delete buffers
 				if (it->m_use_count == 0)
-				{
+				{					
 					Serialization::LoaderImpl<ResType>::UnloadResource(it->m_handle);
-					m_loaded_resources.erase(it, m_loaded_resources.end());
+					RemoveFromSet(it->m_belongs_to_set, it->m_resource_id);
+					m_loaded_resources.erase(it, m_loaded_resources.end());					
 				}
 				// otherwise we do nothing
 			}
 
 			GAMECORE_EXPORT InternalHandle GetHandleToResource(const std::string& i_res_name) const;
-
 			GAMECORE_EXPORT void Use(const std::string& i_res_name);
+
+			void Update(float i_dt);
+			
+			template <typename LoadSystem, typename ResType>
+			void RegisterLoader(LoadSystem& i_instance, void (LoadSystem::*member_function)(const PropertyElement&), const std::string& i_resource_id)
+			{
+				m_dispatcher.RegisterHandler<LoadSystem, const PropertyElement&>(i_instance, member_function, i_resource_id);
+				using Loader = Serialization::LoaderImpl<ResType>;
+				m_additional_functions.push_back({ std::type_index(typeid(ResType)), Loader::UnloadResource });
+			}
+			template <typename LoadSystem, typename ResType>
+			void Unregister(const std::string& i_resource_id)
+			{
+				m_dispatcher.UnregisterHandler<const PropertyElement&>(i_resource_id);
+				std::type_index ti = typeid(ResType);
+				auto it = std::find_if(m_additional_functions.begin(), m_additional_functions.end(), [ti](AdditionalFunctions& i_funcs)
+				{
+					return ti == i_funcs.res_type;
+				});
+				// we have not found functions to unload
+				if (it != m_additional_functions.end())
+					m_additional_functions.erase(it);
+			}
+
+			// last loaded set will be active
+			GAMECORE_EXPORT ResourceSetHandle CreateResourceSet(const std::string& i_resource_set_name);
+			GAMECORE_EXPORT ResourceSetHandle LoadResourceSet(const std::string& i_resource_path);
+			GAMECORE_EXPORT ResourceSetHandle GetHandleToSet(const std::string& i_set_name) const;
+			GAMECORE_EXPORT void UnloadSet(ResourceSetHandle i_set);
+			GAMECORE_EXPORT void SetCurrentResourceSet(ResourceSetHandle i_handle);
+			GAMECORE_EXPORT void SetCurrentResourceSet(const std::string& i_set_name);
 		};
 
 	} // Resources

@@ -10,6 +10,8 @@
 
 #include "GenericHandlesDynamicArray.h"
 
+#include "../PropertyElement.h"
+
 namespace SDK
 {
 	
@@ -64,6 +66,10 @@ namespace SDK
 			//	pointer will be valid if not nullptr
 			GAMECORE_EXPORT MeshComponent* AccessComponent(MeshComponentHandler i_handler);
 			GAMECORE_EXPORT void RemoveInstance(MeshComponentHandler i_handler);			
+
+			void Initialize();
+			void Release();
+			void Load(const PropertyElement& i_resource_element);
 
 		// Extension for entity manager
 		public:

@@ -262,6 +262,36 @@ namespace SDK
 
 		}
 
+		void MeshSystem::Initialize()
+		{
+			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
+			p_load_manager->RegisterLoader<MeshSystem, Mesh>(*this, &MeshSystem::Load, "mesh");
+		}
+
+		void MeshSystem::Release()
+		{
+			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
+			p_load_manager->Unregister<MeshSystem, Mesh>("mesh");
+		}
+
+		BufferUsageFormat StringToFormat(const std::string& i_format)
+		{
+			if (i_format == "static")
+				return BufferUsageFormat::Static;
+			return BufferUsageFormat::Static;
+		}
+
+		void MeshSystem::Load(const PropertyElement& i_resource_element)
+		{
+			const std::string resource_name = i_resource_element.GetValue<std::string>("resource_name");
+			const std::string path = i_resource_element.GetValue<std::string>("path");
+			const std::string ver_usage = i_resource_element.GetValue<std::string>("vertices_usage");
+			const std::string ind_usage = i_resource_element.GetValue<std::string>("indices_usage");
+			BufferUsageFormat ver = StringToFormat(ver_usage);
+			BufferUsageFormat ind = StringToFormat(ind_usage);
+			Load(resource_name, path, ver, ind);
+		}
+
 		void MeshSystem::Update(float i_elapsed_time)
 		{
 
@@ -388,7 +418,7 @@ namespace SDK
 				assert(false && "There is no such material");
 				return;
 			}
-			if (i_component.index >= m_component_handlers.size() || i_component.generation != m_component_handlers[i_component.index].generation)
+			if (i_component.index >= static_cast<int>(m_component_handlers.size()) || i_component.generation != m_component_handlers[i_component.index].generation)
 			{
 				assert(false && "There is no such mesh component");
 				return;

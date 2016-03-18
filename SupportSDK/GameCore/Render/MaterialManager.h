@@ -6,6 +6,8 @@
 #include "Render/Material.h"
 #include "../GenericHandlesDynamicArray.h"
 
+#include "../PropertyElement.h"
+
 namespace SDK
 {
 	namespace Resources {
@@ -34,6 +36,10 @@ namespace SDK
 			GAMECORE_EXPORT void RemoveMaterial(MaterialHandle i_handle);
 
 			void* SetupShaderAndCreateCommands(ShaderUniformValue* op_dynamic_unis, size_t i_unis_size, const Material& i_material, void* ip_shader_command) const;
+
+			void Initialize();
+			void Release();
+			void Load(const PropertyElement& i_resource_element);
 		};
 
 		// TODO: global

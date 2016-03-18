@@ -4,11 +4,12 @@
 #include "../PatternsAPI.h"
 #include "../Event.h"
 
+template <typename EventBase = Event>
 class MessageHandlerBase
   {
   public:
 	  virtual ~MessageHandlerBase() {}
-	  virtual void ExecuteHandler(const Event& i_event) = 0;
+	  virtual void ExecuteHandler(const EventBase& i_event) = 0;
   };
 
 #endif

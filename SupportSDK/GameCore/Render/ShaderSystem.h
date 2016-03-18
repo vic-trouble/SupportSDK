@@ -5,6 +5,7 @@
 #include "RenderTypes.h"
 
 #include "Shader.h"
+#include "../PropertyElement.h"
 
 namespace SDK
 {
@@ -38,35 +39,39 @@ namespace SDK
 				std::string geometry_shader_file;
 				std::string fragment_shader_file;
 				std::string compute_shader_file;
+				bool empty;
 				using ShaderSourceEntry = std::pair<Shader::ShaderType, std::string>;
 				ShaderSource(std::initializer_list<ShaderSourceEntry> i_entries)
+					: empty(true)
 				{
 					for (auto entry : i_entries)
+						AddEntry(entry);
+				}
+				inline void AddEntry(ShaderSourceEntry i_entry)
+				{
+					empty = false;
+					switch (i_entry.first)
 					{
-						switch (entry.first)
-						{
-							case Shader::Vertex:
-								vertex_shader_file = std::move(entry.second);
-								break;
-							case Shader::TesselationConrol:
-								tess_control_shader_file = std::move(entry.second);
-								break;
-							case Shader::TesselationEvaluation:
-								tess_compute_shader_file = std::move(entry.second);
-								break;
-							case Shader::Geometry:
-								geometry_shader_file = std::move(entry.second);
-								break;
-							case Shader::Fragment:
-								fragment_shader_file = std::move(entry.second);
-								break;
-							case Shader::Compute:
-								compute_shader_file = std::move(entry.second);
-								break;
-						}
+						case Shader::Vertex:
+							vertex_shader_file = std::move(i_entry.second);
+							break;
+						case Shader::TesselationConrol:
+							tess_control_shader_file = std::move(i_entry.second);
+							break;
+						case Shader::TesselationEvaluation:
+							tess_compute_shader_file = std::move(i_entry.second);
+							break;
+						case Shader::Geometry:
+							geometry_shader_file = std::move(i_entry.second);
+							break;
+						case Shader::Fragment:
+							fragment_shader_file = std::move(i_entry.second);
+							break;
+						case Shader::Compute:
+							compute_shader_file = std::move(i_entry.second);
+							break;
 					}
 				}
-				
 			};
 			GAMECORE_EXPORT ShaderHandler Load(const std::string& i_resource_name, ShaderSource i_source);
 			GAMECORE_EXPORT void Unload(ShaderHandler i_handler);
@@ -81,6 +86,10 @@ namespace SDK
 			GAMECORE_EXPORT void SetKnownUniforms(ShaderHandler i_handle);
 			GAMECORE_EXPORT void SetUniform(ShaderHandler i_handle, const std::string& i_var_name, const ShaderUniformValue& i_value) const;
 			GAMECORE_EXPORT void SetUniform(int i_location, const ShaderUniformValue& i_value) const;
+
+			void Initialize();
+			void Release();
+			void Load(const PropertyElement& i_resource_element);
 		};
 
 		// TODO: global object

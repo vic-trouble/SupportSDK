@@ -6,7 +6,9 @@
 
 #include "../Input/InputEvent.h"
 
-class MessageDispatcher;
+template <typename TemplateBase>
+class MessageDispatcherBase;
+using MessageDispatcher = MessageDispatcherBase<Event>;
 
 namespace SDK
 {

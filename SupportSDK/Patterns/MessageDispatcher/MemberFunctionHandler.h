@@ -3,8 +3,8 @@
 
 #include "MessageHandlerBase.h"
 
-template < class HandlerType, class EventType >
-class MemberFunctionHandler : public MessageHandlerBase
+template < class HandlerType, class EventType, class EventBase >
+class MemberFunctionHandler : public MessageHandlerBase < EventBase >
   {
   public:
     typedef void (HandlerType::*MemberFunc)(EventType);
@@ -19,10 +19,10 @@ class MemberFunctionHandler : public MessageHandlerBase
 		  , m_function(i_member_func)
 	  {	}
 
-	  virtual void ExecuteHandler(const Event& i_event) override
+	  virtual void ExecuteHandler(const EventBase& i_event) override
 	  {
 		  (m_instance.*m_function)(static_cast<const EventType&>(i_event));
-	  }
+	  }	 
   };
 
 #endif

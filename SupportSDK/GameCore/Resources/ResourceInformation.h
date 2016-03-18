@@ -3,12 +3,16 @@
 
 #include "../TypeDefinitions.h"
 #include "../GenericHandle.h"
+#include <Utilities/type_index.h>
 
 namespace SDK
 {
-
 	namespace Resources
 	{
+
+		struct ResourceSetHandleTag {};
+		using ResourceSetHandle = GenericHandle<int, 12, 20, ResourceSetHandleTag>;
+
 		struct ResourceInformation
 		{
 			enum class State
@@ -23,6 +27,10 @@ namespace SDK
 
 			// 
 			InternalHandle	m_handle;
+
+			std::type_index m_resource_type;
+
+			ResourceSetHandle m_belongs_to_set;
 
 			struct FindPredicate
 			{
@@ -46,7 +54,6 @@ namespace SDK
 		};
 
 	} // Resources
-
 } // SDK
 
 #endif

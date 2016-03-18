@@ -94,6 +94,25 @@ namespace SDK
 		{
 		}
 
+		void GLTextureManager::Initialize()
+		{
+			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
+			p_load_manager->RegisterLoader<GLTextureManager, Texture>(*this, &GLTextureManager::Load, "texture");
+		}
+
+		void GLTextureManager::Release()
+		{
+			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
+			p_load_manager->Unregister<GLTextureManager, Texture>("texture");
+		}
+
+		void GLTextureManager::Load(const PropertyElement& i_resource_element)
+		{
+			const std::string resource_name = i_resource_element.GetValue<std::string>("resource_name");
+			const std::string path = i_resource_element.GetValue<std::string>("path");
+			Load(resource_name, path);
+		}
+
 		TextureHandle GLTextureManager::Load(const std::string& i_resource_name, const std::string & i_file_name)
 		{
 			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();

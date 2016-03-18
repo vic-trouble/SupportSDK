@@ -14,6 +14,12 @@
 
 namespace SDK
 {
+	namespace Resources
+	{
+		extern void RegisterLoaders();
+		extern void ReleaseLoaders();
+	} // Resources
+
 	void ApplicationBase::Start()
 	{
 		StartInternal();
@@ -27,6 +33,7 @@ namespace SDK
 	void ApplicationBase::OnCreate()
 	{
 		OnCreateInternal();
+		Resources::RegisterLoaders();
 		// TODO: register systems in constructor?
 		m_worlds[0].RegisterSystem(&Render::g_mesh_system);
 		mp_delegate->OnCreate();
@@ -39,6 +46,8 @@ namespace SDK
 			world.ClearSystems();
 
 		mp_delegate->OnTerminate();
+
+		Resources::ReleaseLoaders();
 	}
 
 	void ApplicationBase::OnCollapse()
