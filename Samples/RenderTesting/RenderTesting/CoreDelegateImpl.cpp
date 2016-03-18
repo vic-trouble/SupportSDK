@@ -43,14 +43,13 @@ using namespace SDK;
 namespace Game
 {
 	EntityHandle entity_handler;
-	Render::ShaderHandler shader_handler;
 	void CoreDelegateImpl::LoadModel()
 	{
 		//E:\Git_Projects\SupportSDK\Samples\Resources\Models\Box.obj
 		//loaded_mesh = Render::g_mesh_system.Load("Resources\\Models\\Box.obj", Render::BufferUsageFormat::Static, Render::BufferUsageFormat::Static);
-		loaded_mesh = Render::g_mesh_system.Load("Box", "..\\..\\Resources\\Models\\Box.obj", Render::BufferUsageFormat::Static, Render::BufferUsageFormat::Static);
-		Render::g_mesh_system.Unload(loaded_mesh);
-		loaded_mesh = Render::g_mesh_system.Load("Box", "..\\..\\Resources\\Models\\Box.obj", Render::BufferUsageFormat::Static, Render::BufferUsageFormat::Static);
+		auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
+		auto handle = p_load_manager->GetHandleToResource("SimpleBox");
+		loaded_mesh = { handle.index, handle.generation };
 		
 		auto mesh_handler = Render::g_mesh_system.CreateInstance(loaded_mesh);
 		auto trans_handler = g_transforms_system.CreateInstance();
@@ -65,12 +64,9 @@ namespace Game
 
 		// test getting of entity and component
 		auto entity = g_entity_manager.GetEntity(entity_handler);
-		shader_handler = Render::g_shader_system.Load("SimpleShader",
-			{ { Render::Shader::Vertex, "..\\..\\Resources\\Shaders\\Sample.vertexshader" },
-			{ Render::Shader::Fragment, "..\\..\\Resources\\Shaders\\Sample.fragmentshader" }
-		});
-
-		auto material_handle = Render::g_material_mgr.Load("Sample_material", "..\\..\\Resources\\Materials\\sample.material");
+		
+		auto material_handle_int = p_load_manager->GetHandleToResource("SimpleBox");
+		Render::MaterialHandle material_handle = { material_handle_int.index, material_handle_int.generation };
 		auto p_material = Render::g_material_mgr.AccessMaterial(material_handle);
 
 		Render::g_mesh_system.AddMaterialTo(mesh_handler, material_handle);
@@ -171,12 +167,6 @@ namespace Game
 		batch[0].element = p_mgr->CreateLayout(batch[0].vertices, 3, Render::VertexSemantic::Position, Render::ComponentType::Float, false, 0, 0);
 	}
 
-	void LoadTexture()
-	{
-		auto p_mgr = Core::GetRenderer()->GetTextureManager();
-		p_mgr->Load("diffuse_tex", "..\\..\\Resources\\Textures\\img_test.png");
-	}
-
 	GLUquadricObj* quadricId;
 	
 	
@@ -186,7 +176,6 @@ namespace Game
 		InputSystem::Instance().AddSubscriber(&m_input_subs);
 		auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
 		p_load_manager->LoadResourceSet("..\\..\\Resources\\ResourceSets\\render_testing.res");
-		LoadTexture();
 
 		LoadModel();
 
@@ -220,6 +209,9 @@ namespace Game
 		p_renderer->GetHardwareBufferMgr()->DestroyBuffer(batch[1].vertices);
 
 		g_entity_manager.RemoveEntity(entity_handler);
+
+		auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
+		p_load_manager->UnloadSet(p_load_manager->GetHandleToSet("render_testing"));
 	}
 
 
