@@ -6,7 +6,7 @@
 #include "Core.h"
 
 #include "Render/IRenderer.h"
-#include "Systems/MeshSystem.h"
+#include "Render/MeshSystem.h"
 
 #include "UI/UIControlSystem.h"
 

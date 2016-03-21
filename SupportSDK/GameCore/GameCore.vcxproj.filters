@@ -206,9 +206,6 @@
     <ClInclude Include="System.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Systems\MeshSystem.h">
-      <Filter>Core\Systems</Filter>
-    </ClInclude>
     <ClInclude Include="Resources\ResourceManager.h">
       <Filter>Core\Resources</Filter>
     </ClInclude>
@@ -332,6 +329,9 @@
     <ClInclude Include="Render\Texture.h">
       <Filter>Core\Renderer\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="Render\MeshSystem.h">
+      <Filter>Core\Renderer\Mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -387,9 +387,6 @@
     </ClCompile>
     <ClCompile Include="World.cpp">
       <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Systems\MeshSystem.cpp">
-      <Filter>Core\Systems</Filter>
     </ClCompile>
     <ClCompile Include="Resources\ResourceManager.cpp">
       <Filter>Core\Resources</Filter>
@@ -450,6 +447,9 @@
     </ClCompile>
     <ClCompile Include="Resources\LoadersRegistrar.cpp">
       <Filter>Core\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\MeshSystem.cpp">
+      <Filter>Core\Renderer\Mesh</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

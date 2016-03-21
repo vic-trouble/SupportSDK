@@ -7,7 +7,7 @@
 #include "Render/MaterialManager.h"
 #include "Render/ShaderSystem.h"
 #include "Render/TextureManager.h"
-#include "Systems/MeshSystem.h"
+#include "Render/MeshSystem.h"
 
 namespace SDK
 {

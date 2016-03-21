@@ -178,7 +178,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="ObjectGetterBase.h" />
-    <ClInclude Include="Systems\MeshSystem.h" />
+    <ClInclude Include="Render\MeshSystem.h" />
     <ClInclude Include="Systems\TransformationsSystem.h" />
     <ClInclude Include="TimeController.h" />
     <ClInclude Include="GlobalObjectBase.h" />
@@ -224,7 +224,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Systems\MeshSystem.cpp" />
+    <ClCompile Include="Render\MeshSystem.cpp" />
     <ClCompile Include="Systems\TransformationsSystem.cpp" />
     <ClCompile Include="TimeController.cpp" />
     <ClCompile Include="UI\UIButton.cpp" />
