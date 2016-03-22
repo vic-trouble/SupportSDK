@@ -308,7 +308,7 @@ namespace SDK
 		{
 			for (size_t i = 0; i < i_number; ++i)
 			{
-				auto element = i_mgr.AccessLayout(i_layouts[0]);
+				auto element = i_mgr.AccessLayout(i_layouts[i]);
 				auto hd_buf = i_mgr.AccessVertexBuffer(Render::VertexBufferHandle{ element.m_source.index, element.m_source.generation });
 
 				glBindBuffer(GL_ARRAY_BUFFER, hd_buf.m_hardware_id);
@@ -374,7 +374,7 @@ namespace SDK
 			assert(false && "Invalid parameters. Have buffers been created?");
 			return;
 		}
-
+		
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ind_buf.m_hardware_id);
 		glDrawElements(GetPrimitiveType(ind_buf.m_primitive), ind_buf.m_num_indices, GetIndexType(ind_buf.m_index_type), 0);
 		CHECK_GL_ERRORS;

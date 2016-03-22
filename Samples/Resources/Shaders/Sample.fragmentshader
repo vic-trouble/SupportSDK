@@ -7,11 +7,9 @@ uniform float transparency;
 
 uniform sampler2D diffuse_tex;
 
+in vec2 tex_coord;
+
 void main()
 {
-	vec2 TexCoord;
-	TexCoord.x = 0;
-	TexCoord.y = 0;
-	color = mix(texture(diffuse_tex, TexCoord), texture(diffuse_tex, TexCoord), 0.2);
-	// color = vec4(input_color.xyz, transparency);
+	color = texture(diffuse_tex, tex_coord);
 } 

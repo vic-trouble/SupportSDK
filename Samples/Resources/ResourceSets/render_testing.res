@@ -11,6 +11,11 @@ texture = {
 	path = "..\..\Resources\Textures\img_test.png"
 }
 
+texture = {
+	resource_name = "box_diffuse"
+	path = "..\..\Resources\Textures\box_diffuse.png"
+}
+
 shader_program = {
 	resource_name = "SimpleShader"
 	shader = {

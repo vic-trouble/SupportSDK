@@ -5,7 +5,7 @@ Material = {
 		diffuse_tex = {
 			shader_semantic = "uniform"
 			type = "sampler2D"
-			value = "diffuse_tex"
+			value = "box_diffuse"
 
 			show_name = "Diffuse"
 		}		

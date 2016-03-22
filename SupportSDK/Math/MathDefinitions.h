@@ -36,6 +36,7 @@ namespace SDK
 	typedef Math::Matrix4<real> Matrix4f;
 
 	typedef Math::Vector<int, 2> Vector2i;
+	typedef Math::Vector<int, 3> Vector3i;
 
 	typedef Math::Vector<real, 2> Vector2;
 	typedef Math::Vector<real, 3> Vector3;

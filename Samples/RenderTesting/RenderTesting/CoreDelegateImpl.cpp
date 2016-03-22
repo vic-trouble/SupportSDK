@@ -29,7 +29,7 @@ using namespace SDK;
 
 #include <GameCore/Applications/ApplicationBase.h>
 
-#include <GameCore/Systems/MeshSystem.h>
+#include <GameCore/Render/MeshSystem.h>
 #include <GameCore/Render/MaterialManager.h>
 #include <GameCore/Systems/TransformationsSystem.h>
 

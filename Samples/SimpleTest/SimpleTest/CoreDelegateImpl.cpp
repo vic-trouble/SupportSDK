@@ -15,7 +15,7 @@
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 #include <time.h>
 
-#include <GameCore/Systems/MeshSystem.h>
+#include <GameCore/Render/MeshSystem.h>
 #include <GameCore/UI/UIControlSystem.h>
 using namespace SDK;
 

@@ -33,53 +33,15 @@ namespace SDK
 
 			namespace
 			{
-
-				std::istream& operator >> (std::istream& io_stream, Vector3& o_vector)
+				template <typename type, size_t size>
+				std::istream& operator >> (std::istream& io_stream, Math::Vector<type, size>& o_vector)
 				{
 					//v 4.000000 0.000000 0.000000
 					std::string temp;
 					getline(io_stream, temp);
 
 					size_t pos = 0;
-
-
-					for (int i = 0; i < Vector3::VertexNumber; ++i)
-					{
-						pos = temp.find(' ', pos);
-						++pos;
-						o_vector[i] = static_cast<float>(atof(temp.substr(pos).c_str()));
-					}
-					return io_stream;
-				}
-
-				std::istream& operator >> (std::istream& io_stream, Math::Vector<SDK::uint, 3>& o_vector)
-				{
-					//v 4.000000 0.000000 0.000000
-					std::string temp;
-					getline(io_stream, temp);
-
-					size_t pos = 0;
-
-
-					for (int i = 0; i < Vector3::VertexNumber; ++i)
-					{
-						pos = temp.find(' ', pos);
-						++pos;
-						o_vector[i] = atoi(temp.substr(pos).c_str());
-					}
-					return io_stream;
-				}
-
-				std::istream& operator >> (std::istream& io_stream, Vector4& o_vector)
-				{
-					//v 4.000000 0.000000 0.000000
-					std::string temp;
-					getline(io_stream, temp);
-
-					size_t pos = 0;
-
-
-					for (int i = 0; i < Vector4::VertexNumber; ++i)
+					for (int i = 0; i < size; ++i)
 					{
 						pos = temp.find(' ', pos);
 						++pos;
@@ -95,7 +57,7 @@ namespace SDK
 			{
 				typedef MeshInformation InfoType;
 			};
-
+			
 			template <>
 			struct LoaderImpl < Render::Mesh >
 			{
@@ -105,12 +67,14 @@ namespace SDK
 
 					/////////////////
 					std::vector<float> vertices;
-					std::vector<uint> indices;
+					std::vector<float> uvs;
+					std::vector<int> indices;					
 					std::string model_name;
 					/////////////////
 					std::istream& stream = *ip_streams[0];
-					Vector3 temp_vec;
-					Math::Vector<uint, 3> temp_byte_vec;
+					Vector3 vec3;
+					Vector3i vec3i;
+					Vector2 vec2;
 					while (ip_streams[0]->good())
 					{
 						char buffer[255];
@@ -121,26 +85,43 @@ namespace SDK
 							case 'v':
 								if (buffer[1] == '\0')
 								{
-									stream >> temp_vec;
+									stream >> vec3;
 									for (size_t i = 0; i < 3; ++i)
-										vertices.push_back(temp_vec[i]);
+										vertices.push_back(vec3[i]);
 									break;
 								}
+								// texture
 								if (buffer[1] == 't')
 								{
-									*ip_streams[0] >> temp_vec;
-									// TODO
+									*ip_streams[0] >> vec2;
+									uvs.push_back(vec2[0]);
+									uvs.push_back(vec2[1]);
 								}
 								break;
 							case 'o':
 								stream >> model_name;
 								break;
 							case 'f':
-								if (buffer[1] != '\0')
-									break;
-								stream >> temp_byte_vec;
-								for (size_t i = 0; i < 3; ++i)
-									indices.push_back(temp_byte_vec[i]);
+								{
+									if (buffer[1] != '\0')
+										break;
+									std::string temp;
+									getline(stream, temp);
+
+									size_t pos = 0;
+									for (int i = 0; i < 3; ++i)
+									{
+										pos = temp.find(' ', pos) + 1;
+										vec3i[i] = atoi(temp.substr(pos).c_str()) - 1;
+										// textures
+										pos = temp.find('/', pos) + 1;
+										// normals
+										pos = temp.find('/', pos) + 1;
+									}
+									for (size_t i = 0; i < 3; ++i)
+										indices.push_back(vec3i[i]);
+
+								}
 								break;
 							default:
 								stream.getline(buffer, 254);
@@ -149,7 +130,8 @@ namespace SDK
 					}
 					
 					auto p_mgr = Core::GetRenderer()->GetHardwareBufferMgr();
-					auto hardware_buf = p_mgr->CreateHardwareBuffer(vertices.size()*sizeof(float), i_info.m_ver_usage, &vertices[0]);
+					auto ver_buf = p_mgr->CreateHardwareBuffer(vertices.size()*sizeof(float), i_info.m_ver_usage, &vertices[0]);
+					auto uvs_buf = p_mgr->CreateHardwareBuffer(uvs.size()*sizeof(float), i_info.m_ver_usage, &uvs[0]);
 					HardwareIndexBuffer::IndexType ind_type = HardwareIndexBuffer::IndexType::Int;
 					/*
 					TODO: correct determination of vertex types
@@ -158,9 +140,10 @@ namespace SDK
 					else if(indices.size() < 255)
 					ind_type = HardwareIndexBuffer::IndexType::Byte;*/
 					auto ind_buf = p_mgr->CreateIndexBuffer(ind_type, indices.size(), i_info.m_ind_usage, Render::PrimitiveType::Triangles, &indices[0]);
-					auto ver_layout = p_mgr->CreateLayout(hardware_buf, 3, Render::VertexSemantic::Position, Render::ComponentType::Float, false, sizeof(float)*3/*cam be 0*/, 0);
+					auto ver_layout = p_mgr->CreateLayout(ver_buf, 3, Render::VertexSemantic::Position, Render::ComponentType::Float, false, sizeof(float)*3/*cam be 0*/, 0);
+					auto uv_layout = p_mgr->CreateLayout(uvs_buf, 2, Render::VertexSemantic::TextureCoordinates, Render::ComponentType::Float, false, sizeof(float) * 2/*cam be 0*/, 0);
 
-					return std::make_pair(LoadResult::Success, Mesh(hardware_buf, ind_buf, ver_layout));
+					return std::make_pair(LoadResult::Success, Mesh(ver_buf, uvs_buf, ind_buf, ver_layout, uv_layout));
 				}
 
 				// TODO: need some limitations on size of loaded meshes?
@@ -216,8 +199,9 @@ namespace SDK
 					auto p_mgr = Core::GetRenderer()->GetHardwareBufferMgr();
 					Render::Mesh& mesh = meshes[i_handle.index];
 					p_mgr->DestroyBuffer(mesh.GetVertices());
+					p_mgr->DestroyBuffer(mesh.GetUvs());
 					p_mgr->DestroyLayout(mesh.GetLayout());
-					p_mgr->DestroyBuffer(mesh.GetIndices());
+					p_mgr->DestroyBuffer(mesh.GetIndices());					
 				}
 
 				static void Register(InternalHandle i_handle, Render::Mesh i_mesh)
@@ -327,13 +311,14 @@ namespace SDK
 
 				// TODO: need dynamic here and not static :`(
 				// for now buffer place for 6 unis
-				Commands::SetupShader<1, 6>* p_shader_cmd = Render::gBuffer.Append<Commands::SetupShader<1, 6>>(p_transform_cmd);				
+				Commands::SetupShader<2, 6>* p_shader_cmd = Render::gBuffer.Append<Commands::SetupShader<2, 6>>(p_transform_cmd);
 				p_shader_cmd->m_layouts[0] = mesh.GetLayout();
+				p_shader_cmd->m_layouts[1] = mesh.GetUVLayout();
 				void* p_parent_cmd = (void*)p_shader_cmd;
 				if (!mesh_instance.GetMaterials().empty())
 				{
 					auto material_handle = mesh_instance.GetMaterials()[0];					
-					const auto p_material = Render::g_material_mgr.AccessMaterial(material_handle);;
+					const auto p_material = Render::g_material_mgr.AccessMaterial(material_handle);
 					p_shader_cmd->m_shader = p_material->m_shader;					
 					for (auto& entry : p_material->m_entries)
 					{
