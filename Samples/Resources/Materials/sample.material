@@ -9,20 +9,6 @@ Material = {
 
 			show_name = "Diffuse"
 		}		
-		specular_tex = {
-			shader_semantic = "uniform"
-			type = "sampler2D"
-			value = "specular_tex"
-
-			show_name = "Specular"
-		}
-		transparency = {
-			shader_semantic = "uniform"
-			type = "float"
-			value = 4.2f
-			
-			show_name = "Transparency"
-		}
 		input_color = {
 			shader_semantic = "uniform"
 			type = "vec4"
