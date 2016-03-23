@@ -11,5 +11,5 @@ in vec2 tex_coord;
 
 void main()
 {
-	color = texture(diffuse_tex, tex_coord);
+	color = vec4(vec3(texture(diffuse_tex, tex_coord)), 1.f);
 } 

@@ -4,7 +4,7 @@ uniform mat4 proj_m;
 uniform mat4 mv_m;
 uniform	vec3 eye;		// eye position
 
-layout(location = 3)in  vec3 pos;		// position in xyz, size in w
+layout(location = 3)in vec3 pos;		// position in xyz, size in w
 layout(location = 4)in vec2 uv;
 
 out vec2 tex_coord;

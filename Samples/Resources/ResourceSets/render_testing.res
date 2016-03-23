@@ -1,7 +1,7 @@
 set_name = "render_testing"
 mesh = {
 	resource_name = "SimpleBox"
-	path = "..\..\Resources\Models\Box.obj"
+	path = "..\..\Resources\Models\monkey.obj"
 	vertices_usage = "static"
 	indices_usage = "static"
 }
