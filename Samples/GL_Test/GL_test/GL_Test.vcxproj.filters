@@ -25,10 +25,10 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SimpleTest.cpp">
+    <ClCompile Include="CoreDelegateImpl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CoreDelegateImpl.cpp">
+    <ClCompile Include="GL_test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
