@@ -316,15 +316,18 @@ namespace SDK
 				const auto& attributes = i_shader.GetAttributes();
 				for (const auto& attr : attributes)
 				{
-					if (attr.element_semantic != element.m_semantic)
-						continue;
-					glVertexAttribPointer(attr.location, // index for shader attribute
-						element.m_vertex_size, // size
-						GetComponentType(element.m_component), // type
-						element.m_normalized ? GL_TRUE : GL_FALSE, // normalized
-						element.m_stride, // stride
-						reinterpret_cast<GLvoid*>(element.m_offset)); // pointer
-					glEnableVertexAttribArray(attr.location);
+					if (attr.element_semantic == element.m_semantic)
+					{
+						glVertexAttribPointer(attr.location, // index for shader attribute
+							element.m_vertex_size, // size
+							GetComponentType(element.m_component), // type
+							element.m_normalized ? GL_TRUE : GL_FALSE, // normalized
+							element.m_stride, // stride
+							reinterpret_cast<GLvoid*>(element.m_offset)); // pointer
+						glEnableVertexAttribArray(attr.location);
+						// we find attribute and set it - break
+						break;
+					}
 				}
 			}			
 		}

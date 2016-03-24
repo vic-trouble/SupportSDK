@@ -1,7 +1,7 @@
 set_name = "render_testing"
 mesh = {
 	resource_name = "SimpleBox"
-	path = "..\..\Resources\Models\monkey.obj"
+	path = "..\..\Resources\Models\Box.obj"
 	vertices_usage = "static"
 	indices_usage = "static"
 }
@@ -13,7 +13,7 @@ texture = {
 
 texture = {
 	resource_name = "box_diffuse"
-	path = "..\..\Resources\Textures\box_diffuse.png"
+	path = "..\..\Resources\Textures\Box texture.png"
 }
 
 shader_program = {

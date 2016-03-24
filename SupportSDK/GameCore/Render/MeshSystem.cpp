@@ -13,8 +13,13 @@
 
 #include "Systems/TransformationsSystem.h"
 #include "EntityManager.h"
+#include "FileSystem/FileSystem.h"
 
 #include <string>
+
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 namespace SDK
 {
@@ -24,6 +29,7 @@ namespace SDK
 
 		Render::BufferUsageFormat m_ver_usage;
 		Render::BufferUsageFormat m_ind_usage;
+		std::string m_file_name;
 	};
 
 	namespace Resources
@@ -61,78 +67,60 @@ namespace SDK
 			template <>
 			struct LoaderImpl < Render::Mesh >
 			{
-				static std::pair<LoadResult, Render::Mesh> Load(std::istream* ip_streams[1], MeshInformation i_info)
+				static std::pair<LoadResult, Render::Mesh> ProcessMesh(aiMesh* mesh, const aiScene* scene, MeshInformation i_info)
 				{
-					using namespace Render;
-
-					/////////////////
-					std::vector<float> vertices;
-					std::vector<float> uvs;
-					std::vector<int> indices;					
-					std::string model_name;
-					/////////////////
-					std::istream& stream = *ip_streams[0];
-					Vector3 vec3;
-					Vector3i vec3i;
-					Vector2 vec2;
-					while (ip_streams[0]->good())
+					struct Vertex
 					{
-						char buffer[255];
-						stream >> buffer;
-
-						switch (buffer[0])
+						// Position
+						Vector3 Position;
+						// Normal
+						Vector3 Normal;
+						// TexCoords
+						Vector2 TexCoords;
+					};
+					std::vector<Vertex> vertices;
+					std::vector<int> indices;
+					// Walk through each of the mesh's vertices
+					for (uint i = 0; i < mesh->mNumVertices; i++)
+					{
+						Vertex vertex;
+						Vector3 vector; // We declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
+										// Positions
+						vector[0] = mesh->mVertices[i].x;
+						vector[1] = mesh->mVertices[i].y;
+						vector[2] = mesh->mVertices[i].z;
+						vertex.Position = vector;
+						// Normals
+						vector[0] = mesh->mNormals[i].x;
+						vector[1] = mesh->mNormals[i].y;
+						vector[2] = mesh->mNormals[i].z;
+						vertex.Normal = vector;
+						// Texture Coordinates
+						if (mesh->mTextureCoords[0]) // Does the mesh contain texture coordinates?
 						{
-							case 'v':
-								if (buffer[1] == '\0')
-								{
-									stream >> vec3;
-									for (size_t i = 0; i < 3; ++i)
-										vertices.push_back(vec3[i]);
-									break;
-								}
-								// texture
-								if (buffer[1] == 't')
-								{
-									*ip_streams[0] >> vec2;
-									uvs.push_back(vec2[0]);
-									uvs.push_back(vec2[1]);
-								}
-								break;
-							case 'o':
-								stream >> model_name;
-								break;
-							case 'f':
-								{
-									if (buffer[1] != '\0')
-										break;
-									std::string temp;
-									getline(stream, temp);
-
-									size_t pos = 0;
-									for (int i = 0; i < 3; ++i)
-									{
-										pos = temp.find(' ', pos) + 1;
-										vec3i[i] = atoi(temp.substr(pos).c_str()) - 1;
-										// textures
-										pos = temp.find('/', pos) + 1;
-										// normals
-										pos = temp.find('/', pos) + 1;
-									}
-									for (size_t i = 0; i < 3; ++i)
-										indices.push_back(vec3i[i]);
-
-								}
-								break;
-							default:
-								stream.getline(buffer, 254);
-								break;
+							Vector2 vec;
+							// A vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't 
+							// use models where a vertex can have multiple texture coordinates so we always take the first set (0).
+							vec[0] = mesh->mTextureCoords[0][i].x;
+							vec[1] = mesh->mTextureCoords[0][i].y;
+							vertex.TexCoords = vec;
 						}
+						else
+							vertex.TexCoords = Vector2{ 0.0f, 0.0f };
+						vertices.push_back(vertex);
 					}
-					
+					// Now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
+					for (uint i = 0; i < mesh->mNumFaces; i++)
+					{
+						aiFace face = mesh->mFaces[i];
+						// Retrieve all indices of the face and store them in the indices vector
+						for (uint j = 0; j < face.mNumIndices; j++)
+							indices.push_back(face.mIndices[j]);
+					}
+
 					auto p_mgr = Core::GetRenderer()->GetHardwareBufferMgr();
-					auto ver_buf = p_mgr->CreateHardwareBuffer(vertices.size()*sizeof(float), i_info.m_ver_usage, &vertices[0]);
-					auto uvs_buf = p_mgr->CreateHardwareBuffer(uvs.size()*sizeof(float), i_info.m_ver_usage, &uvs[0]);
-					HardwareIndexBuffer::IndexType ind_type = HardwareIndexBuffer::IndexType::Int;
+					auto ver_buf = p_mgr->CreateHardwareBuffer(vertices.size()*sizeof(Vertex), i_info.m_ver_usage, &vertices[0]);					
+					Render::HardwareIndexBuffer::IndexType ind_type = Render::HardwareIndexBuffer::IndexType::Int;
 					/*
 					TODO: correct determination of vertex types
 					if (indices.size() < 65535)
@@ -140,10 +128,33 @@ namespace SDK
 					else if(indices.size() < 255)
 					ind_type = HardwareIndexBuffer::IndexType::Byte;*/
 					auto ind_buf = p_mgr->CreateIndexBuffer(ind_type, indices.size(), i_info.m_ind_usage, Render::PrimitiveType::Triangles, &indices[0]);
-					auto ver_layout = p_mgr->CreateLayout(ver_buf, 3, Render::VertexSemantic::Position, Render::ComponentType::Float, false, sizeof(float)*3/*cam be 0*/, 0);
-					auto uv_layout = p_mgr->CreateLayout(uvs_buf, 2, Render::VertexSemantic::TextureCoordinates, Render::ComponentType::Float, false, sizeof(float) * 2/*cam be 0*/, 0);
+					auto pos_layout = p_mgr->CreateLayout(ver_buf, 3, Render::VertexSemantic::Position, Render::ComponentType::Float, false, sizeof(Vertex), 0);
+					auto normals_layout = p_mgr->CreateLayout(ver_buf, 3, Render::VertexSemantic::Normal, Render::ComponentType::Float, false, sizeof(Vertex), offsetof(Vertex, Normal));
+					auto uv_layout = p_mgr->CreateLayout(ver_buf, 2, Render::VertexSemantic::TextureCoordinates, Render::ComponentType::Float, false, sizeof(Vertex), offsetof(Vertex, TexCoords));
 
-					return std::make_pair(LoadResult::Success, Mesh(ver_buf, uvs_buf, ind_buf, ver_layout, uv_layout));
+					return std::make_pair(LoadResult::Success, Render::Mesh(ver_buf, pos_layout, normals_layout, uv_layout, ind_buf));
+				}
+
+				static std::pair<LoadResult, Render::Mesh> Load(std::istream* ip_streams[1], MeshInformation i_info)
+				{
+					const std::string file_data = FS::ReadFileToString(*ip_streams[0]);
+					if (file_data.empty())
+					{
+						assert(false && "File data is empty");
+						return std::make_pair(LoadResult::Failure, Render::Mesh());
+					}
+					// Read file via ASSIMP
+					Assimp::Importer importer;
+					const aiScene* scene = importer.ReadFileFromMemory(file_data.c_str(), file_data.size(), aiProcess_Triangulate | aiProcess_FlipUVs);
+					// Check for errors
+					if (!scene || scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) // if is Not Zero
+					{
+						std::string message = importer.GetErrorString();
+						assert(false && "ASSIMP ERROR");
+						return std::make_pair(LoadResult::Failure, Render::Mesh());
+					}
+
+					return ProcessMesh(scene->mMeshes[0], scene, i_info);
 				}
 
 				// TODO: need some limitations on size of loaded meshes?
@@ -199,8 +210,9 @@ namespace SDK
 					auto p_mgr = Core::GetRenderer()->GetHardwareBufferMgr();
 					Render::Mesh& mesh = meshes[i_handle.index];
 					p_mgr->DestroyBuffer(mesh.GetVertices());
-					p_mgr->DestroyBuffer(mesh.GetUvs());
-					p_mgr->DestroyLayout(mesh.GetLayout());
+					p_mgr->DestroyLayout(mesh.GetPosLayout());
+					p_mgr->DestroyLayout(mesh.GetNormalLayout());
+					p_mgr->DestroyLayout(mesh.GetUVLayout());
 					p_mgr->DestroyBuffer(mesh.GetIndices());					
 				}
 
@@ -311,9 +323,10 @@ namespace SDK
 
 				// TODO: need dynamic here and not static :`(
 				// for now buffer place for 6 unis
-				Commands::SetupShader<2, 6>* p_shader_cmd = Render::gBuffer.Append<Commands::SetupShader<2, 6>>(p_transform_cmd);
-				p_shader_cmd->m_layouts[0] = mesh.GetLayout();
-				p_shader_cmd->m_layouts[1] = mesh.GetUVLayout();
+				Commands::SetupShader<3, 6>* p_shader_cmd = Render::gBuffer.Append<Commands::SetupShader<3, 6>>(p_transform_cmd);
+				p_shader_cmd->m_layouts[0] = mesh.GetPosLayout();
+				p_shader_cmd->m_layouts[1] = mesh.GetNormalLayout();
+				p_shader_cmd->m_layouts[2] = mesh.GetUVLayout();
 				void* p_parent_cmd = (void*)p_shader_cmd;
 				if (!mesh_instance.GetMaterials().empty())
 				{
@@ -331,14 +344,14 @@ namespace SDK
 
 				Commands::Draw* p_cmd = Render::gBuffer.Append<Commands::Draw>(p_parent_cmd);
 				p_cmd->vertices = mesh.GetVertices();
-				p_cmd->layout = mesh.GetLayout();
+				p_cmd->layout = mesh.GetPosLayout();
 				p_cmd->indices = mesh.GetIndices();
 			}
 		}
 		
 		MeshHandler MeshSystem::Load(const std::string& i_name, const std::string& i_path, Render::BufferUsageFormat i_vertices_usage, Render::BufferUsageFormat i_indices_usage)
 		{
-			MeshInformation info = { i_vertices_usage, i_indices_usage };
+			MeshInformation info = { i_vertices_usage, i_indices_usage, i_path };
 			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
 			InternalHandle handle = p_load_manager->Load<Mesh>(i_name, { i_path }, info);
 

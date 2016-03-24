@@ -20,7 +20,8 @@ namespace SDK
 		private:
 			VertexBufferHandle	m_vertex_buffer;
 			VertexBufferHandle	m_uvs;
-			VertexLayoutHandle	m_vertex_layout;
+			VertexLayoutHandle	m_pos_layout;
+			VertexLayoutHandle	m_normal_layout;
 			VertexLayoutHandle	m_uv_layout;
 
 			IndexBufferHandle	m_index_buffer;
@@ -29,12 +30,16 @@ namespace SDK
 
 		public:
 			GAMECORE_EXPORT Mesh();
-			GAMECORE_EXPORT Mesh(VertexBufferHandle i_vertices, VertexBufferHandle uvs, IndexBufferHandle i_indices, VertexLayoutHandle i_layout, VertexLayoutHandle i_uv_layout);
+			GAMECORE_EXPORT Mesh(VertexBufferHandle i_vertices, 
+								VertexLayoutHandle i_pos_layout,
+								VertexLayoutHandle i_normal_layout,
+								VertexLayoutHandle i_uv_layout,
+								IndexBufferHandle i_indices);
 			GAMECORE_EXPORT ~Mesh();
 			
 			VertexBufferHandle GetVertices() const { return m_vertex_buffer; }
-			VertexBufferHandle GetUvs() const { return m_uvs; }
-			VertexLayoutHandle GetLayout() const { return m_vertex_layout; }
+			VertexLayoutHandle GetPosLayout() const { return m_pos_layout; }
+			VertexLayoutHandle GetNormalLayout() const { return m_normal_layout; }
 			VertexLayoutHandle GetUVLayout() const { return m_uv_layout; }
 			IndexBufferHandle GetIndices() const { return m_index_buffer; }
 

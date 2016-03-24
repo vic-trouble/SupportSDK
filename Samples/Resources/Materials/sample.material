@@ -12,7 +12,7 @@ Material = {
 		input_color = {
 			shader_semantic = "uniform"
 			type = "vec4"
-			value = [ 0.49f 0.059f 0.87f 1.0f ]
+			value = [ 0.4f 0.059f 0.1f 1.0f ]
 
 			show_name = "Color"
 		}
