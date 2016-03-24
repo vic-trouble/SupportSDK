@@ -49,7 +49,7 @@ namespace Game
 		//E:\Git_Projects\SupportSDK\Samples\Resources\Models\Box.obj
 		//loaded_mesh = Render::g_mesh_system.Load("Resources\\Models\\Box.obj", Render::BufferUsageFormat::Static, Render::BufferUsageFormat::Static);
 		auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
-		auto handle = p_load_manager->GetHandleToResource("SimpleBox");
+		auto handle = p_load_manager->GetHandleToResource("Nanosuit");
 		loaded_mesh = { handle.index, handle.generation };
 		
 		auto mesh_handler = Render::g_mesh_system.CreateInstance(loaded_mesh);
@@ -63,7 +63,7 @@ namespace Game
 		// test getting of entity and component
 		auto entity = g_entity_manager.GetEntity(entity_handler);
 		
-		auto material_handle_int = p_load_manager->GetHandleToResource("SimpleBox");
+		auto material_handle_int = p_load_manager->GetHandleToResource("Nanosuit_material");
 		Render::MaterialHandle material_handle = { material_handle_int.index, material_handle_int.generation };
 		auto p_material = Render::g_material_mgr.AccessMaterial(material_handle);
 
@@ -90,7 +90,7 @@ namespace Game
 		auto& world = Core::GetApplication()->GetWorld();
 		auto& camera = world.GetCamera();
 
-		camera.LookAt({ 0,-4,-7 }, { -10,-2,0 });
+		camera.LookAt({ 0,-5,-15 }, { -10,-2,0 });
 
 		world.GetFrustum().SetFOV(60 * Math::DEG2RAD);
 	}

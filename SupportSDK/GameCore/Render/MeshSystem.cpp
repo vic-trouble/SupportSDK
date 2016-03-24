@@ -67,8 +67,9 @@ namespace SDK
 			template <>
 			struct LoaderImpl < Render::Mesh >
 			{
-				static std::pair<LoadResult, Render::Mesh> ProcessMesh(aiMesh* mesh, const aiScene* scene, MeshInformation i_info)
+				static std::pair<LoadResult, Render::Mesh> ProcessMesh(const aiScene* ip_scene, MeshInformation i_info)
 				{
+					Render::Mesh result_mesh;
 					struct Vertex
 					{
 						// Position
@@ -80,59 +81,67 @@ namespace SDK
 					};
 					std::vector<Vertex> vertices;
 					std::vector<int> indices;
-					// Walk through each of the mesh's vertices
-					for (uint i = 0; i < mesh->mNumVertices; i++)
-					{
-						Vertex vertex;
-						Vector3 vector; // We declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
-										// Positions
-						vector[0] = mesh->mVertices[i].x;
-						vector[1] = mesh->mVertices[i].y;
-						vector[2] = mesh->mVertices[i].z;
-						vertex.Position = vector;
-						// Normals
-						vector[0] = mesh->mNormals[i].x;
-						vector[1] = mesh->mNormals[i].y;
-						vector[2] = mesh->mNormals[i].z;
-						vertex.Normal = vector;
-						// Texture Coordinates
-						if (mesh->mTextureCoords[0]) // Does the mesh contain texture coordinates?
-						{
-							Vector2 vec;
-							// A vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't 
-							// use models where a vertex can have multiple texture coordinates so we always take the first set (0).
-							vec[0] = mesh->mTextureCoords[0][i].x;
-							vec[1] = mesh->mTextureCoords[0][i].y;
-							vertex.TexCoords = vec;
-						}
-						else
-							vertex.TexCoords = Vector2{ 0.0f, 0.0f };
-						vertices.push_back(vertex);
-					}
-					// Now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
-					for (uint i = 0; i < mesh->mNumFaces; i++)
-					{
-						aiFace face = mesh->mFaces[i];
-						// Retrieve all indices of the face and store them in the indices vector
-						for (uint j = 0; j < face.mNumIndices; j++)
-							indices.push_back(face.mIndices[j]);
-					}
-
 					auto p_mgr = Core::GetRenderer()->GetHardwareBufferMgr();
-					auto ver_buf = p_mgr->CreateHardwareBuffer(vertices.size()*sizeof(Vertex), i_info.m_ver_usage, &vertices[0]);					
-					Render::HardwareIndexBuffer::IndexType ind_type = Render::HardwareIndexBuffer::IndexType::Int;
-					/*
-					TODO: correct determination of vertex types
-					if (indices.size() < 65535)
-					ind_type = HardwareIndexBuffer::IndexType::Short;
-					else if(indices.size() < 255)
-					ind_type = HardwareIndexBuffer::IndexType::Byte;*/
-					auto ind_buf = p_mgr->CreateIndexBuffer(ind_type, indices.size(), i_info.m_ind_usage, Render::PrimitiveType::Triangles, &indices[0]);
-					auto pos_layout = p_mgr->CreateLayout(ver_buf, 3, Render::VertexSemantic::Position, Render::ComponentType::Float, false, sizeof(Vertex), 0);
-					auto normals_layout = p_mgr->CreateLayout(ver_buf, 3, Render::VertexSemantic::Normal, Render::ComponentType::Float, false, sizeof(Vertex), offsetof(Vertex, Normal));
-					auto uv_layout = p_mgr->CreateLayout(ver_buf, 2, Render::VertexSemantic::TextureCoordinates, Render::ComponentType::Float, false, sizeof(Vertex), offsetof(Vertex, TexCoords));
+					for (uint im = 0; im < ip_scene->mNumMeshes; ++im)
+					{
+						const aiMesh* p_mesh = ip_scene->mMeshes[im];
+						vertices.clear();
+						indices.clear();
+						// Walk through each of the mesh's vertices
+						for (uint i = 0; i < p_mesh->mNumVertices; i++)
+						{
+							Vertex vertex;
+							Vector3 vector; // We declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
+											// Positions
+							vector[0] = p_mesh->mVertices[i].x;
+							vector[1] = p_mesh->mVertices[i].y;
+							vector[2] = p_mesh->mVertices[i].z;
+							vertex.Position = vector;
+							// Normals
+							vector[0] = p_mesh->mNormals[i].x;
+							vector[1] = p_mesh->mNormals[i].y;
+							vector[2] = p_mesh->mNormals[i].z;
+							vertex.Normal = vector;
+							// Texture Coordinates
+							if (p_mesh->mTextureCoords[0]) // Does the mesh contain texture coordinates?
+							{
+								Vector2 vec;
+								// A vertex can contain up to 8 different texture coordinates. We thus make the assumption that we won't 
+								// use models where a vertex can have multiple texture coordinates so we always take the first set (0).
+								vec[0] = p_mesh->mTextureCoords[0][i].x;
+								vec[1] = p_mesh->mTextureCoords[0][i].y;
+								vertex.TexCoords = vec;
+							}
+							else
+								vertex.TexCoords = Vector2{ 0.0f, 0.0f };
+							vertices.push_back(vertex);
+						}
+						// Now wak through each of the mesh's faces (a face is a mesh its triangle) and retrieve the corresponding vertex indices.
+						for (uint i = 0; i < p_mesh->mNumFaces; i++)
+						{
+							aiFace face = p_mesh->mFaces[i];
+							// Retrieve all indices of the face and store them in the indices vector
+							for (uint j = 0; j < face.mNumIndices; j++)
+								indices.push_back(face.mIndices[j]);
+						}
+						
+						auto ver_buf = p_mgr->CreateHardwareBuffer(vertices.size()*sizeof(Vertex), i_info.m_ver_usage, &vertices[0]);
+						Render::HardwareIndexBuffer::IndexType ind_type = Render::HardwareIndexBuffer::IndexType::Int;
+						/*
+						TODO: correct determination of vertex types
+						if (indices.size() < 65535)
+						ind_type = HardwareIndexBuffer::IndexType::Short;
+						else if(indices.size() < 255)
+						ind_type = HardwareIndexBuffer::IndexType::Byte;*/
+						auto ind_buf = p_mgr->CreateIndexBuffer(ind_type, indices.size(), i_info.m_ind_usage, Render::PrimitiveType::Triangles, &indices[0]);
+						auto pos_layout = p_mgr->CreateLayout(ver_buf, 3, Render::VertexSemantic::Position, Render::ComponentType::Float, false, sizeof(Vertex), 0);
+						auto normals_layout = p_mgr->CreateLayout(ver_buf, 3, Render::VertexSemantic::Normal, Render::ComponentType::Float, false, sizeof(Vertex), offsetof(Vertex, Normal));
+						auto uv_layout = p_mgr->CreateLayout(ver_buf, 2, Render::VertexSemantic::TextureCoordinates, Render::ComponentType::Float, false, sizeof(Vertex), offsetof(Vertex, TexCoords));
 
-					return std::make_pair(LoadResult::Success, Render::Mesh(ver_buf, pos_layout, normals_layout, uv_layout, ind_buf));
+						result_mesh.AddSubmesh(ver_buf, pos_layout, normals_layout, uv_layout, ind_buf);
+					}
+					
+					return std::make_pair(LoadResult::Success, result_mesh);
 				}
 
 				static std::pair<LoadResult, Render::Mesh> Load(std::istream* ip_streams[1], MeshInformation i_info)
@@ -154,7 +163,7 @@ namespace SDK
 						return std::make_pair(LoadResult::Failure, Render::Mesh());
 					}
 
-					return ProcessMesh(scene->mMeshes[0], scene, i_info);
+					return ProcessMesh(scene, i_info);
 				}
 
 				// TODO: need some limitations on size of loaded meshes?
@@ -209,11 +218,15 @@ namespace SDK
 					// release resources for mesh
 					auto p_mgr = Core::GetRenderer()->GetHardwareBufferMgr();
 					Render::Mesh& mesh = meshes[i_handle.index];
-					p_mgr->DestroyBuffer(mesh.GetVertices());
-					p_mgr->DestroyLayout(mesh.GetPosLayout());
-					p_mgr->DestroyLayout(mesh.GetNormalLayout());
-					p_mgr->DestroyLayout(mesh.GetUVLayout());
-					p_mgr->DestroyBuffer(mesh.GetIndices());					
+					for (size_t i = 0; i < mesh.GetSubmeshNumber(); ++i)
+					{
+						const Render::Mesh::SubMesh& sub_mesh = mesh.GetSubmesh(i);
+						p_mgr->DestroyBuffer(sub_mesh.m_vertex_buffer);
+						p_mgr->DestroyLayout(sub_mesh.m_pos_layout);
+						p_mgr->DestroyLayout(sub_mesh.m_normal_layout);
+						p_mgr->DestroyLayout(sub_mesh.m_uv_layout);
+						p_mgr->DestroyBuffer(sub_mesh.m_index_buffer);
+					}					
 				}
 
 				static void Register(InternalHandle i_handle, Render::Mesh i_mesh)
@@ -305,47 +318,47 @@ namespace SDK
 
 				auto& mesh_instance = m_instances[handler.index];
 				auto& mesh = m_meshes[mesh_instance.GetHandler().index];
-
-				Commands::Transform* p_transform_cmd = nullptr;
 				auto p_entity = g_entity_manager.GetEntity(mesh_instance.GetEntity());
-				if (p_entity != nullptr)
+				for (size_t i = 0; i < mesh.GetSubmeshNumber(); ++i)
 				{
-					auto p_transform = p_entity->GetComponent<Transform>();
-					// we have no transform - cannot draw somewhere -> skip
-					if (p_transform == nullptr)
+					const Render::Mesh::SubMesh& sub_mesh = mesh.GetSubmesh(i);
+					Commands::Transform* p_transform_cmd = nullptr;
+					if (p_entity != nullptr)
 					{
-						assert(false && "No transform component for mesh");
-						continue;
+						auto p_transform = p_entity->GetComponent<Transform>();
+						// we have no transform - cannot draw somewhere -> skip
+						if (p_transform == nullptr)
+						{
+							assert(false && "No transform component for mesh");
+							continue;
+						}
+						p_transform_cmd = Render::gBuffer.Create<Commands::Transform>();
+						p_transform_cmd->Translate(p_transform->m_position);
 					}
-					p_transform_cmd = Render::gBuffer.Create<Commands::Transform>();
-					p_transform_cmd->Translate(p_transform->m_position);
-				}
 
-				// TODO: need dynamic here and not static :`(
-				// for now buffer place for 6 unis
-				Commands::SetupShader<3, 6>* p_shader_cmd = Render::gBuffer.Append<Commands::SetupShader<3, 6>>(p_transform_cmd);
-				p_shader_cmd->m_layouts[0] = mesh.GetPosLayout();
-				p_shader_cmd->m_layouts[1] = mesh.GetNormalLayout();
-				p_shader_cmd->m_layouts[2] = mesh.GetUVLayout();
-				void* p_parent_cmd = (void*)p_shader_cmd;
-				if (!mesh_instance.GetMaterials().empty())
-				{
-					auto material_handle = mesh_instance.GetMaterials()[0];					
-					const auto p_material = Render::g_material_mgr.AccessMaterial(material_handle);
-					p_shader_cmd->m_shader = p_material->m_shader;					
-					for (auto& entry : p_material->m_entries)
+					// TODO: need dynamic here and not static :`(
+					// for now buffer place for 6 unis
+					Commands::SetupShader<3, 6>* p_shader_cmd = Render::gBuffer.Append<Commands::SetupShader<3, 6>>(p_transform_cmd);
+					p_shader_cmd->m_layouts[0] = sub_mesh.m_pos_layout;
+					p_shader_cmd->m_layouts[1] = sub_mesh.m_normal_layout;
+					p_shader_cmd->m_layouts[2] = sub_mesh.m_uv_layout;
+					void* p_parent_cmd = (void*)p_shader_cmd;
+					if (!mesh_instance.GetMaterials().empty())
 					{
-						if (entry.type != ShaderVariableType::Sampler2D)
-							p_shader_cmd->SetValue(entry.shader_var_location, entry.type, entry.container.GetDataPtr(), entry.container.size, false);
-					}
-					
-					p_parent_cmd = Render::g_material_mgr.SetupShaderAndCreateCommands(&p_shader_cmd->m_dynamic_uniforms[p_shader_cmd->current_value], 6 - p_shader_cmd->current_value, *p_material, p_shader_cmd);
-				}
+						auto material_handle = mesh_instance.GetMaterials()[0];
+						const auto p_material = Render::g_material_mgr.AccessMaterial(material_handle);
+						p_shader_cmd->m_shader = p_material->m_shader;
+						for (auto& entry : p_material->m_entries)
+						{
+							if (entry.type != ShaderVariableType::Sampler2D)
+								p_shader_cmd->SetValue(entry.shader_var_location, entry.type, entry.container.GetDataPtr(), entry.container.size, false);
+						}
 
-				Commands::Draw* p_cmd = Render::gBuffer.Append<Commands::Draw>(p_parent_cmd);
-				p_cmd->vertices = mesh.GetVertices();
-				p_cmd->layout = mesh.GetPosLayout();
-				p_cmd->indices = mesh.GetIndices();
+						p_parent_cmd = Render::g_material_mgr.SetupShaderAndCreateCommands(&p_shader_cmd->m_dynamic_uniforms[p_shader_cmd->current_value], 6 - p_shader_cmd->current_value, *p_material, p_shader_cmd);
+					}
+
+					Commands::Draw* p_cmd = Render::gBuffer.Append<Commands::Draw>(p_parent_cmd);
+				}
 			}
 		}
 		

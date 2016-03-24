@@ -6,9 +6,21 @@ mesh = {
 	indices_usage = "static"
 }
 
+mesh = {
+	resource_name = "Nanosuit"
+	path = "..\..\Resources\Models\nanosuit\nanosuit.obj"
+	vertices_usage = "static"
+	indices_usage = "static"
+}
+
 texture = {
 	resource_name = "diffuse_tex"
 	path = "..\..\Resources\Textures\img_test.png"
+}
+
+texture = {
+	resource_name = "nano_diffuse_tex"
+	path = "..\..\Resources\Textures\nano_test.png"
 }
 
 texture = {
@@ -31,4 +43,9 @@ shader_program = {
 material = {
 	resource_name = "Sample_material"
 	path = "..\..\Resources\Materials\sample.material"
+}
+
+material = {
+	resource_name = "Nanosuit_material"
+	path = "..\..\Resources\Materials\nanosuit.material"
 }

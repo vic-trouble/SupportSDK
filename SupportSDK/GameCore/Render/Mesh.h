@@ -10,44 +10,48 @@ namespace SDK
 	namespace Render
 	{
 		class MeshSystem;
-		/*
-		Why mesh is not POD?
-		static_assert(<std::is_pod<Mesh>, "Mesh is not POD data type");
-		*/
-
+		
 		class Mesh
 		{
+		public:
+			struct SubMesh
+			{
+				VertexBufferHandle	m_vertex_buffer;
+				VertexLayoutHandle	m_pos_layout;
+				VertexLayoutHandle	m_normal_layout;
+				VertexLayoutHandle	m_uv_layout;
+
+				IndexBufferHandle	m_index_buffer;
+
+				SubMesh(VertexBufferHandle i_vertices,
+					VertexLayoutHandle i_pos_layout,
+					VertexLayoutHandle i_normal_layout,
+					VertexLayoutHandle i_uv_layout,
+					IndexBufferHandle i_indices)
+					: m_vertex_buffer(i_vertices)
+					, m_pos_layout(i_pos_layout)
+					, m_normal_layout(i_normal_layout)
+					, m_uv_layout(i_uv_layout)
+					, m_index_buffer(i_indices)
+				{}
+			};
+
 		private:
-			VertexBufferHandle	m_vertex_buffer;
-			VertexBufferHandle	m_uvs;
-			VertexLayoutHandle	m_pos_layout;
-			VertexLayoutHandle	m_normal_layout;
-			VertexLayoutHandle	m_uv_layout;
-
-			IndexBufferHandle	m_index_buffer;
-
-			bool m_valid;
+			std::vector<SubMesh> m_sub_meshes;
 
 		public:
-			GAMECORE_EXPORT Mesh();
-			GAMECORE_EXPORT Mesh(VertexBufferHandle i_vertices, 
-								VertexLayoutHandle i_pos_layout,
-								VertexLayoutHandle i_normal_layout,
-								VertexLayoutHandle i_uv_layout,
-								IndexBufferHandle i_indices);
-			GAMECORE_EXPORT ~Mesh();
-			
-			VertexBufferHandle GetVertices() const { return m_vertex_buffer; }
-			VertexLayoutHandle GetPosLayout() const { return m_pos_layout; }
-			VertexLayoutHandle GetNormalLayout() const { return m_normal_layout; }
-			VertexLayoutHandle GetUVLayout() const { return m_uv_layout; }
-			IndexBufferHandle GetIndices() const { return m_index_buffer; }
+			GAMECORE_EXPORT void AddSubmesh(VertexBufferHandle i_vertices,
+					VertexLayoutHandle i_pos_layout,
+					VertexLayoutHandle i_normal_layout,
+					VertexLayoutHandle i_uv_layout,
+					IndexBufferHandle i_indices);
 
-			bool IsValid() const { return m_valid; }
+			size_t GetSubmeshNumber() const { return m_sub_meshes.size(); }
+			const SubMesh& GetSubmesh(size_t i) const { return m_sub_meshes[i]; }
+			bool IsValid() const { return !m_sub_meshes.empty(); }
 		};
 
-		//static_assert(std::is_pod<Mesh>::value == true, "Mesh is not POD data type");
-	}
-}
+	} // Render
+} // SDK
 
 #endif
