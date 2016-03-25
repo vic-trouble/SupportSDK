@@ -22,7 +22,7 @@ namespace SDK
 				VertexLayoutHandle		layout;
 				IndexBufferHandle		indices;
 
-				ShaderHandler			program;
+				ShaderHandle			program;
 			};
 			static_assert(std::is_pod<Draw>::value == true, "Draw must be a POD.");
 
@@ -73,7 +73,7 @@ namespace SDK
 
 			namespace SetupShaderDetails
 			{
-				GAMECORE_EXPORT void BindShader(ShaderHandler i_shader, const VertexLayoutHandle* i_layouts, size_t i_size);
+				GAMECORE_EXPORT void BindShader(ShaderHandle i_shader, const VertexLayoutHandle* i_layouts, size_t i_size);
 				GAMECORE_EXPORT void UnbindShader();
 				GAMECORE_EXPORT void SetDynamicUniform(const ShaderUniformValue& i_value);
 			} // SetupShaderDetails
@@ -106,7 +106,7 @@ namespace SDK
 				///////////////////////////////////////////////////
 				// Own
 
-				ShaderHandler m_shader;
+				ShaderHandle m_shader;
 				std::array<VertexLayoutHandle, LayoutsCount> m_layouts;
 				std::array<ShaderUniformValue, DynUniCount> m_dynamic_uniforms;
 				size_t current_value;

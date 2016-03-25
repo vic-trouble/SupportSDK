@@ -180,13 +180,13 @@ namespace SDK
 		struct VerLayoutHandleTag {};
 		typedef GenericHandle<int, 12, 20, VerLayoutHandleTag> VertexLayoutHandle;
 		// Meshes
-		struct MeshHandlerTag{};
-		typedef GenericHandle<int, 12, 20, MeshHandlerTag> MeshHandler;
-		struct MeshComponentHandlerTag {};
-		typedef GenericHandle<int, 12, 20, MeshComponentHandlerTag> MeshComponentHandler;
+		struct MeshHandleTag{};
+		typedef GenericHandle<int, 12, 20, MeshHandleTag> MeshHandle;
+		struct MeshComponentHandleTag {};
+		typedef GenericHandle<int, 12, 20, MeshComponentHandleTag> MeshComponentHandle;
 		// Shaders
-		struct ShaderHandlerTag {};
-		typedef GenericHandle<int, 12, 20, ShaderHandlerTag> ShaderHandler;
+		struct ShaderHandleTag {};
+		typedef GenericHandle<int, 12, 20, ShaderHandleTag> ShaderHandle;
 		// Lights
 		using LightHandle = int;
 		constexpr LightHandle INVALID_LIGHT_HANDLE = -1;

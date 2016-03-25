@@ -37,7 +37,7 @@ namespace SDK
 			p_transform_cmd->Translate(Vector3{ static_cast<float>(m_global_position[0]), static_cast<float>(m_global_position[1]), 0.f });
 
 			Commands::SetupShader<1>* p_shader_cmd = Render::gBuffer.Append<Commands::SetupShader<1>>(p_transform_cmd);
-			p_shader_cmd->m_shader = ShaderHandler::InvalidHandle();
+			p_shader_cmd->m_shader = ShaderHandle::InvalidHandle();
 			p_shader_cmd->m_layouts[0] = m_batch.element;
 
 			Commands::Draw* p_cmd = Render::gBuffer.Append<Commands::Draw>(p_shader_cmd);

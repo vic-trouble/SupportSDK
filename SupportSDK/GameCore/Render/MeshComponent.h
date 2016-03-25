@@ -19,7 +19,7 @@ namespace SDK
 			ENTITY_DEFINITION(MeshSystem, "MeshComponent")
 
 		private:
-			MeshHandler m_mesh;
+			MeshHandle m_mesh;
 
 			EntityHandle m_entity;
 
@@ -28,11 +28,11 @@ namespace SDK
 
 		public:
 			MeshComponent() {}
-			MeshComponent(MeshHandler i_handler)
+			MeshComponent(MeshHandle i_handler)
 				: m_mesh(i_handler)
 			{}			
 
-			MeshHandler GetHandler() const { return m_mesh; }
+			MeshHandle GetHandler() const { return m_mesh; }
 
 			void AddMaterial(MaterialHandle i_material) { m_materials.emplace_back(i_material); }
 			const std::vector<MaterialHandle>& GetMaterials() const { return m_materials; }

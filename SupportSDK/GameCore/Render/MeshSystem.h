@@ -24,7 +24,7 @@ namespace SDK
 			struct Definition <Render::Mesh>
 			{
 				typedef MeshInformation InfoType;
-				typedef Render::MeshHandler HandleType;
+				typedef Render::MeshHandle HandleType;
 			};
 
 			template <typename ResInfo>
@@ -43,9 +43,9 @@ namespace SDK
 		private:
 			// raw resources - not processed if they not used with MeshComponent
 			std::vector<Mesh> m_meshes;
-			std::vector<MeshHandler> m_handlers;
+			std::vector<MeshHandle> m_handlers;
 			std::vector<MeshComponent> m_instances;
-			std::vector<MeshComponentHandler> m_component_handlers;
+			std::vector<MeshComponentHandle> m_component_handlers;
 
 		public:
 			MeshSystem();
@@ -58,24 +58,24 @@ namespace SDK
 			virtual bool Requires(Action i_aciton) const { return i_aciton == Action::SubmitDrawCommands || i_aciton == Action::Update; }
 
 			// Own
-			GAMECORE_EXPORT MeshHandler Load(const std::string& i_name, const std::string& i_path, BufferUsageFormat i_vertices_usage, BufferUsageFormat i_indices_usage);
-			GAMECORE_EXPORT void Unload(MeshHandler i_handler);
+			GAMECORE_EXPORT MeshHandle Load(const std::string& i_name, const std::string& i_path, BufferUsageFormat i_vertices_usage, BufferUsageFormat i_indices_usage);
+			GAMECORE_EXPORT void Unload(MeshHandle i_handler);
 			GAMECORE_EXPORT void Unload(const std::string& i_file_name) { throw std::exception("Not realized"); }
 			
-			GAMECORE_EXPORT MeshComponentHandler CreateInstance(MeshHandler i_handler);
-			GAMECORE_EXPORT MeshComponentHandler CreateInstance(const std::string& i_file_name) { throw std::exception("Not realized"); }
+			GAMECORE_EXPORT MeshComponentHandle CreateInstance(MeshHandle i_handler);
+			GAMECORE_EXPORT MeshComponentHandle CreateInstance(const std::string& i_file_name) { throw std::exception("Not realized"); }
 
 			// TODO: Custom mesh
-			//MeshHandler Create(const std::string& i_name, Mesh i_mesh);
+			//MeshHandle Create(const std::string& i_name, Mesh i_mesh);
 
-			GAMECORE_EXPORT void AddMaterialTo(MeshComponentHandler i_component, MaterialHandle i_material);
+			GAMECORE_EXPORT void AddMaterialTo(MeshComponentHandle i_component, MaterialHandle i_material);
 
 			/////////////////////////////////////////////////////////
 			
 			// if you want to change something - use this method. On one frame it is guaranteed that 
 			//	pointer will be valid if not nullptr
-			GAMECORE_EXPORT MeshComponent* AccessComponent(MeshComponentHandler i_handler);
-			GAMECORE_EXPORT void RemoveInstance(MeshComponentHandler i_handler);			
+			GAMECORE_EXPORT MeshComponent* AccessComponent(MeshComponentHandle i_handler);
+			GAMECORE_EXPORT void RemoveInstance(MeshComponentHandle i_handler);			
 
 			void Initialize();
 			void Release();

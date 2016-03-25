@@ -174,7 +174,7 @@ namespace SDK
 					o_material.m_name = i_material_elem.GetValue<std::string>("name");
 					o_material.m_name_hash = Utilities::hash_function(o_material.m_name);
 					std::string shader_name = p_shader_elem->GetValue<std::string>("name");
-					ShaderHandler handle = Core::GetGlobalObject<Resources::ResourceManager>()->GetHandleToResource<Render::Shader>(shader_name);
+					ShaderHandle handle = Core::GetGlobalObject<Resources::ResourceManager>()->GetHandleToResource<Render::Shader>(shader_name);
 
 					o_material.m_shader.index = handle.index;
 					o_material.m_shader.generation = handle.generation;

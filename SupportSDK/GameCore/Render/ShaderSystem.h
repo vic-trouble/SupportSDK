@@ -21,7 +21,7 @@ namespace SDK
 			struct Definition <Render::Shader>
 			{
 				typedef Render::ShaderCompiler* InfoType;
-				typedef Render::ShaderHandler HandleType;
+				typedef Render::ShaderHandle HandleType;
 			};
 
 			template <typename ResInfo>
@@ -36,7 +36,7 @@ namespace SDK
 			friend struct Resources::Serialization::LoaderImpl<Shader>;
 		private:
 			// TODO: limitations to 1024 shader loaded - is it enough?
-			typedef GenericBuffersArray<ShaderHandler, Shader, 1024> Shaders;
+			typedef GenericBuffersArray<ShaderHandle, Shader, 1024> Shaders;
 			Shaders m_shaders;
 			ShaderCompiler* mp_current_shader_compiler;
 		public:
@@ -83,18 +83,18 @@ namespace SDK
 					}
 				}
 			};
-			GAMECORE_EXPORT ShaderHandler Load(const std::string& i_resource_name, ShaderSource i_source);
-			GAMECORE_EXPORT void Unload(ShaderHandler i_handler);
+			GAMECORE_EXPORT ShaderHandle Load(const std::string& i_resource_name, ShaderSource i_source);
+			GAMECORE_EXPORT void Unload(ShaderHandle i_handler);
 			GAMECORE_EXPORT const Shader* Access(const std::string& i_name) const;
-			inline const Shader* Access(ShaderHandler i_handler) const
+			inline const Shader* Access(ShaderHandle i_handler) const
 			{
 				if (i_handler.index == -1 || i_handler.generation != m_shaders.m_handlers[i_handler.index].generation)
 					return nullptr;
 				return &m_shaders.m_buffer[i_handler.index];
 			}
 
-			GAMECORE_EXPORT void SetKnownUniforms(ShaderHandler i_handle);
-			GAMECORE_EXPORT void SetUniform(ShaderHandler i_handle, const std::string& i_var_name, const ShaderUniformValue& i_value) const;
+			GAMECORE_EXPORT void SetKnownUniforms(ShaderHandle i_handle);
+			GAMECORE_EXPORT void SetUniform(ShaderHandle i_handle, const std::string& i_var_name, const ShaderUniformValue& i_value) const;
 			GAMECORE_EXPORT void SetUniform(int i_location, const ShaderUniformValue& i_value) const;
 
 			void Initialize();

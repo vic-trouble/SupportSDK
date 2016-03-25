@@ -453,9 +453,9 @@ namespace SDK
 
 	/////////////////////////////////////////////////////////////////////////////
 
-	void OpenGLRenderer::Bind(Render::ShaderHandler i_shader, const Render::VertexLayoutHandle* i_layouts, size_t i_number)
+	void OpenGLRenderer::Bind(Render::ShaderHandle i_shader, const Render::VertexLayoutHandle* i_layouts, size_t i_number)
 	{
-		if (m_current_shader == i_shader && m_current_shader != Render::ShaderHandler::InvalidHandle())
+		if (m_current_shader == i_shader && m_current_shader != Render::ShaderHandle::InvalidHandle())
 			return;
 		m_current_shader = i_shader;
 		auto p_shader = Render::g_shader_system.Access(i_shader);

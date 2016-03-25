@@ -31,7 +31,7 @@ namespace SDK
 		Matrix4f m_matrices[2];
 		std::vector<int> m_pushed_matrices;
 
-		Render::ShaderHandler m_current_shader;
+		Render::ShaderHandle m_current_shader;
 
 	private:
 		// TODO: more precise configurations
@@ -68,7 +68,7 @@ namespace SDK
 		virtual Render::LightsController* GetLightsController() override { return &m_lights_controller; }
 		virtual Render::TextureManager* GetTextureManager() override { return &m_texture_manager; }
 
-		virtual void Bind(Render::ShaderHandler i_shader, const Render::VertexLayoutHandle* i_layouts, size_t i_number) override;
+		virtual void Bind(Render::ShaderHandle i_shader, const Render::VertexLayoutHandle* i_layouts, size_t i_number) override;
 		virtual void UnbindShader() override;
 		////////////////////////////////////////////////////////////////////
 		// TODO: is it still needed

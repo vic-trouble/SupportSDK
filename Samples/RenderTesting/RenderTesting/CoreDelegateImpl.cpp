@@ -43,7 +43,7 @@ using namespace SDK;
 
 namespace Game
 {
-	EntityHandle entity_handler;
+	EntityHandle entity_handle;
 	void CoreDelegateImpl::LoadModel()
 	{
 		//E:\Git_Projects\SupportSDK\Samples\Resources\Models\Box.obj
@@ -51,21 +51,21 @@ namespace Game
 		auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
 		loaded_mesh = p_load_manager->GetHandleToResource<Render::Mesh>("SimpleBox");
 		
-		auto mesh_handler = Render::g_mesh_system.CreateInstance(loaded_mesh);
-		auto trans_handler = g_transforms_system.CreateInstance();
-		auto p_transform = g_transforms_system.GetInstance(trans_handler);
+		auto mesh_handle = Render::g_mesh_system.CreateInstance(loaded_mesh);
+		auto trans_handle = g_transforms_system.CreateInstance();
+		auto p_transform = g_transforms_system.GetInstance(trans_handle);
 
-		entity_handler = g_entity_manager.CreateEntity();
-		g_entity_manager.AddComponent<Render::MeshComponent>(entity_handler, mesh_handler);
-		g_entity_manager.AddComponent<Transform>(entity_handler, trans_handler);
+		entity_handle = g_entity_manager.CreateEntity();
+		g_entity_manager.AddComponent<Render::MeshComponent>(entity_handle, mesh_handle);
+		g_entity_manager.AddComponent<Transform>(entity_handle, trans_handle);
 
 		// test getting of entity and component
-		auto entity = g_entity_manager.GetEntity(entity_handler);
+		auto entity = g_entity_manager.GetEntity(entity_handle);
 		
 		Render::MaterialHandle material_handle = p_load_manager->GetHandleToResource<Render::Material>("Sample_material");
 		auto p_material = Render::g_material_mgr.AccessMaterial(material_handle);
 
-		Render::g_mesh_system.AddMaterialTo(mesh_handler, material_handle);
+		Render::g_mesh_system.AddMaterialTo(mesh_handle, material_handle);
 	}
 
 	void CoreDelegateImpl::CreateMesh()
@@ -106,7 +106,7 @@ namespace Game
 		p_renderer->GetHardwareBufferMgr()->DestroyBuffer(batch[1].indices);
 		p_renderer->GetHardwareBufferMgr()->DestroyBuffer(batch[1].vertices);
 
-		g_entity_manager.RemoveEntity(entity_handler);
+		g_entity_manager.RemoveEntity(entity_handle);
 
 		auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
 		p_load_manager->UnloadSet(p_load_manager->GetHandleToSet("render_testing"));

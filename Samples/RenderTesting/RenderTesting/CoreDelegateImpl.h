@@ -15,7 +15,7 @@ namespace Game
 		InputTest m_input_subs;
 		SDK::Render::Batch batch[2];
 
-		SDK::Render::MeshHandler loaded_mesh;
+		SDK::Render::MeshHandle loaded_mesh;
 	private:
 		void LoadModel();
 		void InitQuaternions();

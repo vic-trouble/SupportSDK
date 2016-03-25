@@ -163,7 +163,7 @@ namespace SDK
 		struct Material
 		{
 		public:
-			ShaderHandler m_shader;
+			ShaderHandle m_shader;
 			
 			std::vector<details::MaterialEntry> m_entries;
 

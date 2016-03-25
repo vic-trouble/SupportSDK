@@ -14,7 +14,7 @@ namespace Game
 	{
 		SDK::Render::Batch batch[2];
 
-		SDK::Render::MeshHandler loaded_mesh;
+		SDK::Render::MeshHandle loaded_mesh;
 	private:
 		void LoadModel();
 		void InitQuaternions();

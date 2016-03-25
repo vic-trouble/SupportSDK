@@ -176,10 +176,10 @@ namespace SDK
 			Load(resource_name, source);
 		}
 
-		ShaderHandler ShaderSystem::Load(const std::string& i_resource_name, ShaderSource i_source)
+		ShaderHandle ShaderSystem::Load(const std::string& i_resource_name, ShaderSource i_source)
 		{
 			if (i_source.empty)
-				return ShaderHandler::InvalidHandle();
+				return ShaderHandle::InvalidHandle();
 			if (mp_current_shader_compiler == nullptr)
 				mp_current_shader_compiler = Core::GetRenderer()->GetShaderCompiler();
 
@@ -196,7 +196,7 @@ namespace SDK
 				return m_shaders.m_handlers[handle.index];
 			}
 
-			return ShaderHandler::InvalidHandle();
+			return ShaderHandle::InvalidHandle();
 		}
 
 		const Shader* ShaderSystem::Access(const std::string& i_name) const
@@ -209,13 +209,13 @@ namespace SDK
 			return &m_shaders.m_buffer[handle.index];
 		}
 
-		void ShaderSystem::Unload(ShaderHandler i_handler)
+		void ShaderSystem::Unload(ShaderHandle i_handler)
 		{
 			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
 			p_load_manager->Unload<Shader>({ i_handler.index, i_handler.generation });
 		}
 
-		void ShaderSystem::SetKnownUniforms(ShaderHandler i_handle)
+		void ShaderSystem::SetKnownUniforms(ShaderHandle i_handle)
 		{
 			if (i_handle.index == -1 || i_handle.generation != m_shaders.m_handlers[i_handle.index].generation)
 				return;
@@ -247,7 +247,7 @@ namespace SDK
 			}
 		}
 
-		void ShaderSystem::SetUniform(ShaderHandler i_handle, const std::string& i_var_name, const ShaderUniformValue& i_value) const
+		void ShaderSystem::SetUniform(ShaderHandle i_handle, const std::string& i_var_name, const ShaderUniformValue& i_value) const
 		{
 			if (i_handle.index == -1 || i_handle.generation != m_shaders.m_handlers[i_handle.index].generation)
 				return;

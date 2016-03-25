@@ -159,7 +159,7 @@ namespace SDK
 					if (new_index.index == -1)
 					{
 						// TODO: resize vector normally - with some strategy - not push_back
-						handlers.push_back(Render::MeshHandler());
+						handlers.push_back(Render::MeshHandle());
 						const int index = handlers.size() - 1;						
 						handlers[index].generation = 0;
 						handlers[index].index = index;
@@ -335,7 +335,7 @@ namespace SDK
 			}
 		}
 		
-		MeshHandler MeshSystem::Load(const std::string& i_name, const std::string& i_path, Render::BufferUsageFormat i_vertices_usage, Render::BufferUsageFormat i_indices_usage)
+		MeshHandle MeshSystem::Load(const std::string& i_name, const std::string& i_path, Render::BufferUsageFormat i_vertices_usage, Render::BufferUsageFormat i_indices_usage)
 		{
 			MeshInformation info = { i_vertices_usage, i_indices_usage, i_path };
 			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
@@ -348,18 +348,18 @@ namespace SDK
 				return m_handlers[handle.index];
 			}
 
-			return MeshHandler::InvalidHandle();
+			return MeshHandle::InvalidHandle();
 		}
 
-		void MeshSystem::Unload(MeshHandler i_handler)
+		void MeshSystem::Unload(MeshHandle i_handler)
 		{
 			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
 			p_load_manager->Unload<Mesh>({ i_handler.index, i_handler.generation });
 		}
 
-		MeshComponentHandler MeshSystem::CreateInstance(MeshHandler i_handler)
+		MeshComponentHandle MeshSystem::CreateInstance(MeshHandle i_handler)
 		{
-			static MeshComponentHandler error_handler{ -1, -1 };
+			static MeshComponentHandle error_handler{ -1, -1 };
 			if (i_handler.generation != m_handlers[i_handler.index].generation)
 				return error_handler;
 
@@ -394,7 +394,7 @@ namespace SDK
 			return m_component_handlers[new_index];
 		}
 
-		void MeshSystem::AddMaterialTo(MeshComponentHandler i_component, MaterialHandle i_material)
+		void MeshSystem::AddMaterialTo(MeshComponentHandle i_component, MaterialHandle i_material)
 		{
 			auto p_material = Render::g_material_mgr.AccessMaterial(i_material);
 			if (p_material == nullptr)
@@ -412,7 +412,7 @@ namespace SDK
 			mesh_instance.AddMaterial(i_material);
 		}
 
-		MeshComponent* MeshSystem::AccessComponent(MeshComponentHandler i_handler)
+		MeshComponent* MeshSystem::AccessComponent(MeshComponentHandle i_handler)
 		{
 			if (m_component_handlers[i_handler.index].generation != i_handler.generation)
 			{
@@ -422,7 +422,7 @@ namespace SDK
 			return &m_instances[i_handler.index];
 		}
 
-		void MeshSystem::RemoveInstance(MeshComponentHandler i_handler)
+		void MeshSystem::RemoveInstance(MeshComponentHandle i_handler)
 		{
 			// TODO: decrease use count for mesh
 			m_component_handlers[i_handler.index].index = -1;
@@ -434,7 +434,7 @@ namespace SDK
 
 		MeshComponent* MeshSystem::Get(int i_in_system_id, int i_in_system_generation)
 		{
-			MeshComponentHandler inst_handler{ i_in_system_id, i_in_system_generation };
+			MeshComponentHandle inst_handler{ i_in_system_id, i_in_system_generation };
 			MeshComponent* component = g_mesh_system.AccessComponent(inst_handler);
 			return component;
 		}

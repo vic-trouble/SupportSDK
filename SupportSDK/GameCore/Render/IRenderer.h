@@ -102,7 +102,7 @@ namespace SDK
 
 		/////////////////////////////////////////////////////////////
 		// Shaders -> use shader manager?
-		virtual void Bind(Render::ShaderHandler i_shader, const Render::VertexLayoutHandle* i_layouts, size_t i_number) = 0;
+		virtual void Bind(Render::ShaderHandle i_shader, const Render::VertexLayoutHandle* i_layouts, size_t i_number) = 0;
 		virtual void UnbindShader() = 0;
 
 		/////////////////////////////////////////////////////////////

@@ -63,7 +63,7 @@ namespace SDK
 		GAMECORE_EXPORT void RemoveInstance(TransformHandler i_handler);
 
 		// TODO: Custom mesh
-		//MeshHandler Register(const std::string& i_name, Mesh i_mesh);
+		//MeshHandle Register(const std::string& i_name, Mesh i_mesh);
 	// Extension for entity manager
 	public:
 		GAMECORE_EXPORT static Transform* Get(int i_in_system_id, int i_in_system_generation);
