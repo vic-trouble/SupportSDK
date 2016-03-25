@@ -25,30 +25,41 @@ namespace SDK
 			uint		m_use_count;
 			State		m_state;
 
-			// 
+			// handle int specific system (Mesh, Material) that should be cast to
+			//	handle of that system (MeshHandle, MaterialHandle)
 			InternalHandle	m_handle;
 
 			std::type_index m_resource_type;
 
 			ResourceSetHandle m_belongs_to_set;
 
-			struct FindPredicate
+			struct FindByHash
 			{
-				size_t id;
-				InternalHandle handle;
-				explicit FindPredicate(size_t i_id)
-					: id(i_id)
-					, handle(InternalHandle::InvalidHandle())
-				{}
-
-				explicit FindPredicate(InternalHandle i_handle)
-					: handle(i_handle)
-					, id(0)
+				size_t res_hash;
+				const std::type_index& res_type;
+				explicit FindByHash(size_t i_hash, const std::type_index& i_type)
+					: res_hash(i_hash)
+					, res_type(i_type)
 				{}
 
 				bool operator () (const ResourceInformation& i_res) const
 				{
-					return handle.index == -1 ? i_res.m_resource_id == id : handle == i_res.m_handle;
+					return i_res.m_resource_id == res_hash && i_res.m_resource_type == res_type;
+				}
+			};
+
+			struct FindByHandle
+			{
+				InternalHandle res_handle;
+				const std::type_index& res_type;
+				explicit FindByHandle(InternalHandle i_handle, const std::type_index& i_type)
+					: res_handle(i_handle)
+					, res_type(i_type)
+				{}
+
+				bool operator () (const ResourceInformation& i_res) const
+				{
+					return i_res.m_handle == res_handle && i_res.m_resource_type == res_type;
 				}
 			};
 		};

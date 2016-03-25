@@ -11,6 +11,14 @@ namespace SDK
 
 	namespace Resources {
 		namespace Serialization {
+			template <typename ResType>
+			struct Definition;
+			template <>
+			struct Definition <Render::Texture>
+			{
+				typedef std::string InfoType;
+				typedef Render::TextureHandle HandleType;
+			};
 
 			template <typename ResInfo>
 			struct LoaderImpl;

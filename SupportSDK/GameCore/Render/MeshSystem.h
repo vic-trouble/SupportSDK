@@ -14,13 +14,23 @@
 
 namespace SDK
 {
-	
-	namespace Resources { namespace Serialization{
+	struct MeshInformation;
+	namespace Resources {
+		namespace Serialization {
 
-		template <typename ResInfo>
-		struct LoaderImpl;
+			template <typename ResType>
+			struct Definition;
+			template <>
+			struct Definition <Render::Mesh>
+			{
+				typedef MeshInformation InfoType;
+				typedef Render::MeshHandler HandleType;
+			};
 
-		} // Serialization
+			template <typename ResInfo>
+			struct LoaderImpl;
+
+		}// Serialization
 	} // Resources
 
 	namespace Render

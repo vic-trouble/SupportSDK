@@ -58,9 +58,10 @@ namespace SDK
 									return std::move(container);
 								}
 								auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
-								auto handle = p_load_manager->GetHandleToResource(*p_tex_name);
-								p_load_manager->Use(*p_tex_name);
-								container.SetValue<InternalHandle>(0, handle);
+								auto handle = p_load_manager->GetHandleToResource<Render::Texture>(*p_tex_name);
+								p_load_manager->Use<Render::Texture>(*p_tex_name);
+								constexpr size_t hash = 0;
+								container.SetValue<Render::TextureHandle>(hash, handle);
 							}
 							break;
 						case SVT::IntVec2:
@@ -173,7 +174,8 @@ namespace SDK
 					o_material.m_name = i_material_elem.GetValue<std::string>("name");
 					o_material.m_name_hash = Utilities::hash_function(o_material.m_name);
 					std::string shader_name = p_shader_elem->GetValue<std::string>("name");
-					InternalHandle handle = Core::GetGlobalObject<Resources::ResourceManager>()->GetHandleToResource(shader_name);
+					ShaderHandler handle = Core::GetGlobalObject<Resources::ResourceManager>()->GetHandleToResource<Render::Shader>(shader_name);
+
 					o_material.m_shader.index = handle.index;
 					o_material.m_shader.generation = handle.generation;
 					if (o_material.m_shader.index == -1)
@@ -185,12 +187,6 @@ namespace SDK
 				}
 
 			} // namespace
-
-			template <>
-			struct Definition <Render::Material>
-			{
-				typedef void* InfoType;
-			};
 
 			template <>
 			struct LoaderImpl < Render::Material >

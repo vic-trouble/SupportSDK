@@ -19,13 +19,6 @@ namespace SDK
 	{
 		namespace Serialization
 		{
-
-			template <>
-			struct Definition <Render::Texture>
-			{
-				typedef std::string InfoType;
-			};
-
 			template <>
 			struct LoaderImpl < Render::Texture >
 			{

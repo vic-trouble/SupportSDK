@@ -25,21 +25,21 @@ namespace SDK
 			return p_stream;
 		}
 
-		InternalHandle ResourceManager::GetHandleToResource(const std::string& i_res_name) const
+		InternalHandle ResourceManager::GetHandleToResource(const std::string& i_res_name, const std::type_index& i_res_type) const
 		{
 			const size_t hash = Utilities::hash_function(i_res_name);
 			// check if handle already exist
-			auto it = std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(hash));
+			auto it = std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindByHash(hash, i_res_type));
 			if (it != m_loaded_resources.end())
 				return{ it->m_handle.index, it->m_handle.generation };
 			return InternalHandle::InvalidHandle();
 		}
 
-		void ResourceManager::Use(const std::string& i_res_name)
+		void ResourceManager::Use(const std::string& i_res_name, const std::type_index& i_res_type)
 		{
 			const size_t hash = Utilities::hash_function(i_res_name);
 			// check if handle already exist
-			auto it = std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(hash));
+			auto it = std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindByHash(hash, i_res_type));
 			if (it != m_loaded_resources.end())
 				++it->m_use_count;
 			else
@@ -61,7 +61,7 @@ namespace SDK
 			Reload();
 		}
 
-		void ResourceManager::AddToSet(ResourceSetHandle i_set, size_t i_res_hash)
+		void ResourceManager::AddToSet(ResourceSetHandle i_set, LoadedResPair i_res_hash)
 		{
 			ResourceSet* p_set = m_resource_sets.Access(i_set);
 			if (p_set == nullptr)
@@ -70,7 +70,7 @@ namespace SDK
 				p_set->subset.AddEntity(i_res_hash);
 		}
 
-		void ResourceManager::RemoveFromSet(ResourceSetHandle i_set, size_t i_res_hash)
+		void ResourceManager::RemoveFromSet(ResourceSetHandle i_set, LoadedResPair i_res_hash)
 		{
 			ResourceSet* p_set = m_resource_sets.Access(i_set);
 			if (p_set == nullptr)
@@ -138,9 +138,9 @@ namespace SDK
 				return;
 			}
 
-			for (size_t i_name_hash : p_set->subset.GetHandles())
+			for (LoadedResPair res_pair : p_set->subset.GetHandles())
 			{
-				auto res_it = std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(i_name_hash));
+				auto res_it = std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindByHash(res_pair.first, res_pair.second));
 				if (res_it == m_loaded_resources.end())
 				{
 					assert(false && "We found no loaded resources with such hash");

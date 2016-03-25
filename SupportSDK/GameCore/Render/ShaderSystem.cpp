@@ -21,12 +21,6 @@ namespace SDK
 		namespace Serialization
 		{
 			template <>
-			struct Definition <Render::Shader>
-			{
-				typedef Render::ShaderCompiler* InfoType;
-			};
-
-			template <>
 			struct LoaderImpl < Render::Shader >
 			{
 				// TODO: is it possible to catch error like ip_streams[3] in compile time?
@@ -209,7 +203,7 @@ namespace SDK
 		{
 			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
 
-			auto handle = p_load_manager->GetHandleToResource(i_name);
+			auto handle = p_load_manager->GetHandleToResource<Render::Shader>(i_name);
 			if (handle.index == -1)
 				return nullptr;
 			return &m_shaders.m_buffer[handle.index];

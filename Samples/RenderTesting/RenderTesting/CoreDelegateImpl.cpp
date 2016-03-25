@@ -49,8 +49,7 @@ namespace Game
 		//E:\Git_Projects\SupportSDK\Samples\Resources\Models\Box.obj
 		//loaded_mesh = Render::g_mesh_system.Load("Resources\\Models\\Box.obj", Render::BufferUsageFormat::Static, Render::BufferUsageFormat::Static);
 		auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
-		auto handle = p_load_manager->GetHandleToResource("Nanosuit");
-		loaded_mesh = { handle.index, handle.generation };
+		loaded_mesh = p_load_manager->GetHandleToResource<Render::Mesh>("Nanosuit");
 		
 		auto mesh_handler = Render::g_mesh_system.CreateInstance(loaded_mesh);
 		auto trans_handler = g_transforms_system.CreateInstance();
@@ -63,8 +62,7 @@ namespace Game
 		// test getting of entity and component
 		auto entity = g_entity_manager.GetEntity(entity_handler);
 		
-		auto material_handle_int = p_load_manager->GetHandleToResource("Nanosuit_material");
-		Render::MaterialHandle material_handle = { material_handle_int.index, material_handle_int.generation };
+		Render::MaterialHandle material_handle = p_load_manager->GetHandleToResource<Render::Material>("Nanosuit_material");
 		auto p_material = Render::g_material_mgr.AccessMaterial(material_handle);
 
 		Render::g_mesh_system.AddMaterialTo(mesh_handler, material_handle);

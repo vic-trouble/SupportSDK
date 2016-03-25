@@ -13,7 +13,17 @@ namespace SDK
 		class ShaderCompiler;
 	}
 
-	namespace Resources {	namespace Serialization {
+	namespace Resources {
+		namespace Serialization {
+			template <typename ResType>
+			struct Definition;
+			template <>
+			struct Definition <Render::Shader>
+			{
+				typedef Render::ShaderCompiler* InfoType;
+				typedef Render::ShaderHandler HandleType;
+			};
+
 			template <typename ResInfo>
 			struct LoaderImpl;
 		} // Serialization

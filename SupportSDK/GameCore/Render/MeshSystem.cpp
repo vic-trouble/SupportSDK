@@ -36,33 +36,6 @@ namespace SDK
 	{	
 		namespace Serialization
 		{
-
-			namespace
-			{
-				template <typename type, size_t size>
-				std::istream& operator >> (std::istream& io_stream, Math::Vector<type, size>& o_vector)
-				{
-					//v 4.000000 0.000000 0.000000
-					std::string temp;
-					getline(io_stream, temp);
-
-					size_t pos = 0;
-					for (int i = 0; i < size; ++i)
-					{
-						pos = temp.find(' ', pos);
-						++pos;
-						o_vector[i] = static_cast<float>(atof(temp.substr(pos).c_str()));
-					}
-					return io_stream;
-				}
-
-			}
-
-			template <>
-			struct Definition <Render::Mesh>
-			{
-				typedef MeshInformation InfoType;
-			};
 			
 			template <>
 			struct LoaderImpl < Render::Mesh >

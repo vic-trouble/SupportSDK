@@ -12,7 +12,14 @@ namespace SDK
 {
 	namespace Resources {
 		namespace Serialization {
-
+			template <typename ResType>
+			struct Definition;
+			template <>
+			struct Definition <Render::Material>
+			{
+				typedef void* InfoType;
+				typedef Render::MaterialHandle HandleType;
+			};
 			template <typename ResInfo>
 			struct LoaderImpl;
 

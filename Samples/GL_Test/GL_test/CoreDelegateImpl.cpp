@@ -53,8 +53,7 @@ namespace Game
 		//E:\Git_Projects\SupportSDK\Samples\Resources\Models\Box.obj
 		//loaded_mesh = Render::g_mesh_system.Load("Resources\\Models\\Box.obj", Render::BufferUsageFormat::Static, Render::BufferUsageFormat::Static);
 		auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
-		auto handle = p_load_manager->GetHandleToResource("SimpleBox");
-		loaded_mesh = { handle.index, handle.generation };
+		loaded_mesh = p_load_manager->GetHandleToResource<Render::Mesh>("SimpleBox");
 		
 		auto mesh_handler = Render::g_mesh_system.CreateInstance(loaded_mesh);
 		auto trans_handler = g_transforms_system.CreateInstance();
@@ -67,8 +66,7 @@ namespace Game
 		// test getting of entity and component
 		auto entity = g_entity_manager.GetEntity(entity_handler);
 		
-		auto material_handle_int = p_load_manager->GetHandleToResource("SimpleBox");
-		Render::MaterialHandle material_handle = { material_handle_int.index, material_handle_int.generation };
+		Render::MaterialHandle material_handle = p_load_manager->GetHandleToResource<Render::Material>("SimpleBox");
 		auto p_material = Render::g_material_mgr.AccessMaterial(material_handle);
 
 		Render::g_mesh_system.AddMaterialTo(mesh_handler, material_handle);
@@ -198,9 +196,8 @@ namespace Game
 			CHECK_GL_ERRORS;
 			auto p_renderer = Core::GetRenderer();
 			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
-			auto tex = p_load_manager->GetHandleToResource("box_diffuse");
-			auto shader = p_load_manager->GetHandleToResource("SimpleShader");
-			Render::ShaderHandler sh{ shader.index, shader.generation };
+			auto tex = p_load_manager->GetHandleToResource<Render::Texture>("box_diffuse");
+			auto sh = p_load_manager->GetHandleToResource<Render::Shader>("SimpleShader");
 			const Render::Shader* p_shader = Render::g_shader_system.Access(sh);
 			{
 				p_renderer->GetLightsController()->EnableLighting();
@@ -220,7 +217,7 @@ namespace Game
 				glUseProgram(p_shader->GetId());
 				Render::g_shader_system.SetKnownUniforms(sh);
 				CHECK_GL_ERRORS;
-				p_renderer->GetTextureManager()->Bind(0, { tex.index, tex.generation });
+				p_renderer->GetTextureManager()->Bind(0, tex);
 				CHECK_GL_ERRORS;
 				int i = 0;
 				glUniform1i(p_shader->GetUniform("diffuse_tex").location, 0);
