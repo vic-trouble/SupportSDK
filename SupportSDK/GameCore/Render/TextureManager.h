@@ -16,7 +16,7 @@ namespace SDK
 			template <>
 			struct Definition <Render::Texture>
 			{
-				typedef std::string InfoType;
+				typedef void* InfoType;
 				typedef Render::TextureHandle HandleType;
 			};
 

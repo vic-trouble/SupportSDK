@@ -22,10 +22,18 @@ namespace SDK
 			template <>
 			struct LoaderImpl < Render::Texture >
 			{
-				static std::pair<LoadResult, Render::Texture> Load(std::istream* ip_streams[1], std::string i_path)
+				static std::pair<LoadResult, Render::Texture> Load(std::istream* ip_streams[1], void*)
 				{
+					const std::string file_data = FS::ReadFileToString(*ip_streams[0]);
+					if (file_data.empty())
+					{
+						assert(false && "[Textures] File data is empty");
+						return std::make_pair(LoadResult::Failure, Render::Texture());
+					}
+
 					int width, height;
-					unsigned char* image = SOIL_load_image(i_path.c_str(), &width, &height, 0, SOIL_LOAD_RGB);
+
+					unsigned char* image = SOIL_load_image_from_memory(reinterpret_cast<const unsigned char*>(file_data.c_str()),file_data.size(), &width, &height, 0, SOIL_LOAD_RGB);
 					if (image == nullptr)
 						return std::make_pair(LoadResult::Failure, Render::Texture());
 
@@ -121,7 +129,7 @@ namespace SDK
 			const auto app_path = FS::GetApplicationPath();
 			auto path = app_path;
 			path.append("\\").append(i_file_name);
-			InternalHandle handle = p_load_manager->Load<Texture>(i_resource_name, { i_file_name }, path);
+			InternalHandle handle = p_load_manager->Load<Texture>(i_resource_name, { i_file_name }, nullptr);
 			// resource is already loaded
 			if (handle.index != -1)
 			{
