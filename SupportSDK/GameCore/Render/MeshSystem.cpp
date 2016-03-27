@@ -58,6 +58,11 @@ namespace SDK
 					for (uint im = 0; im < ip_scene->mNumMeshes; ++im)
 					{
 						const aiMesh* p_mesh = ip_scene->mMeshes[im];
+						if (!p_mesh->HasPositions())
+						{
+							assert(false && "Without positions");
+							continue;
+						}
 						vertices.clear();
 						indices.clear();
 						// Walk through each of the mesh's vertices
@@ -65,16 +70,19 @@ namespace SDK
 						{
 							Vertex vertex;
 							Vector3 vector; // We declare a placeholder vector since assimp uses its own vector class that doesn't directly convert to glm's vec3 class so we transfer the data to this placeholder glm::vec3 first.
-											// Positions
+							// Positions
 							vector[0] = p_mesh->mVertices[i].x;
 							vector[1] = p_mesh->mVertices[i].y;
 							vector[2] = p_mesh->mVertices[i].z;
 							vertex.Position = vector;
 							// Normals
-							vector[0] = p_mesh->mNormals[i].x;
-							vector[1] = p_mesh->mNormals[i].y;
-							vector[2] = p_mesh->mNormals[i].z;
-							vertex.Normal = vector;
+							if (p_mesh->HasFaces())
+							{
+								vector[0] = p_mesh->mNormals[i].x;
+								vector[1] = p_mesh->mNormals[i].y;
+								vector[2] = p_mesh->mNormals[i].z;
+								vertex.Normal = vector;
+							}
 							// Texture Coordinates
 							if (p_mesh->mTextureCoords[0]) // Does the mesh contain texture coordinates?
 							{

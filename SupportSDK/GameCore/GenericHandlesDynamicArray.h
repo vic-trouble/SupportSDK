@@ -10,7 +10,7 @@ namespace SDK
 
 	namespace detail
 	{
-		template <typename DataType, typename BaseType, class Enable = void>
+		template <typename DataType, typename BaseType, typename Enable = void>
 		struct TypeTraits;
 
 		template <typename DataType, typename BaseType>
@@ -39,7 +39,7 @@ namespace SDK
 			}
 		};
 
-		template <typename typename DataType, typename BaseType>
+		template <typename DataType, typename BaseType>
 		struct TypeTraits <DataType, BaseType,
 			typename std::enable_if<!std::is_same<std::unique_ptr<BaseType>, DataType>::value>::type>
 		{
