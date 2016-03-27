@@ -68,11 +68,6 @@ texture = {
 }
 
 texture = {
-	resource_name = "nano_hand_specular_tex"
-	path = "..\..\Resources\Textures\nanosuit\hand_showroom_spec.png"
-}
-
-texture = {
 	resource_name = "box_diffuse"
 	path = "..\..\Resources\Textures\Box texture.png"
 }
