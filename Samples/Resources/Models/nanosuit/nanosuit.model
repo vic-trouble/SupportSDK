@@ -1,0 +1,25 @@
+name = "Nanosuit"
+mesh = {
+	name = "Arms"
+	material = "Arms_material"
+}
+mesh = {
+	name = "Body"
+	material = "Body_material"
+}
+mesh = {
+	name = "hands"
+	material = "Hands_material"
+}
+mesh = {
+	name = "Helmet"
+	material = "Helmet_material"
+}
+mesh = {
+	name = "Legs"
+	material = "Legs_material"
+}
+mesh = {
+	name = "Visor"
+	material = "Visor_material"
+}

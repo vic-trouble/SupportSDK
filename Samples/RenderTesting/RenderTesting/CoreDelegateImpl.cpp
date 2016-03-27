@@ -107,11 +107,6 @@ namespace Game
 
 		// test getting of entity and component
 		auto entity = g_entity_manager.GetEntity(entity_handle);
-		
-		Render::MaterialHandle material_handle = p_load_manager->GetHandleToResource<Render::Material>("Hand_material");
-		auto p_material = Render::g_material_mgr.AccessMaterial(material_handle);
-
-		Render::g_mesh_system.AddMaterialTo(mesh_handle, material_handle);
 	}
 
 	void CoreDelegateImpl::CreateMesh()

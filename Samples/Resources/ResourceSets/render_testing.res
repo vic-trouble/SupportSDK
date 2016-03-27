@@ -1,4 +1,5 @@
 set_name = "render_testing"
+
 mesh = {
 	resource_name = "SimpleBox"
 	path = "..\..\Resources\Models\Box.obj"
@@ -6,21 +7,64 @@ mesh = {
 	indices_usage = "static"
 }
 
-mesh = {
-	resource_name = "Nanosuit"
-	path = "..\..\Resources\Models\nanosuit\nanosuit.obj"
-	vertices_usage = "static"
-	indices_usage = "static"
+texture = {
+	resource_name = "nano_arm_diffuse_tex"
+	path = "..\..\Resources\Textures\nanosuit\arm_dif.png"
 }
 
 texture = {
-	resource_name = "diffuse_tex"
-	path = "..\..\Resources\Textures\img_test.png"
+	resource_name = "nano_arm_specular_tex"
+	path = "..\..\Resources\Textures\nanosuit\arm_showroom_spec.png"
+}
+
+texture = {
+	resource_name = "nano_body_diffuse_tex"
+	path = "..\..\Resources\Textures\nanosuit\body_dif.png"
+}
+
+texture = {
+	resource_name = "nano_body_specular_tex"
+	path = "..\..\Resources\Textures\nanosuit\body_showroom_spec.png"
 }
 
 texture = {
 	resource_name = "nano_hand_diffuse_tex"
 	path = "..\..\Resources\Textures\nanosuit\hand_dif.png"
+}
+
+texture = {
+	resource_name = "nano_hand_specular_tex"
+	path = "..\..\Resources\Textures\nanosuit\hand_showroom_spec.png"
+}
+
+texture = {
+	resource_name = "nano_helmet_diffuse_tex"
+	path = "..\..\Resources\Textures\nanosuit\helmet_dif.png"
+}
+
+texture = {
+	resource_name = "nano_helmet_specular_tex"
+	path = "..\..\Resources\Textures\nanosuit\helmet_showroom_spec.png"
+}
+
+texture = {
+	resource_name = "nano_glass_diffuse_tex"
+	path = "..\..\Resources\Textures\nanosuit\glass_dif.png"
+}
+
+texture = {
+	resource_name = "nano_glass_specular_tex"
+	path = "..\..\Resources\Textures\nanosuit\glass_ddn.png"
+}
+
+texture = {
+	resource_name = "nano_leg_diffuse_tex"
+	path = "..\..\Resources\Textures\nanosuit\leg_dif.png"
+}
+
+texture = {
+	resource_name = "nano_leg_specular_tex"
+	path = "..\..\Resources\Textures\nanosuit\leg_showroom_spec.png"
 }
 
 texture = {
@@ -63,6 +107,39 @@ material = {
 }
 
 material = {
-	resource_name = "Hand_material"
-	path = "..\..\Resources\Materials\nanosuit\hand.material"
+	resource_name = "Arms_material"
+	path = "..\..\Resources\Materials\nanosuit\arms.material"
+}
+
+material = {
+	resource_name = "Body_material"
+	path = "..\..\Resources\Materials\nanosuit\body.material"
+}
+
+material = {
+	resource_name = "Hands_material"
+	path = "..\..\Resources\Materials\nanosuit\hands.material"
+}
+
+material = {
+	resource_name = "Helmet_material"
+	path = "..\..\Resources\Materials\nanosuit\helmet.material"
+}
+
+material = {
+	resource_name = "Legs_material"
+	path = "..\..\Resources\Materials\nanosuit\legs.material"
+}
+
+material = {
+	resource_name = "Visor_material"
+	path = "..\..\Resources\Materials\nanosuit\visor.material"
+}
+
+model = {
+	resource_name = "Nanosuit"
+	path = "..\..\Resources\Models\nanosuit\nanosuit.obj"
+	description_path = "..\..\Resources\Models\nanosuit\nanosuit.model"
+	vertices_usage = "static"
+	indices_usage = "static"
 }

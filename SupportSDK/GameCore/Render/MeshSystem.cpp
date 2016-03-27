@@ -15,6 +15,8 @@
 #include "EntityManager.h"
 #include "FileSystem/FileSystem.h"
 
+#include "PropertyReaders.h"
+
 #include <string>
 
 #include <assimp/Importer.hpp>
@@ -29,7 +31,7 @@ namespace SDK
 
 		Render::BufferUsageFormat m_ver_usage;
 		Render::BufferUsageFormat m_ind_usage;
-		std::string m_file_name;
+		std::string m_description_path;
 	};
 
 	namespace Resources
@@ -40,6 +42,42 @@ namespace SDK
 			template <>
 			struct LoaderImpl < Render::Mesh >
 			{
+				static void ProcessMaterials(Render::Mesh& io_mesh, const PropertyElement& i_model_description)
+				{
+					using MeshMaterial = std::pair<size_t, std::string>;
+					std::vector<MeshMaterial> materials;
+					const auto end = i_model_description.end<PropertyElement>();
+					for (auto it = i_model_description.begin<PropertyElement>(); it != end; ++it)
+					{
+						const std::string submesh_name = it->GetValue<std::string>("name");
+						const std::string material_name = it->GetValue<std::string>("material");
+						if (submesh_name.empty() || material_name.empty())
+						{
+							assert(false && "[Mesh] Empty name");
+							continue;
+						}
+						materials.emplace_back(Utilities::hash_function(submesh_name), material_name);
+					}
+					auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
+					for (size_t i = 0; i < io_mesh.GetSubmeshNumber(); ++i)
+					{
+						Render::Mesh::SubMesh& sub_mesh = io_mesh.GetSubmesh(i);
+						const size_t submesh_name = Utilities::hash_function(sub_mesh.m_name);
+						auto it = std::find_if(materials.begin(), materials.end(), [submesh_name](const MeshMaterial& mat)
+						{
+							return mat.first == submesh_name;
+						});
+						// not found
+						if (it == materials.end())
+							continue;
+						// mat name it->second
+						Render::MaterialHandle material_handle = p_load_manager->GetHandleToResource<Render::Material>(it->second);
+						if (material_handle == Render::MaterialHandle::InvalidHandle())
+							continue;
+						sub_mesh.m_materials.push_back(material_handle);
+					}
+				}
+
 				static std::pair<LoadResult, Render::Mesh> ProcessMesh(const aiScene* ip_scene, MeshInformation i_info)
 				{
 					Render::Mesh result_mesh;
@@ -119,7 +157,14 @@ namespace SDK
 						auto normals_layout = p_mgr->CreateLayout(ver_buf, 3, Render::VertexSemantic::Normal, Render::ComponentType::Float, false, sizeof(Vertex), offsetof(Vertex, Normal));
 						auto uv_layout = p_mgr->CreateLayout(ver_buf, 2, Render::VertexSemantic::TextureCoordinates, Render::ComponentType::Float, false, sizeof(Vertex), offsetof(Vertex, TexCoords));
 
-						result_mesh.AddSubmesh(ver_buf, pos_layout, normals_layout, uv_layout, ind_buf);
+						result_mesh.AddSubmesh(p_mesh->mName.C_Str(), ver_buf, pos_layout, normals_layout, uv_layout, ind_buf);
+					}
+					
+					if (!i_info.m_description_path.empty())
+					{
+						PropretyReader<(int)ReaderType::SDKFormat> reader;
+						PropertyElement root = reader.Parse(i_info.m_description_path);
+						ProcessMaterials(result_mesh, root);
 					}
 					
 					return std::make_pair(LoadResult::Success, result_mesh);
@@ -255,13 +300,15 @@ namespace SDK
 		void MeshSystem::Initialize()
 		{
 			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
-			p_load_manager->RegisterLoader<MeshSystem, Mesh>(*this, &MeshSystem::Load, "mesh");
+			p_load_manager->RegisterLoader<MeshSystem, Mesh>(*this, &MeshSystem::LoadMesh, "mesh");
+			p_load_manager->RegisterLoader<MeshSystem, Mesh>(*this, &MeshSystem::LoadModel, "model");
 		}
 
 		void MeshSystem::Release()
 		{
 			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
 			p_load_manager->Unregister<MeshSystem, Mesh>("mesh");
+			p_load_manager->Unregister<MeshSystem, Mesh>("model");
 		}
 
 		BufferUsageFormat StringToFormat(const std::string& i_format)
@@ -271,7 +318,7 @@ namespace SDK
 			return BufferUsageFormat::Static;
 		}
 
-		void MeshSystem::Load(const PropertyElement& i_resource_element)
+		void MeshSystem::LoadMesh(const PropertyElement& i_resource_element)
 		{
 			const std::string resource_name = i_resource_element.GetValue<std::string>("resource_name");
 			const std::string path = i_resource_element.GetValue<std::string>("path");
@@ -279,7 +326,46 @@ namespace SDK
 			const std::string ind_usage = i_resource_element.GetValue<std::string>("indices_usage");
 			BufferUsageFormat ver = StringToFormat(ver_usage);
 			BufferUsageFormat ind = StringToFormat(ind_usage);
-			Load(resource_name, path, ver, ind);
+			LoadImpl(resource_name, path, ver, ind, "");
+		}
+
+		void MeshSystem::LoadModel(const PropertyElement& i_resource_element)
+		{
+			const std::string resource_name = i_resource_element.GetValue<std::string>("resource_name");
+			const std::string path = i_resource_element.GetValue<std::string>("path");
+			const std::string description_path = i_resource_element.GetValue<std::string>("description_path");
+			const std::string ver_usage = i_resource_element.GetValue<std::string>("vertices_usage");
+			const std::string ind_usage = i_resource_element.GetValue<std::string>("indices_usage");
+			BufferUsageFormat ver = StringToFormat(ver_usage);
+			BufferUsageFormat ind = StringToFormat(ind_usage);
+			LoadImpl(resource_name, path, ver, ind, description_path);
+		}
+		
+		MeshHandle MeshSystem::Load(const std::string& i_name, const std::string& i_path, Render::BufferUsageFormat i_vertices_usage, Render::BufferUsageFormat i_indices_usage)
+		{
+			return LoadImpl(i_name, i_path, i_vertices_usage, i_indices_usage, "");
+		}
+
+		MeshHandle MeshSystem::LoadImpl(const std::string& i_name, const std::string& i_path, BufferUsageFormat i_vertices_usage, BufferUsageFormat i_indices_usage, const std::string& i_desc_path)
+		{
+			MeshInformation info = { i_vertices_usage, i_indices_usage, i_desc_path };
+			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
+			InternalHandle handle = p_load_manager->Load<Mesh>(i_name, { i_path }, info);
+
+			// resource is already loaded
+			if (handle.index != -1)
+			{
+				assert(handle.index < static_cast<int>(m_handlers.size()));
+				return m_handlers[handle.index];
+			}
+
+			return MeshHandle::InvalidHandle();
+		}
+
+		void MeshSystem::Unload(MeshHandle i_handler)
+		{
+			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
+			p_load_manager->Unload<Mesh>({ i_handler.index, i_handler.generation });
 		}
 
 		void MeshSystem::Update(float i_elapsed_time)
@@ -323,10 +409,11 @@ namespace SDK
 					p_shader_cmd->m_layouts[0] = sub_mesh.m_pos_layout;
 					p_shader_cmd->m_layouts[1] = sub_mesh.m_normal_layout;
 					p_shader_cmd->m_layouts[2] = sub_mesh.m_uv_layout;
+
 					void* p_parent_cmd = (void*)p_shader_cmd;
-					if (!mesh_instance.GetMaterials().empty())
+					if (!sub_mesh.m_materials.empty())
 					{
-						auto material_handle = mesh_instance.GetMaterials()[0];
+						auto material_handle = sub_mesh.m_materials[0];
 						const auto p_material = Render::g_material_mgr.AccessMaterial(material_handle);
 						p_shader_cmd->m_shader = p_material->m_shader;
 						for (auto& entry : p_material->m_entries)
@@ -337,40 +424,21 @@ namespace SDK
 
 						p_parent_cmd = Render::g_material_mgr.SetupShaderAndCreateCommands(&p_shader_cmd->m_dynamic_uniforms[p_shader_cmd->current_value], 6 - p_shader_cmd->current_value, *p_material, p_shader_cmd);
 					}
-
+					else
+					{
+						// TODO: dump material
+					}
+					// Add draw command
 					Commands::Draw* p_cmd = Render::gBuffer.Append<Commands::Draw>(p_parent_cmd);
 					p_cmd->indices = sub_mesh.m_index_buffer;
 				}
 			}
 		}
-		
-		MeshHandle MeshSystem::Load(const std::string& i_name, const std::string& i_path, Render::BufferUsageFormat i_vertices_usage, Render::BufferUsageFormat i_indices_usage)
+
+		MeshComponentHandle MeshSystem::CreateInstance(MeshHandle i_handle)
 		{
-			MeshInformation info = { i_vertices_usage, i_indices_usage, i_path };
-			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
-			InternalHandle handle = p_load_manager->Load<Mesh>(i_name, { i_path }, info);
-
-			// resource is already loaded
-			if (handle.index != -1)
-			{
-				assert(handle.index < static_cast<int>(m_handlers.size()));
-				return m_handlers[handle.index];
-			}
-
-			return MeshHandle::InvalidHandle();
-		}
-
-		void MeshSystem::Unload(MeshHandle i_handler)
-		{
-			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
-			p_load_manager->Unload<Mesh>({ i_handler.index, i_handler.generation });
-		}
-
-		MeshComponentHandle MeshSystem::CreateInstance(MeshHandle i_handler)
-		{
-			static MeshComponentHandle error_handler{ -1, -1 };
-			if (i_handler.generation != m_handlers[i_handler.index].generation)
-				return error_handler;
+			if (i_handle == MeshHandle::InvalidHandle() || i_handle.generation != m_handlers[i_handle.index].generation)
+				return MeshComponentHandle::InvalidHandle();
 
 			// get free index
 			int new_index = -1;
@@ -398,27 +466,9 @@ namespace SDK
 			//////////////////
 			// set data for MeshComponent
 			// TODO: increase use count for mesh
-			m_instances[new_index] = MeshComponent(i_handler);			
+			m_instances[new_index] = MeshComponent(i_handle);			
 			assert(m_instances.size() == m_component_handlers.size());
 			return m_component_handlers[new_index];
-		}
-
-		void MeshSystem::AddMaterialTo(MeshComponentHandle i_component, MaterialHandle i_material)
-		{
-			auto p_material = Render::g_material_mgr.AccessMaterial(i_material);
-			if (p_material == nullptr)
-			{
-				assert(false && "There is no such material");
-				return;
-			}
-			if (i_component.index >= static_cast<int>(m_component_handlers.size()) || i_component.generation != m_component_handlers[i_component.index].generation)
-			{
-				assert(false && "There is no such mesh component");
-				return;
-			}
-
-			auto& mesh_instance = m_instances[i_component.index];
-			mesh_instance.AddMaterial(i_material);
 		}
 
 		MeshComponent* MeshSystem::AccessComponent(MeshComponentHandle i_handler)

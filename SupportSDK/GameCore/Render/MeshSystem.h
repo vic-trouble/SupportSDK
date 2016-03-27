@@ -47,6 +47,12 @@ namespace SDK
 			std::vector<MeshComponent> m_instances;
 			std::vector<MeshComponentHandle> m_component_handlers;
 
+		private:
+			void LoadMesh(const PropertyElement& i_resource_element);
+			void LoadModel(const PropertyElement& i_resource_element);
+
+			MeshHandle LoadImpl(const std::string& i_name, const std::string& i_path, BufferUsageFormat i_vertices_usage, BufferUsageFormat i_indices_usage, const std::string& i_desc_path);
+
 		public:
 			MeshSystem();
 			virtual ~MeshSystem();
@@ -68,8 +74,6 @@ namespace SDK
 			// TODO: Custom mesh
 			//MeshHandle Create(const std::string& i_name, Mesh i_mesh);
 
-			GAMECORE_EXPORT void AddMaterialTo(MeshComponentHandle i_component, MaterialHandle i_material);
-
 			/////////////////////////////////////////////////////////
 			
 			// if you want to change something - use this method. On one frame it is guaranteed that 
@@ -79,7 +83,6 @@ namespace SDK
 
 			void Initialize();
 			void Release();
-			void Load(const PropertyElement& i_resource_element);
 
 		// Extension for entity manager
 		public:

@@ -139,7 +139,7 @@ namespace SDK
 						// no such uniform
 						if (uniform.location == -1)
 						{
-							assert(false);
+							//assert(false);
 							continue;
 						}
 
