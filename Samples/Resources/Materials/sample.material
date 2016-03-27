@@ -1,5 +1,4 @@
 Material = {
-	name = "Sample_material"
 	Shader = {
 		name = "SimpleShader"
 		diffuse_tex = {

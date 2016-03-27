@@ -1,4 +1,3 @@
-name = "Nanosuit"
 mesh = {
 	name = "Arms"
 	material = "Arms_material"

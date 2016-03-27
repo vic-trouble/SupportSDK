@@ -1,5 +1,4 @@
 Material = {
-	name = "Hand_material"
 	Shader = {
 		name = "SuitShader"
 		material.texture_diffuse1 = {
