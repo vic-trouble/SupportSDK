@@ -19,8 +19,13 @@ texture = {
 }
 
 texture = {
-	resource_name = "nano_diffuse_tex"
-	path = "..\..\Resources\Textures\nano_test.png"
+	resource_name = "nano_hand_diffuse_tex"
+	path = "..\..\Resources\Textures\nanosuit\hand_dif.png"
+}
+
+texture = {
+	resource_name = "nano_hand_specular_tex"
+	path = "..\..\Resources\Textures\nanosuit\hand_showroom_spec.png"
 }
 
 texture = {
@@ -40,12 +45,24 @@ shader_program = {
 	}
 }
 
+shader_program = {
+	resource_name = "SuitShader"
+	shader = {
+		type = "vertex"
+		path = "..\..\Resources\Shaders\Suit.vertexshader"
+	}
+	shader = {
+		type = "fragment"
+		path = "..\..\Resources\Shaders\Suit.fragmentshader"
+	}
+}
+
 material = {
 	resource_name = "Sample_material"
 	path = "..\..\Resources\Materials\sample.material"
 }
 
 material = {
-	resource_name = "Nanosuit_material"
-	path = "..\..\Resources\Materials\nanosuit.material"
+	resource_name = "Hand_material"
+	path = "..\..\Resources\Materials\nanosuit\hand.material"
 }

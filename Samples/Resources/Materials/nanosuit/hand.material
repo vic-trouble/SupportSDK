@@ -1,0 +1,133 @@
+Material = {
+	name = "Hand_material"
+	Shader = {
+		name = "SuitShader"
+		material.texture_diffuse1 = {
+			shader_semantic = "uniform"
+			type = "sampler2D"
+			value = "nano_hand_diffuse_tex"
+
+			show_name = "Diffuse Texture"
+		}
+
+		material.texture_specular1 = {
+			shader_semantic = "uniform"
+			type = "sampler2D"
+			value = "nano_hand_specular_tex"
+
+			show_name = "Soecular Texture"
+		}
+
+		pointLights[0].position = {
+			shader_semantic = "uniform"
+			type = "vec3"
+			value = [ 2.3f -1.6f -3.0f ]
+
+			show_name = "Light 0 position"
+		}
+
+		pointLights[0].ambient = {
+			shader_semantic = "uniform"
+			type = "vec3"
+			value = [ 0.05f 0.05f 0.05f ]
+
+			show_name = "Ambient light"
+		}
+
+		pointLights[0].diffuse = {
+			shader_semantic = "uniform"
+			type = "vec3"
+			value = [ 1.0f 1.0f 1.0f ]
+
+			show_name = "Diffuse light"
+		}
+
+		pointLights[0].specular = {
+			shader_semantic = "uniform"
+			type = "vec3"
+			value = [ 1.0f 1.0f 1.0f ]
+
+			show_name = "Ambient"
+		}
+
+		pointLights[0].constant = {
+			shader_semantic = "uniform"
+			type = "float"
+			value = 1.0f
+
+			show_name = "Constant"
+		}
+
+		pointLights[0].linear = {
+			shader_semantic = "uniform"
+			type = "float"
+			value = 0.009f
+
+			show_name = "Linear"
+		}
+
+		pointLights[0].quadratic = {
+			shader_semantic = "uniform"
+			type = "float"
+			value = 0.0032f
+
+			show_name = "Quadratic"
+		}
+
+		pointLights[1].position = {
+			shader_semantic = "uniform"
+			type = "vec3"
+			value = [ -1.7f 0.9f 1.0f ]
+
+			show_name = "Light 1 position"
+		}
+
+		pointLights[1].ambient = {
+			shader_semantic = "uniform"
+			type = "vec3"
+			value = [ 0.05f 0.05f 0.05f ]
+
+			show_name = "Ambient light"
+		}
+
+		pointLights[1].diffuse = {
+			shader_semantic = "uniform"
+			type = "vec3"
+			value = [ 1.0f 1.0f 1.0f ]
+
+			show_name = "Diffuse light"
+		}
+
+		pointLights[1].specular = {
+			shader_semantic = "uniform"
+			type = "vec3"
+			value = [ 1.0f 1.0f 1.0f ]
+
+			show_name = "Ambient"
+		}
+
+		pointLights[1].constant = {
+			shader_semantic = "uniform"
+			type = "float"
+			value = 1.0f
+
+			show_name = "Constant"
+		}
+
+		pointLights[1].linear = {
+			shader_semantic = "uniform"
+			type = "float"
+			value = 0.009f
+
+			show_name = "Linear"
+		}
+
+		pointLights[1].quadratic = {
+			shader_semantic = "uniform"
+			type = "float"
+			value = 0.0032f
+
+			show_name = "Quadratic"
+		}
+	}
+}
