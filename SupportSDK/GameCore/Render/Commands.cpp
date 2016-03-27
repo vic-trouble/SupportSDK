@@ -22,10 +22,9 @@ namespace SDK
 
 			void Draw::SetDefaultValues()
 			{
-				vertices.index = 0;
-				layout.index = 0;
-				indices.index = 0;
-				program.index = -1;
+				vertices = VertexBufferHandle::InvalidHandle();
+				layout = VertexLayoutHandle::InvalidHandle();
+				indices = IndexBufferHandle::InvalidHandle();
 				startVertex = 0;
 				vertexCount = 0;
 			}

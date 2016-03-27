@@ -21,8 +21,6 @@ namespace SDK
 				VertexBufferHandle		vertices;
 				VertexLayoutHandle		layout;
 				IndexBufferHandle		indices;
-
-				ShaderHandle			program;
 			};
 			static_assert(std::is_pod<Draw>::value == true, "Draw must be a POD.");
 

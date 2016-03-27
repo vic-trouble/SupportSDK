@@ -39,6 +39,8 @@ namespace SDK
 						return SVT::Float;
 					if (i_type == "vec4")
 						return SVT::FloatVec4;
+					if (i_type == "vec3")
+						return SVT::FloatVec3;
 					return SVT::Undefined;
 				}
 

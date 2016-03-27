@@ -319,7 +319,7 @@ namespace SDK
 
 					// TODO: need dynamic here and not static :`(
 					// for now buffer place for 6 unis
-					Commands::SetupShader<3, 6>* p_shader_cmd = Render::gBuffer.Append<Commands::SetupShader<3, 6>>(p_transform_cmd);
+					Commands::SetupShader<3, 30>* p_shader_cmd = Render::gBuffer.Append<Commands::SetupShader<3, 30>>(p_transform_cmd);
 					p_shader_cmd->m_layouts[0] = sub_mesh.m_pos_layout;
 					p_shader_cmd->m_layouts[1] = sub_mesh.m_normal_layout;
 					p_shader_cmd->m_layouts[2] = sub_mesh.m_uv_layout;
@@ -339,6 +339,7 @@ namespace SDK
 					}
 
 					Commands::Draw* p_cmd = Render::gBuffer.Append<Commands::Draw>(p_parent_cmd);
+					p_cmd->indices = sub_mesh.m_index_buffer;
 				}
 			}
 		}
