@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="_Maintanance">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Tests">
+      <UniqueIdentifier>{a0e93084-dacb-439d-a633-bd172cb918e5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\Sources\Terrain\Terrain.Tests\stdafx.h">
+      <Filter>_Maintanance</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\Sources\Terrain\Terrain.Tests\stdafx.cpp">
+      <Filter>_Maintanance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Sources\Terrain\Terrain.Tests\Terrain.Tests.cpp">
+      <Filter>_Maintanance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Sources\Terrain\Terrain.Tests\_LinkinLibraries.cpp">
+      <Filter>_Maintanance</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Sources\Terrain\Terrain.Tests\TerrainSlotTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

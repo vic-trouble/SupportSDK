@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="_Maintanance">
+      <UniqueIdentifier>{f8d48eb7-ac0e-4988-bba1-e9390ee09b2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sheduler">
+      <UniqueIdentifier>{5b745822-0421-491d-b0f6-5dcd846663a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sheduler\Base">
+      <UniqueIdentifier>{b75a3ee6-cdf1-4a43-a175-bf4b1758ded1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sheduler\Shedulers">
+      <UniqueIdentifier>{aecb3a79-41c5-4249-bbd3-376a7eb311ac}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\Sources\ExecutionManagement\stdafx.h">
+      <Filter>_Maintanance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Sources\ExecutionManagement\_Link.h">
+      <Filter>_Maintanance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Sources\ExecutionManagement\ExecutionManagementAPI.h">
+      <Filter>_Maintanance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Sources\ExecutionManagement\ISheduler.h">
+      <Filter>Sheduler\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Sources\ExecutionManagement\ScopeSheduledAction.h">
+      <Filter>Sheduler\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Sources\ExecutionManagement\TypeDefines.h">
+      <Filter>Sheduler\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Sources\ExecutionManagement\FrequencySheduler.h">
+      <Filter>Sheduler\Shedulers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Sources\ExecutionManagement\LoadBalancingSheduler.h">
+      <Filter>Sheduler\Shedulers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Sources\ExecutionManagement\PrioritySheduler.h">
+      <Filter>Sheduler\Shedulers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Sources\ExecutionManagement\ActionRecord.h">
+      <Filter>Sheduler\Base</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\Sources\ExecutionManagement\FrequencySheduler.cpp">
+      <Filter>Sheduler\Shedulers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Sources\ExecutionManagement\LoadBalancingSheduler.cpp">
+      <Filter>Sheduler\Shedulers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Sources\ExecutionManagement\PrioritySheduler.cpp">
+      <Filter>Sheduler\Shedulers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Sources\ExecutionManagement\ActionRecord.cpp">
+      <Filter>Sheduler\Base</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Sources\ExecutionManagement\ScopeSheduledAction.cpp" />
+    <ClCompile Include="..\..\..\Sources\ExecutionManagement\stdafx.cpp">
+      <Filter>_Maintanance</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

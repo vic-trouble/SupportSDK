@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="EventManaging">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="_Maintanance">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Polling">
+      <UniqueIdentifier>{61fabfe8-1adc-4f72-a03f-229a8911e3f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EventManaging\Base">
+      <UniqueIdentifier>{be2c093e-a187-446a-8fed-3b141832193f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\Sources\WorldInterfacing\Event.h">
+      <Filter>_Maintanance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Sources\WorldInterfacing\EventListener.h">
+      <Filter>_Maintanance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Sources\WorldInterfacing\EventListenerBroadCasting.h">
+      <Filter>_Maintanance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Sources\WorldInterfacing\EventListenerNarrowCasting.h">
+      <Filter>_Maintanance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Sources\WorldInterfacing\EventManager.h">
+      <Filter>_Maintanance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Sources\WorldInterfacing\PollingStation.h">
+      <Filter>_Maintanance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Sources\WorldInterfacing\PollingTask.h">
+      <Filter>_Maintanance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Sources\WorldInterfacing\stdafx.h">
+      <Filter>_Maintanance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Sources\WorldInterfacing\TypeDefines.h">
+      <Filter>_Maintanance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Sources\WorldInterfacing\WorldInterfacingAPI.h">
+      <Filter>_Maintanance</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Sources\WorldInterfacing\_Link.h">
+      <Filter>_Maintanance</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\Sources\WorldInterfacing\Event.cpp">
+      <Filter>EventManaging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Sources\WorldInterfacing\EventListener.cpp">
+      <Filter>EventManaging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Sources\WorldInterfacing\EventListenerBroadCasting.cpp">
+      <Filter>EventManaging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Sources\WorldInterfacing\EventListenerNarrowCasting.cpp">
+      <Filter>EventManaging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Sources\WorldInterfacing\EventManager.cpp">
+      <Filter>EventManaging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Sources\WorldInterfacing\stdafx.cpp">
+      <Filter>EventManaging</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
