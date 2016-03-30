@@ -97,16 +97,22 @@ namespace Game
 		auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
 		loaded_mesh = p_load_manager->GetHandleToResource<Render::Mesh>("Nanosuit");
 		
-		auto mesh_handle = Render::g_mesh_system.CreateInstance(loaded_mesh);
-		auto trans_handle = g_transforms_system.CreateInstance();
-		auto p_transform = g_transforms_system.GetInstance(trans_handle);
+		for (int i = 0; i < 300; ++i)
+		{
+			auto mesh_handle = Render::g_mesh_system.CreateInstance(loaded_mesh);
+			auto trans_handle = g_transforms_system.CreateInstance();
+			auto p_transform = g_transforms_system.GetInstance(trans_handle);
+			p_transform->m_position[0] = -100 + rand() % 200;
+			//p_transform->m_position[1] = rand() % 10;
+			p_transform->m_position[2] = -100 + rand() % 200;
 
-		entity_handle = g_entity_manager.CreateEntity();
-		g_entity_manager.AddComponent<Render::MeshComponent>(entity_handle, mesh_handle);
-		g_entity_manager.AddComponent<Transform>(entity_handle, trans_handle);
+			entity_handle = g_entity_manager.CreateEntity();
+			g_entity_manager.AddComponent<Render::MeshComponent>(entity_handle, mesh_handle);
+			g_entity_manager.AddComponent<Transform>(entity_handle, trans_handle);
 
-		// test getting of entity and component
-		auto entity = g_entity_manager.GetEntity(entity_handle);
+			// test getting of entity and component
+			auto entity = g_entity_manager.GetEntity(entity_handle);
+		}
 	}
 
 	void CoreDelegateImpl::CreateMesh()
