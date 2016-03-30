@@ -20,9 +20,11 @@ namespace SDK
 
 		int m_fps;
 		
-		World				m_worlds[1];
+		World				m_world;
 		Render::RenderWorld m_render_world;
+
 	private:
+		// methods that depends on platform
 		virtual void StartInternal() = 0;
 		virtual void StopInternal() = 0;
 
@@ -32,13 +34,9 @@ namespace SDK
 		virtual void OnCollapseInternal() = 0;
 		virtual void OnActivateInternal() = 0;
 
-		virtual void UpdateInternal(float i_elapsed_time) = 0;
-		virtual void DrawInternal() = 0;
-
 		virtual void RequestShutdownInternal() = 0;
+
 	public:
-		World& GetWorld() { return m_worlds[0]; }
-		Render::RenderWorld& GetRenderWorld() { return m_render_world; }
 		ApplicationBase(CoreDelegate* ip_delegate)
 			: mp_delegate(ip_delegate)
 			, CONTENT_WIDTH(0)
@@ -65,6 +63,9 @@ namespace SDK
 
 		int GetHeight() const { return CONTENT_HEIGHT; }
 		int GetWidth() const { return CONTENT_WIDTH; }
+
+		World& GetWorld() { return m_world; }
+		Render::RenderWorld& GetRenderWorld() { return m_render_world; }
 
 		void OnResize(const IRect& i_rect);
 	};

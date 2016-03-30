@@ -35,15 +35,14 @@ namespace SDK
 		OnCreateInternal();
 		Resources::RegisterLoaders();
 		// TODO: register systems in constructor?
-		m_worlds[0].RegisterSystem(&Render::g_mesh_system);
+		m_world.RegisterSystem(&Render::g_mesh_system);
 		mp_delegate->OnCreate();
 	}
 
 	void ApplicationBase::OnTerminate()
 	{
 		OnTerminateInternal();
-		for (auto& world : m_worlds)
-			world.ClearSystems();
+		m_world.ClearSystems();
 
 		mp_delegate->OnTerminate();
 
@@ -71,12 +70,9 @@ namespace SDK
 	{
 		UI::g_ui_system.Update(i_elapsed_time);
 
-		UpdateInternal(i_elapsed_time);		
-
 		mp_delegate->Update(i_elapsed_time);
 
-		for (World& world : m_worlds)
-			world.Update(i_elapsed_time);	
+		m_world.Update(i_elapsed_time);
 
 		int sleep_ms = 1;
 		const float frame_time = 1000.f / m_fps;
@@ -89,17 +85,13 @@ namespace SDK
 	void ApplicationBase::Draw()
 	{
 		Core::GetRenderer()->BeginFrame();
-		DrawInternal();
-		
-		for (World& world : m_worlds)
-		{
-			world.SubmitDrawCommands();
-			m_render_world.Submit({
-				world.GetFrustum().GetProjectionType(), 
-				world.GetFrustum().GetProjectionMatrix(), 
-				world.GetCamera().GetModelViewMatrix() 
-			});
-		}
+
+		m_world.SubmitDrawCommands();
+		m_render_world.Submit({
+			m_world.GetFrustum().GetProjectionType(),
+			m_world.GetFrustum().GetProjectionMatrix(),
+			m_world.GetCamera().GetModelViewMatrix()
+		});
 		mp_delegate->Draw();
 		UI::g_ui_system.Draw();
 

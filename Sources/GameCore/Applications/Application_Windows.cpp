@@ -458,15 +458,5 @@ namespace SDK
 
 	}
 
-	void ApplicationWindows::UpdateInternal(float i_elapsed_time)
-	{
-
-	}
-
-	void ApplicationWindows::DrawInternal()
-	{
-
-	}
-
 } // SDK
 

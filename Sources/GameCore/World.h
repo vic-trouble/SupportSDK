@@ -14,7 +14,7 @@ namespace SDK
 	class World : Utilities::noncopyable
 	{
 	private:
-		std::vector<System*> m_systems;
+		std::vector<System*> m_active_systems;
 
 		Render::Camera m_camera;
 		Render::Frustum m_frustum;
@@ -24,14 +24,9 @@ namespace SDK
 		void Update(float i_elapsed_time);
 		void SubmitDrawCommands();
 
-		void RegisterSystem(System* ip_system) { m_systems.push_back(ip_system); }
-		void UnregisterSystem(System* ip_system)
-		{
-			auto it = std::find(m_systems.begin(), m_systems.end(), ip_system);
-			if (it != m_systems.end())
-				m_systems.erase(it);
-		}
-		void ClearSystems() { m_systems.clear(); }
+		GAMECORE_EXPORT void RegisterSystem(System* ip_system);
+		GAMECORE_EXPORT void UnregisterSystem(System* ip_system);
+		GAMECORE_EXPORT void ClearSystems();
 
 		Render::Camera& GetCamera() { return m_camera; }
 		Render::Frustum& GetFrustum() { return m_frustum; }

@@ -40,9 +40,6 @@ namespace SDK
 		virtual void OnActivateInternal() override;
 
 		virtual void RequestShutdownInternal() override;
-		
-		virtual void UpdateInternal(float i_elapsed_time) override;
-		virtual void DrawInternal() override;
 	};
 
 } // SDK
