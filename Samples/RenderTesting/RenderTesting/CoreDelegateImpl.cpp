@@ -97,21 +97,24 @@ namespace Game
 		auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
 		loaded_mesh = p_load_manager->GetHandleToResource<Render::Mesh>("Nanosuit");
 		
-		for (int i = 0; i < 300; ++i)
+		const Vector3 start_pos{ -100, 0, -100 };
+		for (int i = 0; i < 20; ++i)
 		{
-			auto mesh_handle = Render::g_mesh_system.CreateInstance(loaded_mesh);
-			auto trans_handle = g_transforms_system.CreateInstance();
-			auto p_transform = g_transforms_system.GetInstance(trans_handle);
-			p_transform->m_position[0] = -100 + rand() % 200;
-			//p_transform->m_position[1] = rand() % 10;
-			p_transform->m_position[2] = -100 + rand() % 200;
+			for (int j = 0; j < 20; ++j)
+			{
+				auto mesh_handle = Render::g_mesh_system.CreateInstance(loaded_mesh);
+				auto trans_handle = g_transforms_system.CreateInstance();
+				auto p_transform = g_transforms_system.GetInstance(trans_handle);
+				p_transform->m_position[0] = start_pos[0] + i*10;
+				p_transform->m_position[2] = start_pos[2] + j*10;
 
-			entity_handle = g_entity_manager.CreateEntity();
-			g_entity_manager.AddComponent<Render::MeshComponent>(entity_handle, mesh_handle);
-			g_entity_manager.AddComponent<Transform>(entity_handle, trans_handle);
+				entity_handle = g_entity_manager.CreateEntity();
+				g_entity_manager.AddComponent<Render::MeshComponent>(entity_handle, mesh_handle);
+				g_entity_manager.AddComponent<Transform>(entity_handle, trans_handle);
 
-			// test getting of entity and component
-			auto entity = g_entity_manager.GetEntity(entity_handle);
+				// test getting of entity and component
+				auto entity = g_entity_manager.GetEntity(entity_handle);
+			}
 		}
 	}
 
@@ -139,7 +142,7 @@ namespace Game
 		static SDK::Vector3 look_at{ -500,-500, 1500 };
 		camera.LookAt(shift, look_at);
 
-		//world.GetFrustum().SetFOV(60 * Math::DEG2RAD);
+		world.GetFrustum().SetFOV(80 * Math::DEG2RAD);
 		world.GetFrustum().SetFarClipDistance(1000.f);
 		world.GetFrustum().SetNearClipDistance(0.5f);
 		Core::GetRenderer()->SetClearColor(Color(128, 112, 112, 255));
