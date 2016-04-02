@@ -145,8 +145,6 @@ namespace SDK
 			return FontHandle::InvalidHandle();
 		}
 		
-		static GLuint VAO, VBO;
-
 		void FontManager::Render(Vector2 i_position, float i_scale, const std::wstring& i_text)
 		{			
 			auto p_renderer = Core::GetRenderer();
@@ -158,20 +156,19 @@ namespace SDK
 			g_shader_system.SetKnownUniforms(shader_handle);
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			
-			auto p_hd_mgr = p_renderer->GetHardwareBufferMgr();
+
+			auto p_hd_mgr = p_renderer->GetHardwareBufferMgr();			
 			auto buffer_handle = p_hd_mgr->CreateHardwareBuffer(sizeof(float) * 6 * 4, BufferUsageFormat::Dynamic);
 			p_hd_mgr->BindBuffer(buffer_handle);
-			// Configure VAO/VBO for texture quads
-			CHECK_GL_ERRORS;
-			glGenVertexArrays(1, &VAO);
-			glBindVertexArray(VAO);
-			glEnableVertexAttribArray(0);
-			glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
-			CHECK_GL_ERRORS;
+			auto layout_handle = p_hd_mgr->CreateLayout(buffer_handle, 4, VertexSemantic::Position, ComponentType::Float, false, 4 * sizeof(float), 0);
+
+			int location = shader->GetAttribute("position").location;
+			p_hd_mgr->BindLayout(layout_handle, location);
+
+			glEnableVertexAttribArray(location);
 			glUniform3f(shader->GetUniform("textColor").location, 1.f, 0.f, 0.f);
 			glActiveTexture(GL_TEXTURE0);
-			glBindVertexArray(VAO);
+
 			CHECK_GL_ERRORS;
 			
 			//////////////////////
@@ -203,13 +200,6 @@ namespace SDK
 
 				p_hd_mgr->SetSubdata(buffer_handle, vertices, 0, sizeof(vertices));
 				p_hd_mgr->BindBuffer(buffer_handle);
-				// Update content of VBO memory
-				/*glBindBuffer(GL_ARRAY_BUFFER, VBO);
-				CHECK_GL_ERRORS;
-				glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices); // Be sure to use glBufferSubData and not glBufferData
-				CHECK_GL_ERRORS;
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
-				CHECK_GL_ERRORS;*/
 				// Render quad
 				glDrawArrays(GL_TRIANGLES, 0, 6);
 				// Now advance cursors for next glyph (note that advance is number of 1/64 pixels)

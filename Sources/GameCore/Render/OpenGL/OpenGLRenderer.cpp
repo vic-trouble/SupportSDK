@@ -318,6 +318,9 @@ namespace SDK
 				const auto& attributes = i_shader.GetAttributes();
 				for (const auto& attr : attributes)
 				{
+					// dynamic elements should be managed by user
+					if (attr.element_semantic == Render::VertexSemantic::Dynamic)
+						continue;
 					if (attr.element_semantic == element.m_semantic)
 					{
 						glVertexAttribPointer(attr.location, // index for shader attribute

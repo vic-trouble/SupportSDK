@@ -46,6 +46,7 @@ namespace SDK
 				bool i_normalized,
 				uint i_stride,
 				uint i_offset) = 0;
+			virtual void BindLayout(VertexLayoutHandle i_layout, int i_location) = 0;
 			virtual void DestroyLayout(VertexLayoutHandle i_layout) = 0;
 		};
 	}

@@ -61,6 +61,7 @@ namespace SDK
 				bool i_normalized,
 				uint i_stride,
 				uint i_offset) override;
+			virtual void BindLayout(VertexLayoutHandle i_layout, int i_location) override;
 			virtual void DestroyLayout(VertexLayoutHandle i_layout) override;
 
 			////////////////////////////////////////////////////////////////////////////////////

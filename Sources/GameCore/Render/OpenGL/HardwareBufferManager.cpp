@@ -275,6 +275,46 @@ namespace SDK
 			return handle;
 		}
 
+		GLenum GetComponentType(Render::ComponentType i_type)
+		{
+			using namespace Render;
+			switch (i_type)
+			{
+				case ComponentType::Byte:
+					return GL_BYTE;
+				case ComponentType::UByte:
+					return GL_UNSIGNED_BYTE;
+				case ComponentType::Shot:
+					return GL_UNSIGNED_SHORT;
+				case ComponentType::Int:
+					return GL_UNSIGNED_INT;
+				case ComponentType::HalfFloat:
+					return GL_HALF_FLOAT;
+				case ComponentType::Float:
+					return GL_FLOAT;
+				case ComponentType::Double:
+					return GL_DOUBLE;
+				case ComponentType::Fixed:
+					return GL_FIXED;
+			}
+			return 0;
+		}
+
+		void HardwareBufferManager::BindLayout(VertexLayoutHandle i_layout, int i_location)
+		{
+			if (i_layout.index >= VertexLayoutBuffers::Size)
+				return;
+			
+			auto& layout = m_static_elements.m_buffer[i_layout.index];
+			glVertexAttribPointer(i_location, // index for shader attribute
+				layout.m_vertex_size, // size
+				GetComponentType(layout.m_component), // type
+				layout.m_normalized ? GL_TRUE : GL_FALSE, // normalized
+				layout.m_stride, // stride
+				reinterpret_cast<GLvoid*>(layout.m_offset)); // pointer
+			glEnableVertexAttribArray(i_location);
+		}
+
 		void HardwareBufferManager::DestroyLayout(VertexLayoutHandle i_layout)
 		{
 			auto cur_index = i_layout.index;
