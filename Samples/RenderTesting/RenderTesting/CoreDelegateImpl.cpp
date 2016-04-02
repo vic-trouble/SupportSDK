@@ -99,9 +99,9 @@ namespace Game
 		loaded_mesh = p_load_manager->GetHandleToResource<Render::Mesh>("Nanosuit");
 		
 		const Vector3 start_pos{ -100, 0, -100 };
-		for (int i = 0; i < 1; ++i)
+		for (int i = 0; i < 20; ++i)
 		{
-			for (int j = 0; j < 1; ++j)
+			for (int j = 0; j < 20; ++j)
 			{
 				auto mesh_handle = Render::g_mesh_system.CreateInstance(loaded_mesh);
 				auto trans_handle = g_transforms_system.CreateInstance();
@@ -202,7 +202,8 @@ namespace Game
 		static float y = 50;
 		IRect rect = Core::GetRenderer()->GetTargetRectangle();
 		Core::GetRenderer()->SetMatrix(MatrixMode::Projection, Matrix4f::CreateOrtho(0, rect.Width(), 0, rect.Height()));
-		Render::g_font_manager.Render({ x, y }, 1.f, L"Hello world");
+		std::wstring message = L"FPS: " + std::to_wstring(Core::GetApplication()->GetCurrentFPS());
+		Render::g_font_manager.Render({ x, y }, 1.f, message);
 	}
 
 } // Game

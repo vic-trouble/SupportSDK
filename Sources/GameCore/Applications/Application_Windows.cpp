@@ -290,6 +290,68 @@ namespace SDK
 		}
 
 	} // impl
+	
+	namespace
+	{
+		static float inv_freq = 1.f;
+		class Timer
+		{
+		private:
+			__int64 m_start_time = 0;
+			__int64 m_idle_ticks = 0;
+			__int64 m_idle_start_time = 0;
+
+		private:
+			static __int64 get_time()
+			{
+				__int64 t;
+				QueryPerformanceCounter(reinterpret_cast<LARGE_INTEGER*>(&t));
+				return t;
+			}
+
+			static float Interval(__int64 i_begin, __int64 i_end)
+			{
+				if (i_begin <= i_end)
+					return float(i_end - i_begin) * inv_freq;
+				else
+					return -float(i_begin - i_end) * inv_freq;
+			}
+
+		public:
+			static void Sync()
+			{
+				__int64 f;
+				QueryPerformanceFrequency(reinterpret_cast<LARGE_INTEGER*>(&f));
+				inv_freq = 1.0f / static_cast<float>(f);
+			}
+
+			void Start()
+			{
+				m_start_time = get_time();
+				m_idle_ticks = 0;
+			}
+			void Pause()
+			{
+				m_idle_start_time = get_time();
+			}
+
+			void Resume()
+			{
+				__int64 t = get_time();
+				m_idle_ticks += (t - m_idle_start_time);
+			}
+
+			float GetElapsedTime() const
+			{
+				float result = Interval(m_start_time + m_idle_ticks, get_time());
+				if (result < 0 || result == 0.f)
+					return 0.001f;
+				return result;
+			}
+		};
+	}
+
+	Timer g_timer;
 
 	ApplicationWindows::ApplicationWindows(CoreDelegate* ip_delegate)
 		: ApplicationBase(ip_delegate)
@@ -307,7 +369,7 @@ namespace SDK
 	const int WINDOWED_STYLE = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_SIZEBOX;
 	void ApplicationWindows::OnCreateInternal()
 	{
-		CONTENT_WIDTH = 640;
+		CONTENT_WIDTH = 1024;
 		CONTENT_HEIGHT = 960;
 
 		HINSTANCE instance = ::GetModuleHandle(NULL);
@@ -420,11 +482,13 @@ namespace SDK
 	void ApplicationWindows::StartInternal()
 	{
 		m_working = true;
-
+		Timer::Sync();
 		MSG msg;
+		Timer timer;
+		float dt = 0.01f;
 		while (m_working)
 		{
-			SDK::uint64 start_time = GetAbsoluteMS();
+			timer.Start();
 			// process messages
 			while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 			{
@@ -445,11 +509,10 @@ namespace SDK
 					m_working = false;
 				}
 			} // peek message cycle
-
-
-			SDK::uint64 elapsed_time = GetAbsoluteMS() - start_time;
-			Core::Update(elapsed_time*1.f);
+			
+			Core::Update(dt);
 			Core::Draw();
+			dt = timer.GetElapsedTime();
 		} // main cycle
 	}
 

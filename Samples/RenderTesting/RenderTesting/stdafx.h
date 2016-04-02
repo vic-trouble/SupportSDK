@@ -18,7 +18,7 @@
 
 #include <vector>
 #include <algorithm>
-
+#include <string>
 // From SDK
 
 #include <GameCore/TypeDefinitions.h>

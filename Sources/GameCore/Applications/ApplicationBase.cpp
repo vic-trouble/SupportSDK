@@ -20,8 +20,13 @@ namespace SDK
 		extern void ReleaseLoaders();
 	} // Resources
 
+	
+
 	void ApplicationBase::Start()
 	{
+		m_fps_counter = 0;
+		m_fps_timer = 0;
+		m_current_fps = 0;
 		StartInternal();
 	}
 
@@ -74,12 +79,22 @@ namespace SDK
 
 		m_world.Update(i_elapsed_time);
 
-		int sleep_ms = 1;
+		m_fps_timer += i_elapsed_time;
+		if (m_fps_timer >= 1.f)
+		{
+			m_fps_timer = 0.f;
+			m_current_fps = m_fps_counter;
+			m_fps_counter = 0;
+		}
+
+		++m_fps_counter;
+
+		/*int sleep_ms = 1;
 		const float frame_time = 1000.f / m_fps;
 		sleep_ms = static_cast<int>(frame_time - i_elapsed_time);
 		if (sleep_ms < 1)
 			sleep_ms = 1;
-		Utilities::SleepMiliseconds(sleep_ms);
+		Utilities::SleepMiliseconds(sleep_ms);*/
 	}
 
 	void ApplicationBase::Draw()

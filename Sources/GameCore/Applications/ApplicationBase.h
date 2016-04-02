@@ -19,6 +19,9 @@ namespace SDK
 		CoreDelegate* mp_delegate;
 
 		int m_fps;
+		int m_current_fps;
+		int m_fps_counter;
+		float m_fps_timer;
 		
 		World				m_world;
 		Render::RenderWorld m_render_world;
@@ -57,6 +60,7 @@ namespace SDK
 		GAMECORE_EXPORT void RequestShutdown();
 
 		void SetMaxFPS(int i_fps) { m_fps = i_fps; }
+		int GetCurrentFPS() const { return m_current_fps; }
 
 		void Update(float i_elapsed_time);
 		void Draw();

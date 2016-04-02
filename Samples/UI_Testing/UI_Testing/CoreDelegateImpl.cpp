@@ -88,7 +88,7 @@ namespace Game
 		auto p_renderer = Core::GetRenderer();
 		IRect rect = p_renderer->GetTargetRectangle();
 		p_renderer->SetMatrix(MatrixMode::Projection, Matrix4f::CreateOrtho(0, rect.Width(), 0, rect.Height()));
-		std::wstring message = L"Hello world!!!ûûû";
+		std::wstring message = L"FPS: " + std::to_wstring(Core::GetApplication()->GetCurrentFPS());
 		Render::g_font_manager.Render({ x, y }, 1.f, message);
 	}
 
