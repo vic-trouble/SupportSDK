@@ -18,7 +18,7 @@ namespace SDK
 			uint m_hardware_id;
 			bool m_in_video_mem;
 
-			std::unique_ptr<char> p_dynamic_data;
+			std::unique_ptr<char[]> p_dynamic_data;
 
 			HardwareVertexBuffer()
 				: p_dynamic_data(nullptr)
@@ -28,30 +28,25 @@ namespace SDK
 				, m_in_video_mem(false)
 			{}
 
-			HardwareVertexBuffer(uint i_size, BufferUsageFormat i_format, uint i_hd_id)
-				: p_dynamic_data(nullptr)
-				, m_size_in_bytes(i_size)
-				, m_usage(i_format)
-				, m_hardware_id(i_hd_id)
-				, m_in_video_mem(true)
-			{}
-
 			HardwareVertexBuffer(uint i_size, BufferUsageFormat i_format)
-				: p_dynamic_data(nullptr)
+				: p_dynamic_data(new char[i_size])
 				, m_size_in_bytes(i_size)
 				, m_usage(i_format)
 				, m_hardware_id(0)
 				, m_in_video_mem(false)
 			{}
 
-			void SetSubData(const void* ip_data, int i_offset, int i_size)
+			void SetSubData(const void* ip_data, uint i_offset, uint i_size)
 			{
+				if (ip_data == nullptr)
+					return;
+
 				if (m_usage == BufferUsageFormat::Static)
 				{
 					assert(false && "Cannot set for static usage. Try dynamic");
 					return;
 				}
-				if (i_offset + i_size >= m_size_in_bytes || i_offset < 0 || i_size < 0)
+				if (i_offset + i_size > m_size_in_bytes || i_offset < 0 || i_size < 0)
 				{
 					assert(false && "Cannot load more than allocated.");
 					return;

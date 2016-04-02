@@ -47,7 +47,6 @@ namespace SDK
 			}
 			auto p_buffer = m_buffers.Access(buffer_handle);
 			p_buffer->SetSubData(ip_initial_data, 0, i_buffer_size);
-			assert(p_buffer);
 			return buffer_handle;
 		}
 
@@ -107,6 +106,20 @@ namespace SDK
 			}
 
 			return true;
+		}
+
+		void HardwareBufferManager::SetSubdata(VertexBufferHandle i_handle, const void* ip_data, uint i_offset, uint i_size)
+		{
+			auto p_buffer = m_buffers.Access(i_handle);
+			if (p_buffer == nullptr)
+			{
+				assert(false && "No buffer to bind subdata");
+				return;
+			}
+			if (p_buffer->m_usage != BufferUsageFormat::Dynamic)
+				return;
+
+			p_buffer->SetSubData(ip_data, i_offset, i_size);
 		}
 
 		void HardwareBufferManager::DestroyBuffer(VertexBufferHandle i_handle)
@@ -194,12 +207,6 @@ namespace SDK
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////
-
-		HardwareVertexBuffer HardwareBufferManager::AccessVertexBuffer(VertexBufferHandle i_handle) const
-		{
-			
-			return HardwareVertexBuffer{ 0, BufferUsageFormat::Static, 0 };
-		}
 
 		HardwareIndexBuffer HardwareBufferManager::AccessIndexBuffer(IndexBufferHandle i_handle) const
 		{

@@ -9,6 +9,7 @@
 #include "Render/ShaderSystem.h"
 
 #include "Render/OpenGL/GlUitlities.h"
+#include "Render/HardwareBufferManagerBase.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -158,20 +159,20 @@ namespace SDK
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 			
+			auto p_hd_mgr = p_renderer->GetHardwareBufferMgr();
+			auto buffer_handle = p_hd_mgr->CreateHardwareBuffer(sizeof(float) * 6 * 4, BufferUsageFormat::Dynamic);
+			p_hd_mgr->BindBuffer(buffer_handle);
 			// Configure VAO/VBO for texture quads
+			CHECK_GL_ERRORS;
 			glGenVertexArrays(1, &VAO);
-			glGenBuffers(1, &VBO);
 			glBindVertexArray(VAO);
-			glBindBuffer(GL_ARRAY_BUFFER, VBO);
-			glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
 			glEnableVertexAttribArray(0);
 			glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
-			glBindVertexArray(0);
-
+			CHECK_GL_ERRORS;
 			glUniform3f(shader->GetUniform("textColor").location, 1.f, 0.f, 0.f);
 			glActiveTexture(GL_TEXTURE0);
 			glBindVertexArray(VAO);
+			CHECK_GL_ERRORS;
 			
 			//////////////////////
 			// render text
@@ -199,13 +200,16 @@ namespace SDK
 				};
 				// Render glyph texture over quad
 				glBindTexture(GL_TEXTURE_2D, ch.TextureID);
+
+				p_hd_mgr->SetSubdata(buffer_handle, vertices, 0, sizeof(vertices));
+				p_hd_mgr->BindBuffer(buffer_handle);
 				// Update content of VBO memory
-				glBindBuffer(GL_ARRAY_BUFFER, VBO);
+				/*glBindBuffer(GL_ARRAY_BUFFER, VBO);
 				CHECK_GL_ERRORS;
 				glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices); // Be sure to use glBufferSubData and not glBufferData
 				CHECK_GL_ERRORS;
 				glBindBuffer(GL_ARRAY_BUFFER, 0);
-				CHECK_GL_ERRORS;
+				CHECK_GL_ERRORS;*/
 				// Render quad
 				glDrawArrays(GL_TRIANGLES, 0, 6);
 				// Now advance cursors for next glyph (note that advance is number of 1/64 pixels)

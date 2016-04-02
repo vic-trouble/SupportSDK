@@ -350,7 +350,7 @@ namespace SDK
 					element.m_normalized ? GL_TRUE : GL_FALSE, // normalized
 					element.m_stride, // stride
 					reinterpret_cast<GLvoid*>(element.m_offset)); // pointer
-				glEnableVertexAttribArray(0);
+				glEnableVertexAttribArray(i);
 			}			
 		}
 
@@ -373,7 +373,6 @@ namespace SDK
 
 	void OpenGLRenderer::Draw(Render::Batch i_batch)
 	{
-		auto ver_buf = m_hardware_buffer_mgr.AccessVertexBuffer(i_batch.vertices);
 		auto ind_buf = m_hardware_buffer_mgr.AccessIndexBuffer(i_batch.indices);
 		auto element = m_hardware_buffer_mgr.AccessLayout(i_batch.element);
 

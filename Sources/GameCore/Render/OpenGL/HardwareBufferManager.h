@@ -46,7 +46,8 @@ namespace SDK
 															BufferUsageFormat i_usage,
 															const void* ip_initial_data = nullptr);
 			virtual void DestroyBuffer(VertexBufferHandle i_handle) override;
-			virtual bool BindBuffer(VertexBufferHandle i_handle);
+			virtual bool BindBuffer(VertexBufferHandle i_handle) override;
+			virtual void SetSubdata(VertexBufferHandle i_handle, const void* ip_data, uint i_offset, uint i_size) override;
 
 			// can simultaneously hold 4096  buffers with usage = Static
 			virtual IndexBufferHandle CreateIndexBuffer(HardwareIndexBuffer::IndexType i_type, size_t i_num_indices, BufferUsageFormat i_usage, PrimitiveType i_primitive, const void* ip_initial_data = nullptr) override;
@@ -66,7 +67,6 @@ namespace SDK
 			// Part that available to render backent - OpenGL, DirectX, other
 
 			// TODO: should return some struct or ? - not all information about ver./ind. buffer
-			HardwareVertexBuffer AccessVertexBuffer(VertexBufferHandle i_handle) const;
 			HardwareIndexBuffer AccessIndexBuffer(IndexBufferHandle i_handle) const;
 			VertexLayout AccessLayout(VertexLayoutHandle i_handle) const;
 
