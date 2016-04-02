@@ -35,6 +35,10 @@ using namespace SDK;
 #include <Utilities/_Link.h>
 #include <Patterns/_Link.h>
 
+#include <GameCore/Resources/ResourceManager.h>
+#include <GameCore/Render/ShaderCompiler.h>
+#include <GameCore/Render/Fonts/FontManager.h>
+
 namespace Game
 {
 
@@ -63,6 +67,10 @@ namespace Game
 
 		connection = SDK::Connection(msg_dsp, handler, &TestHandler::Handle, "my_mega_button");		
 		connection.disconnect();
+
+		auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
+		p_load_manager->LoadResourceSet("..\\..\\Resources\\ResourceSets\\ui_testing.res");
+		Render::g_font_manager.LoadFont("Arial", "..\\..\\Resources\\Fonts\\arial.ttf");
 	}
 
 	void CoreDelegateImpl::OnTerminate()
@@ -75,6 +83,13 @@ namespace Game
 
 	void CoreDelegateImpl::Draw()
 	{
+		static float x = 50;
+		static float y = 600;
+		auto p_renderer = Core::GetRenderer();
+		IRect rect = p_renderer->GetTargetRectangle();
+		p_renderer->SetMatrix(MatrixMode::Projection, Matrix4f::CreateOrtho(0, rect.Width(), 0, rect.Height()));
+		std::wstring message = L"Hello world!!!ûûû";
+		Render::g_font_manager.Render({ x, y }, 1.f, message);
 	}
 
 } // Game

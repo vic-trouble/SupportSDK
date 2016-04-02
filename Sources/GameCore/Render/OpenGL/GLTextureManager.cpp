@@ -72,17 +72,13 @@ namespace SDK
 				static void RemoveHandle(InternalHandle i_handle)
 				{
 					Render::GLTextureManager* p_mgr = static_cast<Render::GLTextureManager*>(Core::GetRenderer()->GetTextureManager());
-					p_mgr->m_textures.m_elements[i_handle.index].second = Render::Texture();
-					p_mgr->m_textures.m_elements[i_handle.index].first.index = -1;
-					++p_mgr->m_textures.m_elements[i_handle.index].first.generation;
+					p_mgr->m_textures.Destroy({ i_handle.index, i_handle.generation });
 				}
 
 				static void UnloadResource(InternalHandle i_handle)
 				{
 					Render::GLTextureManager* p_mgr = static_cast<Render::GLTextureManager*>(Core::GetRenderer()->GetTextureManager());
-					p_mgr->m_textures.m_elements[i_handle.index].second = Render::Texture();
-					p_mgr->m_textures.m_elements[i_handle.index].first.index = -1;
-					++p_mgr->m_textures.m_elements[i_handle.index].first.generation;
+					p_mgr->m_textures.Destroy({ i_handle.index, i_handle.generation });
 
 				}
 

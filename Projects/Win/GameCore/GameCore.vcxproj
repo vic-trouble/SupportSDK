@@ -47,6 +47,7 @@
     <Import Project="$(THIRD_PARTIES_NEW)\props\tinyxml.props" />
     <Import Project="$(THIRD_PARTIES_NEW)\props\soil.props" />
     <Import Project="$(THIRD_PARTIES_NEW)\props\assimp.props" />
+    <Import Project="..\..\..\..\ThirdParties\props\freetype.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -54,6 +55,7 @@
     <Import Project="$(THIRD_PARTIES_NEW)\props\tinyxml.props" />
     <Import Project="$(THIRD_PARTIES_NEW)\props\soil.props" />
     <Import Project="$(THIRD_PARTIES_NEW)\props\assimp.props" />
+    <Import Project="..\..\..\..\ThirdParties\props\freetype.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -139,6 +141,8 @@
     <ClInclude Include="..\..\..\Sources\GameCore\Render\CommandBucket.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\Render\CommandPacket.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\Render\Commands.h" />
+    <ClInclude Include="..\..\..\Sources\GameCore\Render\Fonts\Font.h" />
+    <ClInclude Include="..\..\..\Sources\GameCore\Render\Fonts\FontManager.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\Render\Frustum.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\Render\HardwareBuffer.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\IComponent.h" />
@@ -209,6 +213,7 @@
     <ClCompile Include="..\..\..\Sources\GameCore\PropertyReaders.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\Render\Camera.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\Render\Commands.cpp" />
+    <ClCompile Include="..\..\..\Sources\GameCore\Render\Fonts\FontManager.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\Render\Frustum.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\Render\MaterialManager.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\Render\OpenGL\GLLightsController.cpp" />

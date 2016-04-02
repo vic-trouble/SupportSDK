@@ -75,6 +75,9 @@
     <Filter Include="Core\Renderer\Materials">
       <UniqueIdentifier>{88c86b88-2857-4d54-ba5f-fbd443654489}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Renderer\Fonts">
+      <UniqueIdentifier>{05058c52-2875-4202-889c-c552809ca1df}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Sources\GameCore\stdafx.h">
@@ -332,6 +335,12 @@
     <ClInclude Include="..\..\..\Sources\GameCore\Render\MeshSystem.h">
       <Filter>Core\Renderer\Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Sources\GameCore\Render\Fonts\FontManager.h">
+      <Filter>Core\Renderer\Fonts</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Sources\GameCore\Render\Fonts\Font.h">
+      <Filter>Core\Renderer\Fonts</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Sources\GameCore\stdafx.cpp">
@@ -450,6 +459,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\Sources\GameCore\Render\MeshSystem.cpp">
       <Filter>Core\Renderer\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Sources\GameCore\Render\Fonts\FontManager.cpp">
+      <Filter>Core\Renderer\Fonts</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

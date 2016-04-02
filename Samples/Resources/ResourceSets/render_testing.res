@@ -96,6 +96,18 @@ shader_program = {
 	}
 }
 
+shader_program = {
+	resource_name = "TextShader"
+	shader = {
+		type = "vertex"
+		path = "..\..\Resources\Shaders\TextShader.vertexshader"
+	}
+	shader = {
+		type = "fragment"
+		path = "..\..\Resources\Shaders\TextShader.fragmentshader"
+	}
+}
+
 material = {
 	resource_name = "Sample_material"
 	path = "..\..\Resources\Materials\sample.material"

@@ -78,6 +78,20 @@ namespace SDK
 				return m;
 			}
 
+			inline static ThisMatrix CreateOrtho(CoordinateType i_left, CoordinateType i_right, CoordinateType i_bottom, CoordinateType i_top)
+			{
+				ThisMatrix matrix;
+				matrix.Identity();
+
+				matrix[0][0] = static_cast<float>(2) / (i_right - i_left);
+				matrix[1][1] = static_cast<float>(2) / (i_top - i_bottom);
+				matrix[2][2] = -static_cast<float>(1);
+				matrix[3][0] = -(i_right + i_left) / (i_right - i_left);
+				matrix[3][1] = -(i_top + i_bottom) / (i_top - i_bottom);
+
+				return matrix;
+			}
+
 			// Makes translation matrix for this matrix
 			inline void CreateTranslation(const ThisVector3& i_vector);
 			// Makes rotation matrix for this matrix

@@ -93,6 +93,8 @@ namespace SDK
 					std::vector<Vertex> vertices;
 					std::vector<int> indices;
 					auto p_mgr = Core::GetRenderer()->GetHardwareBufferMgr();
+					volatile int vertex_count = 0;
+					volatile int trig_count = 0;
 					for (uint im = 0; im < ip_scene->mNumMeshes; ++im)
 					{
 						const aiMesh* p_mesh = ip_scene->mMeshes[im];
@@ -156,7 +158,8 @@ namespace SDK
 						auto pos_layout = p_mgr->CreateLayout(ver_buf, 3, Render::VertexSemantic::Position, Render::ComponentType::Float, false, sizeof(Vertex), 0);
 						auto normals_layout = p_mgr->CreateLayout(ver_buf, 3, Render::VertexSemantic::Normal, Render::ComponentType::Float, false, sizeof(Vertex), offsetof(Vertex, Normal));
 						auto uv_layout = p_mgr->CreateLayout(ver_buf, 2, Render::VertexSemantic::TextureCoordinates, Render::ComponentType::Float, false, sizeof(Vertex), offsetof(Vertex, TexCoords));
-
+						vertex_count += vertices.size();
+						trig_count += indices.size() / 3;
 						result_mesh.AddSubmesh(p_mesh->mName.C_Str(), ver_buf, pos_layout, normals_layout, uv_layout, ind_buf);
 					}
 					
@@ -376,7 +379,6 @@ namespace SDK
 		void MeshSystem::SubmitDrawCommands()
 		{
 			auto& render_world = Core::GetApplication()->GetRenderWorld();
-
 			for (auto& handler : m_component_handlers)
 			{
 				// reach the end of registered (valid) meshes

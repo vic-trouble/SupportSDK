@@ -40,6 +40,7 @@ using namespace SDK;
 #include <GameCore/PropertyElement.h>
 #include <GameCore/Resources/ResourceManager.h>
 #include <GameCore/Render/ShaderCompiler.h>
+#include <GameCore/Render/Fonts/FontManager.h>
 
 namespace Game
 {
@@ -98,9 +99,9 @@ namespace Game
 		loaded_mesh = p_load_manager->GetHandleToResource<Render::Mesh>("Nanosuit");
 		
 		const Vector3 start_pos{ -100, 0, -100 };
-		for (int i = 0; i < 20; ++i)
+		for (int i = 0; i < 1; ++i)
 		{
-			for (int j = 0; j < 20; ++j)
+			for (int j = 0; j < 1; ++j)
 			{
 				auto mesh_handle = Render::g_mesh_system.CreateInstance(loaded_mesh);
 				auto trans_handle = g_transforms_system.CreateInstance();
@@ -132,10 +133,9 @@ namespace Game
 		auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
 		p_load_manager->LoadResourceSet("..\\..\\Resources\\ResourceSets\\render_testing.res");
 
-		LoadModel();
-
+		LoadModel();		
 		CreateMesh();
-
+		Render::g_font_manager.LoadFont("Arial", "..\\..\\Resources\\Fonts\\arial.ttf");
 		auto& world = Core::GetApplication()->GetWorld();
 		auto& camera = world.GetCamera();
 		static SDK::Vector3 shift{ 5.f, -5.f, -50.f };
@@ -205,6 +205,9 @@ namespace Game
 		p_lights->DisableLighting();
 		drawGrid(100, 4);
 		p_lights->EnableLighting();
+		static float x = 50;
+		static float y = 50;
+		Render::g_font_manager.Render({ x, y }, 1.f, L"Hello world");
 	}
 
 } // Game

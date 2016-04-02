@@ -14,6 +14,8 @@
 #include <memory>
 #include <iostream>
 
+#include <cassert>
+#include <array>
 #include <vector>
 #include <algorithm>
 
