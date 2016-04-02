@@ -3,22 +3,31 @@
 
 #include "Render/HardwareBufferManagerBase.h"
 
+#include "GenericHandlesStaticArray.h"
+#include "GenericHandlesDynamicArray.h"
+
 namespace SDK
 {
 	
 	namespace Render
 	{	
-		typedef GenericBuffersArray<VertexBufferHandle, HardwareVertexBuffer, 4096> VertexBuffers;
 		typedef GenericBuffersArray<IndexBufferHandle, HardwareIndexBuffer, 4096> IndexBuffers;
 		typedef GenericBuffersArray<VertexLayoutHandle, VertexLayout, 4096> VertexLayoutBuffers;
 
 		class HardwareBufferManager : public HardwareBufferManagerBase
 		{
 		private:
+			using DynamicHardwareBuffers = GenericHandleDynamicArray<VertexBufferHandle, HardwareVertexBuffer>;
+
+		private:
+			DynamicHardwareBuffers m_buffers;
 			// for static data
-			VertexBuffers	m_static_vertices;
 			IndexBuffers	m_static_indices;
 			VertexLayoutBuffers	m_static_elements;
+
+		private:
+			VertexBufferHandle CreateStatic(int i_buffer_size, const void* ip_initial_data);
+			VertexBufferHandle CreateDynamic(int i_buffer_size, const void* ip_initial_data);
 
 		public:
 			// TODO: allocate configurable number objects
@@ -37,6 +46,8 @@ namespace SDK
 															BufferUsageFormat i_usage,
 															const void* ip_initial_data = nullptr);
 			virtual void DestroyBuffer(VertexBufferHandle i_handle) override;
+			virtual bool BindBuffer(VertexBufferHandle i_handle);
+
 			// can simultaneously hold 4096  buffers with usage = Static
 			virtual IndexBufferHandle CreateIndexBuffer(HardwareIndexBuffer::IndexType i_type, size_t i_num_indices, BufferUsageFormat i_usage, PrimitiveType i_primitive, const void* ip_initial_data = nullptr) override;
 			virtual void DestroyBuffer(IndexBufferHandle i_handle) override;

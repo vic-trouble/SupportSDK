@@ -13,7 +13,6 @@ namespace Game
 	class CoreDelegateImpl : public SDK::CoreDelegate
 	{
 		InputTest m_input_subs;
-		SDK::Render::Batch batch[2];
 
 		SDK::Render::MeshHandle loaded_mesh;
 	private:

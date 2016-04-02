@@ -14,6 +14,7 @@
 #include <memory>
 #include <iostream>
 
+#include <assert.h>
 #include <cassert>
 #include <array>
 #include <vector>

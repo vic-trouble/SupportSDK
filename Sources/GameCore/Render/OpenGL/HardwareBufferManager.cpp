@@ -14,109 +14,116 @@ namespace SDK
 	namespace Render
 	{
 
-		/*Render::VertexBufferHandle HardwareBufferManager::CreateVertexBuffer(uint i_num_verts, uint i_stride, BufferUsageFormat i_usage, const void* ip_initial_data /*= nullptr* /)
+		VertexBufferHandle HardwareBufferManager::CreateStatic(int i_buffer_size, const void* ip_initial_data)
 		{
-			if (i_usage != BufferUsageFormat::Static)
-				return VertexBufferHandle();
-
-			auto cur_index = m_static_vertices.m_current_index;
-
-			// if maximum we can hold
-			if (cur_index == VertexBuffers::Size)
+			auto buffer_handle = m_buffers.CreateNew(i_buffer_size, BufferUsageFormat::Static);
+			if (buffer_handle == VertexBufferHandle::InvalidHandle())
 			{
-				// if first buffer is not empty - we cannot hold one more allocation
-				// TODO: user should be notified about error
-				if (m_static_vertices.m_buffer[0].m_hardware_id != 0)
-				{
-					assert(false && "More static vertex buffers than can hold");
-				}
-				// if not - all is good and move further just flush index
-				cur_index = 0;
+				assert(false && "Error in creating static buffer");
+				return VertexBufferHandle::InvalidHandle();
 			}
-
-			auto handle = m_static_vertices.m_handlers[cur_index];
-			auto& buffer = m_static_vertices.m_buffer[cur_index];
-			auto& id = buffer.m_hardware_id;
-
-			buffer.m_usage = i_usage;
-			buffer.m_num_vertices = i_num_verts;
+			auto p_buffer = m_buffers.Access(buffer_handle);
+			assert(p_buffer);
 
 			// create buffer
-			glGenBuffers(1, &id);
+			glGenBuffers(1, &p_buffer->m_hardware_id);
 			CHECK_GL_ERRORS;
 
-			glBindBuffer(GL_ARRAY_BUFFER, id);
+			glBindBuffer(GL_ARRAY_BUFFER, p_buffer->m_hardware_id);
 			CHECK_GL_ERRORS;
-			uint size = i_num_verts;
-			// if stride == 0 - open GL decides that data is one-by-one
-			if (i_stride != 0)
-				size *= i_stride;
-			glBufferData(GL_ARRAY_BUFFER, size, ip_initial_data, GL_STATIC_DRAW);
+			glBufferData(GL_ARRAY_BUFFER, i_buffer_size, ip_initial_data, GL_STATIC_DRAW);
 			CHECK_GL_ERRORS;
+			p_buffer->LoadToVideoMem();
+			return buffer_handle;
+		}
 
-			m_static_vertices.m_current_index = cur_index + 1;
-			return handle;
-		}*/
-		
+		VertexBufferHandle HardwareBufferManager::CreateDynamic(int i_buffer_size, const void* ip_initial_data)
+		{
+			auto buffer_handle = m_buffers.CreateNew(i_buffer_size, BufferUsageFormat::Dynamic);
+			if (buffer_handle == VertexBufferHandle::InvalidHandle())
+			{
+				assert(false && "Error in creating static buffer");
+				return VertexBufferHandle::InvalidHandle();
+			}
+			auto p_buffer = m_buffers.Access(buffer_handle);
+			p_buffer->SetSubData(ip_initial_data, 0, i_buffer_size);
+			assert(p_buffer);
+			return buffer_handle;
+		}
+
 		VertexBufferHandle HardwareBufferManager::CreateHardwareBuffer(uint i_buffer_size,
 			BufferUsageFormat i_usage,
 			const void* ip_initial_data /*= nullptr*/)
 		{
-			if (i_usage != BufferUsageFormat::Static)
-				return VertexBufferHandle();
-
-			auto cur_index = m_static_vertices.m_current_index;
-
-			// if maximum we can hold
-			if (cur_index == VertexBuffers::Size)
+			switch (i_usage)
 			{
-				// if first buffer is not empty - we cannot hold one more allocation
-				// TODO: user should be notified about error
-				if (m_static_vertices.m_buffer[0].m_hardware_id != 0)
-				{
-					assert(false && "More static vertex buffers than can hold");
-				}
-				// if not - all is good and move further just flush index
-				cur_index = 0;
+				case BufferUsageFormat::Static:
+					return CreateStatic(i_buffer_size, ip_initial_data);
+				case BufferUsageFormat::Dynamic:
+					return CreateDynamic(i_buffer_size, ip_initial_data);
+				default:
+					assert(false && "Unknown type");
+					return VertexBufferHandle::InvalidHandle();
+			}
+			return VertexBufferHandle::InvalidHandle();
+		}
+
+		bool HardwareBufferManager::BindBuffer(VertexBufferHandle i_handle)
+		{
+			auto p_buffer = m_buffers.Access(i_handle);
+			if (p_buffer == nullptr)
+				return false;
+
+			switch (p_buffer->m_usage)
+			{
+				case BufferUsageFormat::Static:
+					glBindBuffer(GL_ARRAY_BUFFER, p_buffer->m_hardware_id);
+					break;
+				case BufferUsageFormat::Dynamic:
+					{
+						// if it was not binded yet - bind
+						if (!p_buffer->m_in_video_mem)
+						{
+							// create buffer
+							glGenBuffers(1, &p_buffer->m_hardware_id);
+							CHECK_GL_ERRORS;
+
+							glBindBuffer(GL_ARRAY_BUFFER, p_buffer->m_hardware_id);
+							CHECK_GL_ERRORS;
+							glBufferData(GL_ARRAY_BUFFER, p_buffer->m_size_in_bytes, p_buffer->p_dynamic_data.get(), GL_DYNAMIC_DRAW);
+							CHECK_GL_ERRORS;
+							p_buffer->LoadToVideoMem();
+						}
+						else
+						{
+							glBindBuffer(GL_ARRAY_BUFFER, p_buffer->m_hardware_id);
+							glBufferSubData(GL_ARRAY_BUFFER, 0, p_buffer->m_size_in_bytes, p_buffer->p_dynamic_data.get());
+						}
+					}
+					break;
+				default:
+					assert(false && "Unknown format");
+					return false;
 			}
 
-			auto handle = m_static_vertices.m_handlers[cur_index];
-			auto& buffer = m_static_vertices.m_buffer[cur_index];
-			auto& id = buffer.m_hardware_id;
-			buffer.m_usage = i_usage;
-			buffer.m_size_in_bytes = i_buffer_size;
-
-			// create buffer
-			glGenBuffers(1, &id);
-			CHECK_GL_ERRORS;
-
-			glBindBuffer(GL_ARRAY_BUFFER, id);
-			CHECK_GL_ERRORS;
-			glBufferData(GL_ARRAY_BUFFER, i_buffer_size, ip_initial_data, GL_STATIC_DRAW);
-			CHECK_GL_ERRORS;
-
-			m_static_vertices.m_current_index = cur_index + 1;
-			
-			return handle;
+			return true;
 		}
 
 		void HardwareBufferManager::DestroyBuffer(VertexBufferHandle i_handle)
 		{
-			auto cur_index = i_handle.index;
-			assert(cur_index < VertexBuffers::Size);
-
-			auto& buffer = m_static_vertices.m_buffer[cur_index].m_hardware_id;
-
-			// destroy buffer
-			if (buffer != 0)
+			auto p_buffer = m_buffers.Access(i_handle);
+			if (p_buffer == nullptr)
 			{
-				glDeleteBuffers(1, &buffer);
-				CHECK_GL_ERRORS;
-				buffer = 0;
+				assert(false && "Not ours buffer");
+				return;
 			}
 
-			// increment generation after destroying
-			++m_static_vertices.m_handlers[cur_index].generation;
+			if (p_buffer->m_in_video_mem)
+			{
+				glDeleteBuffers(1, &p_buffer->m_hardware_id);
+				CHECK_GL_ERRORS;
+			}
+			m_buffers.Destroy(i_handle);
 		}
 
 		IndexBufferHandle HardwareBufferManager::CreateIndexBuffer(HardwareIndexBuffer::IndexType i_type, size_t i_num_indices, BufferUsageFormat i_usage, PrimitiveType i_primitive, const void* ip_initial_data /*= nullptr*/)
@@ -190,15 +197,13 @@ namespace SDK
 
 		HardwareVertexBuffer HardwareBufferManager::AccessVertexBuffer(VertexBufferHandle i_handle) const
 		{
-			if (i_handle.index < VertexBuffers::Size && m_static_vertices.m_buffer[i_handle.index].m_usage == BufferUsageFormat::Static)
-				return m_static_vertices.m_buffer[i_handle.index];
-
+			
 			return HardwareVertexBuffer{ 0, BufferUsageFormat::Static, 0 };
 		}
 
 		HardwareIndexBuffer HardwareBufferManager::AccessIndexBuffer(IndexBufferHandle i_handle) const
 		{
-			if (i_handle.index < VertexBuffers::Size && m_static_indices.m_buffer[i_handle.index].m_usage == BufferUsageFormat::Static)
+			if (i_handle.index < IndexBuffers::Size && m_static_indices.m_buffer[i_handle.index].m_usage == BufferUsageFormat::Static)
 				return m_static_indices.m_buffer[i_handle.index];
 
 			// set hardware id so rendere can check it
@@ -228,8 +233,9 @@ namespace SDK
 			uint i_stride,
 			uint i_offset)
 		{
-			if (i_source.index >= VertexBuffers::Size || m_static_vertices.m_buffer[i_source.index].m_usage != BufferUsageFormat::Static)
-				return VertexLayoutHandle{ 0, 0 };
+			const auto p_buffer = m_buffers.Access(i_source);
+			if (p_buffer == nullptr)
+				return VertexLayoutHandle::InvalidHandle();
 
 			auto cur_index = m_static_elements.m_current_index;
 

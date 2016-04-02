@@ -154,13 +154,6 @@ namespace Game
 		InputSystem::Instance().RemoveSubscriber(&g_camera_controller);
 
 		auto p_renderer = Core::GetRenderer();
-		p_renderer->GetHardwareBufferMgr()->DestroyBuffer(batch[0].vertices);
-		p_renderer->GetHardwareBufferMgr()->DestroyBuffer(batch[0].indices);
-		p_renderer->GetHardwareBufferMgr()->DestroyBuffer(batch[0].vertices);
-
-		p_renderer->GetHardwareBufferMgr()->DestroyBuffer(batch[1].vertices);
-		p_renderer->GetHardwareBufferMgr()->DestroyBuffer(batch[1].indices);
-		p_renderer->GetHardwareBufferMgr()->DestroyBuffer(batch[1].vertices);
 
 		g_entity_manager.RemoveEntity(entity_handle);
 
@@ -207,6 +200,8 @@ namespace Game
 		p_lights->EnableLighting();
 		static float x = 50;
 		static float y = 50;
+		IRect rect = Core::GetRenderer()->GetTargetRectangle();
+		Core::GetRenderer()->SetMatrix(MatrixMode::Projection, Matrix4f::CreateOrtho(0, rect.Width(), 0, rect.Height()));
 		Render::g_font_manager.Render({ x, y }, 1.f, L"Hello world");
 	}
 

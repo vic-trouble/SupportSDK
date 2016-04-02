@@ -309,9 +309,11 @@ namespace SDK
 			for (size_t i = 0; i < i_number; ++i)
 			{
 				auto element = i_mgr.AccessLayout(i_layouts[i]);
-				auto hd_buf = i_mgr.AccessVertexBuffer(Render::VertexBufferHandle{ element.m_source.index, element.m_source.generation });
-
-				glBindBuffer(GL_ARRAY_BUFFER, hd_buf.m_hardware_id);
+				if (!i_mgr.BindBuffer({ element.m_source.index, element.m_source.generation }))
+				{
+					assert(false && "Cannot bind buffer");
+					continue;
+				}
 
 				const auto& attributes = i_shader.GetAttributes();
 				for (const auto& attr : attributes)
@@ -337,8 +339,11 @@ namespace SDK
 			for (size_t i = 0; i < i_number; ++i)
 			{
 				auto element = i_mgr.AccessLayout(i_layout[i]);
-				auto hd_buf = i_mgr.AccessVertexBuffer(Render::VertexBufferHandle{ element.m_source.index, element.m_source.generation });
-				glBindBuffer(GL_ARRAY_BUFFER, hd_buf.m_hardware_id);
+				if (!i_mgr.BindBuffer({ element.m_source.index, element.m_source.generation }))
+				{
+					assert(false && "Cannot bind buffer");
+					continue;
+				}
 				glVertexAttribPointer(i, // index for shader attribute
 					element.m_vertex_size, // size
 					GetComponentType(element.m_component), // type
