@@ -34,6 +34,8 @@ namespace SDK
 			}
 
 			void			SetCenter(const Vector2& i_center) { m_center = i_center; }
+			void			SetBottomLeft(const Vector2& i_bot_left) { m_center = { i_bot_left[0] + m_size[0] / 2, i_bot_left[1] + m_size[1] / 2 }; }
+			Vector2			GetBottomLeft() const { return{ m_center[0] - m_size[0] / 2, m_center[1] - m_size[1] / 2 }; }
 			void			SetWidth(CoordinateType i_width) { m_size[0] = i_width; }
 			void			SetHeight(CoordinateType i_height) { m_size[1] = i_height; }
 			void			SetSize(CoordinateType i_width, CoordinateType i_height) { m_size[0] = i_width; m_size[1] = i_height; }

@@ -11,6 +11,8 @@
 #include "Render/OpenGL/GlUitlities.h"
 #include "Render/HardwareBufferManagerBase.h"
 
+#include "Render/TextureAtlas.h"
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
@@ -27,9 +29,65 @@ namespace SDK
 			template <>
 			struct LoaderImpl < Render::Font >
 			{
+				static Render::Font Preprocess(Render::TextureAtlas& o_atlas, FT_Face& io_face, const std::wstring& i_code_points)
+				{
+					Render::Font font;
+					font.m_name = io_face->family_name;
+					o_atlas.Clear();
+					FT_GlyphSlot slot;
+					FT_Bitmap ft_bitmap;
+					int ft_glyph_top = 0;
+					int ft_glyph_left = 0;
+					int missed = 0;
+					FT_Set_Pixel_Sizes(io_face, 0, 48);
+					for (int code : i_code_points)
+					{
+						FT_UInt glyph_index = FT_Get_Char_Index(io_face, code);
+						if (FT_Load_Glyph(io_face, glyph_index, FT_LOAD_RENDER))
+						{
+							assert(false && "ERROR::FREETYTPE: Failed to load Glyph");
+							continue;
+						}
+
+						slot = io_face->glyph;
+						ft_bitmap = slot->bitmap;
+						if (ft_bitmap.buffer == nullptr)
+							continue;
+						ft_glyph_top = slot->bitmap_top;
+						ft_glyph_left = slot->bitmap_left;
+						int w = ft_bitmap.width / o_atlas.Deepth();
+						int h = ft_bitmap.rows;
+						auto region = o_atlas.GetNewRegion(w + 1, h + 1);
+						auto bl = region.GetBottomLeft();
+						if (bl[0] < 0)
+						{
+							++missed;
+							//assert(false && "Missed character in font");
+							continue;
+						}
+						o_atlas.SetRegion(region, ft_bitmap.buffer, ft_bitmap.pitch);
+						Render::Font::Character ch;
+						ch.char_id = code;
+						ch.Size = { w, h };
+						ch.Bearing = { ft_glyph_left, ft_glyph_top };
+						ch.UV_bot_left = { bl[0] / (float)o_atlas.Width(), bl[1] / (float)o_atlas.Height() };
+						ch.UV_top_right = { (bl[0] + w) / float(o_atlas.Width()), (bl[1] + h) / float(o_atlas.Height()) };
+
+						// Discard hinting to get advance
+						FT_Load_Glyph(io_face, glyph_index, FT_LOAD_RENDER | FT_LOAD_NO_HINTING);
+						slot = io_face->glyph;
+						// Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+						ch.Advance = { slot->advance.x >> 6, slot->advance.y >> 6 };
+						
+						font.m_characters.push_back(ch);
+					}
+					return font;
+				}
+
 				static std::pair<LoadResult, Render::Font> Load(std::istream* ip_streams[1], void*)
 				{
 					FT_Library ft;
+					FT_Face face;
 
 					if (FT_Init_FreeType(&ft))
 					{
@@ -37,65 +95,45 @@ namespace SDK
 						FT_Done_FreeType(ft);
 						return std::make_pair(LoadResult::Failure, Render::Font());
 					}
-
-					FT_Face face;
-					const auto app_path = FS::GetApplicationPath();
-					auto path = app_path;
-					path.append("\\").append("..\\..\\Resources\\Fonts\\arial.ttf");
+					
 					const std::string font_data = FS::ReadFileToString(*ip_streams[0]);
-					//if (FT_New_Memory_Face(ft, reinterpret_cast<const FT_Byte*>(font_data.c_str()), font_data.size(), 0, &face))
-					if (FT_New_Face(ft, path.c_str(), 0, &face))
+					if (FT_New_Memory_Face(ft, reinterpret_cast<const FT_Byte*>(font_data.c_str()), font_data.size(), 0, &face))
 					{
 						assert(false && "ERROR::FREETYPE: Failed to load font");
 						FT_Done_FreeType(ft);
 						FT_Done_Face(face);
 						return std::make_pair(LoadResult::Failure, Render::Font());
 					}
-					Render::Font target_font;
-					glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-					FT_Set_Pixel_Sizes(face, 0, 48);
-					for (int i = 0; i < 1500; ++i)
-					{
-						// Load character glyph 
-						if (FT_Load_Char(face, i, FT_LOAD_RENDER))
-						{
-							assert(false && "ERROR::FREETYTPE: Failed to load Glyph");
-							continue;
-						}
-						// Generate texture
-						GLuint texture;
-						glGenTextures(1, &texture);
-						CHECK_GL_ERRORS;
-						glBindTexture(GL_TEXTURE_2D, texture);
-						CHECK_GL_ERRORS;
-						glTexImage2D(
-							GL_TEXTURE_2D,
-							0,
-							GL_RED,
-							face->glyph->bitmap.width,
-							face->glyph->bitmap.rows,
-							0,
-							GL_RED,
-							GL_UNSIGNED_BYTE,
-							face->glyph->bitmap.buffer
-							);
-						CHECK_GL_ERRORS;
-						// Set texture options
-						glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-						glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-						glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-						glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-						// Now store character for later use
-						Render::Font::Character character = {
-							texture,
-							i,
-							Vector2i{(int)face->glyph->bitmap.width, (int)face->glyph->bitmap.rows},
-							Vector2i{(int)face->glyph->bitmap_left, (int)face->glyph->bitmap_top},
-							face->glyph->advance.x
-						};
-						target_font.m_characters.push_back(character);
-					}
-					
+					Render::TextureAtlas atlas(256, 256, 1);
+					Render::Font target_font = Preprocess(atlas, face, L" !\"#$%&'()*+,-./0123456789:;<=>?"
+        "@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
+        "`abcdefghijklmnopqrstuvwxyz{|}~");
+
+					Render::TextureHandle tex_id_;
+					// bind tex
+					uint tex_id;
+					glGenTextures(1, &tex_id);
+					glBindTexture(GL_TEXTURE_2D, tex_id);
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+					glTexImage2D(
+						GL_TEXTURE_2D,
+						0,
+						GL_RED,
+						atlas.Width(),
+						atlas.Height(),
+						0,
+						GL_RED,
+						GL_UNSIGNED_BYTE,
+						atlas.GetDatPtr()
+						);
+
+					for (auto& ch : target_font.m_characters)
+						ch.TextureID = tex_id;
+
 					FT_Done_Face(face);
 					FT_Done_FreeType(ft);
 					return std::make_pair(LoadResult::Success, target_font);
@@ -187,13 +225,13 @@ namespace SDK
 				GLfloat h = ch.Size[1] * i_scale;
 				// Update VBO for each character
 				GLfloat vertices[6][4] = {
-					{ xpos,     ypos + h,   ch.UV_top_left[0], ch.UV_bot_right[1] },
-					{ xpos,     ypos,       ch.UV_top_left[0],  ch.UV_top_left[1] },
-					{ xpos + w, ypos,        ch.UV_bot_right[0], ch.UV_top_left[1] },
+					{ xpos,     ypos + h,   ch.UV_bot_left[0], ch.UV_bot_left[1] },
+					{ xpos,     ypos,       ch.UV_bot_left[0],  ch.UV_top_right[1] },
+					{ xpos + w, ypos,        ch.UV_top_right[0], ch.UV_top_right[1] },
 
-					{ xpos,     ypos + h,   ch.UV_top_left[0], ch.UV_bot_right[1] },
-					{ xpos + w, ypos,        ch.UV_bot_right[0], ch.UV_top_left[1] },
-					{ xpos + w, ypos + h,    ch.UV_bot_right[0], ch.UV_bot_right[1] }
+					{ xpos,     ypos + h,   ch.UV_bot_left[0], ch.UV_bot_left[1] },
+					{ xpos + w, ypos,        ch.UV_top_right[0], ch.UV_top_right[1] },
+					{ xpos + w, ypos + h,    ch.UV_top_right[0], ch.UV_bot_left[1] }
 				};
 				// Render glyph texture over quad
 				glBindTexture(GL_TEXTURE_2D, ch.TextureID);
@@ -203,7 +241,7 @@ namespace SDK
 				// Render quad
 				glDrawArrays(GL_TRIANGLES, 0, 6);
 				// Now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-				i_position[0] += (ch.Advance >> 6) * i_scale; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+				i_position[0] += ch.Advance[0] * i_scale;
 			}
 			glBindVertexArray(0);
 			glBindTexture(GL_TEXTURE_2D, 0);

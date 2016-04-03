@@ -176,6 +176,7 @@
     <ClInclude Include="..\..\..\Sources\GameCore\Render\ShaderCompiler.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\Render\ShaderSystem.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\Render\Texture.h" />
+    <ClInclude Include="..\..\..\Sources\GameCore\Render\TextureAtlas.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\Render\TextureManager.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\Render\VertexDeclaration.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\Render\Viewport.h" />
@@ -226,6 +227,7 @@
     <ClCompile Include="..\..\..\Sources\GameCore\Render\RenderWorld.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\Render\ShaderSystem.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\Render\Shader.cpp" />
+    <ClCompile Include="..\..\..\Sources\GameCore\Render\TextureAtlas.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\Resources\LoadersRegistrar.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\Resources\ResourceManager.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\stdafx.cpp">

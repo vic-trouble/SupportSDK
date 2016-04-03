@@ -341,6 +341,9 @@
     <ClInclude Include="..\..\..\Sources\GameCore\Render\Fonts\Font.h">
       <Filter>Core\Renderer\Fonts</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Sources\GameCore\Render\TextureAtlas.h">
+      <Filter>Core\Renderer\Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Sources\GameCore\stdafx.cpp">
@@ -462,6 +465,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\Sources\GameCore\Render\Fonts\FontManager.cpp">
       <Filter>Core\Renderer\Fonts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Sources\GameCore\Render\TextureAtlas.cpp">
+      <Filter>Core\Renderer\Texture</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
