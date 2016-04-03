@@ -199,11 +199,15 @@ namespace Game
 		drawGrid(100, 4);
 		p_lights->EnableLighting();
 		static float x = 50;
-		static float y = 50;
-		IRect rect = Core::GetRenderer()->GetTargetRectangle();
-		Core::GetRenderer()->SetMatrix(MatrixMode::Projection, Matrix4f::CreateOrtho(0, rect.Width(), 0, rect.Height()));
+		static float y = 600;
+		auto p_renderer = Core::GetRenderer();
+		IRect rect = p_renderer->GetTargetRectangle();
+		p_renderer->SetMatrix(MatrixMode::Projection, Matrix4f::CreateOrtho(0, rect.Width(), 0, rect.Height()));
 		std::wstring message = L"FPS: " + std::to_wstring(Core::GetApplication()->GetCurrentFPS());
-		Render::g_font_manager.Render({ x, y }, 1.f, message);
+		Render::g_font_manager.Render({ x, 800 }, 1.f, message);
+		message = L"asdqwetbij[we6  ewrgasdf";
+		for (int i = 0; i < 100; ++i)
+			Render::g_font_manager.Render({ x, y }, 1.f, message);
 	}
 
 } // Game

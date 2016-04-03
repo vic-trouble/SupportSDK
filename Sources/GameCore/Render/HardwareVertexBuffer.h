@@ -54,7 +54,7 @@ namespace SDK
 
 				const char* p_data = reinterpret_cast<const char*>(ip_data);
 				char* p_buffer = p_dynamic_data.get();
-				for (int i = 0; i < i_size; ++i)
+				for (uint i = 0; i < i_size; ++i)
 					p_buffer[i+i_offset] = p_data[i];
 			}
 

@@ -219,14 +219,9 @@ namespace SDK
 			return hib;
 		}
 
-		VertexLayout HardwareBufferManager::AccessLayout(VertexLayoutHandle i_handle) const
+		const VertexLayout* HardwareBufferManager::AccessLayout(VertexLayoutHandle i_handle) const
 		{
-			if (i_handle.index < VertexLayoutBuffers::Size)
-				return m_static_elements.m_buffer[i_handle.index];
-
-			VertexLayout vl;
-			vl.m_vertex_size = 0;
-			return vl;
+			return m_layouts.Access(i_handle);			
 		}
 
 		/////////////////////////////////////////////////////////////////////////////////////
@@ -244,35 +239,17 @@ namespace SDK
 			if (p_buffer == nullptr)
 				return VertexLayoutHandle::InvalidHandle();
 
-			auto cur_index = m_static_elements.m_current_index;
-
-			// if maximum we can hold
-			if (cur_index == VertexLayoutBuffers::Size)
-			{
-				// if first buffer is not empty - we cannot hold one more allocation
-				// TODO: user should be notified about error
-				// TODO: definition of error - not as compare with enum value
-				if (m_static_elements.m_buffer[0].m_vertex_size != 0)
-				{
-					assert(false && "More static elements than can hold");
-				}
-				// if not - all is good and move further just flush index
-				cur_index = 0;
-			}
-
-			auto handle = m_static_elements.m_handlers[cur_index];
-			auto& layout = m_static_elements.m_buffer[cur_index];
-
-			layout.m_source = { i_source.index, i_source.generation };
-			layout.m_vertex_size = i_ver_size;
-			layout.m_semantic = i_semantic;
-			layout.m_component = i_component;
-			layout.m_normalized = i_normalized;
-			layout.m_stride = i_stride;
-			layout.m_offset = i_offset;
-
-			m_static_elements.m_current_index = cur_index + 1;
-			return handle;
+			auto layout_handle = m_layouts.CreateNew();
+			auto p_layout = m_layouts.Access(layout_handle);
+			assert(p_layout);
+			p_layout->m_source = { i_source.index, i_source.generation };
+			p_layout->m_vertex_size = i_ver_size;
+			p_layout->m_semantic = i_semantic;
+			p_layout->m_component = i_component;
+			p_layout->m_normalized = i_normalized;
+			p_layout->m_stride = i_stride;
+			p_layout->m_offset = i_offset;
+			return layout_handle;
 		}
 
 		GLenum GetComponentType(Render::ComponentType i_type)
@@ -302,31 +279,25 @@ namespace SDK
 
 		void HardwareBufferManager::BindLayout(VertexLayoutHandle i_layout, int i_location)
 		{
-			if (i_layout.index >= VertexLayoutBuffers::Size)
+			auto p_layout = m_layouts.Access(i_layout);
+			if (p_layout == nullptr)
+			{
+				assert(p_layout && "Layout not exist");
 				return;
+			}
 			
-			auto& layout = m_static_elements.m_buffer[i_layout.index];
 			glVertexAttribPointer(i_location, // index for shader attribute
-				layout.m_vertex_size, // size
-				GetComponentType(layout.m_component), // type
-				layout.m_normalized ? GL_TRUE : GL_FALSE, // normalized
-				layout.m_stride, // stride
-				reinterpret_cast<GLvoid*>(layout.m_offset)); // pointer
+				p_layout->m_vertex_size, // size
+				GetComponentType(p_layout->m_component), // type
+				p_layout->m_normalized ? GL_TRUE : GL_FALSE, // normalized
+				p_layout->m_stride, // stride
+				reinterpret_cast<GLvoid*>(p_layout->m_offset)); // pointer
 			glEnableVertexAttribArray(i_location);
 		}
 
 		void HardwareBufferManager::DestroyLayout(VertexLayoutHandle i_layout)
 		{
-			auto cur_index = i_layout.index;
-			assert(cur_index < VertexLayoutBuffers::Size);
-
-			auto& buffer = m_static_elements.m_buffer[cur_index];
-
-			// destroy buffer
-			buffer.m_vertex_size = 0;
-
-			// increment generation after destroying
-			++m_static_indices.m_handlers[cur_index].generation;
+			m_layouts.Destroy(i_layout);
 		}
 
 

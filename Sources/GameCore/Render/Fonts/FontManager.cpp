@@ -130,9 +130,7 @@ namespace SDK
 						GL_UNSIGNED_BYTE,
 						atlas.GetDatPtr()
 						);
-
-					for (auto& ch : target_font.m_characters)
-						ch.TextureID = tex_id;
+					target_font.m_texture_id = tex_id;
 
 					FT_Done_Face(face);
 					FT_Done_FreeType(ft);
@@ -198,20 +196,24 @@ namespace SDK
 			auto p_hd_mgr = p_renderer->GetHardwareBufferMgr();			
 			auto buffer_handle = p_hd_mgr->CreateHardwareBuffer(sizeof(float) * 6 * 4, BufferUsageFormat::Dynamic);
 			p_hd_mgr->BindBuffer(buffer_handle);
+			CHECK_GL_ERRORS;
 			auto layout_handle = p_hd_mgr->CreateLayout(buffer_handle, 4, VertexSemantic::Position, ComponentType::Float, false, 4 * sizeof(float), 0);
 
 			int location = shader->GetAttribute("position").location;
 			p_hd_mgr->BindLayout(layout_handle, location);
-
+			CHECK_GL_ERRORS;
 			glEnableVertexAttribArray(location);
 			glUniform3f(shader->GetUniform("textColor").location, 1.f, 0.f, 0.f);
+			CHECK_GL_ERRORS;
 			glActiveTexture(GL_TEXTURE0);
 
 			CHECK_GL_ERRORS;
+			// Render glyph texture over quad
 			
 			//////////////////////
 			// render text
 			auto& current_font = m_fonts.m_elements[1];
+			glBindTexture(GL_TEXTURE_2D, current_font.second.m_texture_id);
 			for (int c : i_text)
 			{
 				Font::Character ch = current_font.second.Find(c);
@@ -233,8 +235,7 @@ namespace SDK
 					{ xpos + w, ypos,        ch.UV_top_right[0], ch.UV_top_right[1] },
 					{ xpos + w, ypos + h,    ch.UV_top_right[0], ch.UV_bot_left[1] }
 				};
-				// Render glyph texture over quad
-				glBindTexture(GL_TEXTURE_2D, ch.TextureID);
+				
 
 				p_hd_mgr->SetSubdata(buffer_handle, vertices, 0, sizeof(vertices));
 				p_hd_mgr->BindBuffer(buffer_handle);
@@ -245,6 +246,9 @@ namespace SDK
 			}
 			glBindVertexArray(0);
 			glBindTexture(GL_TEXTURE_2D, 0);
+
+			p_hd_mgr->DestroyBuffer(buffer_handle);
+			p_hd_mgr->DestroyLayout(layout_handle);
 
 		}
 

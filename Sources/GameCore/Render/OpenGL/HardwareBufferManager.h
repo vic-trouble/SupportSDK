@@ -17,13 +17,13 @@ namespace SDK
 		class HardwareBufferManager : public HardwareBufferManagerBase
 		{
 		private:
-			using DynamicHardwareBuffers = GenericHandleDynamicArray<VertexBufferHandle, HardwareVertexBuffer>;
-
+			using HardwareBuffers = GenericHandleDynamicArray<VertexBufferHandle, HardwareVertexBuffer>;
+			using Layouts = GenericHandleDynamicArray<VertexLayoutHandle, VertexLayout>;
 		private:
-			DynamicHardwareBuffers m_buffers;
+			HardwareBuffers m_buffers;
+			Layouts m_layouts;
 			// for static data
 			IndexBuffers	m_static_indices;
-			VertexLayoutBuffers	m_static_elements;
 
 		private:
 			VertexBufferHandle CreateStatic(int i_buffer_size, const void* ip_initial_data);
@@ -69,7 +69,7 @@ namespace SDK
 
 			// TODO: should return some struct or ? - not all information about ver./ind. buffer
 			HardwareIndexBuffer AccessIndexBuffer(IndexBufferHandle i_handle) const;
-			VertexLayout AccessLayout(VertexLayoutHandle i_handle) const;
+			const VertexLayout* AccessLayout(VertexLayoutHandle i_handle) const;
 
 			// use for other buffers - colors/uvs/deepth...
 			/*typedef int BufHandle;

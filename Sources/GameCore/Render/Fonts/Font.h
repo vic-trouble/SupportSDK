@@ -10,7 +10,6 @@ namespace SDK
 		struct Font
 		{
 			struct Character {
-				uint		TextureID;  // ID handle of the glyph texture
 				int			char_id;	// id of character
 				Vector2i	Size;       // Size of glyph
 				Vector2i	Bearing;    // Offset from baseline to left/top of glyph
@@ -19,8 +18,7 @@ namespace SDK
 				Vector2		UV_top_right;
 
 				Character()
-					: TextureID(0)
-					, char_id(-1)
+					: char_id(-1)
 					, Size{ 0,0 }
 					, Bearing{ 0,0 }
 					, Advance{0, 0}
@@ -28,6 +26,7 @@ namespace SDK
 			};
 			std::string m_name;
 			std::vector<Character> m_characters;
+			uint		m_texture_id;  // ID handle of the glyph texture
 
 			Character Find(int i_char_id) const
 			{

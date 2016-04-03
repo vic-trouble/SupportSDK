@@ -308,7 +308,13 @@ namespace SDK
 		{
 			for (size_t i = 0; i < i_number; ++i)
 			{
-				auto element = i_mgr.AccessLayout(i_layouts[i]);
+				auto p_element = i_mgr.AccessLayout(i_layouts[i]);
+				if (p_element == nullptr)
+				{
+					assert(false && "Null element");
+					continue;
+				}
+				auto& element = *p_element;
 				if (!i_mgr.BindBuffer({ element.m_source.index, element.m_source.generation }))
 				{
 					assert(false && "Cannot bind buffer");
@@ -341,7 +347,13 @@ namespace SDK
 		{
 			for (size_t i = 0; i < i_number; ++i)
 			{
-				auto element = i_mgr.AccessLayout(i_layout[i]);
+				auto p_element = i_mgr.AccessLayout(i_layout[0]);
+				if (p_element == nullptr)
+				{
+					assert(false && "Null element");
+					continue;
+				}
+				auto& element = *p_element;
 				if (!i_mgr.BindBuffer({ element.m_source.index, element.m_source.generation }))
 				{
 					assert(false && "Cannot bind buffer");

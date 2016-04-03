@@ -90,6 +90,11 @@ namespace Game
 		p_renderer->SetMatrix(MatrixMode::Projection, Matrix4f::CreateOrtho(0, rect.Width(), 0, rect.Height()));
 		std::wstring message = L"FPS: " + std::to_wstring(Core::GetApplication()->GetCurrentFPS());
 		Render::g_font_manager.Render({ x, y }, 1.f, message);
+		message = L"asdqwetbij[we6  ewrgasdf";
+		Render::g_font_manager.Render({ x, y }, 1.f, message);
+		Render::g_font_manager.Render({ x, y }, 1.f, message);
+		Render::g_font_manager.Render({ x, y }, 1.f, message);
+		Render::g_font_manager.Render({ x, y }, 1.f, message);
 	}
 
 } // Game
