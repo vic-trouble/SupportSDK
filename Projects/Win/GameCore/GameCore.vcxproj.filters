@@ -347,6 +347,9 @@
     <ClInclude Include="..\..\..\Sources\GameCore\Options.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Sources\GameCore\Timer.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Sources\GameCore\stdafx.cpp">
@@ -471,6 +474,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\Sources\GameCore\Render\TextureAtlas.cpp">
       <Filter>Core\Renderer\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Sources\GameCore\Timer.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

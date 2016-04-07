@@ -191,6 +191,7 @@
     <ClInclude Include="..\..\..\Sources\GameCore\Systems\TransformationsSystem.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\TimeController.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\GlobalObjectBase.h" />
+    <ClInclude Include="..\..\..\Sources\GameCore\Timer.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\TypeDefinitions.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\UI\UIButton.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\UI\UIControl.h" />
@@ -238,6 +239,7 @@
     <ClCompile Include="..\..\..\Sources\GameCore\Render\MeshSystem.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\Systems\TransformationsSystem.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\TimeController.cpp" />
+    <ClCompile Include="..\..\..\Sources\GameCore\Timer.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\UI\UIButton.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\UI\UIControl.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\UI\UIRegistrar.cpp" />
