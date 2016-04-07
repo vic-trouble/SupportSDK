@@ -344,6 +344,9 @@
     <ClInclude Include="..\..\..\Sources\GameCore\Render\TextureAtlas.h">
       <Filter>Core\Renderer\Texture</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Sources\GameCore\Options.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Sources\GameCore\stdafx.cpp">

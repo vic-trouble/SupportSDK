@@ -134,6 +134,7 @@
     <ClInclude Include="..\..\..\Sources\GameCore\GameObject.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\GenericHandle.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\GenericHandlesDynamicArray.h" />
+    <ClInclude Include="..\..\..\Sources\GameCore\Options.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\PropertyElement.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\PropertyReader.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\PropertyReaders.h" />

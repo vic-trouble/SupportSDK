@@ -91,10 +91,10 @@ namespace Game
 		std::wstring message = L"FPS: " + std::to_wstring(Core::GetApplication()->GetCurrentFPS());
 		Render::g_font_manager.Render({ x, y }, 1.f, message);
 		message = L"asdqwetbij[we6  ewrgasdf";
-		Render::g_font_manager.Render({ x, y }, 1.f, message);
-		Render::g_font_manager.Render({ x, y }, 1.f, message);
-		Render::g_font_manager.Render({ x, y }, 1.f, message);
-		Render::g_font_manager.Render({ x, y }, 1.f, message);
+		Render::g_font_manager.Render({ x, y - 50 }, 1.f, message);
+		Render::g_font_manager.Render({ x, y - 50 }, 1.f, message);
+		Render::g_font_manager.Render({ x, y - 50 }, 1.f, message);
+		Render::g_font_manager.Render({ x, y - 50 }, 1.f, message);
 	}
 
 } // Game

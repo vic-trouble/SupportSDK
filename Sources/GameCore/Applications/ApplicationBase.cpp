@@ -88,13 +88,6 @@ namespace SDK
 		}
 
 		++m_fps_counter;
-
-		/*int sleep_ms = 1;
-		const float frame_time = 1000.f / m_fps;
-		sleep_ms = static_cast<int>(frame_time - i_elapsed_time);
-		if (sleep_ms < 1)
-			sleep_ms = 1;
-		Utilities::SleepMiliseconds(sleep_ms);*/
 	}
 
 	void ApplicationBase::Draw()

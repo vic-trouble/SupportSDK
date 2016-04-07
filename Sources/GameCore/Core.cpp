@@ -26,6 +26,7 @@ namespace SDK
 	std::unique_ptr<ApplicationBase> Core::mp_application = nullptr;
 	std::unique_ptr<IRenderer> Core::mp_renderer = nullptr;
 	std::unique_ptr<ObjectGetterBase> Core::mp_object_getter = nullptr;
+	Options Core::m_options;
 
 	void Core::CreateSingletons()
 	{

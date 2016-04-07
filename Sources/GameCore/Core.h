@@ -3,6 +3,7 @@
 
 #include "GameCoreAPI.h"
 #include "ObjectGetterBase.h"
+#include "Options.h"
 
 namespace SDK
 {
@@ -18,6 +19,7 @@ namespace SDK
 		static std::unique_ptr<CoreDelegate> mp_delegate;
 		static std::unique_ptr<ApplicationBase> mp_application;
 		static std::unique_ptr<IRenderer> mp_renderer;
+		static Options m_options;
 		GAMECORE_EXPORT static std::unique_ptr<ObjectGetterBase> mp_object_getter;
 
 	private:
@@ -29,6 +31,8 @@ namespace SDK
 		static GAMECORE_EXPORT void DestroyApplication();
 		static GAMECORE_EXPORT CoreDelegate* GetDelegate();
 		static GAMECORE_EXPORT ApplicationBase* GetApplication();
+
+		static Options& GetOptions() { return m_options; }
 
 		static void SetupRenderer(std::unique_ptr<IRenderer> ip_renderer);
 		static GAMECORE_EXPORT IRenderer* GetRenderer();

@@ -86,7 +86,7 @@ namespace
 		}
 		m_ev.m_x = LOWORD(lParam);
 
-		const int h = SDK::Core::GetApplication()->GetHeight();
+		const int h = SDK::Core::GetOptions().height;
 		m_ev.m_y = h-HIWORD(lParam);
 		SDK::InputSystem::Instance().ProcessEvent(m_ev);
 	}
@@ -369,9 +369,7 @@ namespace SDK
 	const int WINDOWED_STYLE = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_SIZEBOX;
 	void ApplicationWindows::OnCreateInternal()
 	{
-		CONTENT_WIDTH = 1024;
-		CONTENT_HEIGHT = 960;
-
+		Options& opts = Core::GetOptions();
 		HINSTANCE instance = ::GetModuleHandle(NULL);
 		const bool windowCreated = CreateWin32Window(instance);
 		if (!windowCreated)
@@ -396,8 +394,8 @@ namespace SDK
 		RECT clientSize;
 		clientSize.top = 0;
 		clientSize.left = 0;
-		clientSize.right = CONTENT_WIDTH;
-		clientSize.bottom = CONTENT_HEIGHT;
+		clientSize.right = opts.width;
+		clientSize.bottom = opts.height;
 
 		ULONG style = WINDOWED_STYLE | WS_CLIPCHILDREN;
 		AdjustWindowRect(&clientSize, style, FALSE);
@@ -422,8 +420,8 @@ namespace SDK
 		// move window
 		clientSize.top = 0;
 		clientSize.left = 0;
-		clientSize.right = CONTENT_WIDTH;
-		clientSize.bottom = CONTENT_HEIGHT;
+		clientSize.right = Core::GetOptions().width;
+		clientSize.bottom = Core::GetOptions().height;
 
 		AdjustWindowRect(&clientSize, style, FALSE);
 
@@ -434,7 +432,6 @@ namespace SDK
 		windowTop = (GetSystemMetrics(SM_CYSCREEN) - realHeight) / 2;
 		MoveWindow(mh_window, windowLeft, windowTop, realWidth, realHeight, TRUE);
 
-		// TODO initialize renderer
 		Core::SetupRenderer(std::unique_ptr<IRenderer>(new OpenGLRenderer(mh_window, IRect())));
 		auto p_renderer = Core::GetRenderer();
 		p_renderer->Initialize();

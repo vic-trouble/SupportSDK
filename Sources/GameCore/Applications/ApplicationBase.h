@@ -13,9 +13,6 @@ namespace SDK
 	class ApplicationBase
 	{
 	protected:
-		int CONTENT_WIDTH;
-		int CONTENT_HEIGHT;
-
 		CoreDelegate* mp_delegate;
 
 		int m_fps;
@@ -42,8 +39,6 @@ namespace SDK
 	public:
 		ApplicationBase(CoreDelegate* ip_delegate)
 			: mp_delegate(ip_delegate)
-			, CONTENT_WIDTH(0)
-			, CONTENT_HEIGHT(0)
 			, m_fps(60)
 		{}
 		virtual ~ApplicationBase(){}
@@ -64,9 +59,6 @@ namespace SDK
 
 		void Update(float i_elapsed_time);
 		void Draw();
-
-		int GetHeight() const { return CONTENT_HEIGHT; }
-		int GetWidth() const { return CONTENT_WIDTH; }
 
 		World& GetWorld() { return m_world; }
 		Render::RenderWorld& GetRenderWorld() { return m_render_world; }
