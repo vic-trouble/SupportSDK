@@ -10,7 +10,10 @@
 
 namespace SDK
 {
-	
+	namespace Render {
+		class RenderWorld;
+	} // Render
+
 	class World : Utilities::noncopyable
 	{
 	private:
@@ -22,7 +25,7 @@ namespace SDK
 	public:
 		World();
 		void Update(float i_elapsed_time);
-		void SubmitDrawCommands();
+		void SubmitDrawCommands(Render::RenderWorld& i_render_world);
 
 		GAMECORE_EXPORT void RegisterSystem(System* ip_system);
 		GAMECORE_EXPORT void UnregisterSystem(System* ip_system);

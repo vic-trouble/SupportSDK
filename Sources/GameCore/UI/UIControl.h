@@ -12,6 +12,14 @@ using MessageDispatcher = MessageDispatcherBase<Event>;
 
 namespace SDK
 {
+	namespace Render {
+		namespace Commands {
+			template <typename Key>
+			class CommandBucket;
+		} // Commands
+		using RenderCommandBucket = Commands::CommandBucket<int>;
+	} // Render
+
 	class PropertyElement;
 	
 	namespace UI
@@ -39,7 +47,7 @@ namespace SDK
 			IRect m_rect;
 
 		private:
-			virtual void DrawImpl() = 0;
+			virtual void DrawImpl(Render::RenderCommandBucket& i_bucket) = 0;
 			virtual void UpdateImpl(float i_elapsed_time) = 0;
 			virtual void LoadImpl(const PropertyElement& i_element) = 0;
 			
@@ -50,7 +58,7 @@ namespace SDK
 			GAMECORE_EXPORT std::string GetName() const { return m_name; }
 
 			GAMECORE_EXPORT void Update(float i_elapsed_time);
-			GAMECORE_EXPORT void Draw();
+			GAMECORE_EXPORT void Draw(Render::RenderCommandBucket& i_bucket);
 			
 			GAMECORE_EXPORT void SetParent(UIControlHandler i_parent);
 			UIControlHandler GetParent() const { return m_parent; }

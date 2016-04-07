@@ -17,7 +17,7 @@ namespace SDK
 
 		}
 
-		void UIScreen::DrawImpl()
+		void UIScreen::DrawImpl(Render::RenderCommandBucket& i_bucket)
 		{
 
 		}

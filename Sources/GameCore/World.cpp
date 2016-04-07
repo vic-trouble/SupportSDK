@@ -18,12 +18,12 @@ namespace SDK
 		}
 	}
 
-	void World::SubmitDrawCommands()
+	void World::SubmitDrawCommands(Render::RenderWorld& i_render_world)
 	{
 		for (auto& p_system : m_active_systems)
 		{
 			if (p_system->Requires(System::Action::SubmitDrawCommands))
-				p_system->SubmitDrawCommands();
+				p_system->SubmitDrawCommands(i_render_world);
 		}
 	}
 

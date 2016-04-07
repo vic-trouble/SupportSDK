@@ -376,9 +376,10 @@ namespace SDK
 
 		}
 
-		void MeshSystem::SubmitDrawCommands()
+		void MeshSystem::SubmitDrawCommands(Render::RenderWorld& i_render_world)
 		{
-			auto& render_world = Core::GetApplication()->GetRenderWorld();
+			auto p_bucket = i_render_world.GetBucket(BucketType::Buffer);
+
 			for (auto& handler : m_component_handlers)
 			{
 				// reach the end of registered (valid) meshes
@@ -401,13 +402,13 @@ namespace SDK
 							assert(false && "No transform component for mesh");
 							continue;
 						}
-						p_transform_cmd = Render::gBuffer.Create<Commands::Transform>();
+						p_transform_cmd = p_bucket->Create<Commands::Transform>();
 						p_transform_cmd->Translate(p_transform->m_position);
 					}
 
 					// TODO: need dynamic here and not static :`(
 					// for now buffer place for 6 unis
-					Commands::SetupShader<3, 30>* p_shader_cmd = Render::gBuffer.Append<Commands::SetupShader<3, 30>>(p_transform_cmd);
+					Commands::SetupShader<3, 30>* p_shader_cmd = p_bucket->Append<Commands::SetupShader<3, 30>>(p_transform_cmd);
 					p_shader_cmd->m_layouts[0] = sub_mesh.m_pos_layout;
 					p_shader_cmd->m_layouts[1] = sub_mesh.m_normal_layout;
 					p_shader_cmd->m_layouts[2] = sub_mesh.m_uv_layout;
@@ -424,14 +425,14 @@ namespace SDK
 								p_shader_cmd->SetValue(entry.shader_var_location, entry.type, entry.container.GetDataPtr(), entry.container.size, false);
 						}
 
-						p_parent_cmd = Render::g_material_mgr.SetupShaderAndCreateCommands(&p_shader_cmd->m_dynamic_uniforms[p_shader_cmd->current_value], 6 - p_shader_cmd->current_value, *p_material, p_shader_cmd);
+						p_parent_cmd = Render::g_material_mgr.SetupShaderAndCreateCommands(*p_bucket, &p_shader_cmd->m_dynamic_uniforms[p_shader_cmd->current_value], 6 - p_shader_cmd->current_value, *p_material, p_shader_cmd);
 					}
 					else
 					{
 						// TODO: dump material
 					}
 					// Add draw command
-					Commands::Draw* p_cmd = Render::gBuffer.Append<Commands::Draw>(p_parent_cmd);
+					Commands::Draw* p_cmd = p_bucket->Append<Commands::Draw>(p_parent_cmd);
 					p_cmd->indices = sub_mesh.m_index_buffer;
 				}
 			}

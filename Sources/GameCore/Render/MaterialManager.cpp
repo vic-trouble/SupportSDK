@@ -284,7 +284,7 @@ namespace SDK
 			p_load_manager->Unload<Material>({ i_handle.index, i_handle.generation });			
 		}
 
-		void* MaterialManager::SetupShaderAndCreateCommands(ShaderUniformValue* op_dynamic_unis, size_t i_unis_size, const Material& i_material, void* ip_shader_command) const
+		void* MaterialManager::SetupShaderAndCreateCommands(RenderCommandBucket& o_bucket, ShaderUniformValue* op_dynamic_unis, size_t i_unis_size, const Material& i_material, void* ip_shader_command) const
 		{
 			// bind textures
 			void* p_parent = ip_shader_command;
@@ -301,7 +301,7 @@ namespace SDK
 				if (entry.type != ShaderVariableType::Sampler2D)
 					continue;
 
-				Commands::BindTexture* p_bind_texture = Render::gBuffer.Append<Commands::BindTexture>(p_parent);
+				Commands::BindTexture* p_bind_texture = o_bucket.Append<Commands::BindTexture>(p_parent);
 				const InternalHandle* p_handle = reinterpret_cast<const InternalHandle*>(entry.container.GetDataPtr());
 				if (p_handle == nullptr)
 				{

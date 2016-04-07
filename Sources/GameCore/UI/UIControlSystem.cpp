@@ -128,10 +128,12 @@ namespace SDK
 			}
 		}
 
-		void UIControlSystem::Draw()
+		void UIControlSystem::Draw(Render::RenderWorld& i_render_world)
 		{
 			if (m_current_scheme == INVALID_UISCHEME_HANDLER)
 				return;
+
+			auto& bucket = *i_render_world.GetBucket(Render::BucketType::UI);
 
 			UIScheme& current = m_schemes.m_elements[m_current_scheme.index].second;
 
@@ -143,13 +145,12 @@ namespace SDK
 				// control is updated from parent
 				if (p_control->GetParent() != INVALID_UI_HANDLER)
 					continue;
-				p_control->Draw();
+				p_control->Draw(bucket);
 			}
 
 			Render::ScopedLightSwitch scopedLight(Core::GetRenderer()->GetLightsController());
 			Core::GetRenderer()->GetLightsController()->DisableLighting();
-			auto& render_world = Core::GetApplication()->GetRenderWorld();
-			render_world.Submit({Render::ProjectionType::Orthographic, Matrix4f::IDENTITY, Matrix4f::IDENTITY });
+			i_render_world.Submit({Render::ProjectionType::Orthographic, Matrix4f::IDENTITY, Matrix4f::IDENTITY });
 		}
 		
 		UIControl* UIControlSystem::FindControlInCurrentScheme(const std::string& i_control_name)

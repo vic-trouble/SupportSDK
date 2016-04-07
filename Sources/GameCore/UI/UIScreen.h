@@ -15,7 +15,7 @@ namespace SDK
 
 		private:
 			virtual void UpdateImpl(float i_elapsed_time) override;
-			virtual void DrawImpl() override;
+			virtual void DrawImpl(Render::RenderCommandBucket& i_bucket) override;
 			virtual void LoadImpl(const PropertyElement& element) override;
 
 		public:

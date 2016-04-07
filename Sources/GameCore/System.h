@@ -3,6 +3,9 @@
 
 namespace SDK
 {
+	namespace Render {
+		class RenderWorld;
+	} // Render
 
 	class System
 	{
@@ -22,7 +25,7 @@ namespace SDK
 		virtual ~System(){}
 		
 		virtual void Update(float i_elapsed_time) {}
-		virtual void SubmitDrawCommands() {}
+		virtual void SubmitDrawCommands(Render::RenderWorld& i_render_world) {}
 
 		virtual bool Requires(Action i_action) const { return false; }
 	};

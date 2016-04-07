@@ -12,7 +12,6 @@ namespace SDK
 
 	namespace Render
 	{
-		Commands::CommandBucket<int64> gBuffer;
 		// shaders?
 		void SetRenderTargets()
 		{
@@ -37,8 +36,11 @@ namespace SDK
 			p_renderer->SetProjectionType(i_viewport.m_projection_type);
 			SetRenderTargets();
 
-			gBuffer.Sort();
-			gBuffer.Submit();	
+			for (auto& bucket : m_command_buckets)
+			{
+				bucket.Sort();
+				bucket.Submit();
+			}
 
 			p_renderer->SetMatrix(MatrixMode::Projection, Matrix4f::IDENTITY);
 			p_renderer->SetMatrix(MatrixMode::ModelView, Matrix4f::IDENTITY);

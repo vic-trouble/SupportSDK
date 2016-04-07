@@ -59,7 +59,7 @@ namespace SDK
 
 			// System
 			virtual void Update(float i_elapsed_time) override;
-			virtual void SubmitDrawCommands() override;
+			virtual void SubmitDrawCommands(Render::RenderWorld& i_render_world) override;
 
 			virtual bool Requires(Action i_aciton) const { return i_aciton == Action::SubmitDrawCommands || i_aciton == Action::Update; }
 

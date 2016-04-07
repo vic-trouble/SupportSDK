@@ -49,14 +49,14 @@ namespace SDK
 			}
 		}
 
-		void UIControl::Draw()
+		void UIControl::Draw(Render::RenderCommandBucket& i_bucket)
 		{
-			DrawImpl();
+			DrawImpl(i_bucket);
 			for (auto child : m_children)
 			{
 				auto p_control = g_ui_system.AccessControl(child);
 				if (p_control)
-					p_control->Draw();
+					p_control->Draw(i_bucket);
 			}
 				
 		}

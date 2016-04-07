@@ -15,6 +15,10 @@ namespace SDK
 {
 	class InputSystem;
 
+	namespace Render {
+		class RenderWorld;
+	} // Render
+
 	namespace UI
 	{
 		class UIScreen;
@@ -153,7 +157,7 @@ namespace SDK
 			GAMECORE_EXPORT void RemoveControl(UIControlHandler i_handler);
 
 			void Update(float i_elapsed_time);
-			void Draw();
+			void Draw(Render::RenderWorld& i_render_world);
 
 			GAMECORE_EXPORT UIControl* FindControlInCurrentScheme(const std::string& i_control_name);
 

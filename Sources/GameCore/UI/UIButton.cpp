@@ -30,17 +30,17 @@ namespace SDK
 
 		}
 
-		void UIButton::DrawImpl()
+		void UIButton::DrawImpl(Render::RenderCommandBucket& i_bucket)
 		{
 			using namespace Render;
-			Commands::Transform* p_transform_cmd = Render::gBuffer.Create<Commands::Transform>();
+			Commands::Transform* p_transform_cmd = i_bucket.Create<Commands::Transform>();
 			p_transform_cmd->Translate(Vector3{ static_cast<float>(m_global_position[0]), static_cast<float>(m_global_position[1]), 0.f });
 
-			Commands::SetupShader<1>* p_shader_cmd = Render::gBuffer.Append<Commands::SetupShader<1>>(p_transform_cmd);
+			Commands::SetupShader<1>* p_shader_cmd = i_bucket.Append<Commands::SetupShader<1>>(p_transform_cmd);
 			p_shader_cmd->m_shader = ShaderHandle::InvalidHandle();
 			p_shader_cmd->m_layouts[0] = m_batch.element;
 
-			Commands::Draw* p_cmd = Render::gBuffer.Append<Commands::Draw>(p_shader_cmd);
+			Commands::Draw* p_cmd = i_bucket.Append<Commands::Draw>(p_shader_cmd);
 			p_cmd->vertices = m_batch.vertices;
 			p_cmd->layout = m_batch.element;
 			p_cmd->indices = m_batch.indices;

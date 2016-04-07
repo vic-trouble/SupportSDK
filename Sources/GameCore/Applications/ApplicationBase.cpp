@@ -101,14 +101,14 @@ namespace SDK
 	{
 		Core::GetRenderer()->BeginFrame();
 
-		m_world.SubmitDrawCommands();
+		m_world.SubmitDrawCommands(m_render_world);
 		m_render_world.Submit({
 			m_world.GetFrustum().GetProjectionType(),
 			m_world.GetFrustum().GetProjectionMatrix(),
 			m_world.GetCamera().GetModelViewMatrix()
 		});
 		mp_delegate->Draw();
-		UI::g_ui_system.Draw();
+		UI::g_ui_system.Draw(m_render_world);
 
 		Core::GetRenderer()->EndFrame();
 	}
