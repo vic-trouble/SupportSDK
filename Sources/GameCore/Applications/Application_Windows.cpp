@@ -45,7 +45,6 @@ namespace
 		return static_cast<SDK::uint64>(((double)(liCounter.QuadPart)) / (double)liFrequency.QuadPart * 1000.);
 	}
 
-
 	void ChangeMouseButonState(USHORT buttonFlags)
 	{
 	}
@@ -88,7 +87,7 @@ namespace
 		m_ev.m_x = LOWORD(lParam);
 
 		const int h = SDK::Core::GetOptions().height;
-		m_ev.m_y = h-HIWORD(lParam);
+		m_ev.m_y = h - HIWORD(lParam);
 		SDK::InputSystem::Instance().ProcessEvent(m_ev);
 	}
 		

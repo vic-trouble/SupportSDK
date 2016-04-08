@@ -55,6 +55,9 @@ namespace SDK
 
 	void InputSystem::ProcessEvent(const InputEvent& i_evt)
 	{
+		if (i_evt.GetType() == EventType::ET_Keyboard)
+			m_keyboard.ProcessEvent(static_cast<const KeyEvent&>(i_evt));
+
 		if (ProcessUI(i_evt))
 			return;
 

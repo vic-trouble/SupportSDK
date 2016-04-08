@@ -213,6 +213,7 @@
     <ClCompile Include="..\..\..\Sources\GameCore\GameContext.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\GameObject.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\Input\InputSystem.cpp" />
+    <ClCompile Include="..\..\..\Sources\GameCore\Input\Keyboard.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\PropertyReaders.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\Render\Camera.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\Render\Commands.cpp" />

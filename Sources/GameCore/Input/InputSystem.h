@@ -3,6 +3,8 @@
 
 #include "GameCore/GameCoreAPI.h"
 
+#include "Keyboard.h"
+
 #include "GameCore/Core.h"
 #include "GameCore/Input/InputEvent.h"
 
@@ -30,6 +32,8 @@ namespace SDK
 		// TODO: maybe create prioritize queue of subscribers [Chain of Responsibility]
 		InputSubscriber* mp_ui_subscriber;
 
+		Keyboard m_keyboard;
+
 	private:
 		bool ProcessUI(const InputEvent& i_event);
 
@@ -40,6 +44,7 @@ namespace SDK
 		void RemoveSubscriber(InputSubscriber* ip_subscriber);
 
 		void SetUISubscriber(InputSubscriber* ip_subscriber);
+		const Keyboard& GetKeyboard() const { return m_keyboard; }
 	};
 
 } // SDK

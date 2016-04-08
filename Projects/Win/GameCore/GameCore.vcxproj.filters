@@ -478,5 +478,8 @@
     <ClCompile Include="..\..\..\Sources\GameCore\Timer.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Sources\GameCore\Input\Keyboard.cpp">
+      <Filter>Core\Input</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

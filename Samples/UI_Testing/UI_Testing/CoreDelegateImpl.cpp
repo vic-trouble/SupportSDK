@@ -76,11 +76,15 @@ namespace Game
 	void CoreDelegateImpl::OnTerminate()
 	{
 	}
-
+	static std::wstring message_num_0 = L"asdqwetbij[we6  ewrgasdf";
 	void CoreDelegateImpl::Update(float i_elapsed_time)
 	{
+		if (InputSystem::Instance().GetKeyboard().IsKeyPressed(SDK::Key::A))
+			message_num_0 = L"AbBbCcDdEeFfGgHh";
+		else
+			message_num_0 = L"A released!#!Arj";
 	}
-
+	
 	void CoreDelegateImpl::Draw()
 	{
 		static float x = 50;
@@ -90,11 +94,8 @@ namespace Game
 		p_renderer->SetMatrix(MatrixMode::Projection, Matrix4f::CreateOrtho(0, rect.Width(), 0, rect.Height()));
 		std::wstring message = L"FPS: " + std::to_wstring(Core::GetApplication()->GetCurrentFPS());
 		Render::g_font_manager.Render({ x, y }, 1.f, message);
-		message = L"asdqwetbij[we6  ewrgasdf";
-		Render::g_font_manager.Render({ x, y - 50 }, 1.f, message);
-		Render::g_font_manager.Render({ x, y - 50 }, 1.f, message);
-		Render::g_font_manager.Render({ x, y - 50 }, 1.f, message);
-		Render::g_font_manager.Render({ x, y - 50 }, 1.f, message);
+		
+		Render::g_font_manager.Render({ x, y - 50 }, 1.f, message_num_0);
 	}
 
 } // Game
