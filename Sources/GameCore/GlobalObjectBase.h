@@ -3,7 +3,6 @@
 
 namespace SDK
 {
-	class ObjectGetterBase;
 	class GlobalObjectBase
 	{
 	private:

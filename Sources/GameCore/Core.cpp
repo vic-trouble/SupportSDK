@@ -12,7 +12,7 @@
 #include "UI/UIControlSystem.h"
 
 // global object getter
-#include "DefaultGlobalObjectGetter.h"
+#include "DefaultObjectsStorage.h"
 
 namespace SDK
 {
@@ -25,7 +25,7 @@ namespace SDK
 	std::unique_ptr<CoreDelegate> Core::mp_delegate = nullptr;
 	std::unique_ptr<ApplicationBase> Core::mp_application = nullptr;
 	std::unique_ptr<IRenderer> Core::mp_renderer = nullptr;
-	std::unique_ptr<ObjectGetterBase> Core::mp_object_getter = nullptr;
+	std::unique_ptr<ObjectStorageBase> Core::mp_go_storage = nullptr;
 	Options Core::m_options;
 
 	void Core::CreateSingletons()
@@ -45,7 +45,7 @@ namespace SDK
 
 	void Core::Run(std::unique_ptr<CoreDelegate>&& ip_delegate)
 	{
-		SetGlobalObjectGetter(std::make_unique<DefaultGlobalObjectGetter>());
+		SetGlobalObjectStorage(std::make_unique<DefaultObjectsStorage>());
 		CreateSingletons();
 		
 		UI::g_ui_system.SetInputSystem(InputSystem::Instance());

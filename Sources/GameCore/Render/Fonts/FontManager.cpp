@@ -106,7 +106,7 @@ namespace SDK
 						FT_Done_Face(face);
 						return std::make_pair(LoadResult::Failure, Render::Font());
 					}
-					Render::TextureAtlas atlas(512, 512, 1);
+					Render::TextureAtlas atlas(512, 256, 1);
 					Render::Font target_font = Preprocess(atlas, face, L" !\"#$%&'()*+,-./0123456789:;<=>?"
         "@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
         "`abcdefghijklmnopqrstuvwxyz{|}~");

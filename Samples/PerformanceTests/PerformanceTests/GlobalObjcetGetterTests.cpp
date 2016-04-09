@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include <GameCore/ObjectGetterBase.h>
-#include <GameCore/DefaultGlobalObjectGetter.h>
+#include <GameCore/ObjectStorageBase.h>
+#include <GameCore/DefaultObjectsStorage.h>
 
 #include <time.h>
 
@@ -119,7 +119,7 @@ namespace GlobalObjectGetterTests
 		}
 	}
 
-	void TestGetter(SDK::ObjectGetterBase& i_getter)
+	void TestGetter(SDK::ObjectStorageBase& i_getter)
 	{
 		constexpr static size_t NUMBER_3 = NUMBER / 3;
 		for (size_t i = 0; i < NUMBER; ++i)
@@ -157,7 +157,7 @@ namespace GlobalObjectGetterTests
 		std::cout << "==========================================================" << std::endl
 			<< "\t\t\Global objects getter tests" << std::endl;
 		ConstructIndices();
-		SDK::DefaultGlobalObjectGetter g_getter;
+		SDK::DefaultObjectsStorage g_getter;
 		{
 			constexpr static size_t NUMBER_3 = NUMBER / 3;
 			g_getter.AddGlobalObject<First>();

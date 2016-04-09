@@ -2,7 +2,7 @@
 #define __GAMECORE_CORE_H__
 
 #include "GameCoreAPI.h"
-#include "ObjectGetterBase.h"
+#include "ObjectStorageBase.h"
 #include "Options.h"
 
 namespace SDK
@@ -20,7 +20,7 @@ namespace SDK
 		static std::unique_ptr<ApplicationBase> mp_application;
 		static std::unique_ptr<IRenderer> mp_renderer;
 		static Options m_options;
-		GAMECORE_EXPORT static std::unique_ptr<ObjectGetterBase> mp_object_getter;
+		GAMECORE_EXPORT static std::unique_ptr<ObjectStorageBase> mp_go_storage;
 
 	private:
 		static void SetApplication(std::unique_ptr<ApplicationBase> ip_application);
@@ -42,15 +42,15 @@ namespace SDK
 
 		static GAMECORE_EXPORT void CreateSingletons();
 
-		static void SetGlobalObjectGetter(std::unique_ptr<ObjectGetterBase> ip_getter)
+		static void SetGlobalObjectStorage(std::unique_ptr<ObjectStorageBase> ip_getter)
 		{
-			mp_object_getter = std::move(ip_getter);
+			mp_go_storage = std::move(ip_getter);
 		}
-		static ObjectGetterBase* GetGlobalObjectGetter() { return mp_object_getter.get(); }
+		static ObjectStorageBase* GetGlobalObjectStorage() { return mp_go_storage.get(); }
 		template <typename ObjectType>
 		static ObjectType* GetGlobalObject()
 		{
-			return mp_object_getter->GetGlobalObject<ObjectType>();
+			return mp_go_storage->GetGlobalObject<ObjectType>();
 		}
 	};
 

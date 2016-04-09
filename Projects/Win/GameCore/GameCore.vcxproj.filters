@@ -302,13 +302,7 @@
     <ClInclude Include="..\..\..\Sources\GameCore\ObjectSubset.h">
       <Filter>Core\Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Sources\GameCore\ObjectGetterBase.h">
-      <Filter>Core\GlobalObjects</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Sources\GameCore\GlobalObjectBase.h">
-      <Filter>Core\GlobalObjects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Sources\GameCore\DefaultGlobalObjectGetter.h">
       <Filter>Core\GlobalObjects</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Sources\GameCore\EntityDefines.h">
@@ -349,6 +343,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\Sources\GameCore\Timer.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Sources\GameCore\ObjectStorageBase.h">
+      <Filter>Core\GlobalObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Sources\GameCore\DefaultObjectsStorage.h">
+      <Filter>Core\GlobalObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -451,9 +451,6 @@
     <ClCompile Include="..\..\..\Sources\GameCore\Render\OpenGL\GLLightsController.cpp">
       <Filter>Core\Renderer\OpenGL</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Sources\GameCore\DefaultGlobalObjectGetter.cpp">
-      <Filter>Core\GlobalObjects</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Sources\GameCore\Render\Shader.cpp">
       <Filter>Core\Renderer\Shaders</Filter>
     </ClCompile>
@@ -480,6 +477,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\Sources\GameCore\Input\Keyboard.cpp">
       <Filter>Core\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Sources\GameCore\DefaultObjectsStorage.cpp">
+      <Filter>Core\GlobalObjects</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

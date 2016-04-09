@@ -1,9 +1,9 @@
-#ifndef	__GAMECORE_DEFAULTGLOBALOBJECTGETTER_H__
-#define __GAMECORE_DEFAULTGLOBALOBJECTGETTER_H__
+#ifndef	__GAMECORE_DEFAULTOBJECTSTORAGE_H__
+#define __GAMECORE_DEFAULTOBJECTSTORAGE_H__
 
 #include "GameCoreAPI.h"
 
-#include "ObjectGetterBase.h"
+#include "ObjectStorageBase.h"
 
 // objects
 #include "Resources/ResourceManager.h"
@@ -11,7 +11,7 @@
 namespace SDK
 {
 
-	class DefaultGlobalObjectGetter : public ObjectGetterBase
+	class DefaultObjectsStorage : public ObjectStorageBase
 	{
 	private:
 		std::vector<GlobalObjectBase*> m_cache_objects;
@@ -27,7 +27,7 @@ namespace SDK
 		virtual void RemoveGlobalObjectImpl(size_t i_type_code) override;
 
 	public:
-		GAMECORE_EXPORT DefaultGlobalObjectGetter();
+		GAMECORE_EXPORT DefaultObjectsStorage();
 	};
 
 } // SDK
