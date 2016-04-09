@@ -19,6 +19,8 @@
 // TODO: temporary in GL
 #include <GL/glew.h>
 
+#include <SOIL.h>
+
 namespace SDK
 {
 	namespace Resources
@@ -104,11 +106,14 @@ namespace SDK
 						FT_Done_Face(face);
 						return std::make_pair(LoadResult::Failure, Render::Font());
 					}
-					Render::TextureAtlas atlas(256, 256, 1);
+					Render::TextureAtlas atlas(512, 512, 1);
 					Render::Font target_font = Preprocess(atlas, face, L" !\"#$%&'()*+,-./0123456789:;<=>?"
         "@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
         "`abcdefghijklmnopqrstuvwxyz{|}~");
-
+#if defined(_DEBUG)
+					SOIL_save_image("temp.bmp", SOIL_SAVE_TYPE_BMP, atlas.Width(), atlas.Height(), 1, atlas.GetDatPtr());
+#endif
+					
 					Render::TextureHandle tex_id_;
 					// bind tex
 					uint tex_id;
@@ -213,9 +218,16 @@ namespace SDK
 			//////////////////////
 			// render text
 			auto& current_font = m_fonts.m_elements[1];
+			constexpr int space_width = 25;
 			glBindTexture(GL_TEXTURE_2D, current_font.second.m_texture_id);
 			for (int c : i_text)
 			{
+				if (c == L' ')
+				{
+					i_position[0] += space_width * i_scale;
+					continue;
+				}
+
 				Font::Character ch = current_font.second.Find(c);
 				if (ch.char_id == -1)
 					continue;
