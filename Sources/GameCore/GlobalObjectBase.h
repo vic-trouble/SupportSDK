@@ -11,8 +11,8 @@ namespace SDK
 	public:		
 		virtual ~GlobalObjectBase() {}
 
-		__forceinline size_t GetTypeHashCode() const { return m_hash_code; }
-		__forceinline void RecalcHashCode() { m_hash_code = typeid(*this).hash_code(); }
+		size_t GetTypeHashCode() const { return m_hash_code; }
+		void RecalcHashCode() { m_hash_code = typeid(*this).hash_code(); }
 	};
 
 } // SDK

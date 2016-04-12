@@ -27,7 +27,7 @@ namespace SDK
 	void DefaultObjectsStorage::AddGlobalObjectImpl(std::unique_ptr<GlobalObjectBase> ip_object)
 	{
 #if defined(_DEBUG)
-		if (GetGlobalObjectImpl(typeid(*ip_object.get()).hash_code()) != nullptr)
+		if (GetGlobalObjectImpl(p_obj->GetTypeHashCode()) != nullptr)
 		{
 			assert(false);
 			return;
@@ -43,7 +43,7 @@ namespace SDK
 	{	
 		const auto it_dyn = std::find_if(m_dynamic_objects.begin(), m_dynamic_objects.end(), [i_type_code](ObjPtr& p_obj)
 		{
-			return typeid(*p_obj.get()).hash_code() == i_type_code;
+			return p_obj->GetTypeHashCode() == i_type_code;
 		});
 		// we can delete from cache only dynamic objects - not static which are defined inside this class
 		//	and will be removed with destruction of getter
@@ -52,7 +52,7 @@ namespace SDK
 			// remove from cache
 			const auto it = std::find_if(m_cache_objects.begin(), m_cache_objects.end(), [i_type_code](GlobalObjectBase* p_obj)
 			{
-				return typeid(*p_obj).hash_code() == i_type_code;
+				return p_obj->GetTypeHashCode() == i_type_code;
 			});
 
 			if (it != m_cache_objects.end())
