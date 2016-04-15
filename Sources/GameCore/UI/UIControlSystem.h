@@ -118,6 +118,8 @@ namespace SDK
 			class UI_InputSubscriber;
 			friend class UI_InputSubscriber;
 
+			std::unique_ptr<UI_InputSubscriber> mp_input_subscriber;
+
 		private:
 			using UIControls = SDK::GenericHandleDynamicArray<UIControlHandler, std::unique_ptr<UIControl>>;
 			UIControls m_controls;

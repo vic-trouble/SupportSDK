@@ -80,7 +80,7 @@ namespace Game
 	static std::wstring message_num_0 = L"asdqwetbij[we6  ewrgasdf";
 	void CoreDelegateImpl::Update(float i_elapsed_time)
 	{
-		if (InputSystem::Instance().GetKeyboard().IsKeyPressed(SDK::Key::A))
+		if (Core::GetGlobalObject<InputSystem>()->GetKeyboard().IsKeyPressed(SDK::Key::A))
 			message_num_0 = L"AbBbCcDdEeFfGgHh";
 		else
 			message_num_0 = L"A released!#!Arj";

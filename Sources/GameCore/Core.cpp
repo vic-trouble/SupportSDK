@@ -25,6 +25,7 @@ namespace SDK
 	namespace GlobalObjects
 	{
 		void RegisterDefaultGlobalObjects();
+		void ClearDefaultGlobalObjects();
 	}
 
 	std::unique_ptr<CoreDelegate> Core::mp_delegate = nullptr;
@@ -35,13 +36,12 @@ namespace SDK
 
 	void Core::CreateSingletons()
 	{
-		new InputSystem();
 		GlobalObjects::RegisterDefaultGlobalObjects();
 	}
 
 	void Core::ReleaseSingletons()
 	{
-		InputSystem::Instance().Release();
+		GlobalObjects::ClearDefaultGlobalObjects();
 	}
 
 	void Core::SetApplication(std::unique_ptr<ApplicationBase> ip_application)
@@ -54,7 +54,7 @@ namespace SDK
 		SetGlobalObjectStorage(std::make_unique<DefaultObjectsStorage>());
 		CreateSingletons();
 		
-		Core::GetGlobalObject<UI::UIControlSystem>()->SetInputSystem(InputSystem::Instance());
+		Core::GetGlobalObject<UI::UIControlSystem>()->SetInputSystem(*Core::GetGlobalObject<InputSystem>());
 
 		mp_delegate = std::move(ip_delegate);
 

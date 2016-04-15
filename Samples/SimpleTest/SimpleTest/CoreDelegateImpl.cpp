@@ -120,8 +120,8 @@ namespace Game
 		
 		frustum.SetProjectionType(Render::ProjectionType::Orthographic);
 		//frustum.SetFrustumExtents(-0.5f, 0.5f, 0.5f, 0.5f)
-		InputSystem::Instance().AddSubscriber(&m_input_subs);
-		InputSystem::Instance().AddSubscriber(&m_ship);
+		Core::GetGlobalObject<InputSystem>()->AddSubscriber(&m_input_subs);
+		Core::GetGlobalObject<InputSystem>()->AddSubscriber(&m_ship);
 
 		InitQuaternions();
 
@@ -132,8 +132,8 @@ namespace Game
 
 	void CoreDelegateImpl::OnTerminate()
 	{
-		InputSystem::Instance().RemoveSubscriber(&m_input_subs);
-		InputSystem::Instance().RemoveSubscriber(&m_ship);
+		Core::GetGlobalObject<InputSystem>()->RemoveSubscriber(&m_input_subs);
+		Core::GetGlobalObject<InputSystem>()->RemoveSubscriber(&m_ship);
 
 		auto p_renderer = Core::GetRenderer();
 		p_renderer->GetHardwareBufferMgr()->DestroyBuffer(batch[0].vertices);

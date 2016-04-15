@@ -16,10 +16,10 @@ namespace SDK
 	public:
 		virtual ~ObjectStorageBase() {}
 		
-		template <typename ObjectType>
-		void AddGlobalObject()
+		template <typename ObjectType, typename... Args>
+		void AddGlobalObject(Args... args)
 		{
-			auto p_object = std::make_unique<ObjectType>();
+			auto p_object = std::make_unique<ObjectType>(args...);
 			p_object->RecalcHashCode();
 			AddGlobalObjectImpl(std::move(p_object));
 		}
@@ -38,7 +38,7 @@ namespace SDK
 		template <typename ObjectType>
 		void RemoveGlobalObject()
 		{
-			RemoveGlobalObjectImpl( typeid(ObjectType).hash_code() );
+			RemoveGlobalObjectImpl(typeid(ObjectType).hash_code());
 		}
 	};
 } // SDK

@@ -131,8 +131,8 @@ namespace Game
 
 	void CoreDelegateImpl::OnCreate()
 	{
-		InputSystem::Instance().AddSubscriber(&m_input_subs);
-		InputSystem::Instance().AddSubscriber(&g_camera_controller);
+		Core::GetGlobalObject<InputSystem>()->AddSubscriber(&m_input_subs);
+		Core::GetGlobalObject<InputSystem>()->AddSubscriber(&g_camera_controller);
 		auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
 		p_load_manager->LoadResourceSet("..\\..\\Resources\\ResourceSets\\render_testing.res");
 
@@ -153,8 +153,8 @@ namespace Game
 
 	void CoreDelegateImpl::OnTerminate()
 	{
-		InputSystem::Instance().RemoveSubscriber(&m_input_subs);
-		InputSystem::Instance().RemoveSubscriber(&g_camera_controller);
+		Core::GetGlobalObject<InputSystem>()->RemoveSubscriber(&m_input_subs);
+		Core::GetGlobalObject<InputSystem>()->RemoveSubscriber(&g_camera_controller);
 
 		auto p_renderer = Core::GetRenderer();
 

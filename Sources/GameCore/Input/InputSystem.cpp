@@ -3,10 +3,6 @@
 #include "InputSystem.h"
 #include "InputSubscriber.h"
 
-#if defined(_USRDLL)
-	DefineSingletonInstance(SDK::InputSystem)
-#endif
-
 namespace SDK
 {
 

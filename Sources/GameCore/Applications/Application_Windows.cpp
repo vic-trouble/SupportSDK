@@ -88,7 +88,7 @@ namespace
 
 		const int h = SDK::Core::GetOptions().height;
 		m_ev.m_y = h - HIWORD(lParam);
-		SDK::InputSystem::Instance().ProcessEvent(m_ev);
+		SDK::Core::GetGlobalObject<SDK::InputSystem>()->ProcessEvent(m_ev);
 	}
 		
 	//  OnMouseEvent(raw->data.mouse.usButtonFlags, MAKEWPARAM(isMove, isInside), MAKELPARAM(x, y), raw->data.mouse.usButtonData);
@@ -181,13 +181,13 @@ namespace
 
 			case WM_KEYUP:
 				{
-					SDK::InputSystem::Instance().ProcessEvent(SDK::KeyEvent((SDK::int32)wParam, SDK::KeyState::Released));
+					SDK::Core::GetGlobalObject<SDK::InputSystem>()->ProcessEvent(SDK::KeyEvent((SDK::int32)wParam, SDK::KeyState::Released));
 				}
 				break;
 
 			case WM_KEYDOWN:
 				{
-					SDK::InputSystem::Instance().ProcessEvent(SDK::KeyEvent((SDK::int32)wParam, SDK::KeyState::Pressed));
+					SDK::Core::GetGlobalObject<SDK::InputSystem>()->ProcessEvent(SDK::KeyEvent((SDK::int32)wParam, SDK::KeyState::Pressed));
 				}
 				break;
 				

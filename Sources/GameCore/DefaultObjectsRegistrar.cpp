@@ -14,6 +14,8 @@
 
 #include "UI/UIControlSystem.h"
 
+#include "Input/InputSystem.h"
+
 namespace SDK
 {
 
@@ -22,6 +24,8 @@ namespace SDK
 		void RegisterDefaultGlobalObjects()
 		{
 			auto p_storage = Core::GetGlobalObjectStorage();
+			p_storage->AddGlobalObject<InputSystem>();
+
 			p_storage->AddGlobalObject<Render::MeshSystem>();
 			p_storage->AddGlobalObject<Render::MaterialManager>();
 			p_storage->AddGlobalObject<Render::FontManager>();
@@ -32,6 +36,23 @@ namespace SDK
 			p_storage->AddGlobalObject<TransformationsSystem>();
 
 			p_storage->AddGlobalObject<UI::UIControlSystem>();
+		}
+
+		void ClearDefaultGlobalObjects()
+		{
+			auto p_storage = Core::GetGlobalObjectStorage();
+			p_storage->RemoveGlobalObject<Render::MeshSystem>();
+			p_storage->RemoveGlobalObject<Render::MaterialManager>();
+			p_storage->RemoveGlobalObject<Render::FontManager>();
+			p_storage->RemoveGlobalObject<Render::ShaderSystem>();
+
+			p_storage->RemoveGlobalObject<EntityManager>();
+
+			p_storage->RemoveGlobalObject<TransformationsSystem>();
+
+			p_storage->RemoveGlobalObject<UI::UIControlSystem>();
+
+			p_storage->RemoveGlobalObject<InputSystem>();
 		}
 	}
 

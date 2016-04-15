@@ -8,7 +8,7 @@
 #include "GameCore/Core.h"
 #include "GameCore/Input/InputEvent.h"
 
-#include <Patterns/Singleton.h>
+#include "GlobalObjectBase.h"
 
 #if defined(_USRDLL)
 #pragma warning ( push )
@@ -20,13 +20,8 @@ namespace SDK
 	class InputSubscriber;
 	// need to export class as singleton
 	// TODO: remove singlton
-	class GAMECORE_EXPORT InputSystem : public Singleton<InputSystem>
+	class GAMECORE_EXPORT InputSystem : public GlobalObjectBase
 	{
-		friend void Core::CreateSingletons();
-	private:
-		InputSystem();
-		virtual ~InputSystem();
-
 	private:
 		std::vector<InputSubscriber*> m_subscribers;
 		// TODO: maybe create prioritize queue of subscribers [Chain of Responsibility]
@@ -38,6 +33,8 @@ namespace SDK
 		bool ProcessUI(const InputEvent& i_event);
 
 	public:
+		InputSystem();
+		~InputSystem();
 		void ProcessEvent(const InputEvent& i_event);
 
 		void AddSubscriber(InputSubscriber* ip_subscriber);

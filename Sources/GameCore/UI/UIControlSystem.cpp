@@ -23,18 +23,19 @@ namespace SDK
 		class UIControlSystem::UI_InputSubscriber : public InputSubscriber
 		{
 		private:
-			UIControlSystem& m_system;
+			UIControlSystem* m_system;
 
 		public:
 			UI_InputSubscriber(UIControlSystem& i_system)
-				: m_system(i_system)
+				: m_system(&i_system)
 			{
-				InputSystem::Instance().SetUISubscriber(this);
+				Core::GetGlobalObject<InputSystem>()->SetUISubscriber(this);
 			}
 			virtual ~UI_InputSubscriber()
 			{
-				InputSystem::Instance().SetUISubscriber(nullptr);
+				Core::GetGlobalObject<InputSystem>()->SetUISubscriber(nullptr);
 			}
+
 			/*
 			/// TODO: Should UI controls handle key events? Or only mouse
 			virtual bool KeyPressed(const KeyEvent& i_evt) override
@@ -79,6 +80,7 @@ namespace SDK
 			: m_current_scheme(INVALID_UISCHEME_HANDLER)
 		{
 			detail::RegisterBaseUITypes(*this);
+			mp_input_subscriber.reset(new UI_InputSubscriber(*this));
 		}
 
 		UIControlSystem::~UIControlSystem()
@@ -90,6 +92,7 @@ namespace SDK
 				control.second->SetParent(INVALID_UI_HANDLER);
 			}
 			m_controls.ClearAll();
+			mp_input_subscriber.reset(nullptr);
 		}
 
 		UIControlHandler UIControlSystem::GetHandlerTo(UIControl* ip_pointer) const
@@ -174,7 +177,8 @@ namespace SDK
 
 		void UIControlSystem::SetInputSystem(InputSystem& i_input_system)
 		{
-			static UI_InputSubscriber g_subscriber(*this);			
+			assert(mp_input_subscriber && "UI Input subscriber is nullptr");
+			i_input_system.SetUISubscriber(mp_input_subscriber.get());
 		}
 
 		void UIControlSystem::OnResize(const IRect& i_new_size)
