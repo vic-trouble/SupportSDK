@@ -198,7 +198,7 @@ namespace SDK
 				// TODO: need some limitations on size of loaded meshes?
 				static InternalHandle CreateNewHandle()
 				{
-					auto& handlers = Render::g_mesh_system.m_handlers;
+					auto& handlers = Core::GetGlobalObject<Render::MeshSystem>()->m_handlers;
 
 					InternalHandle new_index{ -1, -1 };
 					for (size_t i = 0; i < handlers.size(); ++i)
@@ -229,7 +229,7 @@ namespace SDK
 
 				static void RemoveHandle(InternalHandle i_handle)
 				{
-					auto& handlers = Render::g_mesh_system.m_handlers;
+					auto& handlers = Core::GetGlobalObject<Render::MeshSystem>()->m_handlers;
 					assert(i_handle.index < static_cast<int>(handlers.size()));
 					++handlers[i_handle.index].generation;
 					handlers[i_handle.index].index = -1;
@@ -237,12 +237,13 @@ namespace SDK
 
 				static void UnloadResource(InternalHandle i_handle)
 				{
-					auto& handlers = Render::g_mesh_system.m_handlers;
+					auto p_mesh_system = Core::GetGlobalObject<Render::MeshSystem>();
+					auto& handlers = p_mesh_system->m_handlers;
 					assert(i_handle.index < static_cast<int>(handlers.size()));
 					++handlers[i_handle.index].generation;
 					handlers[i_handle.index].index = -1;
 
-					auto& meshes = Render::g_mesh_system.m_meshes;
+					auto& meshes = p_mesh_system->m_meshes;
 					assert(i_handle.index < static_cast<int>(meshes.size()));
 					// release resources for mesh
 					auto p_mgr = Core::GetRenderer()->GetHardwareBufferMgr();
@@ -260,7 +261,7 @@ namespace SDK
 
 				static void Register(InternalHandle i_handle, Render::Mesh i_mesh)
 				{					
-					auto& meshes = Render::g_mesh_system.m_meshes;					
+					auto& meshes = Core::GetGlobalObject<Render::MeshSystem>()->m_meshes;
 					if (static_cast<int>(meshes.size()) < i_handle.index)
 					{
 						// TODO: increase buffer strategy
@@ -282,8 +283,6 @@ namespace SDK
 
 	namespace Render
 	{
-		static MeshSystem mesh_system;
-		MeshSystem& g_mesh_system = mesh_system;
 
 		MeshSystem::MeshSystem()
 		{
@@ -502,13 +501,13 @@ namespace SDK
 		MeshComponent* MeshSystem::Get(int i_in_system_id, int i_in_system_generation)
 		{
 			MeshComponentHandle inst_handler{ i_in_system_id, i_in_system_generation };
-			MeshComponent* component = g_mesh_system.AccessComponent(inst_handler);
+			MeshComponent* component = Core::GetGlobalObject<Render::MeshSystem>()->AccessComponent(inst_handler);
 			return component;
 		}
 
 		void MeshSystem::Remove(int i_in_system_id, int i_in_system_generation)
 		{
-			g_mesh_system.RemoveInstance({ i_in_system_id, i_in_system_generation });
+			Core::GetGlobalObject<Render::MeshSystem>()->RemoveInstance({ i_in_system_id, i_in_system_generation });
 		}
 		
 

@@ -18,7 +18,7 @@ namespace SDK
 		{
 			Core::GetGlobalObject<Render::MaterialManager>()->Initialize();
 			Core::GetGlobalObject<Render::ShaderSystem>()->Initialize();
-			Render::g_mesh_system.Initialize();
+			Core::GetGlobalObject<Render::MeshSystem>()->Initialize();
 			Core::GetRenderer()->GetTextureManager()->Initialize();
 		}
 
@@ -26,7 +26,7 @@ namespace SDK
 		{
 			Core::GetGlobalObject<Render::MaterialManager>()->Release();
 			Core::GetGlobalObject<Render::ShaderSystem>()->Release();
-			Render::g_mesh_system.Release();
+			Core::GetGlobalObject<Render::MeshSystem>()->Release();
 			Core::GetRenderer()->GetTextureManager()->Release();
 		}
 

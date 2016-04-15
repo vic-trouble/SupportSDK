@@ -28,14 +28,14 @@ namespace SDK
 
 		UIControl::~UIControl()
 		{
-			UIControl* p_parent = g_ui_system.AccessControl(m_parent);
+			UIControl* p_parent = Core::GetGlobalObject<UI::UIControlSystem>()->AccessControl(m_parent);
 			if (p_parent)
 				p_parent->RemoveChild(m_this_handler);
 		}
 
 		void UIControl::InitializeThisHandler()
 		{
-			m_this_handler = g_ui_system.GetHandlerTo(this);
+			m_this_handler = Core::GetGlobalObject<UI::UIControlSystem>()->GetHandlerTo(this);
 		}
 
 		void UIControl::Update(float i_elapsed_time)
@@ -43,7 +43,7 @@ namespace SDK
 			UpdateImpl(i_elapsed_time);
 			for (auto child : m_children)
 			{
-				auto p_control = g_ui_system.AccessControl(child);
+				auto p_control = Core::GetGlobalObject<UI::UIControlSystem>()->AccessControl(child);
 				if (p_control)
 					p_control->Update(i_elapsed_time);
 			}
@@ -54,7 +54,7 @@ namespace SDK
 			DrawImpl(i_bucket);
 			for (auto child : m_children)
 			{
-				auto p_control = g_ui_system.AccessControl(child);
+				auto p_control = Core::GetGlobalObject<UI::UIControlSystem>()->AccessControl(child);
 				if (p_control)
 					p_control->Draw(i_bucket);
 			}
@@ -63,20 +63,20 @@ namespace SDK
 
 		void UIControl::SetParent(UIControlHandler i_parent)
 		{
-			UIControl* p_parent = g_ui_system.AccessControl(m_parent);
+			UIControl* p_parent = Core::GetGlobalObject<UI::UIControlSystem>()->AccessControl(m_parent);
 			if (p_parent != nullptr)
 				p_parent->RemoveChild(m_this_handler);
 				
 			m_parent = i_parent;
 
-			p_parent = g_ui_system.AccessControl(m_parent);
+			p_parent = Core::GetGlobalObject<UI::UIControlSystem>()->AccessControl(m_parent);
 			if (p_parent != nullptr)
 				p_parent->AddChild(m_this_handler);
 		}
 
 		UIControl* UIControl::GetParentPtr() const
 		{
-			return g_ui_system.AccessControl(m_parent);
+			return Core::GetGlobalObject<UI::UIControlSystem>()->AccessControl(m_parent);
 		}
 
 		void UIControl::AddChild(UIControlHandler i_child)

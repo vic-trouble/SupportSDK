@@ -3,6 +3,8 @@
 
 #include "../GameCoreAPI.h"
 
+#include "GlobalObjectBase.h"
+
 #include "System.h"
 #include "Render/Material.h"
 #include "Render/Mesh.h"
@@ -36,6 +38,7 @@ namespace SDK
 	namespace Render
 	{
 		class MeshSystem : public System
+						 , public GlobalObjectBase
 		{
 		private:
 			friend struct Resources::Serialization::LoaderImpl<Mesh>;
@@ -89,9 +92,6 @@ namespace SDK
 			GAMECORE_EXPORT static MeshComponent* Get(int i_in_system_id, int i_in_system_generation);
 			GAMECORE_EXPORT static void Remove(int i_in_system_id, int i_in_system_generation);
 		};
-
-		// TODO: global object: decide in what format user should access objects like this
-		GAMECORE_EXPORT extern MeshSystem& g_mesh_system;
 
 	} // Render
 

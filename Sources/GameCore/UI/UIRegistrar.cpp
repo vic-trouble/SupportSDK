@@ -13,7 +13,7 @@ namespace SDK {
 			template <typename ControlType>
 			UIControlSystem::UIControlAccessor<UIControl> Create()
 			{
-				return g_ui_system.CreateControl<ControlType>();
+				return Core::GetGlobalObject<UI::UIControlSystem>()->CreateControl<ControlType>();
 			}
 			void RegisterBaseUITypes(UIControlSystem& o_system)
 			{

@@ -53,16 +53,17 @@ namespace Game
 
 	void CoreDelegateImpl::OnCreate()
 	{
-		UI::g_ui_system.LoadScheme("..\\..\\Resources\\UI\\test.scheme");
-		UI::g_ui_system.UnloadScheme("test");
-		UI::g_ui_system.SetActiveScheme("test");
-		auto scheme_handler = UI::g_ui_system.LoadScheme("..\\..\\Resources\\UI\\TestUIProfile.scheme");				
-		UI::g_ui_system.SetActiveScheme(scheme_handler);
-		auto accessor = UI::g_ui_system.CreateControl<UI::UIButton>();
-		UI::g_ui_system.RemoveControl(accessor.GetHandler());
-		auto accessor1 = UI::g_ui_system.CreateControl<UI::UIButton>();
+		auto p_ui_system = Core::GetGlobalObject<UI::UIControlSystem>();
+		p_ui_system->LoadScheme("..\\..\\Resources\\UI\\test.scheme");
+		p_ui_system->UnloadScheme("test");
+		p_ui_system->SetActiveScheme("test");
+		auto scheme_handler = p_ui_system->LoadScheme("..\\..\\Resources\\UI\\TestUIProfile.scheme");				
+		p_ui_system->SetActiveScheme(scheme_handler);
+		auto accessor = p_ui_system->CreateControl<UI::UIButton>();
+		p_ui_system->RemoveControl(accessor.GetHandler());
+		auto accessor1 = p_ui_system->CreateControl<UI::UIButton>();
 
-		auto& msg_dsp = UI::g_ui_system.GetMessageDispatcher();
+		auto& msg_dsp = p_ui_system->GetMessageDispatcher();
 		msg_dsp.RegisterHandler<TestHandler, UI::UIButtonEvent>(handler, &TestHandler::Handle, "exit_button");
 
 		connection = SDK::Connection(msg_dsp, handler, &TestHandler::Handle, "my_mega_button");		

@@ -41,11 +41,10 @@ namespace SDK
 
 	void ApplicationBase::OnCreate()
 	{
-		GlobalObjects::RegisterDefaultGlobalObjects();
 		OnCreateInternal();
 		Resources::RegisterLoaders();		
 		// TODO: register systems in constructor?
-		m_world.RegisterSystem(&Render::g_mesh_system);
+		m_world.RegisterSystem(Core::GetGlobalObject<Render::MeshSystem>());
 		mp_delegate->OnCreate();
 	}
 
@@ -78,7 +77,7 @@ namespace SDK
 
 	void ApplicationBase::Update(float i_elapsed_time)
 	{
-		UI::g_ui_system.Update(i_elapsed_time);
+		Core::GetGlobalObject<UI::UIControlSystem>()->Update(i_elapsed_time);
 
 		mp_delegate->Update(i_elapsed_time);
 
@@ -106,14 +105,14 @@ namespace SDK
 			m_world.GetCamera().GetModelViewMatrix()
 		});
 		mp_delegate->Draw();
-		UI::g_ui_system.Draw(m_render_world);
+		Core::GetGlobalObject<UI::UIControlSystem>()->Draw(m_render_world);
 
 		Core::GetRenderer()->EndFrame();
 	}
 
 	void ApplicationBase::OnResize(const IRect& i_rect)
 	{
-		UI::g_ui_system.OnResize(i_rect);
+		Core::GetGlobalObject<UI::UIControlSystem>()->OnResize(i_rect);
 	}
 
 } // SDK

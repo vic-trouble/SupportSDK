@@ -10,7 +10,7 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
-
+#include <cassert>
 #include <memory>
 #include <iostream>
 

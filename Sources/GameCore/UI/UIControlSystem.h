@@ -2,6 +2,9 @@
 #define __GAMECORE_UICONTROLSYSTEM_H__
 
 #include "../GameCoreAPI.h"
+#include "GlobalObjectBase.h"
+#include "Core.h"
+
 #include "UITypes.h"
 
 #include <Utilities/noncopyable.h>
@@ -25,10 +28,9 @@ namespace SDK
 		class UIControl;		
 
 		class UIControlSystem;
-		// TODO: global object
-		GAMECORE_EXPORT extern UIControlSystem g_ui_system;
 
 		class UIControlSystem : Utilities::noncopyable
+							  , public GlobalObjectBase
 		{
 		public:
 			template <typename ControlType>
@@ -101,7 +103,7 @@ namespace SDK
 					if (it != m_handlers.end())
 					{
 						// if control removed from scheme - it removed from UI system
-						g_ui_system.RemoveControl(i_handler);
+						Core::GetGlobalObject<UI::UIControlSystem>()->RemoveControl(i_handler);
 						m_handlers.erase(it);
 					}
 				}

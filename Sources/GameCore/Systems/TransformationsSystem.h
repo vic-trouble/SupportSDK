@@ -3,6 +3,8 @@
 
 #include "../GameCoreAPI.h"
 
+#include "GlobalObjectBase.h"
+
 #include "../Component.h"
 #include "../Entity.h"
 #include "../System.h"
@@ -40,6 +42,7 @@ namespace SDK
 	typedef GenericHandle<int, 12, 20, TransformHandlerTag> TransformHandler;
 
 	class TransformationsSystem : public System
+								, public GlobalObjectBase
 	{
 	private:
 		// separate vectors for trnasform;aabb and other, or one handler and {transform;aabb;etc.}
@@ -69,9 +72,6 @@ namespace SDK
 		GAMECORE_EXPORT static Transform* Get(int i_in_system_id, int i_in_system_generation);
 		GAMECORE_EXPORT static void Remove(int i_in_system_id, int i_in_system_generation);
 	};
-
-	// TODO: global object: decide in what format user should access objects like this
-	GAMECORE_EXPORT extern TransformationsSystem g_transforms_system;
 
 } // SDK
 

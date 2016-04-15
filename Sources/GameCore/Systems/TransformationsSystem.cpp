@@ -1,12 +1,11 @@
 #include "stdafx.h"
 
+#include "Core.h"
+
 #include "TransformationsSystem.h"
 
 namespace SDK
 {
-	// TODO: global
-	TransformationsSystem g_transforms_system;
-
 	////////////////////////////////////////////////////////////////////////////////
 	// System
 
@@ -74,13 +73,13 @@ namespace SDK
 	Transform* TransformationsSystem::Get(int i_in_system_id, int i_in_system_generation)
 	{
 		TransformHandler inst_handler{ i_in_system_id, i_in_system_generation };
-		Transform* component = g_transforms_system.GetInstance(inst_handler);
+		Transform* component = Core::GetGlobalObject<TransformationsSystem>()->GetInstance(inst_handler);
 		return component;
 	}
 
 	void TransformationsSystem::Remove(int i_in_system_id, int i_in_system_generation)
 	{
-		g_transforms_system.RemoveInstance({ i_in_system_id, i_in_system_generation });
+		Core::GetGlobalObject<TransformationsSystem>()->RemoveInstance({ i_in_system_id, i_in_system_generation });
 	}
 
 } // SDK

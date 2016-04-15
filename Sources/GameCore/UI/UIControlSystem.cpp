@@ -20,8 +20,6 @@ namespace SDK
 {
 	namespace UI
 	{
-		UIControlSystem g_ui_system;
-
 		class UIControlSystem::UI_InputSubscriber : public InputSubscriber
 		{
 		private:
@@ -58,7 +56,8 @@ namespace SDK
 			}
 			virtual bool MouseReleased(const MouseEvent& i_evt) override
 			{
-				auto& controls = g_ui_system.m_controls;
+				auto p_ui_sys = Core::GetGlobalObject<UI::UIControlSystem>();
+				auto& controls = p_ui_sys->m_controls;
 				for (auto& control : controls.m_elements)
 				{
 					if (control.second == nullptr)
@@ -66,7 +65,7 @@ namespace SDK
 					UIControl* p_control = control.second.get();
 					if (control.second->IsHited({ i_evt.m_x, i_evt.m_y }))
 					{
-						p_control->MouseReleased(g_ui_system.m_message_dispatcher, i_evt);
+						p_control->MouseReleased(p_ui_sys->m_message_dispatcher, i_evt);
 						return true;
 					}
 				}
@@ -198,7 +197,7 @@ namespace SDK
 			// type of control
 			auto type = i_it.element_name();
 			const PropertyElement& element = *i_it;
-			UIControlSystem::UIControlAccessor<UIControl> accessor = g_ui_system.GetFactory().Create(type);
+			UIControlSystem::UIControlAccessor<UIControl> accessor = Core::GetGlobalObject<UI::UIControlSystem>()->GetFactory().Create(type);
 
 			if (!accessor.IsValid())
 				return;

@@ -99,17 +99,19 @@ namespace Game
 		loaded_mesh = p_load_manager->GetHandleToResource<Render::Mesh>("Nanosuit");
 		
 		const Vector3 start_pos{ -100, 0, -100 };
+		auto p_mesh_system = Core::GetGlobalObject<Render::MeshSystem>();
+		auto p_entity_mgr = Core::GetGlobalObject<EntityManager>();
+		auto p_transformation_sys = Core::GetGlobalObject<TransformationsSystem>();
 		for (int i = 0; i < 20; ++i)
 		{
 			for (int j = 0; j < 20; ++j)
 			{
-				auto mesh_handle = Render::g_mesh_system.CreateInstance(loaded_mesh);
-				auto trans_handle = g_transforms_system.CreateInstance();
-				auto p_transform = g_transforms_system.GetInstance(trans_handle);
+				auto mesh_handle = p_mesh_system->CreateInstance(loaded_mesh);
+				auto trans_handle = p_transformation_sys->CreateInstance();
+				auto p_transform = p_transformation_sys->GetInstance(trans_handle);
 				p_transform->m_position[0] = start_pos[0] + i*10;
 				p_transform->m_position[2] = start_pos[2] + j*10;
 
-				auto p_entity_mgr = Core::GetGlobalObject<EntityManager>();
 				entity_handle = p_entity_mgr->CreateEntity();
 				p_entity_mgr->AddComponent<Render::MeshComponent>(entity_handle, mesh_handle);
 				p_entity_mgr->AddComponent<Transform>(entity_handle, trans_handle);

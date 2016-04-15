@@ -55,9 +55,9 @@ namespace Game
 		auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
 		loaded_mesh = p_load_manager->GetHandleToResource<Render::Mesh>("SimpleBox");
 		
-		auto mesh_handler = Render::g_mesh_system.CreateInstance(loaded_mesh);
-		auto trans_handler = g_transforms_system.CreateInstance();
-		auto p_transform = g_transforms_system.GetInstance(trans_handler);
+		auto mesh_handler = Core::GetGlobalObject<Render::MeshSystem>()->CreateInstance(loaded_mesh);
+		auto trans_handler = Core::GetGlobalObject<TransformationsSystem>()->CreateInstance();
+		auto p_transform = Core::GetGlobalObject<TransformationsSystem>()->GetInstance(trans_handler);
 
 		auto p_entity_manager = Core::GetGlobalObject<EntityManager>();
 		entity_handler = p_entity_manager->CreateEntity();
