@@ -3,6 +3,8 @@
 #include "OpenGLRenderer.h"
 #include "GlUitlities.h"
 
+#include "Core.h"
+
 #include "Render/ShaderSystem.h"
 
 #include <Math/VectorConstructor.h>
@@ -477,7 +479,7 @@ namespace SDK
 		if (m_current_shader == i_shader && m_current_shader != Render::ShaderHandle::InvalidHandle())
 			return;
 		m_current_shader = i_shader;
-		auto p_shader = Render::g_shader_system.Access(i_shader);
+		auto p_shader = Core::GetGlobalObject<Render::ShaderSystem>()->Access(i_shader);
 		// TODO: use standard shader?
 		if (p_shader == nullptr)
 		{
@@ -494,7 +496,7 @@ namespace SDK
 
 	void OpenGLRenderer::UnbindShader()
 	{
-		auto p_shader = Render::g_shader_system.Access(m_current_shader);
+		auto p_shader = Core::GetGlobalObject<Render::ShaderSystem>()->Access(m_current_shader);
 		if (p_shader != nullptr)
 			GLDetails::ClearShaderSetups(*p_shader);
 		else

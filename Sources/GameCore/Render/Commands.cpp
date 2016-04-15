@@ -114,7 +114,7 @@ namespace SDK
 				void BindShader(ShaderHandle i_shader, const VertexLayoutHandle* i_layouts, size_t i_size)
 				{
 					Core::GetRenderer()->Bind(i_shader, i_layouts, i_size);
-					Render::g_shader_system.SetKnownUniforms(i_shader);
+					Core::GetGlobalObject<Render::ShaderSystem>()->SetKnownUniforms(i_shader);
 				}
 
 				void UnbindShader()
@@ -124,7 +124,7 @@ namespace SDK
 
 				void SetDynamicUniform(const ShaderUniformValue& i_value)
 				{
-					Render::g_shader_system.SetUniform(i_value.location, i_value);
+					Core::GetGlobalObject<Render::ShaderSystem>()->SetUniform(i_value.location, i_value);
 				}
 			} // SetupShaderDetails
 

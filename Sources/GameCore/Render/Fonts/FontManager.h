@@ -3,6 +3,8 @@
 
 #include "GameCoreAPI.h"
 
+#include "GlobalObjectBase.h"
+
 #include "Font.h"
 #include "GenericHandlesStaticArray.h"
 
@@ -30,7 +32,7 @@ namespace SDK
 
 	namespace Render
 	{
-		class FontManager
+		class FontManager : public GlobalObjectBase
 		{
 		private:
 			friend struct Resources::Serialization::LoaderImpl<Font>;
@@ -53,9 +55,6 @@ namespace SDK
 			void Initialize();
 			void Release();
 		};
-
-		// TODO: global object: decide in what format user should access objects like this
-		GAMECORE_EXPORT extern FontManager& g_font_manager;
 
 	} // Render
 } // SDK

@@ -16,16 +16,16 @@ namespace SDK
 
 		void RegisterLoaders()
 		{
-			Render::g_material_mgr.Initialize();
-			Render::g_shader_system.Initialize();
+			Core::GetGlobalObject<Render::MaterialManager>()->Initialize();
+			Core::GetGlobalObject<Render::ShaderSystem>()->Initialize();
 			Render::g_mesh_system.Initialize();
 			Core::GetRenderer()->GetTextureManager()->Initialize();
 		}
 
 		void ReleaseLoaders()
 		{
-			Render::g_material_mgr.Release();
-			Render::g_shader_system.Release();
+			Core::GetGlobalObject<Render::MaterialManager>()->Release();
+			Core::GetGlobalObject<Render::ShaderSystem>()->Release();
 			Render::g_mesh_system.Release();
 			Core::GetRenderer()->GetTextureManager()->Release();
 		}

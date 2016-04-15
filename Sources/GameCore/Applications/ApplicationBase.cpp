@@ -41,9 +41,9 @@ namespace SDK
 
 	void ApplicationBase::OnCreate()
 	{
-		OnCreateInternal();
-		Resources::RegisterLoaders();
 		GlobalObjects::RegisterDefaultGlobalObjects();
+		OnCreateInternal();
+		Resources::RegisterLoaders();		
 		// TODO: register systems in constructor?
 		m_world.RegisterSystem(&Render::g_mesh_system);
 		mp_delegate->OnCreate();

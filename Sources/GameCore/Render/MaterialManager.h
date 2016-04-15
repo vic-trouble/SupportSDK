@@ -3,6 +3,8 @@
 
 #include "../GameCoreAPI.h"
 
+#include "GlobalObjectBase.h"
+
 #include "Render/Material.h"
 #include "../GenericHandlesDynamicArray.h"
 
@@ -33,7 +35,7 @@ namespace SDK
 			class CommandBucket;
 		}
 		using RenderCommandBucket = Commands::CommandBucket<int>;
-		class MaterialManager
+		class MaterialManager : public GlobalObjectBase
 		{
 		private:
 			friend struct Resources::Serialization::LoaderImpl<Material>;
@@ -52,9 +54,6 @@ namespace SDK
 			void Release();
 			void Load(const PropertyElement& i_resource_element);
 		};
-
-		// TODO: global
-		GAMECORE_EXPORT extern MaterialManager& g_material_mgr;
 
 	} // Render
 } // SDK

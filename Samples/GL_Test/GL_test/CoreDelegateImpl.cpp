@@ -186,6 +186,7 @@ namespace Game
 
 		void DrawX()
 		{
+			auto p_shader_system = Core::GetGlobalObject<Render::ShaderSystem>();
 			glPushMatrix();
 			glTranslatef(0, 0, 0);
 
@@ -194,7 +195,7 @@ namespace Game
 			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
 			auto tex = p_load_manager->GetHandleToResource<Render::Texture>("box_diffuse");
 			auto sh = p_load_manager->GetHandleToResource<Render::Shader>("SimpleShader");
-			const Render::Shader* p_shader = Render::g_shader_system.Access(sh);
+			const Render::Shader* p_shader = p_shader_system->Access(sh);
 			{
 				p_renderer->GetLightsController()->EnableLighting();
 				// set up light colors (ambient, diffuse, specular)
@@ -211,7 +212,7 @@ namespace Game
 
 				glEnable(light_num);
 				glUseProgram(p_shader->GetId());
-				Render::g_shader_system.SetKnownUniforms(sh);
+				p_shader_system->SetKnownUniforms(sh);
 				CHECK_GL_ERRORS;
 				p_renderer->GetTextureManager()->Bind(0, tex);
 				CHECK_GL_ERRORS;

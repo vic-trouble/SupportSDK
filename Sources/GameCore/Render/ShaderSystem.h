@@ -2,6 +2,8 @@
 #define __GAMECORE_SHADERSYSTEM_H__
 
 #include "../GameCoreAPI.h"
+#include "GlobalObjectBase.h"
+
 #include "RenderTypes.h"
 
 #include "Shader.h"
@@ -31,7 +33,7 @@ namespace SDK
 
 	namespace Render
 	{
-		class ShaderSystem
+		class ShaderSystem : public GlobalObjectBase
 		{
 			friend struct Resources::Serialization::LoaderImpl<Shader>;
 		private:
@@ -101,9 +103,6 @@ namespace SDK
 			void Release();
 			void Load(const PropertyElement& i_resource_element);
 		};
-
-		// TODO: global object
-		GAMECORE_EXPORT extern ShaderSystem g_shader_system;
 
 	} // Render
 

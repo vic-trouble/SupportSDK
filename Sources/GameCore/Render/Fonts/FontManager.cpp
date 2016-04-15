@@ -145,23 +145,23 @@ namespace SDK
 				// TODO: need some limitations on size of loaded meshes?
 				static InternalHandle CreateNewHandle()
 				{
-					Render::FontHandle handle = Render::g_font_manager.m_fonts.Create();
+					Render::FontHandle handle = Core::GetGlobalObject<Render::FontManager>()->m_fonts.Create();
 					return{ handle.index, handle.generation };
 				}
 
 				static void RemoveHandle(InternalHandle i_handle)
 				{
-					Render::g_font_manager.m_fonts.Destroy({ i_handle.index, i_handle.generation });
+					Core::GetGlobalObject<Render::FontManager>()->m_fonts.Destroy({ i_handle.index, i_handle.generation });
 				}
 
 				static void UnloadResource(InternalHandle i_handle)
 				{
-					Render::g_font_manager.m_fonts.Destroy({ i_handle.index, i_handle.generation });
+					Core::GetGlobalObject<Render::FontManager>()->m_fonts.Destroy({ i_handle.index, i_handle.generation });
 				}
 
 				static void Register(InternalHandle i_handle, Render::Font i_font)
 				{
-					Render::g_font_manager.m_fonts.m_elements[i_handle.index].second = i_font;
+					Core::GetGlobalObject<Render::FontManager>()->m_fonts.m_elements[i_handle.index].second = i_font;
 				}
 			};
 
@@ -170,9 +170,6 @@ namespace SDK
 
 	namespace Render
 	{
-		FontManager g_manager;
-		FontManager& g_font_manager = g_manager;
-
 		FontHandle FontManager::LoadFont(const std::string& i_resource_name, const std::string& i_file_name)
 		{
 			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
@@ -189,12 +186,12 @@ namespace SDK
 		void FontManager::Render(Vector2 i_position, float i_scale, const std::wstring& i_text)
 		{			
 			auto p_renderer = Core::GetRenderer();
-			auto shader = g_shader_system.Access("TextShader");
+			auto shader = Core::GetGlobalObject<Render::ShaderSystem>()->Access("TextShader");
 			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
 			auto shader_handle = p_load_manager->GetHandleToResource<Shader>("TextShader");
 
 			p_renderer->Bind(shader_handle, nullptr, 0);
-			g_shader_system.SetKnownUniforms(shader_handle);
+			Core::GetGlobalObject<Render::ShaderSystem>()->SetKnownUniforms(shader_handle);
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 

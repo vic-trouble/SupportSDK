@@ -126,7 +126,7 @@ namespace SDK
 				std::vector<MaterialEntry> ParseShaderElement(const PropertyElement& i_shader_elem)
 				{
 					std::string shader_name = i_shader_elem.GetValue<std::string>("name");
-					const auto p_shader = Render::g_shader_system.Access(shader_name);
+					const auto p_shader = Core::GetGlobalObject<Render::ShaderSystem>()->Access(shader_name);
 					if (p_shader == nullptr)
 						return std::vector<MaterialEntry>();
 
@@ -210,23 +210,23 @@ namespace SDK
 
 				static InternalHandle CreateNewHandle()
 				{
-					auto handle = Render::g_material_mgr.m_materials.CreateNew();
+					auto handle = Core::GetGlobalObject<Render::MaterialManager>()->m_materials.CreateNew();
 					return{ handle.index, handle.generation };
 				}
 
 				static void RemoveHandle(InternalHandle i_handle)
 				{
-					Render::g_material_mgr.m_materials.Destroy({ i_handle.index, i_handle.generation });
+					Core::GetGlobalObject<Render::MaterialManager>()->m_materials.Destroy({ i_handle.index, i_handle.generation });
 				}
 
 				static void UnloadResource(InternalHandle i_handle)
 				{
-					Render::g_material_mgr.m_materials.Destroy({ i_handle.index, i_handle.generation });
+					Core::GetGlobalObject<Render::MaterialManager>()->m_materials.Destroy({ i_handle.index, i_handle.generation });
 				}
 
 				static void Register(InternalHandle i_handle, Render::Material i_material)
 				{
-					Render::g_material_mgr.m_materials.m_elements[i_handle.index].second = std::move(i_material);
+					Core::GetGlobalObject<Render::MaterialManager>()->m_materials.m_elements[i_handle.index].second = std::move(i_material);
 				}
 			};
 
@@ -236,9 +236,6 @@ namespace SDK
 
 	namespace Render
 	{
-		static MaterialManager material_mgr;
-		MaterialManager& g_material_mgr = material_mgr;
-		
 		void MaterialManager::Initialize()
 		{
 			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();

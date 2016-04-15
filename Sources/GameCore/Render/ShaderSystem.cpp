@@ -53,8 +53,9 @@ namespace SDK
 
 				static InternalHandle CreateNewHandle()
 				{
-					auto cur_index = Render::g_shader_system.m_shaders.m_current_index;
-					auto& handlers = Render::g_shader_system.m_shaders.m_handlers;
+					auto p_shader_system = Core::GetGlobalObject<Render::ShaderSystem>();
+					auto cur_index = p_shader_system->m_shaders.m_current_index;
+					auto& handlers = p_shader_system->m_shaders.m_handlers;
 					// TODO: if maximum we can hold
 					//	try to find free buffers
 					if (cur_index == Render::ShaderSystem::Shaders::Size)
@@ -76,7 +77,7 @@ namespace SDK
 					else
 					{				
 						// increase otherwise
-						++Render::g_shader_system.m_shaders.m_current_index;
+						++p_shader_system->m_shaders.m_current_index;
 					}
 
 					handlers[cur_index].index = cur_index;
@@ -85,7 +86,7 @@ namespace SDK
 
 				static void RemoveHandle(InternalHandle i_handle)
 				{
-					auto& handlers = Render::g_shader_system.m_shaders.m_handlers;
+					auto& handlers = Core::GetGlobalObject<Render::ShaderSystem>()->m_shaders.m_handlers;
 					assert(i_handle.index < static_cast<int>(Render::ShaderSystem::Shaders::Size));
 					++handlers[i_handle.index].generation;
 					handlers[i_handle.index].index = -1;
@@ -95,7 +96,7 @@ namespace SDK
 				{
 					using namespace Render;
 
-					auto& handlers = Render::g_shader_system.m_shaders;
+					auto& handlers = Core::GetGlobalObject<Render::ShaderSystem>()->m_shaders;
 					assert(i_handle.index < static_cast<int>(Render::ShaderSystem::Shaders::Size));
 					++handlers.m_handlers[i_handle.index].generation;
 					handlers.m_handlers[i_handle.index].index = -1;
@@ -106,7 +107,7 @@ namespace SDK
 
 				static void Register(InternalHandle i_handle, Render::Shader i_shader)
 				{
-					Render::g_shader_system.m_shaders.m_buffer[i_handle.index] = i_shader;
+					Core::GetGlobalObject<Render::ShaderSystem>()->m_shaders.m_buffer[i_handle.index] = i_shader;
 				}
 			};
 
@@ -116,9 +117,6 @@ namespace SDK
 
 	namespace Render
 	{
-
-		ShaderSystem g_shader_system;
-
 		ShaderSystem::ShaderSystem()
 			: mp_current_shader_compiler(nullptr)
 		{

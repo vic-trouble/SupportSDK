@@ -70,7 +70,7 @@ namespace Game
 
 		auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
 		p_load_manager->LoadResourceSet("..\\..\\Resources\\ResourceSets\\ui_testing.res");
-		Render::g_font_manager.LoadFont("Arial", "..\\..\\Resources\\Fonts\\arial.ttf");
+		Core::GetGlobalObject<Render::FontManager>()->LoadFont("Arial", "..\\..\\Resources\\Fonts\\arial.ttf");
 	}
 
 	void CoreDelegateImpl::OnTerminate()
@@ -93,9 +93,9 @@ namespace Game
 		IRect rect = p_renderer->GetTargetRectangle();
 		p_renderer->SetMatrix(MatrixMode::Projection, Matrix4f::CreateOrtho(0, rect.Width(), 0, rect.Height()));
 		std::wstring message = L"FPS: " + std::to_wstring(Core::GetApplication()->GetCurrentFPS());
-		Render::g_font_manager.Render({ x, y }, 1.f, message);
+		Core::GetGlobalObject<Render::FontManager>()->Render({ x, y }, 1.f, message);
 		
-		Render::g_font_manager.Render({ x, y - 50 }, 1.f, message_num_0);
+		Core::GetGlobalObject<Render::FontManager>()->Render({ x, y - 50 }, 1.f, message_num_0);
 	}
 
 } // Game

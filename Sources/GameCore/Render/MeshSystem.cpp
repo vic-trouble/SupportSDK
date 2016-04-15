@@ -380,6 +380,11 @@ namespace SDK
 		{
 			auto p_bucket = i_render_world.GetBucket(BucketType::Buffer);
 
+			auto p_material_manager = Core::GetGlobalObject<Render::MaterialManager>();
+			auto p_entity_manager = Core::GetGlobalObject<EntityManager>();
+			assert(p_material_manager && "Material manager is not registered");
+			assert(p_entity_manager && "Entity manager is not registered");
+
 			for (auto& handler : m_component_handlers)
 			{
 				// reach the end of registered (valid) meshes
@@ -388,7 +393,7 @@ namespace SDK
 
 				auto& mesh_instance = m_instances[handler.index];
 				auto& mesh = m_meshes[mesh_instance.GetHandler().index];
-				auto p_entity = Core::GetGlobalObject<EntityManager>()->GetEntity(mesh_instance.GetEntity());
+				auto p_entity = p_entity_manager->GetEntity(mesh_instance.GetEntity());
 				for (size_t i = 0; i < mesh.GetSubmeshNumber(); ++i)
 				{
 					const Render::Mesh::SubMesh& sub_mesh = mesh.GetSubmesh(i);
@@ -417,7 +422,7 @@ namespace SDK
 					if (!sub_mesh.m_materials.empty())
 					{
 						auto material_handle = sub_mesh.m_materials[0];
-						const auto p_material = Render::g_material_mgr.AccessMaterial(material_handle);
+						const auto p_material = p_material_manager->AccessMaterial(material_handle);
 						p_shader_cmd->m_shader = p_material->m_shader;
 						for (auto& entry : p_material->m_entries)
 						{
@@ -425,7 +430,7 @@ namespace SDK
 								p_shader_cmd->SetValue(entry.shader_var_location, entry.type, entry.container.GetDataPtr(), entry.container.size, false);
 						}
 
-						p_parent_cmd = Render::g_material_mgr.SetupShaderAndCreateCommands(*p_bucket, &p_shader_cmd->m_dynamic_uniforms[p_shader_cmd->current_value], 6 - p_shader_cmd->current_value, *p_material, p_shader_cmd);
+						p_parent_cmd = p_material_manager->SetupShaderAndCreateCommands(*p_bucket, &p_shader_cmd->m_dynamic_uniforms[p_shader_cmd->current_value], 6 - p_shader_cmd->current_value, *p_material, p_shader_cmd);
 					}
 					else
 					{
