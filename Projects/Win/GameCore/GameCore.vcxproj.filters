@@ -481,5 +481,8 @@
     <ClCompile Include="..\..\..\Sources\GameCore\DefaultObjectsStorage.cpp">
       <Filter>Core\GlobalObjects</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Sources\GameCore\DefaultObjectsRegistrar.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -27,7 +27,7 @@ namespace SDK
 	void DefaultObjectsStorage::AddGlobalObjectImpl(std::unique_ptr<GlobalObjectBase> ip_object)
 	{
 #if defined(_DEBUG)
-		if (GetGlobalObjectImpl(p_obj->GetTypeHashCode()) != nullptr)
+		if (GetGlobalObjectImpl(ip_object->GetTypeHashCode()) != nullptr)
 		{
 			assert(false);
 			return;

@@ -206,6 +206,7 @@
     <ClCompile Include="..\..\..\Sources\GameCore\Applications\Application_Windows.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\Core.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\Composer\ObjectSettings.cpp" />
+    <ClCompile Include="..\..\..\Sources\GameCore\DefaultObjectsRegistrar.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\DefaultObjectsStorage.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\EntityManager.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\FileSystem\FileStream.cpp" />

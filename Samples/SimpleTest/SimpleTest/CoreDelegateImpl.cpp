@@ -138,11 +138,11 @@ namespace Game
 		auto p_renderer = Core::GetRenderer();
 		p_renderer->GetHardwareBufferMgr()->DestroyBuffer(batch[0].vertices);
 		p_renderer->GetHardwareBufferMgr()->DestroyBuffer(batch[0].indices);
-		p_renderer->GetHardwareBufferMgr()->DestroyBuffer(batch[0].vertices);
+		p_renderer->GetHardwareBufferMgr()->DestroyLayout(batch[0].element);
 
 		p_renderer->GetHardwareBufferMgr()->DestroyBuffer(batch[1].vertices);
 		p_renderer->GetHardwareBufferMgr()->DestroyBuffer(batch[1].indices);
-		p_renderer->GetHardwareBufferMgr()->DestroyBuffer(batch[1].vertices);
+		p_renderer->GetHardwareBufferMgr()->DestroyLayout(batch[1].element);
 	}
 
 

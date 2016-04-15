@@ -59,12 +59,13 @@ namespace Game
 		auto trans_handler = g_transforms_system.CreateInstance();
 		auto p_transform = g_transforms_system.GetInstance(trans_handler);
 
-		entity_handler = g_entity_manager.CreateEntity();
-		g_entity_manager.AddComponent<Render::MeshComponent>(entity_handler, mesh_handler);
-		g_entity_manager.AddComponent<Transform>(entity_handler, trans_handler);
+		auto p_entity_manager = Core::GetGlobalObject<EntityManager>();
+		entity_handler = p_entity_manager->CreateEntity();
+		p_entity_manager->AddComponent<Render::MeshComponent>(entity_handler, mesh_handler);
+		p_entity_manager->AddComponent<Transform>(entity_handler, trans_handler);
 
 		// test getting of entity and component
-		auto entity = g_entity_manager.GetEntity(entity_handler);
+		auto entity = p_entity_manager->GetEntity(entity_handler);
 	}
 
 	void CoreDelegateImpl::CreateMesh()
@@ -257,7 +258,7 @@ namespace Game
 		p_renderer->GetHardwareBufferMgr()->DestroyBuffer(batch[1].indices);
 		p_renderer->GetHardwareBufferMgr()->DestroyBuffer(batch[1].vertices);
 
-		g_entity_manager.RemoveEntity(entity_handler);
+		Core::GetGlobalObject<EntityManager>()->RemoveEntity(entity_handler);
 
 		auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
 		p_load_manager->UnloadSet(p_load_manager->GetHandleToSet("render_testing"));

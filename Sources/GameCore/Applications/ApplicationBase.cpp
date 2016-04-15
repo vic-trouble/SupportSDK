@@ -19,6 +19,10 @@ namespace SDK
 		extern void RegisterLoaders();
 		extern void ReleaseLoaders();
 	} // Resources
+	namespace GlobalObjects
+	{
+		extern void RegisterDefaultGlobalObjects();
+	}
 
 	
 
@@ -39,6 +43,7 @@ namespace SDK
 	{
 		OnCreateInternal();
 		Resources::RegisterLoaders();
+		GlobalObjects::RegisterDefaultGlobalObjects();
 		// TODO: register systems in constructor?
 		m_world.RegisterSystem(&Render::g_mesh_system);
 		mp_delegate->OnCreate();

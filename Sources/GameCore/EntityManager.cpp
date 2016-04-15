@@ -7,9 +7,6 @@
 
 namespace SDK
 {
-	// TODO: global
-	EntityManager g_entity_manager;
-
 	EntityHandle EntityManager::CreateEntity()
 	{
 		// find free entity slot

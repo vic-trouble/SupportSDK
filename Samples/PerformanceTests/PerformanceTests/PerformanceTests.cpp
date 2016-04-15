@@ -11,11 +11,10 @@
 
 int main()
 {
-	for (int i = 0; i < 10; ++i)
-		GlobalObjectGetterTests::Test();
-	//TempTests::Test();
-	//FactoryTests::Test();
-	//StateMachineTests::Test();
-	//CmdBucketTest::Test();	
+	GlobalObjectGetterTests::Test();
+	TempTests::Test();
+	FactoryTests::Test();
+	StateMachineTests::Test();
+	CmdBucketTest::Test();	
     return 0;
 }

@@ -388,7 +388,7 @@ namespace SDK
 
 				auto& mesh_instance = m_instances[handler.index];
 				auto& mesh = m_meshes[mesh_instance.GetHandler().index];
-				auto p_entity = g_entity_manager.GetEntity(mesh_instance.GetEntity());
+				auto p_entity = Core::GetGlobalObject<EntityManager>()->GetEntity(mesh_instance.GetEntity());
 				for (size_t i = 0; i < mesh.GetSubmeshNumber(); ++i)
 				{
 					const Render::Mesh::SubMesh& sub_mesh = mesh.GetSubmesh(i);

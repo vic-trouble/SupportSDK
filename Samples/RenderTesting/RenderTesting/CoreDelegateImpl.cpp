@@ -109,12 +109,13 @@ namespace Game
 				p_transform->m_position[0] = start_pos[0] + i*10;
 				p_transform->m_position[2] = start_pos[2] + j*10;
 
-				entity_handle = g_entity_manager.CreateEntity();
-				g_entity_manager.AddComponent<Render::MeshComponent>(entity_handle, mesh_handle);
-				g_entity_manager.AddComponent<Transform>(entity_handle, trans_handle);
+				auto p_entity_mgr = Core::GetGlobalObject<EntityManager>();
+				entity_handle = p_entity_mgr->CreateEntity();
+				p_entity_mgr->AddComponent<Render::MeshComponent>(entity_handle, mesh_handle);
+				p_entity_mgr->AddComponent<Transform>(entity_handle, trans_handle);
 
 				// test getting of entity and component
-				auto entity = g_entity_manager.GetEntity(entity_handle);
+				auto entity = p_entity_mgr->GetEntity(entity_handle);
 			}
 		}
 	}
@@ -155,7 +156,7 @@ namespace Game
 
 		auto p_renderer = Core::GetRenderer();
 
-		g_entity_manager.RemoveEntity(entity_handle);
+		Core::GetGlobalObject<EntityManager>()->RemoveEntity(entity_handle);
 
 		auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
 		p_load_manager->UnloadSet(p_load_manager->GetHandleToSet("render_testing"));

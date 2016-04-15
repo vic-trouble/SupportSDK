@@ -2,6 +2,7 @@
 #define __GAMECORE_ENTITYMANAGER_H__
 
 #include "GameCoreAPI.h"
+#include "GlobalObjectBase.h"
 
 #include "GenericHandle.h"
 
@@ -10,7 +11,7 @@
 
 namespace SDK
 {
-	class EntityManager
+	class EntityManager : public GlobalObjectBase
 	{
 	private:
 		std::vector<Entity> m_entities;
@@ -50,9 +51,6 @@ namespace SDK
 		GAMECORE_EXPORT EntitySubset CreateSubset();
 		GAMECORE_EXPORT void RemoveSubset(const EntitySubset& i_set);
 	};
-
-	// TODO: global variable
-	GAMECORE_EXPORT extern EntityManager g_entity_manager;
 
 } // SDK
 
