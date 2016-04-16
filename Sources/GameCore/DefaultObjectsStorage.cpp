@@ -55,6 +55,8 @@ namespace SDK
 				return p_obj->GetTypeHashCode() == i_type_code;
 			});
 
+			it_dyn->reset(nullptr);
+
 			if (it != m_cache_objects.end())
 				m_cache_objects.erase(it);
 
