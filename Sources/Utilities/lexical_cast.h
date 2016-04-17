@@ -82,6 +82,19 @@ namespace SDK
 				}
 			};
 
+			template <>
+			struct Converter <const char*>
+			{
+				static const char* convert_to(const char* i_value)
+				{
+					return i_value;
+				}
+				static std::string convert_from(const char* i_value)
+				{
+					return i_value;
+				}
+			};
+
 		} // impl
 
 		template <typename T>

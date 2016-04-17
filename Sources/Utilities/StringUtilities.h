@@ -4,6 +4,7 @@
 #include "UtilitiesAPI.h"
 
 #include "noncopyable.h"
+#include "lexical_cast.h"
 
 #include <iostream>
 #include <sstream>
@@ -36,5 +37,29 @@ std::string StringUtilities::t_to_string(T&& i_value)
 
     return s;
 }
-
+namespace SDK
+{
+	namespace Strings
+	{
+		template <typename... Args>
+		std::string FormatString(const std::string& i_format, Args... i_args)
+		{
+			const std::string strings[] = { Utilities::lexical_cast(i_args)... };
+			std::string buffer;
+			buffer.resize(i_format.size() + 50);
+			buffer = i_format;
+			size_t pos = 0;
+			for (size_t i = 0; i < sizeof(strings) / sizeof(std::string); ++i)
+			{
+				std::string search = "{" + Utilities::lexical_cast(i) + "}";
+				pos = buffer.find(search, pos);
+				if (pos == std::string::npos)
+					continue;
+				buffer.replace(pos, search.size(), strings[i]);
+				pos += strings[i].size();
+			}
+			return buffer;
+		}
+	} // Strings
+} // SDK
 #endif
