@@ -78,6 +78,9 @@
     <Filter Include="Core\Renderer\Fonts">
       <UniqueIdentifier>{05058c52-2875-4202-889c-c552809ca1df}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Logging">
+      <UniqueIdentifier>{c77d97f3-ed0a-40b1-a0e0-c41a44addba9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Sources\GameCore\stdafx.h">
@@ -350,6 +353,21 @@
     <ClInclude Include="..\..\..\Sources\GameCore\DefaultObjectsStorage.h">
       <Filter>Core\GlobalObjects</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Sources\GameCore\Logging\LogSystem.h">
+      <Filter>Core\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Sources\GameCore\Logging\LoggingDefinitions.h">
+      <Filter>Core\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Sources\GameCore\Logging\Logger.h">
+      <Filter>Core\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Sources\GameCore\Logging\BasicPolicies.h">
+      <Filter>Core\Logging</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Sources\GameCore\Render\RenderLogPolicies.h">
+      <Filter>Core\Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Sources\GameCore\stdafx.cpp">
@@ -483,6 +501,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\Sources\GameCore\DefaultObjectsRegistrar.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Sources\GameCore\Logging\LogSystem.cpp">
+      <Filter>Core\Logging</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Sources\GameCore\Logging\BasicPolicies.cpp">
+      <Filter>Core\Logging</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

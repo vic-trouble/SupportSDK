@@ -39,6 +39,10 @@ using namespace SDK;
 #include <GameCore/Render/ShaderCompiler.h>
 #include <GameCore/Render/Fonts/FontManager.h>
 
+#include <GameCore/Logging/LogSystem.h>
+#include <GameCore/Logging/BasicPolicies.h>
+#include <Utilities/StringUtilities.h>
+
 namespace Game
 {
 
@@ -72,6 +76,8 @@ namespace Game
 		auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
 		p_load_manager->LoadResourceSet("..\\..\\Resources\\ResourceSets\\ui_testing.res");
 		Core::GetGlobalObject<Render::FontManager>()->LoadFont("Arial", "..\\..\\Resources\\Fonts\\arial.ttf");
+
+		Log::Info(0, { __FILE__, __func__, __LINE__ }, "{0}: {1}", "asdasd", 1);
 	}
 
 	void CoreDelegateImpl::OnTerminate()

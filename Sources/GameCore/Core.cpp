@@ -14,6 +14,10 @@
 // global object getter
 #include "DefaultObjectsStorage.h"
 
+#include "Logging/LogSystem.h"
+#include "Logging/BasicPolicies.h"
+#include "Render/RenderLogPolicies.h"
+
 namespace SDK
 {
 
@@ -27,6 +31,16 @@ namespace SDK
 		void RegisterDefaultGlobalObjects();
 		void ClearDefaultGlobalObjects();
 	}
+
+	namespace Log
+	{
+		void RegisterLoggers()
+		{
+			g_log.RegisterLogger<Render::RenderVSLogger>();
+			g_log.RegisterLogger<IDELogger>();
+			g_log.RegisterLogger<FileLogger>();
+		}
+	} // Log
 
 	std::unique_ptr<CoreDelegate> Core::mp_delegate = nullptr;
 	std::unique_ptr<ApplicationBase> Core::mp_application = nullptr;
@@ -51,6 +65,7 @@ namespace SDK
 
 	void Core::Run(std::unique_ptr<CoreDelegate>&& ip_delegate)
 	{
+		Log::RegisterLoggers();
 		SetGlobalObjectStorage(std::make_unique<DefaultObjectsStorage>());
 		CreateSingletons();
 		

@@ -124,6 +124,10 @@
     <ClInclude Include="..\..\..\Sources\GameCore\Entity.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\EntityManager.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\GenericHandlesStaticArray.h" />
+    <ClInclude Include="..\..\..\Sources\GameCore\Logging\BasicPolicies.h" />
+    <ClInclude Include="..\..\..\Sources\GameCore\Logging\Logger.h" />
+    <ClInclude Include="..\..\..\Sources\GameCore\Logging\LoggingDefinitions.h" />
+    <ClInclude Include="..\..\..\Sources\GameCore\Logging\LogSystem.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\ObjectSubset.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\FileSystem\FileStream.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\FileSystem\FileSystem.h" />
@@ -161,6 +165,7 @@
     <ClInclude Include="..\..\..\Sources\GameCore\Render\OpenGL\GLLightsController.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\Render\OpenGL\GLShaderCompiler.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\Render\OpenGL\GLTextureManager.h" />
+    <ClInclude Include="..\..\..\Sources\GameCore\Render\RenderLogPolicies.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\Render\RenderWorld.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\Render\OpenGL\HardwareBufferManager.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\Render\HardwareIndexBuffer.h" />
@@ -215,6 +220,8 @@
     <ClCompile Include="..\..\..\Sources\GameCore\GameObject.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\Input\InputSystem.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\Input\Keyboard.cpp" />
+    <ClCompile Include="..\..\..\Sources\GameCore\Logging\BasicPolicies.cpp" />
+    <ClCompile Include="..\..\..\Sources\GameCore\Logging\LogSystem.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\PropertyReaders.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\Render\Camera.cpp" />
     <ClCompile Include="..\..\..\Sources\GameCore\Render\Commands.cpp" />
