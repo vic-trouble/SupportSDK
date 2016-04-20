@@ -35,10 +35,12 @@ namespace SDK
 			template <typename ResType>
 			struct LoaderImpl
 			{
-				typedef typename Definition<ResType>::InfoType InfoType;
-				typedef ResType ResourceType;
+				using InfoType = typename Definition<ResType>::InfoType;
+				using ResourceType = ResType;
+				using RawData = typename Definition<ResType>::RawDataType;
 
 				static std::pair<LoadResult, ResourceType> Load(std::istream*, InfoType);
+				static std::pair<LoadResult, ResourceType> Load(RawData&&);
 				static int CreateNewHandle();
 				static void RemoveHandle(InternalHandle i_handle);
 				static void UnloadResource(InternalHandle i_handle);
@@ -175,6 +177,51 @@ namespace SDK
 				// add to current set
 				AddToSet(res_info.m_belongs_to_set, { hash, res_type });
 				return handle;
+			}
+
+			template <typename ResType>
+			InternalHandle LoadFromData(
+				const std::string& i_res_name,
+				typename Serialization::Definition<ResType>::RawData&& i_data)
+			{
+				using namespace Serialization;
+				using Loader = LoaderImpl<ResType>;
+				const std::type_index res_type = typeid(ResType);
+				const size_t hash = Utilities::hash_function(i_res_name);
+				// check if handle already exist
+				auto it = std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindByHash(hash, res_type));
+				if (it != m_loaded_resources.end())
+				{
+					++it->m_use_count;
+					return it->m_handle;
+				}
+				// handle not exist - this file was not loaded before			
+				InternalHandle handle = Loader::CreateNewHandle();
+				{
+					ResourceInformation res_info = { hash, 0, ResourceInformation::State::Unloaded, handle, res_type, m_current_set };
+					m_loaded_resources.emplace_back(res_info);
+				}
+
+				auto load_res = Loader::Load(std::move(i_data));
+
+				if (load_res.first == LoadResult::Failure)
+				{
+					Loader::RemoveHandle(handle);
+					m_loaded_resources.erase(
+						std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindByHash(hash, res_type)),
+						m_loaded_resources.end());
+					return InternalHandle::InvalidHandle();
+				}
+
+				// TODO: when will be async - this will not be reference to back element
+				// auto it = std::find(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(hash));
+				auto& res_info = m_loaded_resources.back();
+				res_info.m_state = ResourceInformation::State::Loaded;
+				Register<ResType>(res_info, std::move(load_res.second));
+				// add to current set
+				AddToSet(res_info.m_belongs_to_set, { hash, res_type });
+				return handle;
+
 			}
 
 			template <typename ResType>
