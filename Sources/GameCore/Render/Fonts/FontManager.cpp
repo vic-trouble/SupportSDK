@@ -12,6 +12,7 @@
 #include "Render/HardwareBufferManagerBase.h"
 
 #include "Render/TextureAtlas.h"
+#include "Render/TextureManager.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -113,32 +114,12 @@ namespace SDK
 #if defined(_DEBUG)
 					SOIL_save_image("temp.bmp", SOIL_SAVE_TYPE_BMP, atlas.Width(), atlas.Height(), 1, atlas.GetDatPtr());
 #endif
-					
-					Render::TextureHandle tex_id_;
-					// bind tex
-					uint tex_id;
-					glGenTextures(1, &tex_id);
-					glBindTexture(GL_TEXTURE_2D, tex_id);
-					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-					glTexImage2D(
-						GL_TEXTURE_2D,
-						0,
-						GL_RED,
-						atlas.Width(),
-						atlas.Height(),
-						0,
-						GL_RED,
-						GL_UNSIGNED_BYTE,
-						atlas.GetDatPtr()
-						);
-					target_font.m_texture_id = tex_id;
 
 					FT_Done_Face(face);
 					FT_Done_FreeType(ft);
+
+					target_font.m_texture_handle = Core::GetRenderer()->GetTextureManager()->Load(target_font.m_name, atlas.Release());
+
 					return std::make_pair(LoadResult::Success, target_font);
 				}
 
@@ -207,16 +188,14 @@ namespace SDK
 			glEnableVertexAttribArray(location);
 			glUniform3f(shader->GetUniform("textColor").location, 1.f, 0.f, 0.f);
 			CHECK_GL_ERRORS;
-			glActiveTexture(GL_TEXTURE0);
-
-			CHECK_GL_ERRORS;
 			// Render glyph texture over quad
 			
+
 			//////////////////////
 			// render text
 			auto& current_font = m_fonts.m_elements[1];
 			constexpr int space_width = 25;
-			glBindTexture(GL_TEXTURE_2D, current_font.second.m_texture_id);
+			p_renderer->GetTextureManager()->Bind(0, current_font.second.m_texture_handle);
 			for (int c : i_text)
 			{
 				if (c == L' ')
@@ -253,12 +232,10 @@ namespace SDK
 				// Now advance cursors for next glyph (note that advance is number of 1/64 pixels)
 				i_position[0] += ch.Advance[0] * i_scale;
 			}
-			glBindVertexArray(0);
-			glBindTexture(GL_TEXTURE_2D, 0);
 
 			p_hd_mgr->DestroyBuffer(buffer_handle);
 			p_hd_mgr->DestroyLayout(layout_handle);
-
+			p_renderer->GetTextureManager()->Release(0);
 		}
 
 	} // Render

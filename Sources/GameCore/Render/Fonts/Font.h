@@ -3,6 +3,8 @@
 
 #include "GenericHandle.h"
 
+#include "Render/RenderTypes.h"
+
 namespace SDK
 {
 	namespace Render
@@ -26,7 +28,7 @@ namespace SDK
 			};
 			std::string m_name;
 			std::vector<Character> m_characters;
-			uint		m_texture_id;  // ID handle of the glyph texture
+			TextureHandle m_texture_handle;
 
 			Character Find(int i_char_id) const
 			{
