@@ -10,6 +10,8 @@
 
 #include "BaseTypesHashes.h"
 
+#include <codecvt>
+
 namespace SDK
 {
 	////////////////////////////////////////////////////
@@ -42,6 +44,8 @@ namespace SDK
 		const size_t end_line = i_value.find_first_of("\n\0", i_offset + 1);
 		if (i_value[alpha_char] == '"')
 			return ValueType::String;
+		if (i_value[alpha_char] == 'L' && i_value[alpha_char + 1] == '"')
+			return ValueType::WideString;
 		auto val = i_value.substr(i_offset, end_line - i_offset);
 		// Property
 		if (val.find('{') != std::string::npos)
@@ -224,9 +228,27 @@ namespace SDK
 					// value_begin points to openning " symbol -> shift
 					++value_begin;
 					size_t end_val = value.find_first_of("\"", value_begin);
+					while (end_val != std::string::npos && value[end_val - 1] == '\\')
+						end_val = value.find_first_of("\"", end_val + 1);
 					// end_val points to closing " symbol
 					new_offset = end_val + 1;
 					o_element.AddValue<std::string>(name, value.substr(value_begin, end_val - value_begin));
+				}
+				break;
+			case ValueType::WideString:
+				{
+					std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+					// value_begin points to openning " symbol -> shift
+					++value_begin;
+					size_t end_val = value.find_first_of("\r\n\t", value_begin);
+					// end_val points to closing " symbol
+					new_offset = end_val + 1;
+					
+					std::wstring val = conv.from_bytes(value.substr(value_begin, end_val - value_begin));
+					end_val = val.find_first_of(L'\"', 1);
+					while (end_val != std::wstring::npos && val[end_val - 1] == L'\\')
+						end_val = val.find_first_of(L'\"', end_val + 1);
+					o_element.AddValue<std::wstring>(name, val.substr(0, end_val));
 				}
 				break;
 			case ValueType::Array:

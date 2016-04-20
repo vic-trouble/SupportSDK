@@ -15,6 +15,7 @@ namespace SDK
 		Float,
 		Double,
 		String,
+		WideString,
 		Array,
 		PropertyObject
 	};
