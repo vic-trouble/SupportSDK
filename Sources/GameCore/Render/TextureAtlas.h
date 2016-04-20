@@ -1,6 +1,8 @@
 #ifndef	__GAMECORE_TEXTUREATLAS_H__
 #define __GAMECORE_TEXTUREATLAS_H__
 
+#include "Texture.h"
+
 namespace SDK
 {
 	namespace Render
@@ -10,14 +12,9 @@ namespace SDK
 		{
 		private:
 			std::vector<Vector3i> m_nodes;
-			size_t m_width;
-			size_t m_height;
-
-			size_t m_deepth;
-
 			size_t m_in_use;
 
-			std::unique_ptr<ubyte[]> mp_data;
+			RawTexture m_texture;
 
 		private:
 			int AtlasFit(const size_t i_index, const size_t i_width, const size_t i_height);
@@ -31,11 +28,13 @@ namespace SDK
 
 			void Clear();
 
-			size_t Width() const { return m_width; }
-			size_t Height() const { return m_height; }
-			size_t Deepth() const { return m_deepth; }
+			size_t Width() const { return m_texture.m_width; }
+			size_t Height() const { return m_texture.m_height; }
+			size_t Deepth() const { return m_texture.m_deepth; }
 			size_t InUse() const { return m_in_use; }
-			const ubyte* GetDatPtr() const { return mp_data.get(); }
+			const ubyte* GetDatPtr() const { return m_texture.mp_data.get(); }
+
+			RawTexture Release() { return std::move(m_texture); }
 		};
 
 	} // Render

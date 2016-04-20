@@ -7,12 +7,9 @@ namespace SDK
 	namespace Render
 	{
 		TextureAtlas::TextureAtlas(size_t i_width, size_t i_height, size_t i_deepth)
-			: m_width(i_width)
-			, m_height(i_height)
-			, m_deepth(i_deepth)
+			: m_texture(i_width, i_height, i_deepth)
 			, m_in_use(0)
 		{
-			mp_data.reset(new ubyte[m_width*m_height*m_deepth]);
 			// We want a one pixel border around the whole atlas to avoid any artefact when
 			// sampling texture
 			m_nodes.emplace_back(Vector3i{ 1, 1, (int)i_width - 2 });
@@ -27,7 +24,7 @@ namespace SDK
 			
 			size_t i = i_index;
 
-			if ((x + i_width) > (m_width - 1))
+			if ((x + i_width) > (m_texture.m_width - 1))
 				return -1;
 
 			y = node[1];
@@ -38,7 +35,7 @@ namespace SDK
 				{
 					y = node[1];
 				}
-				if ((y + i_height) > (m_height - 1))
+				if ((y + i_height) > (m_texture.m_height - 1))
 					return -1;
 				width_left -= node[2];
 				++i;
@@ -124,21 +121,21 @@ namespace SDK
 			auto bot_left = i_region.GetBottomLeft();
 			assert(bot_left[0] > 0);
 			assert(bot_left[1] > 0);
-			assert(bot_left[0] < (m_width - 1));
-			assert((bot_left[0] + i_region.Width()) <= (m_width - 1));
-			assert(bot_left[1] < (m_height - 1));
-			assert(bot_left[1] + i_region.Height() <= m_height - 1);
+			assert(bot_left[0] < (m_texture.m_width - 1));
+			assert((bot_left[0] + i_region.Width()) <= (m_texture.m_width - 1));
+			assert(bot_left[1] < (m_texture.m_height - 1));
+			assert(bot_left[1] + i_region.Height() <= m_texture.m_height - 1);
 
 			int x = bot_left[0];
 			int y = bot_left[1];
 			int width = i_region.Width();
 			int height = i_region.Height();
 
-			size_t depth = m_deepth;
+			size_t depth = m_texture.m_deepth;
 			size_t charsize = sizeof(ubyte);
 			for (size_t i = 0; i < height; ++i)
 			{
-				memcpy(mp_data.get() + ((y + i)*m_width + x) * charsize * depth,
+				memcpy(m_texture.mp_data.get() + ((y + i)*m_texture.m_width + x) * charsize * depth,
 					ip_data + (i*i_stride) * charsize, width * charsize * depth);
 			}
 		}
@@ -147,8 +144,8 @@ namespace SDK
 		{
 			m_in_use = 0;
 			m_nodes.clear();
-			m_nodes.emplace_back(Vector3i{ 1, 1, (int)m_width - 2 });
-			memset(mp_data.get(), 0, m_width*m_height*m_deepth);
+			m_nodes.emplace_back(Vector3i{ 1, 1, (int)m_texture.m_width - 2 });
+			m_texture.Clear();
 		}
 	} // Render
 } // SDK
