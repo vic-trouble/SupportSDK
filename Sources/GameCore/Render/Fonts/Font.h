@@ -9,6 +9,14 @@ namespace SDK
 {
 	namespace Render
 	{
+		struct FontSettings
+		{
+			std::string name;
+			std::wstring symbols_to_load;
+			size_t pixel_width = 0;
+			size_t pixel_height = 48;
+		};
+
 		struct Font
 		{
 			struct Character {

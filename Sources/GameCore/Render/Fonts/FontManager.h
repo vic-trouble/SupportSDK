@@ -20,7 +20,7 @@ namespace SDK
 			template <>
 			struct Definition <Render::Font>
 			{
-				typedef void* InfoType;
+				typedef Render::FontSettings InfoType;
 				typedef Render::FontHandle HandleType;
 			};
 
@@ -43,14 +43,14 @@ namespace SDK
 			FontsArray m_fonts;
 
 		private:
-			FontHandle Load(const PropertyElement& i_resource_element);
+			void Load(const PropertyElement& i_resource_element);
 
 		public:
-			GAMECORE_EXPORT FontHandle LoadFont(const std::string& i_resource_name, const std::string& i_file_name);
+			GAMECORE_EXPORT FontHandle LoadFont(const std::string& i_resource_name, FontSettings i_settings, const std::string& i_file_name);
 			GAMECORE_EXPORT void Unload(FontHandle i_texture);
 			GAMECORE_EXPORT Font* Access(FontHandle i_texture);
 
-			GAMECORE_EXPORT void Render(Vector2 i_position, float i_scale, const std::wstring& i_text);
+			GAMECORE_EXPORT void Render(Vector2 i_position, float i_scale, const std::wstring& i_text, FontHandle i_font);
 
 			void Initialize();
 			void Release();

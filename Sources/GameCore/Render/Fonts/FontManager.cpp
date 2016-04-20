@@ -32,10 +32,10 @@ namespace SDK
 			template <>
 			struct LoaderImpl < Render::Font >
 			{
-				static Render::Font Preprocess(Render::TextureAtlas& o_atlas, FT_Face& io_face, const std::wstring& i_code_points)
+				static Render::Font Preprocess(Render::TextureAtlas& o_atlas, FT_Face& io_face, const Render::FontSettings& i_settings)
 				{
 					Render::Font font;
-					font.m_name = io_face->family_name;
+					font.m_name = i_settings.name;
 					o_atlas.Clear();
 					FT_GlyphSlot slot;
 					FT_Bitmap ft_bitmap;
@@ -43,7 +43,7 @@ namespace SDK
 					int ft_glyph_left = 0;
 					int missed = 0;
 					FT_Set_Pixel_Sizes(io_face, 0, 48);
-					for (int code : i_code_points)
+					for (int code : i_settings.symbols_to_load)
 					{
 						FT_UInt glyph_index = FT_Get_Char_Index(io_face, code);
 						if (FT_Load_Glyph(io_face, glyph_index, FT_LOAD_RENDER))
@@ -87,8 +87,11 @@ namespace SDK
 					return font;
 				}
 
-				static std::pair<LoadResult, Render::Font> Load(std::istream* ip_streams[1], void*)
+				static std::pair<LoadResult, Render::Font> Load(std::istream* ip_streams[1], Render::FontSettings i_settings)
 				{
+					if (i_settings.symbols_to_load.empty() || i_settings.pixel_height == 0 || i_settings.name.empty())
+						return std::make_pair(LoadResult::Failure, Render::Font());
+
 					FT_Library ft;
 					FT_Face face;
 
@@ -108,9 +111,7 @@ namespace SDK
 						return std::make_pair(LoadResult::Failure, Render::Font());
 					}
 					Render::TextureAtlas atlas(512, 256, 1);
-					Render::Font target_font = Preprocess(atlas, face, L" !\"#$%&'()*+,-./0123456789:;<=>?"
-        "@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_"
-        "`abcdefghijklmnopqrstuvwxyz{|}~");
+					Render::Font target_font = Preprocess(atlas, face, i_settings);
 #if defined(_DEBUG)
 					SOIL_save_image("temp.bmp", SOIL_SAVE_TYPE_BMP, atlas.Width(), atlas.Height(), 1, atlas.GetDatPtr());
 #endif
@@ -151,10 +152,23 @@ namespace SDK
 
 	namespace Render
 	{
-		FontHandle FontManager::LoadFont(const std::string& i_resource_name, const std::string& i_file_name)
+		void FontManager::Load(const PropertyElement & i_resource_element)
+		{
+			const std::string path = i_resource_element.GetValue<std::string>("path");
+			FontSettings settings;
+			settings.name = i_resource_element.GetValue<std::string>("resource_name");
+			settings.symbols_to_load = i_resource_element.GetValue<std::wstring>("codes");
+			settings.pixel_width = i_resource_element.GetValue<int>("pixel_width");
+			settings.pixel_height = i_resource_element.GetValue<int>("pixel_height");
+			if (settings.symbols_to_load.empty())
+				return;
+			LoadFont(settings.name, settings, path);
+		}
+
+		FontHandle FontManager::LoadFont(const std::string& i_resource_name, FontSettings i_settings, const std::string& i_file_name)
 		{
 			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
-			InternalHandle handle = p_load_manager->Load<Font>(i_resource_name, { i_file_name }, nullptr);
+			InternalHandle handle = p_load_manager->Load<Font>(i_resource_name, { i_file_name }, i_settings);
 			if (handle.index != -1)
 			{
 				assert(handle.index < static_cast<int>(FontsArray::Size));
@@ -164,8 +178,11 @@ namespace SDK
 			return FontHandle::InvalidHandle();
 		}
 		
-		void FontManager::Render(Vector2 i_position, float i_scale, const std::wstring& i_text)
-		{			
+		void FontManager::Render(Vector2 i_position, float i_scale, const std::wstring& i_text, FontHandle i_font)
+		{
+			auto p_font = m_fonts.Access(i_font);
+			if (p_font == nullptr)
+				return;
 			auto p_renderer = Core::GetRenderer();
 			auto shader = Core::GetGlobalObject<Render::ShaderSystem>()->Access("TextShader");
 			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
@@ -193,9 +210,8 @@ namespace SDK
 
 			//////////////////////
 			// render text
-			auto& current_font = m_fonts.m_elements[1];
 			constexpr int space_width = 25;
-			p_renderer->GetTextureManager()->Bind(0, current_font.second.m_texture_handle);
+			p_renderer->GetTextureManager()->Bind(0, p_font->m_texture_handle);
 			for (int c : i_text)
 			{
 				if (c == L' ')
@@ -204,7 +220,7 @@ namespace SDK
 					continue;
 				}
 
-				Font::Character ch = current_font.second.Find(c);
+				Font::Character ch = p_font->Find(c);
 				if (ch.char_id == -1)
 					continue;
 
@@ -236,6 +252,18 @@ namespace SDK
 			p_hd_mgr->DestroyBuffer(buffer_handle);
 			p_hd_mgr->DestroyLayout(layout_handle);
 			p_renderer->GetTextureManager()->Release(0);
+		}
+
+		void FontManager::Initialize()
+		{
+			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
+			p_load_manager->RegisterLoader<FontManager, Font>(*this, &FontManager::Load, "font");
+		}
+
+		void FontManager::Release()
+		{
+			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
+			p_load_manager->Unregister<FontManager, Font>("font");
 		}
 
 	} // Render

@@ -138,7 +138,7 @@ namespace Game
 
 		LoadModel();		
 		CreateMesh();
-		Core::GetGlobalObject<Render::FontManager>()->LoadFont("Arial", "..\\..\\Resources\\Fonts\\arial.ttf");
+		Core::GetGlobalObject<Render::FontManager>()->LoadFont("Arial", Render::FontSettings(), "..\\..\\Resources\\Fonts\\arial.ttf");
 		auto& world = Core::GetApplication()->GetWorld();
 		auto& camera = world.GetCamera();
 		static SDK::Vector3 shift{ 5.f, -5.f, -50.f };
@@ -207,11 +207,13 @@ namespace Game
 		IRect rect = p_renderer->GetTargetRectangle();
 		p_renderer->SetMatrix(MatrixMode::Projection, Matrix4f::CreateOrtho(0, rect.Width(), 0, rect.Height()));
 		std::wstring message = L"FPS: " + std::to_wstring(Core::GetApplication()->GetCurrentFPS());
+		auto en_font = Core::GetGlobalObject<Resources::ResourceManager>()->GetHandleToResource<Render::Font>("Arial_en");
+
 		auto p_font_mgr = Core::GetGlobalObject<Render::FontManager>();
-		p_font_mgr->Render({ x, 800 }, 1.f, message);
+		p_font_mgr->Render({ x, 800 }, 1.f, message, en_font);
 		message = L"asdqwetbij[we6  ewrgasdf";
 		for (int i = 0; i < 100; ++i)
-			p_font_mgr->Render({ x, y }, 1.f, message);
+			p_font_mgr->Render({ x, y }, 1.f, message, en_font);
 	}
 
 } // Game

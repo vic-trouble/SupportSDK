@@ -10,3 +10,19 @@ shader_program = {
 		path = "..\..\Resources\Shaders\TextShader.fragmentshader"
 	}
 }
+
+font = {
+	resource_name = "Arial_en"
+	path = "..\..\Resources\Fonts\arial.ttf"
+	codes = L" !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
+	pixel_width = 0
+	pixel_height = 48
+}
+
+font = {
+	resource_name = "Arial_ru"
+	path = "..\..\Resources\Fonts\arial.ttf"
+	codes = L" !\"#$%&'()*+,-./0123456789:;<=>?@АБВГДАЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЬЭЮЯ[\\]^_`абвгдежзийклмнопрстуфхцчшщъыьэюя{|}~"
+	pixel_width = 0
+	pixel_height = 48
+}

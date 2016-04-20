@@ -87,7 +87,7 @@ namespace Game
 
 		auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
 		p_load_manager->LoadResourceSet("..\\..\\Resources\\ResourceSets\\ui_testing.res");
-		Core::GetGlobalObject<Render::FontManager>()->LoadFont("Arial", "..\\..\\Resources\\Fonts\\arial.ttf");
+		Core::GetGlobalObject<Render::FontManager>()->LoadFont("Arial", Render::FontSettings(), "..\\..\\Resources\\Fonts\\arial.ttf");
 
 		Log::Info("Render", Source, "Test message");
 		Log::Info(0, Source, "{0}: {1}", "asdasd", 1);
@@ -114,9 +114,11 @@ namespace Game
 		IRect rect = p_renderer->GetTargetRectangle();
 		p_renderer->SetMatrix(MatrixMode::Projection, Matrix4f::CreateOrtho(0, rect.Width(), 0, rect.Height()));
 		std::wstring message = L"FPS: " + std::to_wstring(Core::GetApplication()->GetCurrentFPS());
-		Core::GetGlobalObject<Render::FontManager>()->Render({ x, y }, 1.f, message);
-		
-		Core::GetGlobalObject<Render::FontManager>()->Render({ x, y - 50 }, 1.f, message_num_0);
+		auto ru_font = Core::GetGlobalObject<Resources::ResourceManager>()->GetHandleToResource<Render::Font>("Arial_ru");
+		auto en_font = Core::GetGlobalObject<Resources::ResourceManager>()->GetHandleToResource<Render::Font>("Arial_en");
+		Core::GetGlobalObject<Render::FontManager>()->Render({ x, y }, 1.f, message, en_font);
+		Core::GetGlobalObject<Render::FontManager>()->Render({ x, y - 50 }, 1.f, message_num_0, en_font);
+		Core::GetGlobalObject<Render::FontManager>()->Render({ x, y - 100 }, 1.f, L"Мама мыла раму!", ru_font);
 	}
 
 } // Game

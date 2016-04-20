@@ -150,3 +150,11 @@ model = {
 	vertices_usage = "static"
 	indices_usage = "static"
 }
+
+font = {
+	resource_name = "Arial_en"
+	path = "..\..\Resources\Fonts\arial.ttf"
+	codes = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
+	pixel_width = 0
+	pixel_height = 48
+}
