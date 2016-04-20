@@ -180,9 +180,11 @@
     <ClInclude Include="..\..\..\Sources\GameCore\Render\ScopedLightSwitch.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\Render\Shader.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\Render\ShaderCompiler.h" />
+    <ClInclude Include="..\..\..\Sources\GameCore\Render\ShaderDefinitions.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\Render\ShaderSystem.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\Render\Texture.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\Render\TextureAtlas.h" />
+    <ClInclude Include="..\..\..\Sources\GameCore\Render\TextureDefinitions.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\Render\TextureManager.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\Render\VertexDeclaration.h" />
     <ClInclude Include="..\..\..\Sources\GameCore\Render\Viewport.h" />

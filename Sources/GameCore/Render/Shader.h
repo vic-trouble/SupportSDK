@@ -195,7 +195,7 @@ namespace SDK
 				location = -1;
 			}
 		};
-		static_assert(std::is_pod<ShaderUniformValue>::value, "");
+		static_assert(std::is_pod<ShaderUniformValue>::value, "ShaderUniformValue is not POD");
 
 	} // Render
 } // SDK

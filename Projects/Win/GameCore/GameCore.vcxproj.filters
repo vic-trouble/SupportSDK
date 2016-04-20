@@ -368,6 +368,12 @@
     <ClInclude Include="..\..\..\Sources\GameCore\Render\RenderLogPolicies.h">
       <Filter>Core\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Sources\GameCore\Render\ShaderDefinitions.h">
+      <Filter>Core\Renderer\Shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Sources\GameCore\Render\TextureDefinitions.h">
+      <Filter>Core\Renderer\Texture</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Sources\GameCore\stdafx.cpp">
