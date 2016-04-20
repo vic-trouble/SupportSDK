@@ -61,6 +61,38 @@ namespace SDK
 					return std::make_pair(LoadResult::Success, t);
 				}
 
+				static std::pair<LoadResult, Render::Texture> Load(Render::RawTexture&& i_data)
+				{
+					if (i_data.mp_data == nullptr)
+						return std::make_pair(LoadResult::Failure, Render::Texture());
+					GLuint texture;
+					glGenTextures(1, &texture);
+					glBindTexture(GL_TEXTURE_2D, texture);
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+					glTexImage2D(
+						GL_TEXTURE_2D,
+						0,
+						GL_RED,
+						i_data.m_width,
+						i_data.m_height,
+						0,
+						GL_RED,
+						GL_UNSIGNED_BYTE,
+						i_data.mp_data.get()
+						);
+
+					Render::Texture t;
+					t.hardware_id = texture;
+					t.type = Render::TextureType::TwoD;
+					t.image_format = Render::ImageFormat::RGBA;
+
+					return std::make_pair(LoadResult::Success, t);
+				}
+
 				static InternalHandle CreateNewHandle()
 				{
 					Render::GLTextureManager* p_mgr = static_cast<Render::GLTextureManager*>(Core::GetRenderer()->GetTextureManager());
@@ -120,12 +152,22 @@ namespace SDK
 		TextureHandle GLTextureManager::Load(const std::string& i_resource_name, const std::string & i_file_name)
 		{
 			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
-			// TODO: now it is needed to open file with another library that does not now about our streams
-			//	so we need to pass thre correct path
-			const auto app_path = FS::GetApplicationPath();
-			auto path = app_path;
-			path.append("\\").append(i_file_name);
 			InternalHandle handle = p_load_manager->Load<Texture>(i_resource_name, { i_file_name }, nullptr);
+			// resource is already loaded
+			if (handle.index != -1)
+			{
+				assert(handle.index < static_cast<int>(TexturesArray::Size));
+				return m_textures.m_elements[handle.index].first;
+			}
+
+			return TextureHandle::InvalidHandle();
+		}
+
+		TextureHandle GLTextureManager::Load(const std::string& i_resource_name, RawTexture i_texture)
+		{
+			auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
+
+			InternalHandle handle = p_load_manager->LoadFromData<Texture>(i_resource_name, std::move(i_texture));
 			// resource is already loaded
 			if (handle.index != -1)
 			{

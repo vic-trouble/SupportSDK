@@ -16,8 +16,9 @@ namespace SDK
 			template <>
 			struct Definition <Render::Texture>
 			{
-				typedef void* InfoType;
-				typedef Render::TextureHandle HandleType;
+				using InfoType = void*;
+				using HandleType = Render::TextureHandle;
+				using RawData = Render::RawTexture;
 			};
 
 			template <typename ResInfo>
@@ -34,6 +35,7 @@ namespace SDK
 			virtual ~TextureManager() {}
 
 			virtual TextureHandle Load(const std::string& i_resource_name, const std::string& i_file_name) = 0;
+			virtual TextureHandle Load(const std::string& i_resource_name, RawTexture i_texture) = 0;
 			virtual void Unload(TextureHandle i_texture) = 0;
 			virtual Texture* Access(TextureHandle i_texture) = 0;
 			virtual void Bind(int i_target, TextureHandle i_texture) = 0;

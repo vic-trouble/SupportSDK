@@ -24,6 +24,7 @@ namespace SDK
 			virtual ~GLTextureManager();
 
 			virtual TextureHandle Load(const std::string& i_resource_name, const std::string& i_file_name) override;
+			virtual TextureHandle Load(const std::string& i_resource_name, RawTexture i_texture) override;
 			virtual void Unload(TextureHandle i_texture) override;
 			virtual Texture* Access(TextureHandle i_texture) override;
 			virtual void Bind(int i_target, TextureHandle i_texture) override;
