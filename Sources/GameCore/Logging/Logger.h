@@ -11,7 +11,7 @@ namespace SDK
 		{
 		public:
 			virtual ~Logger() {}
-			virtual void Log(size_t channel, LogType type, const SourceInformation& i_source_info, const std::string& i_message) = 0;
+			virtual void Log(const char* channel, LogType type, const SourceInformation& i_source_info, const std::string& i_message) = 0;
 		};
 
 		template <typename FilterPolicy, typename FormatPolicy, typename WritePolicy>
@@ -23,7 +23,7 @@ namespace SDK
 			WritePolicy m_writer;
 
 		public:
-			virtual void Log(size_t channel, LogType type, const SourceInformation& i_source_info, const std::string& i_message) override
+			virtual void Log(const char* channel, LogType type, const SourceInformation& i_source_info, const std::string& i_message) override
 			{
 				if (m_filter.Filter(channel, type))
 				{

@@ -55,6 +55,18 @@ namespace Game
 	};
 	TestHandler handler;
 
+	struct SSS
+	{
+		const char* file_name;
+		const char* function_name;
+		const int line;
+		SSS(const char* file = __FILE__, int l = __LINE__)
+			: file_name(file)
+			, function_name("")
+			, line(l)
+		{}
+	};
+
 	void CoreDelegateImpl::OnCreate()
 	{
 		auto p_ui_system = Core::GetGlobalObject<UI::UIControlSystem>();
@@ -77,7 +89,9 @@ namespace Game
 		p_load_manager->LoadResourceSet("..\\..\\Resources\\ResourceSets\\ui_testing.res");
 		Core::GetGlobalObject<Render::FontManager>()->LoadFont("Arial", "..\\..\\Resources\\Fonts\\arial.ttf");
 
-		Log::Info(0, { __FILE__, __func__, __LINE__ }, "{0}: {1}", "asdasd", 1);
+		Log::Info("Render", Source, "Test message");
+		Log::Info(0, Source, "{0}: {1}", "asdasd", 1);
+		Log::Info(0, Source, "asdfasdf");
 	}
 
 	void CoreDelegateImpl::OnTerminate()

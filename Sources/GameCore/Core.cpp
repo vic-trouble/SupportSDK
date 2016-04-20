@@ -36,9 +36,9 @@ namespace SDK
 	{
 		void RegisterLoggers()
 		{
-			g_log.RegisterLogger<Render::RenderVSLogger>();
-			g_log.RegisterLogger<IDELogger>();
-			g_log.RegisterLogger<FileLogger>();
+			Log::RegisterLogger<Render::RenderVSLogger>();
+			Log::RegisterLogger<IDELogger>();
+			Log::RegisterLogger<FileLogger>();
 		}
 	} // Log
 

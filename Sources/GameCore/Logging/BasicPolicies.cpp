@@ -14,7 +14,7 @@ namespace SDK
 		/////////////////////////////////////////////////////////////////////////////
 		// Filter Policies
 
-		bool NoFilterPolicy::Filter(size_t i_channel, LogType i_type)
+		bool NoFilterPolicy::Filter(const char* i_channel, LogType i_type)
 		{
 			return true;
 		}
@@ -22,11 +22,17 @@ namespace SDK
 		/////////////////////////////////////////////////////////////////////////////
 		// Format Policies
 
-		std::string ExtendedFormatPolicy::Format(size_t channel, LogType type, const SourceInformation& i_source_info, const std::string& i_message)
+		std::string ExtendedFormatPolicy::Format(const char* channel, LogType type, const SourceInformation& i_source_info, const std::string& i_message)
 		{
-			return i_source_info.file_name
-				+ std::string("(") + Utilities::lexical_cast(i_source_info.line) + std::string("): ")
-				+ i_message + std::string("\n");
+			if (channel == nullptr)
+				return i_source_info.file_name
+					+ std::string("(") + Utilities::lexical_cast(i_source_info.line) + std::string("): ")
+					+ i_message + std::string("\n");
+			else
+				return i_source_info.file_name
+					+ std::string("(") + Utilities::lexical_cast(i_source_info.line) + std::string("): [")
+					+ std::string(channel) + std::string("] ")
+					+ i_message + std::string("\n");
 		}
 		
 		/////////////////////////////////////////////////////////////////////////////

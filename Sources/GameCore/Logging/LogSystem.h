@@ -10,76 +10,79 @@
 namespace SDK
 {
 	namespace Log
-	{		
-		class LogSystem
+	{
+		namespace details
 		{
-		private:
-			using LoggerPtr = std::unique_ptr<Logger>;
-			using Loggers = std::vector<LoggerPtr>;
-			Loggers m_loggers;
-
-		private:
-			GAMECORE_EXPORT void Register(LoggerPtr ip_logger);
-			GAMECORE_EXPORT void Remove(size_t i_type);
-			GAMECORE_EXPORT void LogImpl(size_t i_channel, LogType i_type, SourceInformation i_source, std::string i_message) const;
-
-		public:
-			LogSystem();
-
-			template <typename LoggerType>
-			void RegisterLogger()
+			class LogSystem
 			{
-				Register(std::make_unique<LoggerType>());
-			}
+			private:
+				using LoggerPtr = std::unique_ptr<Logger>;
+				using Loggers = std::vector<LoggerPtr>;
+				Loggers m_loggers;
 
-			template <typename LoggerType>
-			void RemoveLogger()
-			{
-				Remove(typeid(LoggerType).hash_code());
-			}
+			public:
+				LogSystem();
 
-			template <typename... Args>
-			void Log(size_t i_channel, LogType i_type, SourceInformation i_source, const std::string& i_format, Args... i_args) const
-			{
-				LogImpl(i_channel, i_type, i_source, Strings::FormatString(i_format, i_args...));
-			}
+				GAMECORE_EXPORT void Register(LoggerPtr ip_logger);
+				GAMECORE_EXPORT void Remove(size_t i_type);
+				GAMECORE_EXPORT void LogImpl(const char* i_channel, LogType i_type, SourceInformation i_source, std::string i_message) const;
 
-			void Log(size_t i_channel, LogType i_type, SourceInformation i_source, const std::string& i_format) const
-			{
-				LogImpl(i_channel, i_type, i_source, i_format);
-			}
-		};
+				template <typename... Args>
+				void Log(const char* i_channel, LogType i_type, SourceInformation i_source, const std::string& i_format, Args... i_args) const
+				{
+					LogImpl(i_channel, i_type, i_source, Strings::FormatString(i_format, i_args...));
+				}
 
-		GAMECORE_EXPORT extern LogSystem g_log;
+				void Log(const char* i_channel, LogType i_type, SourceInformation i_source, const std::string& i_format) const
+				{
+					LogImpl(i_channel, i_type, i_source, i_format);
+				}
+			};
 
-		template <typename... Args>
-		void Debug(size_t i_channel, SourceInformation i_source, const std::string& i_format, Args... i_args)
+			GAMECORE_EXPORT extern LogSystem g_log_system;
+
+		} // details
+
+		template <typename LoggerType>
+		void RegisterLogger()
 		{
-			g_log.Log(i_channel, LogType::Debug, i_source, i_format, i_args...);
+			details::g_log_system.Register(std::make_unique<LoggerType>());
+		}
+		template <typename LoggerType>
+		void RemoveLogger()
+		{
+			details::g_log_system.RegisterLogger(typeid(LoggerType).hash_code());
 		}
 
 		template <typename... Args>
-		void Info(size_t i_channel, SourceInformation i_source, const std::string& i_format, Args... i_args)
+		void Debug(const char* i_channel, SourceInformation i_source, const std::string& i_format, Args... i_args)
 		{
-			g_log.Log(i_channel, LogType::Info, i_source, i_format, i_args...);
+			details::g_log_system.Log(i_channel, LogType::Debug, i_source, i_format, i_args...);
 		}
 		template <typename... Args>
-		void Warn(size_t i_channel, SourceInformation i_source, const std::string& i_format, Args... i_args)
+		void Info(const char* i_channel, SourceInformation i_source, const std::string& i_format, Args... i_args)
 		{
-			g_log.Log(i_channel, LogType::Warning, i_source, i_format, i_args...);
+			details::g_log_system.Log(i_channel, LogType::Info, i_source, i_format, i_args...);
 		}
 		template <typename... Args>
-		void Error(size_t i_channel, SourceInformation i_source, const std::string& i_format, Args... i_args)
+		void Warn(const char* i_channel, SourceInformation i_source, const std::string& i_format, Args... i_args)
 		{
-			g_log.Log(i_channel, LogType::Error, i_source, i_format, i_args...);
+			details::g_log_system.Log(i_channel, LogType::Warning, i_source, i_format, i_args...);
 		}
 		template <typename... Args>
-		void Fatal(size_t i_channel, SourceInformation i_source, const std::string& i_format, Args... i_args)
+		void Error(const char* i_channel, SourceInformation i_source, const std::string& i_format, Args... i_args)
 		{
-			g_log.Log(i_channel, LogType::Fatal, i_source, i_format, i_args...);
+			details::g_log_system.Log(i_channel, LogType::Error, i_source, i_format, i_args...);
+		}
+		template <typename... Args>
+		void Fatal(const char* i_channel, SourceInformation i_source, const std::string& i_format, Args... i_args)
+		{
+			details::g_log_system.Log(i_channel, LogType::Fatal, i_source, i_format, i_args...);
 		}
 
 	} // Log
 } // SDK
+
+#define Source { __FILE__, __func__, __LINE__ }
 
 #endif

@@ -4,6 +4,7 @@
 #include "../GameCoreAPI.h"
 
 #include "Logger.h"
+#include <Utilities/HashFunctions.h>
 
 namespace SDK
 {
@@ -14,22 +15,23 @@ namespace SDK
 
 		struct NoFilterPolicy
 		{
-			GAMECORE_EXPORT bool Filter(size_t i_channel, LogType i_type);
+			GAMECORE_EXPORT bool Filter(const char* i_channel, LogType i_type);
 		};
 
 		template <size_t hash>
 		struct ChannelFilterPolicy
 		{
-			bool Filter(size_t i_channel, LogType i_type)
+			bool Filter(const char* i_channel, LogType i_type)
 			{
-				return hash == i_channel;
+				const size_t i_hash = Utilities::hash_function(i_channel);
+				return hash == i_hash;
 			}
 		};
 
 		template <Log::LogType... types>
 		struct LogTypeFilterPolicy
 		{
-			bool Filter(size_t i_channel, Log::LogType i_type)
+			bool Filter(const char* i_channel, Log::LogType i_type)
 			{
 				bool result[] = { types == i_type... };
 				for (bool interested_type : result)
@@ -48,7 +50,7 @@ namespace SDK
 			First m_first;
 			Second m_second;
 		public:
-			bool Filter(size_t i_channel, LogType i_type)
+			bool Filter(const char* i_channel, LogType i_type)
 			{
 				return m_first.Filter(i_channel, i_type) && m_second.Filter(i_channel, i_type);
 			}
@@ -59,15 +61,18 @@ namespace SDK
 
 		struct SimpleFormatPolicy
 		{
-			std::string Format(size_t channel, LogType type, const SourceInformation& i_source_info, const std::string& i_message)
+			std::string Format(const char* channel, LogType type, const SourceInformation& i_source_info, const std::string& i_message)
 			{
-				return i_message;
+				if (channel == nullptr)
+					return i_message;
+				else
+					return "[" + std::string(channel) + "] " + i_message;
 			}
 		};
 
 		struct ExtendedFormatPolicy
 		{
-			GAMECORE_EXPORT std::string Format(size_t channel, LogType type, const SourceInformation& i_source_info, const std::string& i_message);
+			GAMECORE_EXPORT std::string Format(const char* channel, LogType type, const SourceInformation& i_source_info, const std::string& i_message);
 		};
 
 		/////////////////////////////////////////////////////////////////////////////
