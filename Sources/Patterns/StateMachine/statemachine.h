@@ -131,14 +131,6 @@ namespace SDK
 		size_t GetCurrent() const { return m_current; }
 
 		template <typename State>
-		bool IsCurrent() const
-		{
-			if (m_current == NullState)
-				return false;
-			return typeid(m_states[m_current]) == typeid(State);
-		}
-
-		template <typename State>
 		bool IsStateCurrent() const
 		{
 			if (m_current == NullState)

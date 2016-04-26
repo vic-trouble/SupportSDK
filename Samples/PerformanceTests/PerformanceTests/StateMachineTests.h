@@ -3,8 +3,6 @@
 
 namespace StateMachineTests
 {
-
-
 	void Test();
 } // StateMachineTests
 

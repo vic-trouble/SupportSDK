@@ -58,6 +58,43 @@ namespace SDK
 	template <typename FrState, typename ToState, typename Event>
 	using _tr = SDK::Transition<FrState, ToState, Event>;
 
+	////////////////////////////////////////////////////////////////////
+	// Transitions table
+	template <typename... Transitions>
+	struct TransitionsTable
+	{
+
+		template <typename EventType, typename StateMachine>
+		TransitionGetterResult GetNextState(const EventType& i_event, const StateMachine& i_fsm)
+		{
+			TransitionGetterResult tr_results[] = { Transitions::GetNextState<EventType, StateMachine>(i_event, i_fsm)... };
+
+			for (auto& result : tr_results)
+			{
+				if (result.second != nullptr)
+					return std::move(result);
+			}
+
+			return std::make_pair(std::type_index(typeid(*this)), nullptr);
+		}
+
+	};
+
+	template <typename StateFrom, typename StateTo, typename TargetEventType>
+	struct TransitionRow
+	{
+		template <typename EventType, typename StateMachine>
+		static TransitionGetterResult GetNextState(const EventType& i_event, const StateMachine& i_fsm)
+		{
+			if (i_fsm.IsStateCurrent<StateFrom>() && typeid(EventType) == typeid(TargetEventType))
+				return std::make_pair(std::type_index(typeid(StateTo)), std::make_unique<Executor<EventType, StateTo>>(i_event, i_fsm.GetState<StateTo>()));
+			return std::make_pair(std::type_index(typeid(Transition<StateFrom, StateTo, TargetEventType>)), nullptr);
+		}
+	};
+
+	template <typename StateFrom, typename StateTo, typename TargetEventType>
+	using _row = TransitionRow<StateFrom, StateTo, TargetEventType>;
+
 } // SDK
 
 #endif
