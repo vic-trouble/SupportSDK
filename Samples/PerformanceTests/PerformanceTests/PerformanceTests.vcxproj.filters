@@ -39,6 +39,9 @@
     <ClInclude Include="GlobalObjectGetterTests.h">
       <Filter>Tests</Filter>
     </ClInclude>
+    <ClInclude Include="FSM_Test_HierarchicalvsTemplate.h">
+      <Filter>Tests</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -57,6 +60,9 @@
       <Filter>Tests</Filter>
     </ClCompile>
     <ClCompile Include="GlobalObjcetGetterTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
+    <ClCompile Include="FSM_Test_HierarchicalvsTemplate.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
   </ItemGroup>

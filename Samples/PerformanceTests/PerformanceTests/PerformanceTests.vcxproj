@@ -181,6 +181,7 @@
   <ItemGroup>
     <ClInclude Include="CommandBucketTests.h" />
     <ClInclude Include="FactoryTests.h" />
+    <ClInclude Include="FSM_Test_HierarchicalvsTemplate.h" />
     <ClInclude Include="GlobalObjectGetterTests.h" />
     <ClInclude Include="StateMachineTests.h" />
     <ClInclude Include="stdafx.h" />
@@ -189,6 +190,7 @@
   <ItemGroup>
     <ClCompile Include="commandBucketTests.cpp" />
     <ClCompile Include="FactoryTests.cpp" />
+    <ClCompile Include="FSM_Test_HierarchicalvsTemplate.cpp" />
     <ClCompile Include="GlobalObjcetGetterTests.cpp" />
     <ClCompile Include="PerformanceTests.cpp" />
     <ClCompile Include="StateMachineTests.cpp" />

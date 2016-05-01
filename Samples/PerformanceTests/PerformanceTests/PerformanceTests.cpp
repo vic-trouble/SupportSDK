@@ -5,6 +5,7 @@
 
 #include "CommandBucketTests.h"
 #include "StateMachineTests.h"
+#include "FSM_Test_HierarchicalvsTemplate.h"
 #include "FactoryTests.h"
 #include "GlobalObjectGetterTests.h"
 #include "TempTests.h"
@@ -14,6 +15,7 @@ int main()
 	GlobalObjectGetterTests::Test();
 	TempTests::Test();
 	FactoryTests::Test();
+	HiararchicalvsTemplate::Test();
 	StateMachineTests::Test();
 	CmdBucketTest::Test();	
     return 0;
