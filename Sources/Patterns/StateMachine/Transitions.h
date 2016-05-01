@@ -31,10 +31,10 @@ namespace SDK
 			typedef std::pair<NextStateType, ExecutorPtr> Result;
 			Result first_result = std::move(first.GetNextState<EventType, StateMachine>(i_event, i_fsm));
 
-			if (first_result.first != typeid(first))
+			if (first_result.first != std::type_index(typeid(first)))
 				return first_result;
 			Result second_result = std::move(second.GetNextState<EventType, StateMachine>(i_event, i_fsm));
-			if (second_result.first != typeid(second))
+			if (second_result.first != std::type_index(typeid(second)))
 				return second_result;
 
 			return std::make_pair(std::type_index(typeid(*this)), nullptr);
@@ -86,7 +86,7 @@ namespace SDK
 		template <typename EventType, typename StateMachine>
 		static TransitionGetterResult GetNextState(const EventType& i_event, const StateMachine& i_fsm)
 		{
-			if (i_fsm.IsStateCurrent<StateFrom>() && typeid(EventType) == typeid(TargetEventType))
+			if (i_fsm.IsStateCurrent<StateFrom>() && typeid(EventType).hash_code() == typeid(TargetEventType).hash_code())
 				return std::make_pair(std::type_index(typeid(StateTo)), std::make_unique<Executor<EventType, StateTo>>(i_event, i_fsm.GetState<StateTo>()));
 			return std::make_pair(std::type_index(typeid(Transition<StateFrom, StateTo, TargetEventType>)), nullptr);
 		}

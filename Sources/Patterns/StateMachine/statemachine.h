@@ -135,14 +135,14 @@ namespace SDK
 		{
 			if (m_current == NullState)
 				return false;
-			return typeid(*m_states[m_current]) == typeid(State);
+			return typeid(*m_states[m_current]).hash_code() == typeid(State).hash_code();
 		}
 		template <typename State>
 		bool IsStatePrevious() const
 		{
 			if (m_prev == NullState)
 				return false;
-			return typeid(*m_states[m_prev]) == typeid(State);
+			return typeid(*m_states[m_prev]).hash_code() == typeid(State).hash_code();
 		}
 
 		template <typename State>
