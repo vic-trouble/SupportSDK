@@ -12,7 +12,11 @@ namespace Hiararchical
 	{
 		// do not forget about virtual destructor
 		virtual ~Event() {}
+
+		// method for coping events
+		virtual std::unique_ptr<Event> Copy() const { return nullptr; }
 	};
+
 	class BaseState
 	{
 	public:
@@ -37,7 +41,7 @@ namespace Hiararchical
 		return{ typeid(StateFrom).hash_code(), typeid(StateTo).hash_code(), typeid(Event).hash_code() };
 	}
 
-	class StateMachine : public BaseState
+	class StateMachine
 	{
 	private:
 		std::vector<std::unique_ptr<BaseState>> m_states;
@@ -45,24 +49,29 @@ namespace Hiararchical
 		BaseState* mp_current;
 		BaseState* mp_next;
 
+		bool m_terminate;
+
 		std::vector<Transition> m_transitions;
 		std::unique_ptr<Event> mp_cashed_event;
 
 	private:
 		void CheckNextStateTransition()
 		{
-			if (mp_next == nullptr)
+			if (mp_next == nullptr && !m_terminate)
 				return;
+
 			if (mp_current != nullptr)
 				mp_current->OnExit();
-			mp_current = mp_next;
+			mp_current = mp_next;			
+
 			if (mp_cashed_event)
-				mp_next->OnEnter(*mp_cashed_event);
+				mp_current->OnEnter(*mp_cashed_event);
 			else
 			{
 				Event base_event;
-				mp_next->OnEnter(base_event);
+				mp_current->OnEnter(base_event);
 			}
+
 			mp_next = nullptr;
 			mp_cashed_event.reset();
 		}
@@ -84,13 +93,35 @@ namespace Hiararchical
 			: mp_current(nullptr)
 			, mp_next(nullptr)
 			, mp_cashed_event(nullptr)
+			, m_terminate(false)
 		{}
+		StateMachine(StateMachine&& other)
+			: m_states(std::move(other.m_states))
+			, mp_current(other.mp_current)
+			, mp_next(other.mp_next)
+			, m_transitions(std::move(other.m_transitions))
+			, mp_cashed_event(std::move(other.mp_cashed_event))
+			, m_terminate(false)
+		{
+		}
 		virtual ~StateMachine() {}
 
 		template<typename State>
-		void SetFirst()
+		void Start()
 		{
 			mp_next = FindState(typeid(State).hash_code());
+			if (mp_next)
+				mp_cashed_event.reset(new Event());
+			m_terminate = mp_next == nullptr;
+		}
+
+		template<typename State>
+		void Start(const Event& i_evt)
+		{
+			mp_next = FindState(typeid(State).hash_code());
+			if (mp_next)
+				mp_cashed_event = std::move(i_evt.Copy());
+			m_terminate = mp_next == nullptr;
 		}
 
 		void AddState(std::unique_ptr<BaseState> ip_state)
@@ -117,12 +148,6 @@ namespace Hiararchical
 			std::copy(transitions.begin(), transitions.end(), std::back_inserter(m_transitions));
 		}
 
-		template <typename State>
-		void SetNext()
-		{
-			mp_next = FindState(typeid(State).hash_code());
-		}
-
 		void ProcessEvent(std::unique_ptr<Event> ip_event)
 		{
 			if (mp_current == nullptr)
@@ -144,11 +169,17 @@ namespace Hiararchical
 			}
 		}
 
-		virtual void OnUpdate(float dt) override
+		virtual void OnUpdate(float dt)
 		{
 			CheckNextStateTransition();
 			if (mp_current)
 				mp_current->OnUpdate(dt);
+		}
+
+		virtual void OnExit()
+		{
+			mp_next = nullptr;
+			m_terminate = true;
 		}
 
 		template <typename State>
@@ -159,6 +190,75 @@ namespace Hiararchical
 			return typeid(State).hash_code() == typeid(*mp_current).hash_code();
 		}
 	};
+
+	// enters in some state from SetInternalMachin
+	//	and continue from place of exit;
+	// Tag is for identification of different compound states in FSM (as we use typeid)
+	template <typename Tag>
+	struct ContinuesCompoundState : public BaseState
+	{
+		StateMachine m_internal_fsm;
+
+		ContinuesCompoundState(void(*SetInternalMachine)(StateMachine&))
+		{
+			SetInternalMachine(m_internal_fsm);
+		}
+
+		ContinuesCompoundState(std::function<void(StateMachine&)> SetInternalMachine)
+		{
+			SetInternalMachine(m_internal_fsm);
+		}
+
+		virtual void OnUpdate(float dt) override
+		{
+			m_internal_fsm.OnUpdate(dt);
+		}
+	};
+
+	// breaks OnExit and continue from scratch
+	// Tag is for identification of different compound states in FSM (as we use typeid)
+	template <typename Tag, typename FirstState>
+	struct CompoundState : public BaseState
+	{
+		StateMachine m_internal_fsm;
+
+		CompoundState(void(*SetInternalMachine)(StateMachine&))
+		{
+			SetInternalMachine(m_internal_fsm);
+		}
+		
+		CompoundState(std::function<void(StateMachine&)> SetInternalMachine)
+		{
+			SetInternalMachine(m_internal_fsm);
+		}
+
+		virtual void OnEnter(const Event& i_evt) override
+		{
+			/*struct SpecificEvent : public Event
+			{
+				virtual std::unique_ptr<Event> Copy() const override
+				{
+					return std::make_unique<SpecificEvent>();
+				}
+			};
+			SpecificEvent ev;*/
+			m_internal_fsm.Start<FirstState>(i_evt);
+		}
+
+		virtual void OnUpdate(float dt) override
+		{
+			m_internal_fsm.OnUpdate(dt);
+		}
+
+		virtual void OnExit() override
+		{
+			// if we want to start from scratch on evert entry to state
+			//	then OnExit; if no - call nothing;
+			//	when OnUpdate will call next time, fsm will continue from prev place
+			m_internal_fsm.OnExit();
+		}
+	};
+
 } // Hiararchical
 
 namespace HiararchicalSample
@@ -221,23 +321,47 @@ namespace HiararchicalSample
 		}
 	};
 
-	struct Idle : public StateMachine
+	struct Idle : public BaseState
 	{
+		StateMachine m_internal_fsm;
+
 		Idle()
 		{
-			AddState(std::make_unique<Wait>(*this));
-			AddState(std::make_unique<Dance>(*this));
-			AddState(std::make_unique<Joke>(*this));
-			SetTransitions({
+			m_internal_fsm.AddState(std::make_unique<Wait>(m_internal_fsm));
+			m_internal_fsm.AddState(std::make_unique<Dance>(m_internal_fsm));
+			m_internal_fsm.AddState(std::make_unique<Joke>(m_internal_fsm));
+			m_internal_fsm.SetTransitions({
 				_row<Wait, Dance, idle_action_completed>(),
 				_row<Dance, Joke, idle_action_completed>(),
 				_row<Joke, Wait, idle_action_completed>(),
 			});
 		}
 
-		virtual void OnEnter(const Event&)
+		virtual void OnEnter(const Event&) override
 		{
-			SetNext<Wait>();
+			struct SpecificEvent : public Event
+			{
+				virtual std::unique_ptr<Event> Copy() const override
+				{
+					return std::make_unique<SpecificEvent>();
+				}
+			};
+			SpecificEvent ev;
+			m_internal_fsm.Start<Wait>(ev);
+			// another overload is Start(void)
+		}
+
+		virtual void OnUpdate(float dt) override
+		{
+			m_internal_fsm.OnUpdate(dt);
+		}
+
+		virtual void OnExit() override
+		{
+			// if we want to start from scratch on evert entry to state
+			//	then OnExit; if no - call nothing;
+			//	when OnUpdate will call next time, fsm will continue from prev place
+			m_internal_fsm.OnExit();
 		}
 	};
 
@@ -260,7 +384,7 @@ namespace HiararchicalSample
 		{
 			std::cout << "[Walk] OnEnter" << std::endl;
 			// we cannot be sure that event is walk_away, so additional check needed
-			if (const walk_away* p_ev = static_cast<const walk_away*>(&i_ev))
+			if (const walk_away* p_ev = dynamic_cast<const walk_away*>(&i_ev))
 			{
 				m_pos = p_ev->position;
 				m_arrived = false;
@@ -365,42 +489,62 @@ namespace HiararchicalSample
 		}
 	};
 
-	struct CharacterFSM : public StateMachine
+	void IdleFsm(StateMachine& o_fsm)
 	{
-		CharacterFSM()
-		{
-			AddState(std::make_unique<Idle>());
-			AddState(std::make_unique<Walk>(*this));
-			AddState(std::make_unique<Run>(*this));
-			AddState(std::make_unique<Attack>(*this));			
+		o_fsm.AddState(std::make_unique<Wait>(o_fsm));
+		o_fsm.AddState(std::make_unique<Dance>(o_fsm));
+		o_fsm.AddState(std::make_unique<Joke>(o_fsm));
+		o_fsm.SetTransitions({
+			_row<Wait, Dance, idle_action_completed>(),
+			_row<Dance, Joke, idle_action_completed>(),
+			_row<Joke, Wait, idle_action_completed>(),
+		});
+		o_fsm.Start<Wait>();
+	}
 
-			SetTransitions({
-				_row<Idle, Walk, walk_away>(),
-				_row<Idle, Walk, run_away>(),
-				_row<Idle, Attack, attack>(),
+	struct IdleTag {};
+	// if use this than each OnEntry will start from Wait
+	using IdleCompound = CompoundState<IdleTag, Wait>;
+	// if use this than each OnEntry will continue from State in which machine was before
+	//	switching to another state
+	using IdleCompoundCont = ContinuesCompoundState<IdleTag>;
 
-				_row<Walk, Idle, position_achieved>(),
-				_row<Walk, Run, run_away>(),
-				_row<Walk, Attack, attack>(),
-				_row<Walk, Idle, stop>(),
+	using IntFSM = IdleCompoundCont;
 
-				_row<Run, Idle, position_achieved>(),
-				_row<Run, Walk, walk_away>(),
-				_row<Run, Attack, attack>(),
-				_row<Run, Idle, stop>(),
+	void CharacterFSM(StateMachine& o_fsm)
+	{
+		o_fsm.AddState(std::make_unique<IntFSM>(&IdleFsm));
+		o_fsm.AddState(std::make_unique<Walk>(o_fsm));
+		o_fsm.AddState(std::make_unique<Run>(o_fsm));
+		o_fsm.AddState(std::make_unique<Attack>(o_fsm));
 
-				_row<Attack, Idle, stop_attacking>(),
-				_row<Attack, Walk, walk_away>(),
-				_row<Attack, Run, run_away>(),
-				_row<Attack, Idle, stop>(),
-			});
-		}
-	};
+		o_fsm.SetTransitions({
+			_row<IntFSM, Walk, walk_away>(),
+			_row<IntFSM, Run, run_away>(),
+			_row<IntFSM, Attack, attack>(),
+
+			_row<Walk, IntFSM, position_achieved>(),
+			_row<Walk, Run, run_away>(),
+			_row<Walk, Attack, attack>(),
+			_row<Walk, IntFSM, stop>(),
+
+			_row<Run, IntFSM, position_achieved>(),
+			_row<Run, Walk, walk_away>(),
+			_row<Run, Attack, attack>(),
+			_row<Run, IntFSM, stop>(),
+
+			_row<Attack, IntFSM, stop_attacking>(),
+			_row<Attack, Walk, walk_away>(),
+			_row<Attack, Run, run_away>(),
+			_row<Attack, IntFSM, stop>(),
+		});
+	}
 
 	void Test()
 	{
-		CharacterFSM char_fsm;
-		char_fsm.SetNext<Idle>();
+		StateMachine char_fsm;
+		CharacterFSM(char_fsm);
+		char_fsm.Start<IntFSM>();
 
 		// move to Wait
 		char_fsm.OnUpdate(.1f);
@@ -418,7 +562,7 @@ namespace HiararchicalSample
 		char_fsm.ProcessEvent(std::make_unique<run_away>(std::make_pair(1, 1)));
 		char_fsm.OnUpdate(.1f);
 		// wait for idle state
-		while (!char_fsm.IsCurrentState<Idle>()) char_fsm.OnUpdate(.1f);
+		while (!char_fsm.IsCurrentState<IntFSM>()) char_fsm.OnUpdate(.1f);
 		// attack
 		char_fsm.ProcessEvent(std::make_unique<attack>(1));
 		char_fsm.OnUpdate(.1f);
