@@ -6,7 +6,7 @@
 
 #include <Utilities/lexical_cast.h>
 
-namespace Hiararchical
+namespace Hierarchical
 {
 	struct Event
 	{
@@ -261,9 +261,9 @@ namespace Hiararchical
 
 } // Hiararchical
 
-namespace HiararchicalSample
+namespace HierarchicalSample
 {
-	using namespace Hiararchical;	
+	using namespace Hierarchical;	
 
 	// events
 	struct idle_action_completed : public Event {};
@@ -583,6 +583,6 @@ namespace HiararchicalvsTemplate
 {
 	void Test()
 	{
-		HiararchicalSample::Test();
+		HierarchicalSample::Test();
 	}
 } // HiararchicalvsTemplate
