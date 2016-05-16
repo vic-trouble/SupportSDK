@@ -35,7 +35,7 @@ namespace SDK
 		size_t m_next;
 		size_t m_prev;
 
-		std::unique_ptr<ExBase> mp_next_executor;
+		std::function<void()> m_next_executor;
 
 	private:
 		void ChangeStateIfNeeded()
@@ -48,10 +48,10 @@ namespace SDK
 
 			m_prev = m_current;
 			m_current = m_next;
-			if (m_current != NullState && mp_next_executor)
+			if (m_current != NullState && m_next_executor)
 			{
-				mp_next_executor->Execute();
-				mp_next_executor.reset();
+				m_next_executor();
+				m_next_executor.swap(std::function<void()>());
 			}
 
 			m_next = NullNextState;
@@ -67,7 +67,7 @@ namespace SDK
 				if (next_state == m_states_hashes[i])
 				{
 					m_next = i;
-					mp_next_executor = std::move(i_result.second);
+					m_next_executor.swap(i_result.second);
 					break;
 				}
 			}
@@ -114,18 +114,18 @@ namespace SDK
 		template <typename EventType>
 		void ProcessEvent(const EventType& i_evt)
 		{
-			auto result = std::move(m_transitions.GetNextState<EventType, _ThisMachine>(i_evt, *this));
+			auto result = m_transitions.GetNextState<EventType, _ThisMachine>(i_evt, *this);
 			if (result.second != nullptr)
-				SetNext(std::move(result));
+				SetNext(result);
 		}
-
+		void SomeFunction() {}
 		template <typename State>
 		void SetNext()
 		{
 			const size_t next_state = typeid(State).hash_code();
 			SetNext(std::make_pair(
 				next_state,
-				std::make_unique<VoidExecutor<State>>(GetState<State>()) 
+				std::bind(static_cast<void(State::*)(void)>(&State::OnEnter), GetState<State>())
 				));
 		}
 

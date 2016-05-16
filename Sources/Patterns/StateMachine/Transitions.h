@@ -6,7 +6,8 @@
 namespace SDK
 {
 
-	typedef std::unique_ptr<ExBase> ExecutorPtr;
+	//typedef std::unique_ptr<ExBase> ExecutorPtr;
+	typedef std::function<void()> ExecutorPtr;
 	typedef size_t NextStateType;
 	typedef std::pair<NextStateType, ExecutorPtr> TransitionGetterResult;
 	template <typename StateMachine>
@@ -15,7 +16,7 @@ namespace SDK
 		template <typename EventType, typename StateMachine>
 		TransitionGetterResult GetNextState(const EventType& i_event, const StateMachine& i_fsm)
 		{
-			return std::make_pair(std::type_index(typeid(*this)).hash_code(), nullptr);
+			return std::make_pair(std::type_index(typeid(*this)).hash_code(), ExecutorPtr());
 		}
 	};
 
@@ -29,15 +30,15 @@ namespace SDK
 		TransitionGetterResult GetNextState(const EventType& i_event, const StateMachine& i_fsm)
 		{
 			typedef std::pair<NextStateType, ExecutorPtr> Result;
-			Result first_result = std::move(first.GetNextState<EventType, StateMachine>(i_event, i_fsm));
+			Result first_result = first.GetNextState<EventType, StateMachine>(i_event, i_fsm);
 
 			if (first_result.first != std::type_index(typeid(first)).hash_code())
 				return first_result;
-			Result second_result = std::move(second.GetNextState<EventType, StateMachine>(i_event, i_fsm));
+			Result second_result = second.GetNextState<EventType, StateMachine>(i_event, i_fsm);
 			if (second_result.first != std::type_index(typeid(second)).hash_code())
 				return second_result;
 
-			return std::make_pair(std::type_index(typeid(*this)).hash_code(), nullptr);
+			return std::make_pair(std::type_index(typeid(*this)).hash_code(), ExecutorPtr());
 		}
 	};
 
@@ -48,8 +49,11 @@ namespace SDK
 		TransitionGetterResult GetNextState(const EventType& i_event, const StateMachine& i_fsm) const
 		{
 			if (i_fsm.IsStateCurrent<StateFrom>() && typeid(EventType).hash_code() == typeid(TargetEventType).hash_code())
-				return std::make_pair(std::type_index(typeid(StateTo)).hash_code(), std::make_unique<Executor<EventType, StateTo>>(i_event, i_fsm.GetState<StateTo>()));
-			return std::make_pair(std::type_index(typeid(*this)).hash_code(), nullptr);
+				return std::make_pair(
+					std::type_index(typeid(StateTo)).hash_code(), 
+					std::bind(static_cast<void(StateTo::*)(const EventType&)>(&StateTo::OnEnter), i_fsm.GetState<StateTo>(), i_event)
+					);
+			return std::make_pair(std::type_index(typeid(*this)).hash_code(), std::function<void()>());
 		}
 	};
 
@@ -68,9 +72,9 @@ namespace SDK
 		{
 			static size_t this_index = std::type_index(typeid(*this)).hash_code();
 			if (io_result)
-				return std::make_pair(this_index, nullptr);
+				return std::make_pair(this_index, ExecutorPtr());
 			auto res = row::GetNextState<EventType, StateMachine>(i_event, i_fsm);
-			io_result = res.second != nullptr;
+			io_result = static_cast<bool>(res.second);
 			return res;
 		}
 
@@ -82,11 +86,11 @@ namespace SDK
 
 			for (auto& result : tr_results)
 			{
-				if (result.second != nullptr)
-					return std::move(result);
+				if (result.second)
+					return result;
 			}
 			static size_t this_index = std::type_index(typeid(*this)).hash_code();
-			return std::make_pair(this_index, nullptr);
+			return std::make_pair(this_index, std::function<void()>());
 		}
 
 	};
@@ -99,13 +103,16 @@ namespace SDK
 		{
 			static size_t type_to = typeid(StateTo).hash_code();
 			static size_t type_this = typeid(TransitionRow<StateFrom, StateTo, TargetEventType>).hash_code();
-			static size_t hash_from = typeid(StateFrom).hash_code();
 			static size_t hash_event = typeid(TargetEventType).hash_code();
+			static size_t current_event_hash = typeid(EventType).hash_code();
+			static void(StateTo::*enter_func)(const EventType&) = &StateTo::OnEnter;
 
-			auto p_state = i_fsm.GetState<StateTo>();
-			if (i_fsm.IsStateCurrent<StateFrom>() && typeid(EventType).hash_code() == hash_event)
-				return std::make_pair(type_to, std::make_unique<Executor<EventType, StateTo>>(i_event, i_fsm.GetState<StateTo>()));
-			return std::make_pair(type_this, nullptr);
+			if (i_fsm.IsStateCurrent<StateFrom>() && current_event_hash == hash_event)
+				return std::make_pair(
+					type_to,
+					std::bind(enter_func, i_fsm.GetState<StateTo>(), i_event)
+					);
+			return std::make_pair(type_this, std::function<void()>());
 		}
 	};
 

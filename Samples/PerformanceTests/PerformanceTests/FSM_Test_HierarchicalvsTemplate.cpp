@@ -749,7 +749,7 @@ namespace TemplateSample
 
 		DEFINE_BASE_FUNCTIONS();
 
-		virtual void OnEnter(const run_away& i_ev)
+		void OnEnter(const run_away& i_ev)
 		{
 			std::cout << "[Run] OnEnter" << std::endl;
 			// we cannot be sure that event is walk_away, so additional check needed
@@ -774,7 +774,6 @@ namespace TemplateSample
 	{
 		StateMachine& m_parent_fsm;
 		int m_enemy_id;
-
 		bool m_done;
 
 		Attack_(StateMachine& i_fsm)
@@ -783,7 +782,7 @@ namespace TemplateSample
 			, m_done(false)
 		{}
 		DEFINE_BASE_FUNCTIONS();
-		virtual void OnEnter(const attack& i_ev)
+		void OnEnter(const attack& i_ev)
 		{
 			std::cout << "[Attack] OnEnter" << std::endl;
 			m_enemy_id = i_ev.enemy_id;
