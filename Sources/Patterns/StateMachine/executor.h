@@ -8,9 +8,7 @@ namespace SDK
 
 	struct ExBase
 	{
-		const std::type_index m_handler_type;
-		ExBase(const std::type_index& i_handler_type)
-			: m_handler_type(i_handler_type)
+		ExBase()
 		{}
 		virtual void Execute() = 0;
 	};
@@ -21,8 +19,7 @@ namespace SDK
 		EventType m_cached;
 		Handler* mp_handler;
 		Executor(EventType cached, Handler* ip_handler)
-			: ExBase(typeid(Handler))
-			, m_cached(cached)
+			: m_cached(cached)
 			, mp_handler(ip_handler)
 		{}
 		virtual void Execute() override
@@ -36,8 +33,7 @@ namespace SDK
 	{
 		Handler* mp_handler;
 		VoidExecutor(Handler* ip_handler)
-			: ExBase(typeid(Handler))
-			, mp_handler(ip_handler)
+			: mp_handler(ip_handler)
 		{}
 		virtual void Execute() override
 		{

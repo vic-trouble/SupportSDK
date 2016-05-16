@@ -29,6 +29,7 @@ namespace SDK
 		typedef typename FirstStateType _FirstState;
 	private:
 		PtrType m_states[_StatesCount];
+		size_t m_states_hashes[_StatesCount];
 		TransitionTable m_transitions;
 		size_t m_current;
 		size_t m_next;
@@ -59,10 +60,11 @@ namespace SDK
 		void SetNext(TransitionGetterResult i_result)
 		{
 			m_next = NullState;
+			const size_t next_state = i_result.first;
 			for (size_t i = 0; i < _StatesCount; ++i)
 			{
 				const auto& state = m_states[i];
-				if (std::type_index(typeid(*state)) == i_result.first)
+				if (next_state == m_states_hashes[i])
 				{
 					m_next = i;
 					mp_next_executor = std::move(i_result.second);
@@ -94,7 +96,10 @@ namespace SDK
 			static_assert(sizeof...(i_states) == _StatesCount, "Size of arguments must be same as size of states");
 			PtrType states[] = { std::move(i_states)... };
 			for (size_t i = 0; i < _StatesCount; ++i)
+			{
 				m_states[i] = std::move(states[i]);
+				m_states_hashes[i] = typeid(*m_states[i]).hash_code();
+			}
 
 			m_current = NullState;
 			m_next = NullNextState;
@@ -109,19 +114,19 @@ namespace SDK
 		template <typename EventType>
 		void ProcessEvent(const EventType& i_evt)
 		{
-			auto result = std::move(m_transitions.GetNextState<EventType, _ThisMachine>(i_evt, dynamic_cast<Derived&>(*this)));
-			if (std::type_index(typeid(m_transitions)) != result.first)
+			auto result = std::move(m_transitions.GetNextState<EventType, _ThisMachine>(i_evt, *this));
+			if (result.second != nullptr)
 				SetNext(std::move(result));
 		}
 
 		template <typename State>
 		void SetNext()
 		{
-			const std::type_info& next_state = typeid(State);
-			SetNext(
-				std::make_pair( std::type_index(typeid(State)),
-				std::make_unique<VoidExecutor<State>>(GetState<State>()) )
-				);
+			const size_t next_state = typeid(State).hash_code();
+			SetNext(std::make_pair(
+				next_state,
+				std::make_unique<VoidExecutor<State>>(GetState<State>()) 
+				));
 		}
 
 		/////////////////////////////////////////////////////////////
@@ -135,24 +140,24 @@ namespace SDK
 		{
 			if (m_current == NullState)
 				return false;
-			return typeid(*m_states[m_current]).hash_code() == typeid(State).hash_code();
+			return m_states_hashes[m_current] == typeid(State).hash_code();
 		}
 		template <typename State>
 		bool IsStatePrevious() const
 		{
 			if (m_prev == NullState)
 				return false;
-			return typeid(*m_states[m_prev]).hash_code() == typeid(State).hash_code();
+			return m_states_hashes[m_prev] == typeid(State).hash_code();
 		}
 
 		template <typename State>
 		State* GetState() const
 		{
-			const std::type_index next_state = typeid(State);
+			const size_t next_state = typeid(State).hash_code();
 			for (size_t i = 0; i < _StatesCount; ++i)
 			{
 				const auto& state = m_states[i];
-				if (std::type_index(typeid(*state)) == next_state)
+				if (m_states_hashes[i] == next_state)
 					return static_cast<State*>(&(*state));
 			}
 			return nullptr;
