@@ -641,10 +641,13 @@ namespace TemplateSample
 	{
 		Idle();
 		void OnEnter()
-		{
-
-		}
-		DEFINE_BASE_FUNCTIONS();
+		{		}
+		void OnEnter(const position_achieved&)
+		{		}
+		void OnEnter(const stop&)
+		{		}
+		void OnEnter(const stop_attacking&)
+		{		}
 	};
 
 	using IntFSM = Idle;
@@ -707,7 +710,7 @@ namespace TemplateSample
 			: m_parent_fsm(i_fsm)
 			, m_steps_count(0)
 		{}
-		DEFINE_BASE_FUNCTIONS();
+		
 		void OnEnter(const walk_away& i_ev)
 		{
 			std::cout << "[Walk] OnEnter" << std::endl;
@@ -747,8 +750,6 @@ namespace TemplateSample
 			, m_steps_count(0)
 		{}
 
-		DEFINE_BASE_FUNCTIONS();
-
 		void OnEnter(const run_away& i_ev)
 		{
 			std::cout << "[Run] OnEnter" << std::endl;
@@ -781,7 +782,7 @@ namespace TemplateSample
 			, m_enemy_id(0)
 			, m_done(false)
 		{}
-		DEFINE_BASE_FUNCTIONS();
+		
 		void OnEnter(const attack& i_ev)
 		{
 			std::cout << "[Attack] OnEnter" << std::endl;
@@ -924,10 +925,13 @@ namespace HiararchicalvsTemplate
 		std::cout << "-----------------------------------" << std::endl;
 
 		constexpr static size_t CALL_COUNT = 100000;
-		const clock_t hier_t = Runner(&HierarchicalSample::TestEvents, CALL_COUNT);
-		const clock_t template_t = Runner(&TemplateSample::TestEvents, CALL_COUNT);
+		for (size_t i = 0; i < 1; ++i)
+		{
+			const clock_t hier_t = Runner(&HierarchicalSample::TestEvents, CALL_COUNT);
+			const clock_t template_t = Runner(&TemplateSample::TestEvents, CALL_COUNT);
 
-		std::cout << "\tHierarchical: " << hier_t << std::endl
-			<< "\tTemplate: " << template_t << std::endl;
+			std::cout << "\tHierarchical: " << hier_t << std::endl
+				<< "\tTemplate: " << template_t << std::endl;
+		}
 	}
 } // HiararchicalvsTemplate

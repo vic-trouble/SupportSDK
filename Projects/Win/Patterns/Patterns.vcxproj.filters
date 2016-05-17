@@ -51,9 +51,6 @@
     <ClInclude Include="..\..\..\Sources\Patterns\StateMachine\StateMachine.h">
       <Filter>FSM</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Sources\Patterns\StateMachine\Executor.h">
-      <Filter>FSM</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Sources\Patterns\StateMachine\Transitions.h">
       <Filter>FSM</Filter>
     </ClInclude>

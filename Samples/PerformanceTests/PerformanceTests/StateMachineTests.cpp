@@ -20,21 +20,22 @@ namespace StateMachineTests
 	struct Event33 {};
 	struct MyState1 : public BaseState<>
 	{
-		DEFINE_BASE_FUNCTIONS();
 		void OnEnter()
 		{
 			//std::cout << "MyState1 Enters first state" << std::endl;
+		}
+		void OnEnter(const Event11&)
+		{
+
 		}
 	};
 	
 	struct MyState2 : public BaseState<>
 	{
-		DEFINE_BASE_FUNCTIONS();
 	};
 	class MyFSM;
 	struct MyState4 : public BaseState<>
 	{
-		DEFINE_BASE_FUNCTIONS();
 	};
 	
 	struct MyState3;
@@ -51,10 +52,10 @@ namespace StateMachineTests
 			Transition<MyState1, MyState2, Event11>,
 			CompoundTransition<Transition<MyState2, MyState3, Event11>, Transition<MyState3, MyState1, Event11>>
 		> TransitionTableX;
-
-		void OnEnter(const Event22& ev)
+		
+		void OnEnter(const Event22&)
 		{
-			std::cout << "sdfaerwer" << std::endl;
+			std::cout << "asdasd" << std::endl;
 		}
 
 		void OnEnter()
@@ -62,12 +63,9 @@ namespace StateMachineTests
 			//std::cout << "MyFSM Enters first state" << std::endl;
 		}
 
-		DEFINE_BASE_FUNCTIONS();
-
 	};
 	struct MyState3 : public BaseState<>
 	{
-		DEFINE_BASE_FUNCTIONS();
 		void OnEnter(const Event11& ev)
 		{
 			//std::cout << ev.name << std::endl;
@@ -92,7 +90,6 @@ namespace StateMachineTests
 			: m_fsm(i_fsm)
 		{}
 
-		DEFINE_BASE_FUNCTIONS();
 		void OnEnter(const Event11& ev)
 		{
 			//std::cout << "asdasdsd" << std::endl;

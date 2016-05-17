@@ -9,8 +9,8 @@ namespace SDK
 	public:
 		virtual ~BaseState() {}
 
-		// stub function - if you want to override one of entry you must include in struct
-		//	DEFINE_BASE_FUNCTIONS()
+		// if you want to override OnEnter functions than you should define concrete functions
+		//	with specific events that your state will handle
 		template <typename EventType>
 		void OnEnter(const EventType&) {}
 		// Is called for first state from SetStates
@@ -19,12 +19,6 @@ namespace SDK
 		virtual void OnExit() {}
 		virtual void OnUpdate(OnUdateParam i_elapsed_time) {}
 	};
-
-	// is needed because of Transition`s code generates OnEnter for all types in TTable with which
-	//	 it works (for OnEnter event, and for next_state.OnEnter event)
-#define DEFINE_BASE_FUNCTIONS() \
-	template <typename EventType> \
-	void OnEnter(const EventType&) {}
 
 } // SDK
 

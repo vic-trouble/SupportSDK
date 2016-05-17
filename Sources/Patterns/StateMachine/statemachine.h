@@ -1,11 +1,8 @@
 #ifndef	__PATTERNS_STATEMACHINE_H__
 #define __PATTERNS_STATEMACHINE_H__
 
-#include "Executor.h"
-#include "Transitions.h"
 #include "BaseState.h"
-
-#include <Utilities/type_index.h>
+#include "Transitions.h"
 
 namespace SDK
 {

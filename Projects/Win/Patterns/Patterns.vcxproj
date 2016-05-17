@@ -87,7 +87,6 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\Sources\Patterns\Factory\factory.h" />
     <ClInclude Include="..\..\..\Sources\Patterns\StateMachine\BaseState.h" />
-    <ClInclude Include="..\..\..\Sources\Patterns\StateMachine\Executor.h" />
     <ClInclude Include="..\..\..\Sources\Patterns\StateMachine\StateMachine.h" />
     <ClInclude Include="..\..\..\Sources\Patterns\MessageDispatcher\Connection.h" />
     <ClInclude Include="..\..\..\Sources\Patterns\Event.h" />
