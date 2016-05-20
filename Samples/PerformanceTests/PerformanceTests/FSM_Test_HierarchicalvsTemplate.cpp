@@ -686,7 +686,7 @@ namespace TemplateSample
 		_row<Dance, Joke<Idle>, idle_action_completed>,
 		_row<Joke<Idle>, Wait, idle_action_completed>
 	>;
-	struct Idle : public StateMachine<Idle, BaseState<>, 3, Tr, Wait>
+	struct Idle : public StateMachine<3, Tr, Wait>
 	{
 		Idle()
 		{
@@ -875,7 +875,7 @@ namespace TemplateSample
 		_row<Attack, IntFSM, stop>
 	>;
 
-	struct CharacherFSM : public StateMachine<int, BaseState<>, 4, CharTr, IntFSM>
+	struct CharacherFSM : public StateMachine<4, CharTr, IntFSM>
 	{
 		CharacherFSM()
 		{
@@ -932,7 +932,7 @@ namespace TemplateSample
 		_row<Third, First, test_event>
 	>;
 
-	struct TestEventsFSM : public StateMachine<TestEventsFSM, BaseState<>, 3, TestEvTr, First>
+	struct TestEventsFSM : public StateMachine<3, TestEvTr, First>
 	{
 		TestEventsFSM()
 		{

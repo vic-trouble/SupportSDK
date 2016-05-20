@@ -6,26 +6,28 @@
 
 namespace SDK
 {
-	template <typename Derived,
-		typename BaseStateType,
+	template <
 		size_t StatesCount,
 		typename TransitionTable,
 		typename FirstStateType,
-		class PtrType = std::unique_ptr<BaseStateType>,
-		typename OnUpdateParam = float
+		typename OnUpdateParam = float,
+		typename BaseStateType = BaseState<OnUpdateParam>,
+		class PtrType = std::unique_ptr<BaseStateType>	
 	>
 	class StateMachine
 	{
+	public:
 		constexpr static size_t _StatesCount = StatesCount;
 		static_assert(_StatesCount > 0, "Size of states must be greater than 0");
-		constexpr static size_t NullState = _StatesCount;
-		constexpr static size_t NullNextState = _StatesCount + 1;
-
-	public:
-		typedef typename StateMachine<Derived, BaseStateType, StatesCount, TransitionTable, FirstStateType, PtrType, OnUpdateParam> _ThisMachine;
+		using _ThisMachine = typename StateMachine<StatesCount, TransitionTable, FirstStateType, OnUpdateParam, BaseStateType, PtrType>;
 		using _FirstState = FirstStateType;
 		using _BaseStateType = BaseStateType;
 		using _OnUpdateParam = OnUpdateParam;
+
+	private:
+		constexpr static size_t NullState = _StatesCount;
+		constexpr static size_t NullNextState = _StatesCount + 1;
+
 	private:
 		PtrType m_states[_StatesCount];
 		size_t m_states_hashes[_StatesCount];
@@ -214,18 +216,21 @@ namespace SDK
 		}
 	};
 
+	/////////////////////////////////////////////////////////////////////////
+	// Helper classes
+
 	template <
 		size_t StatesCount,
 		typename TransitionTable,
 		typename FirstStateType,
 		typename OnUpdateParam = float,
 		typename BaseStateType = BaseState<OnUpdateParam>,
-	class PtrType = std::unique_ptr<BaseStateType>
+		class PtrType = std::unique_ptr<BaseStateType>
 	>
 	class CompoundState : public BaseStateType
 	{
 	protected:
-		using _InternalFSM = StateMachine<int, BaseStateType, StatesCount, TransitionTable, FirstStateType, PtrType, OnUpdateParam>;
+		using _InternalFSM = StateMachine<StatesCount, TransitionTable, FirstStateType, OnUpdateParam, BaseStateType, PtrType>;
 		_InternalFSM m_fsm;
 
 	public:

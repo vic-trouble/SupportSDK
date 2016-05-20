@@ -55,7 +55,7 @@ namespace StateMachineTests
 		CompoundTransition<Transition<MyState2, MyState3, Event11>, 
 		CompoundTransition<Transition<MyState3, MyState4, Event11>, Transition<MyState4, MyState1, Event11>> >
 	> TransitionTable;
-	class MyFSM : public SDK::StateMachine<MyFSM, SDK::BaseState<>, 4, TransitionTable, MyState1, SDK::BaseState<>*>
+	class MyFSM : public SDK::StateMachine<4, TransitionTable, MyState1, float, SDK::BaseState<>, SDK::BaseState<>*>
 	{
 	private:
 		std::unique_ptr<BaseState<>> mp_states[4];
@@ -89,7 +89,7 @@ namespace StateMachineTests
 		_row<MyState3, MyState4, Event11>,
 		_row<MyState4, MyState1, Event11>
 	>;
-	class TestFSM : public SDK::StateMachine<TestFSM, SDK::BaseState<>, 4, TestTr, MyState1, SDK::BaseState<>*>
+	class TestFSM : public SDK::StateMachine<4, TestTr, MyState1, float, SDK::BaseState<>, SDK::BaseState<>*>
 	{};
 
 	/////////////////////////////
@@ -199,7 +199,7 @@ namespace StateMachineTests
 			_row<TestState, IntFSM::_fsm, state_finished>,
 			_row<IntFSM::_fsm, TestState1, int_fsm_break>
 		>;
-		struct UpperFSM : public SDK::StateMachine<UpperFSM, SDK::BaseState<>, 3, Tr, TestState>
+		struct UpperFSM : public SDK::StateMachine<3, Tr, TestState>
 		{
 			UpperFSM()
 			{
@@ -236,7 +236,7 @@ namespace StateMachineTests
 	typedef CompoundTransition<
 		Transition<MyFSMWrapper, M4<MyCompoundFSM>, Event11>, Transition<M4<MyCompoundFSM>, MyFSMWrapper, Event22>
 	> TransTable;
-	class MyCompoundFSM : public SDK::StateMachine<MyCompoundFSM, SDK::BaseState<>, 2, TransTable, MyFSMWrapper>
+	class MyCompoundFSM : public SDK::StateMachine<2, TransTable, MyFSMWrapper>
 	{
 	public:
 		MyCompoundFSM()
@@ -293,9 +293,11 @@ namespace StateMachineTests
 			test_fsm.ProcessEvent<Event11>(Event11(Utilities::lexical_cast(i)));
 		}
 
-		constexpr size_t COUNT = 100000;
-		auto time_fsm = TestTransitionsPerformance<MyFSM>(COUNT);
-		auto time_test = TestTransitionsPerformance<TestFSM>(COUNT);
-		std::cout << "Time (compound transition-transition table): " << time_fsm << " - " << time_test << std::endl;
+		constexpr size_t COUNT = 10000;
+		auto time_compound = TestTransitionsPerformance<MyFSM>(COUNT);
+		auto time_trans_table = TestTransitionsPerformance<TestFSM>(COUNT);
+		std::cout << "Transitions test: " << std::endl
+			<< "\tCompounds set: " << time_compound << std::endl
+			<< "\tTransitions table: " << time_trans_table << std::endl;
 	}
 } // StateMachineTests
