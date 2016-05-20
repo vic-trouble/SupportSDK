@@ -20,7 +20,8 @@ namespace SDK
 		constexpr static size_t _StatesCount = StatesCount;
 		static_assert(_StatesCount > 0, "Size of states must be greater than 0");
 		constexpr static size_t NullState = _StatesCount;
-		constexpr static size_t NullNextState = _StatesCount + 1;		
+		constexpr static size_t NullNextState = _StatesCount + 1;
+
 	public:
 		typedef typename StateMachine<Derived, BaseStateType, StatesCount, TransitionTable, FirstStateType, PtrType, OnUpdateParam> _ThisMachine;
 		typedef typename FirstStateType _FirstState;
@@ -32,7 +33,7 @@ namespace SDK
 		size_t m_next;
 		size_t m_prev;
 
-		std::function<void()> m_next_executor;
+		ExecFunction m_next_executor;
 
 	private:
 		void ChangeStateIfNeeded()
@@ -48,15 +49,26 @@ namespace SDK
 			if (m_current != NullState && m_next_executor)
 			{
 				m_next_executor();
-				m_next_executor.swap(std::function<void()>());
+				m_next_executor.swap(ExecFunction());
 			}
 
 			m_next = NullNextState;
 		}
 
+		template <typename State>
+		void SetNext()
+		{
+			const size_t next_state = typeid(State).hash_code();
+			SetNext(std::make_pair(
+				next_state,
+				std::bind(static_cast<void(State::*)(void)>(&State::OnEnter), GetState<State>())
+				));
+		}
+
 		void SetNext(TransitionGetterResult i_result)
 		{
-			m_next = NullState;
+			m_next = NullNextState;
+			m_next_executor.swap(ExecFunction());
 			const size_t next_state = i_result.first;
 			for (size_t i = 0; i < _StatesCount; ++i)
 			{
@@ -115,15 +127,32 @@ namespace SDK
 			if (result.second != nullptr)
 				SetNext(result);
 		}
-		void SomeFunction() {}
+
 		template <typename State>
-		void SetNext()
+		void Start()
 		{
 			const size_t next_state = typeid(State).hash_code();
 			SetNext(std::make_pair(
 				next_state,
 				std::bind(static_cast<void(State::*)(void)>(&State::OnEnter), GetState<State>())
 				));
+		}
+
+		template <typename State, typename Event>
+		void Start(const Event& i_event)
+		{
+			static size_t type_to = typeid(State).hash_code();
+			static void(State::*enter_func)(const Event&) = &State::OnEnter;
+			SetNext(std::make_pair(
+				type_to,
+				std::bind(enter_func, GetState<State>(), static_cast<const Event&>(i_event))
+				));
+		}
+
+		void Stop()
+		{
+			m_next = NullState;
+			m_next_executor.swap(ExecFunction());
 		}
 
 		/////////////////////////////////////////////////////////////
@@ -181,6 +210,55 @@ namespace SDK
 			ChangeStateIfNeeded();
 			if (m_current != NullState)
 				m_states[m_current]->OnUpdate(i_param);
+		}
+	};
+
+	template <
+		size_t StatesCount,
+		typename TransitionTable,
+		typename FirstStateType,
+		typename OnUpdateParam = float,
+		typename BaseStateType = BaseState<OnUpdateParam>,
+	class PtrType = std::unique_ptr<BaseStateType>
+	>
+	class CompoundState : public BaseStateType
+	{
+	protected:
+		using _InternalFSM = StateMachine<int, BaseStateType, StatesCount, TransitionTable, FirstStateType, PtrType, OnUpdateParam>;
+		_InternalFSM m_fsm;
+
+	public:
+		template <typename... Ptrs>
+		CompoundState(Ptrs... i_states)
+		{
+			m_fsm.SetStates(std::move(i_states)...);
+		}
+
+		template <typename EventType>
+		void ProcessEvent(const EventType& i_evt)
+		{
+			m_fsm.ProcessEvent<EventType>(i_evt);
+		}
+
+		virtual void OnUpdate(OnUpdateParam i_dt) override
+		{
+			m_fsm.OnUpdate(i_dt);
+		}
+
+		template <typename Event>
+		void OnEnter(const Event& i_evt)
+		{
+			m_fsm.Start<FirstStateType>(i_evt);
+		}
+
+		void OnEnter()
+		{
+			m_fsm.Start<FirstStateType>();
+		}
+
+		virtual void OnExit() override
+		{
+			m_fsm.Stop();
 		}
 	};
 

@@ -20,6 +20,13 @@ namespace SDK
 		virtual void OnUpdate(OnUdateParam i_elapsed_time) {}
 	};
 
+	template <typename Event, typename StateMachine>
+	std::function<void(const Event&)> BindProcessEventFunction(StateMachine& i_fsm)
+	{
+		static void(StateMachine::*process_func)(const Event&) = &StateMachine::ProcessEvent;
+		return std::bind(process_func, std::ref(i_fsm), std::placeholders::_1);
+	}
+
 } // SDK
 
 #endif

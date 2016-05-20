@@ -629,17 +629,73 @@ namespace TemplateSample
 
 
 	// idle states
-	struct Wait;
-	struct Dance;
-	struct Joke;
+	struct Wait : public BaseState<>
+	{
+		std::function<void(const idle_action_completed&)> m_process_func;
+		template <typename StateMachine>
+		Wait(StateMachine& i_fsm)
+		{
+			m_process_func = BindProcessEventFunction<idle_action_completed, StateMachine>(i_fsm);
+		}
+
+		virtual void OnUpdate(float dt) override
+		{
+			std::cout << "\t[Wait] OnUpdate" << std::endl;
+			m_process_func(idle_action_completed());
+		}
+	};
+
+	struct Dance : public BaseState<>
+	{
+		std::function<void(const idle_action_completed&)> m_process_func;
+		template <typename StateMachine>
+		Dance(StateMachine& i_fsm)
+		{
+			m_process_func = BindProcessEventFunction<idle_action_completed, StateMachine>(i_fsm);
+		}
+
+		virtual void OnUpdate(float dt) override
+		{
+			std::cout << "\t[Dance] OnUpdate" << std::endl;
+			m_process_func(idle_action_completed());
+		}
+	};
+
+	template <typename StateMachine>
+	struct Joke : public BaseState<>
+	{
+		StateMachine& m_parent_fsm;
+		Joke(StateMachine& i_fsm) : m_parent_fsm(i_fsm) {}
+		virtual void OnUpdate(float dt) override
+		{
+			std::cout << "\t[Joke] OnUpdate" << std::endl;
+			m_parent_fsm.ProcessEvent(idle_action_completed());
+		}
+		void OnEnter(const stop& i_evt)
+		{
+			std::cout << "\t[Joke] Position achieved - hah" << std::endl;
+		}
+		void OnEnter(const idle_action_completed& i_evt)
+		{
+		}
+	};
+
+	struct Idle;
 	using Tr = TransitionsTable<
 		_row<Wait, Dance, idle_action_completed>,
-		_row<Dance, Joke, idle_action_completed>,
-		_row<Joke, Wait, idle_action_completed>
+		_row<Dance, Joke<Idle>, idle_action_completed>,
+		_row<Joke<Idle>, Wait, idle_action_completed>
 	>;
 	struct Idle : public StateMachine<Idle, BaseState<>, 3, Tr, Wait>
 	{
-		Idle();
+		Idle()
+		{
+			SetStates(
+				std::make_unique<Wait>(*this),
+				std::make_unique<Dance>(*this),
+				std::make_unique<Joke<Idle>>(*this)
+				);
+		}
 		void OnEnter()
 		{		}
 		void OnEnter(const position_achieved&)
@@ -650,50 +706,44 @@ namespace TemplateSample
 		{		}
 	};
 
-	using IntFSM = Idle;
-
-	struct Dance : public BaseState<>
+	struct IdleS;
+	using TrS = TransitionsTable<
+		_row<Wait, Dance, idle_action_completed>,
+		_row<Dance, Joke<IdleS>, idle_action_completed>,
+		_row<Joke<IdleS>, Wait, idle_action_completed>
+	>;
+	// default OnEnter(void) - start with Wait state
+	struct IdleS : public CompoundState<3, TrS, Wait>
 	{
-		Idle& m_parent_fsm;
-		Dance(Idle& i_fsm) : m_parent_fsm(i_fsm) {}
-		virtual void OnUpdate(float dt) override
-		{
-			std::cout << "\t[Dance] OnUpdate" << std::endl;
-			m_parent_fsm.ProcessEvent(idle_action_completed());
-		}
-	};
-
-	struct Joke : public BaseState<>
-	{
-		Idle& m_parent_fsm;
-		Joke(Idle& i_fsm) : m_parent_fsm(i_fsm) {}
-		virtual void OnUpdate(float dt) override
-		{
-			std::cout << "\t[Joke] OnUpdate" << std::endl;
-			m_parent_fsm.ProcessEvent(idle_action_completed());
-		}
-	};
-
-	struct Wait : public BaseState<>
-	{
-		Idle& m_parent_fsm;
-		Wait(Idle& i_fsm) : m_parent_fsm(i_fsm) {}
+		IdleS()
+			: CompoundState(
+				std::make_unique<Wait>(*this),
+				std::make_unique<Dance>(*this),
+				std::make_unique<Joke<IdleS>>(*this))
+		{		}
 		
-		virtual void OnUpdate(float dt) override
+		// for first state
+		void OnEnter()
 		{
-			std::cout << "\t[Wait] OnUpdate" << std::endl;
-			m_parent_fsm.ProcessEvent(idle_action_completed());
+			m_fsm.Start<Wait>();
+		}
+
+		// for all events we can override behavior
+		void OnEnter(const position_achieved& i_evt)
+		{
+			m_fsm.Start<Dance>(i_evt);
+		}
+		void OnEnter(const stop& i_evt)
+		{
+			m_fsm.Start<Joke<IdleS>>(i_evt);
+		}
+		void OnEnter(const stop_attacking& i_evt)
+		{
+			m_fsm.Start<Dance>(i_evt);
 		}
 	};
-	
-	Idle::Idle()
-	{
-		SetStates(
-			std::make_unique<Wait>(*this),
-			std::make_unique<Dance>(*this),
-			std::make_unique<Joke>(*this)
-			);
-	}
+
+	using IntFSM = IdleS;
 
 	// separate states
 
@@ -837,8 +887,6 @@ namespace TemplateSample
 				);
 		}
 	};
-
-	
 
 	////////////////////////////////////////////////////
 
