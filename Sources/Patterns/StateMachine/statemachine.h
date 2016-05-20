@@ -14,8 +14,7 @@ namespace SDK
 		class PtrType = std::unique_ptr<BaseStateType>,
 		typename OnUpdateParam = float
 	>
-	class StateMachine 
-		: public BaseState<OnUpdateParam> // inheritance to use StateMachine as substate
+	class StateMachine
 	{
 		constexpr static size_t _StatesCount = StatesCount;
 		static_assert(_StatesCount > 0, "Size of states must be greater than 0");
@@ -24,7 +23,9 @@ namespace SDK
 
 	public:
 		typedef typename StateMachine<Derived, BaseStateType, StatesCount, TransitionTable, FirstStateType, PtrType, OnUpdateParam> _ThisMachine;
-		typedef typename FirstStateType _FirstState;
+		using _FirstState = FirstStateType;
+		using _BaseStateType = BaseStateType;
+		using _OnUpdateParam = OnUpdateParam;
 	private:
 		PtrType m_states[_StatesCount];
 		size_t m_states_hashes[_StatesCount];
@@ -254,6 +255,40 @@ namespace SDK
 		void OnEnter()
 		{
 			m_fsm.Start<FirstStateType>();
+		}
+
+		virtual void OnExit() override
+		{
+			m_fsm.Stop();
+		}
+	};
+
+	template <typename InternalFSM>
+	class StateMachineWrapper : public InternalFSM::_BaseStateType
+	{
+	private:
+		InternalFSM m_fsm;
+	public:
+		template <typename EventType>
+		void ProcessEvent(const EventType& i_evt)
+		{
+			m_fsm.ProcessEvent<EventType>(i_evt);
+		}
+
+		virtual void OnUpdate(typename InternalFSM::_OnUpdateParam i_dt) override
+		{
+			m_fsm.OnUpdate(i_dt);
+		}
+
+		template <typename Event>
+		void OnEnter(const Event& i_evt)
+		{
+			m_fsm.Start<InternalFSM::_FirstState>(i_evt);
+		}
+
+		void OnEnter()
+		{
+			m_fsm.Start<InternalFSM::_FirstState>();
 		}
 
 		virtual void OnExit() override

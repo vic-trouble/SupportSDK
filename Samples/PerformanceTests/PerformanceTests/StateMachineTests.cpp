@@ -28,6 +28,10 @@ namespace StateMachineTests
 		{
 
 		}
+		void OnEnter(const Event22&)
+		{
+
+		}
 	};
 	
 	struct MyState2 : public BaseState<>
@@ -37,8 +41,14 @@ namespace StateMachineTests
 	struct MyState4 : public BaseState<>
 	{
 	};
-	
-	struct MyState3;
+	struct MyState3 : public BaseState<>
+	{
+		void OnEnter(const Event11& ev)
+		{
+			//std::cout << ev.name << std::endl;
+		}
+	};
+
 	struct Event11;
 	typedef CompoundTransition<
 		Transition<MyState1, MyState2, Event22>,
@@ -47,12 +57,20 @@ namespace StateMachineTests
 	> TransitionTable;
 	class MyFSM : public SDK::StateMachine<MyFSM, SDK::BaseState<>, 4, TransitionTable, MyState1, SDK::BaseState<>*>
 	{
+	private:
+		std::unique_ptr<BaseState<>> mp_states[4];
+
 	public:
-		typedef CompoundTransition<
-			Transition<MyState1, MyState2, Event11>,
-			CompoundTransition<Transition<MyState2, MyState3, Event11>, Transition<MyState3, MyState1, Event11>>
-		> TransitionTableX;
-		
+		MyFSM()
+		{
+			mp_states[0].reset(new MyState1);
+			mp_states[1].reset(new MyState2);
+			mp_states[2].reset(new MyState3);
+			mp_states[3].reset(new MyState4);
+			SetStates(mp_states[0].get(), mp_states[1].get(), mp_states[2].get(), mp_states[3].get());
+		}
+
+
 		void OnEnter(const Event22&)
 		{
 			std::cout << "asdasd" << std::endl;
@@ -63,13 +81,6 @@ namespace StateMachineTests
 			//std::cout << "MyFSM Enters first state" << std::endl;
 		}
 
-	};
-	struct MyState3 : public BaseState<>
-	{
-		void OnEnter(const Event11& ev)
-		{
-			//std::cout << ev.name << std::endl;
-		}
 	};
 
 	using TestTr = TransitionsTable<
@@ -103,6 +114,7 @@ namespace StateMachineTests
 	{
 		// event that will appear when one of state which is FSM reach its end
 		struct int_fsm_break {};
+		struct state_finished {};
 
 		template <typename FSM, typename Signal>
 		struct Finisher : public BaseState<>
@@ -117,7 +129,6 @@ namespace StateMachineTests
 		};
 
 		struct UpperFSM;
-		
 		namespace IntFSM
 		{
 			struct stage_finished {};
@@ -134,6 +145,15 @@ namespace StateMachineTests
 				void OnEnter()
 				{
 					std::cout << "Enter first stage" << std::endl;
+				}
+
+				void OnEnter(const stage_finished&)
+				{
+
+				}
+				void OnEnter(const state_finished&)
+				{
+
 				}
 			};
 
@@ -158,20 +178,17 @@ namespace StateMachineTests
 				_row<First<_fsm>, Second<_fsm>, stage_finished>,
 				_row<Second<_fsm>, Finisher<UpperFSM, int_fsm_break>, stage_finished>
 			>;
-			struct _fsm : public SDK::StateMachine<_fsm, SDK::BaseState<>, 3, Tr, First<_fsm>>
+			struct _fsm : public SDK::CompoundState<3, Tr, First<_fsm>>
 			{
 				_fsm(UpperFSM& i_fsm)
-				{
-					SetStates(
+					: CompoundState(
 						std::make_unique<First<_fsm>>(*this),
 						std::make_unique<Second<_fsm>>(*this),
 						std::make_unique<Finisher<UpperFSM, int_fsm_break>>(i_fsm)
-						);
-				}
+						)
+				{	}
 			};
 		} // IntFSM
-
-		struct state_finished {};
 
 		struct TestState : public BaseState<>
 		{};
@@ -213,13 +230,20 @@ namespace StateMachineTests
 	} // fsm_in_fsm
 	
 
+	using MyFSMWrapper = SDK::StateMachineWrapper<MyFSM>;
+
 	class MyCompoundFSM;
 	typedef CompoundTransition<
-		Transition<MyFSM, M4<MyCompoundFSM>, Event11>, Transition<M4<MyCompoundFSM>, MyFSM, Event22>
+		Transition<MyFSMWrapper, M4<MyCompoundFSM>, Event11>, Transition<M4<MyCompoundFSM>, MyFSMWrapper, Event22>
 	> TransTable;
-
-	class MyCompoundFSM : public SDK::StateMachine<MyCompoundFSM, SDK::BaseState<>, 2, TransTable, MyFSM>
-	{};
+	class MyCompoundFSM : public SDK::StateMachine<MyCompoundFSM, SDK::BaseState<>, 2, TransTable, MyFSMWrapper>
+	{
+	public:
+		MyCompoundFSM()
+		{
+			SetStates(std::make_unique<MyFSMWrapper>(), std::make_unique<M4<MyCompoundFSM>>(*this));
+		}
+	};
 
 	/////////////////////////////
 
@@ -244,7 +268,6 @@ namespace StateMachineTests
 	{
 		fsm_in_fsm::TestInternal();
 		MyCompoundFSM x;
-		x.SetStates(std::make_unique<MyFSM>(), std::make_unique<M4<MyCompoundFSM>>(x));
 		x.OnUpdate(.1f);
 		x.ProcessEvent(Event11());
 		x.OnUpdate(1.f);
@@ -254,7 +277,6 @@ namespace StateMachineTests
 		test_fsm.SetStates(new MyState1, new MyState2, new MyState3, new MyState4);
 
 		MyFSM my_fsm;
-		my_fsm.SetStates(new MyState1, new MyState2, new MyState3, new MyState4);
 		for (size_t i = 0; i < 10; ++i)
 		{
 			my_fsm.OnUpdate(0.1f);
@@ -271,9 +293,9 @@ namespace StateMachineTests
 			test_fsm.ProcessEvent<Event11>(Event11(Utilities::lexical_cast(i)));
 		}
 
-		constexpr size_t COUNT = 1000000;
+		constexpr size_t COUNT = 100000;
 		auto time_fsm = TestTransitionsPerformance<MyFSM>(COUNT);
 		auto time_test = TestTransitionsPerformance<TestFSM>(COUNT);
-		std::cout << "Time: " << time_fsm << " - " << time_test << std::endl;
+		std::cout << "Time (compound transition-transition table): " << time_fsm << " - " << time_test << std::endl;
 	}
 } // StateMachineTests
