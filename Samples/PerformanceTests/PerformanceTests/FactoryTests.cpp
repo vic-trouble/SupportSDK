@@ -155,7 +155,7 @@ namespace FactoryTests
 
 	void Test()
 	{
-		static const size_t OBJ_NUMBER = 100000000;
+		static const size_t OBJ_NUMBER = 10000000;
 		std::cout << "==========================================================" << std::endl
 			<< "\t\t\tFactory tests" << std::endl;
 		/*size_t sum = 0;

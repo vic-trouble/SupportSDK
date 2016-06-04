@@ -65,5 +65,8 @@
     <ClCompile Include="FSM_Test_HierarchicalvsTemplate.cpp">
       <Filter>Tests</Filter>
     </ClCompile>
+    <ClCompile Include="TempTests.cpp">
+      <Filter>Tests</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

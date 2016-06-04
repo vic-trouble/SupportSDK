@@ -28,17 +28,17 @@ namespace SDK
 	struct RowChecker <StateFrom, StateTo, TargetEventType, Event, typename std::enable_if<std::is_same<TargetEventType, Event>::value>::type>
 	{
 		template <typename StateMachine>
-		static TransitionGetterResult GetNextState(const TargetEventType& i_event, const StateMachine& i_fsm, const size_t i_caller_type)
+		static void GetNextState(TransitionGetterResult& o_result, const TargetEventType& i_event, const StateMachine& i_fsm, const size_t i_caller_type)
 		{
 			static size_t type_to = typeid(StateTo).hash_code();
+			static size_t type_from = typeid(StateFrom).hash_code();
 			static void(StateTo::*enter_func)(const TargetEventType&) = &StateTo::OnEnter;
-
-			if (i_fsm.IsStateCurrent<StateFrom>())
-				return std::make_pair(
-					type_to,
-					std::bind(enter_func, i_fsm.GetState<StateTo>(), static_cast<const TargetEventType&>(i_event))
-					);
-			return std::make_pair(i_caller_type, ExecFunction());
+			
+			if (i_fsm.IsStateCurrent(type_from))
+			{
+				o_result.first = type_to;
+				o_result.second = std::bind(enter_func, i_fsm.GetState<StateTo>(), static_cast<const TargetEventType&>(i_event));
+			}
 		}
 	};
 
@@ -46,11 +46,13 @@ namespace SDK
 	struct RowChecker <StateFrom, StateTo, TargetEventType, Event, typename std::enable_if<!std::is_same<TargetEventType, Event>::value>::type>
 	{
 		template <typename StateMachine>
-		static TransitionGetterResult GetNextState(const Event& i_event, const StateMachine& i_fsm, const size_t i_caller_type)
+		static void GetNextState(TransitionGetterResult& o_result, const Event& i_event, const StateMachine& i_fsm, const size_t i_caller_type)
 		{
-			return std::make_pair(i_caller_type, ExecFunction());
 		}
 	};
+
+	////////////////////////////////////////////////////////////////////
+	// Compound transitions
 
 	template <typename FirstTransition, typename SecondTransition>
 	struct CompoundTransition
@@ -59,18 +61,21 @@ namespace SDK
 		SecondTransition second;
 
 		template <typename EventType, typename StateMachine>
-		TransitionGetterResult GetNextState(const EventType& i_event, const StateMachine& i_fsm)
+		void GetNextState(TransitionGetterResult& o_result, const EventType& i_event, const StateMachine& i_fsm)
 		{
-			typedef std::pair<NextStateType, ExecFunction> Result;
-			Result first_result = first.GetNextState<EventType, StateMachine>(i_event, i_fsm);
+			static const size_t first_type = typeid(first).hash_code();
+			static const size_t second_type = typeid(second).hash_code();
+			static const size_t this_type = typeid(*this).hash_code();
 
-			if (first_result.first != typeid(first).hash_code())
-				return first_result;
-			Result second_result = second.GetNextState<EventType, StateMachine>(i_event, i_fsm);
-			if (second_result.first != typeid(second).hash_code())
-				return second_result;
+			first.GetNextState<EventType, StateMachine>(o_result, i_event, i_fsm);
+			if (o_result.first != first_type)
+				return;
+			second.GetNextState<EventType, StateMachine>(o_result, i_event, i_fsm);
+			if (o_result.first != second_type)
+				return;
 
-			return std::make_pair(typeid(*this).hash_code(), ExecFunction());
+			o_result.first = this_type;
+			o_result.second = ExecFunction();
 		}
 	};
 
@@ -79,10 +84,10 @@ namespace SDK
 	{
 		using _ThisType = Transition<StateFrom, StateTo, TargetEventType>;
 		template <typename EventType, typename StateMachine>
-		TransitionGetterResult GetNextState(const EventType& i_event, const StateMachine& i_fsm) const
+		void GetNextState(TransitionGetterResult& o_result, const EventType& i_event, const StateMachine& i_fsm) const
 		{
 			static size_t caller_type = typeid(_ThisType).hash_code();
-			return RowChecker<StateFrom, StateTo, TargetEventType, EventType>::GetNextState(i_event, i_fsm, caller_type);
+			RowChecker<StateFrom, StateTo, TargetEventType, EventType>::GetNextState(o_result, i_event, i_fsm, caller_type);
 		}
 	};
 
@@ -91,37 +96,29 @@ namespace SDK
 	template <typename FrState, typename ToState, typename Event>
 	using _tr = SDK::Transition<FrState, ToState, Event>;
 
+
 	////////////////////////////////////////////////////////////////////
 	// Transitions table
 	template <typename... Transitions>
 	struct TransitionsTable
 	{
 		template <typename EventType, typename StateMachine, typename row>
-		TransitionGetterResult CheckTransition(const EventType& i_event, const StateMachine& i_fsm, bool& io_result, row&)
+		bool CheckTransition(TransitionGetterResult& o_result, const EventType& i_event, const StateMachine& i_fsm, row&)
 		{
-			static size_t this_index = typeid(*this).hash_code();
-			if (io_result)
-				return std::make_pair(this_index, ExecFunction());
-			auto res = row::GetNextState<EventType, StateMachine>(i_event, i_fsm);
-			io_result = static_cast<bool>(res.second);
-			return res;
+			if (o_result.second)
+				return false;
+			row::GetNextState<EventType, StateMachine>(o_result, i_event, i_fsm);
+			return true;
 		}
 
 		template <typename EventType, typename StateMachine>
-		TransitionGetterResult GetNextState(const EventType& i_event, const StateMachine& i_fsm)
+		void GetNextState(TransitionGetterResult& o_result, const EventType& i_event, const StateMachine& i_fsm)
 		{
-			bool res = false;
-			TransitionGetterResult tr_results[] = { CheckTransition(i_event, i_fsm, res, Transitions())... };
-
-			for (auto& result : tr_results)
-			{
-				if (result.second)
-					return result;
-			}
 			static size_t this_index = typeid(*this).hash_code();
-			return std::make_pair(this_index, ExecFunction());
+			o_result.first = this_index;
+			o_result.second = ExecFunction();
+			bool tr_results[] = { CheckTransition<EventType, StateMachine>(o_result, i_event, i_fsm, Transitions())... };
 		}
-
 	};
 
 	template <typename StateFrom, typename StateTo, typename TargetEventType>
@@ -129,10 +126,10 @@ namespace SDK
 	{
 		using _ThisType = TransitionRow<StateFrom, StateTo, TargetEventType>;
 		template <typename EventType, typename StateMachine>
-		static TransitionGetterResult GetNextState(const EventType& i_event, const StateMachine& i_fsm)
+		static void GetNextState(TransitionGetterResult& o_result, const EventType& i_event, const StateMachine& i_fsm)
 		{
 			static size_t caller_type = typeid(_ThisType).hash_code();
-			return RowChecker<StateFrom, StateTo, TargetEventType, EventType>::GetNextState(i_event, i_fsm, caller_type);
+			RowChecker<StateFrom, StateTo, TargetEventType, EventType>::GetNextState(o_result, i_event, i_fsm, caller_type);
 		}
 	};
 

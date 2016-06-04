@@ -126,7 +126,8 @@ namespace SDK
 		template <typename EventType>
 		void ProcessEvent(const EventType& i_evt)
 		{
-			auto result = m_transitions.GetNextState<EventType, _ThisMachine>(i_evt, *this);
+			TransitionGetterResult result;
+			m_transitions.GetNextState<EventType, _ThisMachine>(result, i_evt, *this);
 			if (result.second != nullptr)
 				SetNext(result);
 		}
@@ -167,22 +168,32 @@ namespace SDK
 		template <typename State>
 		bool IsStateCurrent() const
 		{
-			if (m_current == NullState)
-				return false;
-			return m_states_hashes[m_current] == typeid(State).hash_code();
+			return IsStateCurrent(typeid(State).hash_code());
 		}
 		template <typename State>
 		bool IsStatePrevious() const
 		{
+			IsStatePrevious(typeid(State).hash_code());
+		}
+
+		inline bool IsStateCurrent(size_t i_type_hash) const
+		{
+			if (m_current == NullState)
+				return false;
+			return m_states_hashes[m_current] == i_type_hash;
+		}
+
+		inline bool IsStatePrevious(size_t i_type_hash) const
+		{
 			if (m_prev == NullState)
 				return false;
-			return m_states_hashes[m_prev] == typeid(State).hash_code();
+			return m_states_hashes[m_prev] == i_type_hash;
 		}
 
 		template <typename State>
 		State* GetState() const
 		{
-			const size_t next_state = typeid(State).hash_code();
+			static const size_t next_state = typeid(State).hash_code();
 			for (size_t i = 0; i < _StatesCount; ++i)
 			{
 				const auto& state = m_states[i];

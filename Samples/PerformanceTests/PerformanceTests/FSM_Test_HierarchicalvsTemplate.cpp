@@ -6,6 +6,116 @@
 
 #include <Utilities/lexical_cast.h>
 
+#if defined(BOOST_TEST)
+// back-end
+#include <boost/msm/back/state_machine.hpp>
+//front-end
+#include <boost/msm/front/state_machine_def.hpp>
+// functors
+#include <boost/msm/front/functor_row.hpp>
+#include <boost/msm/front/euml/common.hpp>
+// for And_ operator
+#include <boost/msm/front/euml/operator.hpp>
+// for func_state and func_state_machine
+#include <boost/msm/front/euml/state_grammar.hpp>
+
+namespace BoostSample
+{
+	namespace msm = boost::msm;
+	namespace mpl = boost::mpl;
+
+	//////////////////////////////////////////////////////////////////////////
+
+	struct test_event {};
+
+	struct test_event_fsm : public msm::front::state_machine_def<test_event>
+	{
+		struct First : public msm::front::state<>
+		{
+			/*template <typename Event, typename FSM>
+			void on_entry(const Event& i_evt, FSM& i_send_definitions_fsm)
+			{
+			}*/
+			template <typename FSM>
+			void on_entry(const test_event& i_evt, FSM& i_send_definitions_fsm)
+			{
+				//std::cout << "OnEntry first" << std::endl;
+			}
+		};
+
+		struct Second : public msm::front::state<>
+		{
+			template <typename Event, typename FSM>
+			void on_entry(const Event& i_evt, FSM& i_send_definitions_fsm)
+			{
+				//std::cout << "OnEntry Second" << std::endl;
+			}
+		};
+
+		struct Third : public msm::front::state<>
+		{
+			template <typename Event, typename FSM>
+			void on_entry(const Event& i_evt, FSM& i_send_definitions_fsm)
+			{
+				//std::cout << "OnEntry Third" << std::endl;
+			}
+		};
+
+		typedef First initial_state;
+
+		struct transition_table : mpl::vector<
+			_row<First, test_event, Second>,
+			_row<Second, test_event, Third>,
+			_row<Third, test_event, First>
+		> {};
+	};
+
+	typedef msm::back::state_machine<test_event_fsm> TestFSM;
+
+	void TestEvents(int count)
+	{
+		TestFSM fsm;
+		for (int i = 0; i < count; ++i)
+			fsm.process_event(test_event());
+	}
+
+} // BoostSample
+#endif
+
+namespace PlainFSM
+{
+	enum class State
+	{
+		Wait,
+		Dance,
+		Joke,
+		Move,
+		Run,
+		Attack,
+	};
+	void Update()
+	{
+		State state = State::Wait;
+		switch (state)
+		{
+			case State::Wait:
+				// animation idle
+				break;
+			case State::Move:
+				// animation move
+				//
+				break;
+			case State::Attack:
+				// animation attack
+				//	shoot the enemy
+				break;
+		}
+		// ...
+		state = State::Attack;
+	}
+
+} // PlainFSM
+
 namespace Hierarchical
 {
 	struct Event
@@ -169,14 +279,14 @@ namespace Hierarchical
 			}
 		}
 
-		virtual void OnUpdate(float dt)
+		void OnUpdate(float dt)
 		{
 			CheckNextStateTransition();
 			if (mp_current)
 				mp_current->OnUpdate(dt);
 		}
 
-		virtual void OnExit()
+		void OnExit()
 		{
 			mp_next = nullptr;
 			m_terminate = true;
@@ -577,6 +687,17 @@ namespace HierarchicalSample
 	struct Second : public BaseState {};
 	struct Third : public BaseState {};
 
+	void TestIdle()
+	{
+		StateMachine idle_fsm;
+		IdleFsm(idle_fsm);
+		idle_fsm.Start<Wait>();
+		// or we can start with event
+		// idle_fsm.Start<Wait>(idle_action_completed());
+		for (int i = 0; i < 10; ++i)
+			idle_fsm.OnUpdate(.1f);
+	}
+
 	void TestEventsFSM(StateMachine& o_fsm)
 	{
 		o_fsm.AddState(std::make_unique<First>());
@@ -956,7 +1077,6 @@ namespace TemplateSample
 
 } // TemplateSample
 
-
 namespace HiararchicalvsTemplate
 {
 	clock_t Runner(std::function<void(int)> func, size_t i_nums)
@@ -972,14 +1092,20 @@ namespace HiararchicalvsTemplate
 		TemplateSample::Test();
 		std::cout << "-----------------------------------" << std::endl;
 
-		constexpr static size_t CALL_COUNT = 100000;
+		constexpr static size_t CALL_COUNT = 1000000;// 100000;
 		for (size_t i = 0; i < 1; ++i)
 		{
-			const clock_t hier_t = Runner(&HierarchicalSample::TestEvents, CALL_COUNT);
+			const clock_t hier_t = 0;// Runner(&HierarchicalSample::TestEvents, CALL_COUNT);
 			const clock_t template_t = Runner(&TemplateSample::TestEvents, CALL_COUNT);
+#if defined(BOOST_TEST)
+			const clock_t boost_t = Runner(&BoostSample::TestEvents, CALL_COUNT);
+#endif
 
 			std::cout << "\tHierarchical: " << hier_t << std::endl
 				<< "\tTemplate: " << template_t << std::endl;
+#if defined(BOOST_TEST)
+			std::cout << "\tBoost: " << boost_t << std::endl;
+#endif
 		}
 	}
 } // HiararchicalvsTemplate
