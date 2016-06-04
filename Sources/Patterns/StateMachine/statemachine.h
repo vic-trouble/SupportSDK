@@ -52,7 +52,7 @@ namespace SDK
 			if (m_current != NullState && m_next_executor)
 			{
 				m_next_executor();
-				m_next_executor.swap(ExecFunction());
+				m_next_executor = std::move(ExecFunction());
 			}
 
 			m_next = NullNextState;
@@ -71,7 +71,7 @@ namespace SDK
 		void SetNext(TransitionGetterResult i_result)
 		{
 			m_next = NullNextState;
-			m_next_executor.swap(ExecFunction());
+			m_next_executor = std::move(ExecFunction());
 			const size_t next_state = i_result.first;
 			for (size_t i = 0; i < _StatesCount; ++i)
 			{
@@ -79,7 +79,7 @@ namespace SDK
 				if (next_state == m_states_hashes[i])
 				{
 					m_next = i;
-					m_next_executor.swap(i_result.second);
+					m_next_executor = std::move(i_result.second);
 					break;
 				}
 			}
@@ -128,7 +128,7 @@ namespace SDK
 		{
 			TransitionGetterResult result;
 			m_transitions.GetNextState<EventType, _ThisMachine>(result, i_evt, *this);
-			if (result.second != nullptr)
+			if (result.second)
 				SetNext(result);
 		}
 
@@ -156,7 +156,7 @@ namespace SDK
 		void Stop()
 		{
 			m_next = NullState;
-			m_next_executor.swap(ExecFunction());
+			m_next_executor = std::move(ExecFunction());
 		}
 
 		/////////////////////////////////////////////////////////////

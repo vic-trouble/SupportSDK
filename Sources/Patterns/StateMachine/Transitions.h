@@ -116,7 +116,6 @@ namespace SDK
 		{
 			static size_t this_index = typeid(*this).hash_code();
 			o_result.first = this_index;
-			o_result.second = ExecFunction();
 			bool tr_results[] = { CheckTransition<EventType, StateMachine>(o_result, i_event, i_fsm, Transitions())... };
 		}
 	};
