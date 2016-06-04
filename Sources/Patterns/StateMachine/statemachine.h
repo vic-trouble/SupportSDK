@@ -6,6 +6,62 @@
 
 namespace SDK
 {
+	namespace details
+	{
+		struct Visitor
+		{
+			size_t m_state_hash;
+			size_t m_ev_hash;
+
+			Visitor(size_t i_state, size_t i_ev_hash)
+				: m_state_hash(i_state)
+				, m_ev_hash(i_ev_hash)
+			{}
+			inline bool Compare(size_t i_state, size_t i_event) const
+			{
+				return m_state_hash == i_state && m_ev_hash == i_event;
+			}
+			virtual void Execute() = 0;
+		};
+
+		template <typename State, typename Ev>
+		struct VisitorImpl : Visitor
+		{
+			State& m_state;
+			Ev m_cached_ev;
+
+			VisitorImpl(size_t i_state_hash, size_t i_ev_hash, State& i_state, const Ev& i_event)
+				: Visitor(i_state_hash, i_ev_hash)
+				, m_state(i_state)
+				, m_cached_ev(i_event)
+			{}
+
+			virtual void Execute() override
+			{
+				m_state.OnEnter(m_cached_ev);
+			}
+		};
+
+		template <typename State>
+		struct VisitorVoidImpl : Visitor
+		{
+			State& m_state;
+
+			VisitorVoidImpl(size_t i_state_hash, State& i_state)
+				: Visitor(i_state_hash, 0)
+				, m_state(i_state)
+			{}
+			virtual void Execute() override
+			{
+				m_state.OnEnter();
+			}
+		};
+
+		using VisitorPtr = std::unique_ptr<Visitor>;
+		using Visitors = std::vector<VisitorPtr>;
+	} // details
+
+
 	template <
 		size_t StatesCount,
 		typename TransitionTable,
@@ -23,6 +79,7 @@ namespace SDK
 		using _FirstState = FirstStateType;
 		using _BaseStateType = BaseStateType;
 		using _OnUpdateParam = OnUpdateParam;
+		static constexpr int INVALID_EXECUTOR_INDEX = -1;
 
 	private:
 		constexpr static size_t NullState = _StatesCount;
@@ -36,7 +93,8 @@ namespace SDK
 		size_t m_next;
 		size_t m_prev;
 
-		ExecFunction m_next_executor;
+		mutable details::Visitors m_visitors;
+		int m_next_executor;
 
 	private:
 		void ChangeStateIfNeeded()
@@ -49,10 +107,10 @@ namespace SDK
 
 			m_prev = m_current;
 			m_current = m_next;
-			if (m_current != NullState && m_next_executor)
+			if (m_current != NullState && m_next_executor != INVALID_EXECUTOR_INDEX)
 			{
-				m_next_executor();
-				m_next_executor = std::move(ExecFunction());
+				m_visitors[m_next_executor]->Execute();
+				m_next_executor = INVALID_EXECUTOR_INDEX;
 			}
 
 			m_next = NullNextState;
@@ -64,14 +122,14 @@ namespace SDK
 			const size_t next_state = typeid(State).hash_code();
 			SetNext(std::make_pair(
 				next_state,
-				std::bind(static_cast<void(State::*)(void)>(&State::OnEnter), GetState<State>())
+				CacheVisit<State>()
 				));
 		}
 
 		void SetNext(TransitionGetterResult i_result)
 		{
 			m_next = NullNextState;
-			m_next_executor = std::move(ExecFunction());
+			m_next_executor = INVALID_EXECUTOR_INDEX;
 			const size_t next_state = i_result.first;
 			for (size_t i = 0; i < _StatesCount; ++i)
 			{
@@ -79,7 +137,7 @@ namespace SDK
 				if (next_state == m_states_hashes[i])
 				{
 					m_next = i;
-					m_next_executor = std::move(i_result.second);
+					m_next_executor = i_result.second;
 					break;
 				}
 			}
@@ -93,6 +151,7 @@ namespace SDK
 			: m_current(NullState)
 			, m_next(NullNextState)
 			, m_prev(NullState)
+			, m_next_executor(INVALID_EXECUTOR_INDEX)
 		{}
 		template <typename... Ptrs>
 		StateMachine(Ptrs... i_states)
@@ -121,14 +180,60 @@ namespace SDK
 		}
 
 		/////////////////////////////////////////////////////////////
+		// Caching visits to states::OnEnter methods
+		//	Events should have copy constructor; ideally - POD structures
+
+		template <
+			typename StateTo,
+			typename TargetEventType,
+			typename = std::enable_if_t<!std::is_same<TargetEventType, void>::value>
+		>
+		int CacheVisit(const TargetEventType& i_event) const
+		{
+			static const size_t type_to = typeid(StateTo).hash_code();
+			static const size_t ev_hash = typeid(TargetEventType).hash_code();
+			static void(StateTo::*enter_func)(const TargetEventType&) = &StateTo::OnEnter;
+
+			for (int i = 0; i < static_cast<int>(m_visitors.size()); ++i)
+			{
+				if (m_visitors[i]->Compare(type_to, ev_hash))
+				{
+					static_cast<details::VisitorImpl<StateTo, TargetEventType>*>(m_visitors[i].get())->m_cached_ev = i_event;
+					return i;
+				}
+			}
+
+			m_visitors.emplace_back(new details::VisitorImpl<StateTo, TargetEventType>(type_to, ev_hash, *GetState<StateTo>(), i_event));
+
+			return static_cast<int>(m_visitors.size() - 1);
+		}
+
+		template <typename StateTo>
+		int CacheVisit() const
+		{
+			static size_t type_to = typeid(StateTo).hash_code();
+			static void(StateTo::*enter_func)() = &StateTo::OnEnter;
+			static size_t func_hash = typeid(enter_func).hash_code();
+			for (int i = 0; i < static_cast<int>(m_visitors.size()); ++i)
+			{
+				if (m_visitors[i]->Compare(type_to, 0))
+					return i;
+			}
+
+			m_visitors.emplace_back(new details::VisitorVoidImpl<StateTo>(type_to, *GetState<StateTo>()));
+
+			return static_cast<int>(m_visitors.size() - 1);
+		}
+
+		/////////////////////////////////////////////////////////////
 		// Switching between states
 		
 		template <typename EventType>
 		void ProcessEvent(const EventType& i_evt)
 		{
-			TransitionGetterResult result;
+			TransitionGetterResult result(0, INVALID_EXECUTOR_INDEX);
 			m_transitions.GetNextState<EventType, _ThisMachine>(result, i_evt, *this);
-			if (result.second)
+			if (result.second != INVALID_EXECUTOR_INDEX)
 				SetNext(result);
 		}
 
@@ -138,7 +243,7 @@ namespace SDK
 			const size_t next_state = typeid(State).hash_code();
 			SetNext(std::make_pair(
 				next_state,
-				std::bind(static_cast<void(State::*)(void)>(&State::OnEnter), GetState<State>())
+				CacheVisit<State>()
 				));
 		}
 
@@ -149,14 +254,14 @@ namespace SDK
 			static void(State::*enter_func)(const Event&) = &State::OnEnter;
 			SetNext(std::make_pair(
 				type_to,
-				std::bind(enter_func, GetState<State>(), static_cast<const Event&>(i_event))
+				CacheVisit<State, Event>(i_event)
 				));
 		}
 
 		void Stop()
 		{
 			m_next = NullState;
-			m_next_executor = std::move(ExecFunction());
+			m_next_executor = INVALID_EXECUTOR_INDEX;
 		}
 
 		/////////////////////////////////////////////////////////////

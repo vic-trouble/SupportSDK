@@ -8,9 +8,8 @@
 
 namespace SDK
 {
-	typedef std::function<void()> ExecFunction;
 	typedef size_t NextStateType;
-	typedef std::pair<NextStateType, ExecFunction> TransitionGetterResult;
+	typedef std::pair<NextStateType, int> TransitionGetterResult;
 	template <typename StateMachine>
 	struct NoTransition
 	{
@@ -37,7 +36,7 @@ namespace SDK
 			if (i_fsm.IsStateCurrent(type_from))
 			{
 				o_result.first = type_to;
-				o_result.second = std::bind(enter_func, i_fsm.GetState<StateTo>(), static_cast<const TargetEventType&>(i_event));
+				o_result.second = i_fsm.CacheVisit<StateTo, TargetEventType>(i_event);// std::bind(enter_func, i_fsm.GetState<StateTo>(), static_cast<const TargetEventType&>(i_event));
 			}
 		}
 	};
@@ -75,7 +74,7 @@ namespace SDK
 				return;
 
 			o_result.first = this_type;
-			o_result.second = ExecFunction();
+			o_result.second = StateMachine::INVALID_EXECUTOR_INDEX;
 		}
 	};
 
@@ -105,7 +104,7 @@ namespace SDK
 		template <typename EventType, typename StateMachine, typename row>
 		bool CheckTransition(TransitionGetterResult& o_result, const EventType& i_event, const StateMachine& i_fsm, row&)
 		{
-			if (o_result.second)
+			if (o_result.second != StateMachine::INVALID_EXECUTOR_INDEX)
 				return false;
 			row::GetNextState<EventType, StateMachine>(o_result, i_event, i_fsm);
 			return true;
@@ -118,12 +117,32 @@ namespace SDK
 			o_result.first = this_index;
 			bool tr_results[] = { CheckTransition<EventType, StateMachine>(o_result, i_event, i_fsm, Transitions())... };
 		}
+
+		template <typename StateMachine, typename row>
+		bool Cache(StateMachine& o_fsm)
+		{
+			row::Cache(o_fsm);
+			return true;
+		}
+
+		template <typename StateMachine>
+		void CacheStates(StateMachine& o_fsm)
+		{
+			bool res[] = { Cache<StateMachine, Transitions>(o_fsm)... };
+		}
 	};
 
 	template <typename StateFrom, typename StateTo, typename TargetEventType>
 	struct TransitionRow
 	{
 		using _ThisType = TransitionRow<StateFrom, StateTo, TargetEventType>;
+
+		template <typename StateMachine>
+		void Cache(StateMachine& o_fsm)
+		{
+			o_fsm.
+		}
+
 		template <typename EventType, typename StateMachine>
 		static void GetNextState(TransitionGetterResult& o_result, const EventType& i_event, const StateMachine& i_fsm)
 		{

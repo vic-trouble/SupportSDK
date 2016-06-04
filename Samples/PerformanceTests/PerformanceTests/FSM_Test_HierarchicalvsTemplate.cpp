@@ -6,6 +6,7 @@
 
 #include <Utilities/lexical_cast.h>
 
+//#define BOOST_TEST
 #if defined(BOOST_TEST)
 // back-end
 #include <boost/msm/back/state_machine.hpp>
@@ -26,7 +27,16 @@ namespace BoostSample
 
 	//////////////////////////////////////////////////////////////////////////
 
-	struct test_event {};
+	struct test_event
+	{
+		int x;
+		test_event()
+			: x(0)
+		{}
+		test_event(int xx)
+			: x(xx)
+		{}
+	};
 
 	struct test_event_fsm : public msm::front::state_machine_def<test_event>
 	{
@@ -75,6 +85,8 @@ namespace BoostSample
 	void TestEvents(int count)
 	{
 		TestFSM fsm;
+		fsm.process_event(test_event(1));
+		fsm.process_event(test_event(2));
 		for (int i = 0; i < count; ++i)
 			fsm.process_event(test_event());
 	}
@@ -1041,11 +1053,39 @@ namespace TemplateSample
 
 	////////////////////////////////////////////////////
 
-	struct test_event {};
+	struct test_event
+	{
+		int x;
+		test_event()
+			: x(0)
+		{}
+		test_event(int xx)
+			: x(xx)
+		{}
+	};
 
-	struct First : public BaseState<> {};
-	struct Second : public BaseState<> {};
-	struct Third : public BaseState<> {};
+	struct First : public BaseState<>
+	{
+		void OnEnter()
+		{
+
+		}
+		void OnEnter(const test_event& i_evt)
+		{
+		}
+	};
+	struct Second : public BaseState<>
+	{
+		void OnEnter(const test_event& i_evt)
+		{
+		}
+	};
+	struct Third : public BaseState<>
+	{
+		void OnEnter(const test_event& i_evt)
+		{
+		}
+	};
 
 	using TestEvTr = TransitionsTable<
 		_row<First, Second, test_event>,
@@ -1085,6 +1125,7 @@ namespace HiararchicalvsTemplate
 		func(i_nums);
 		return clock() - begin;
 	}
+
 	void Test()
 	{
 		HierarchicalSample::Test();
@@ -1092,10 +1133,10 @@ namespace HiararchicalvsTemplate
 		TemplateSample::Test();
 		std::cout << "-----------------------------------" << std::endl;
 
-		constexpr static size_t CALL_COUNT = 1000000;// 100000;
+		constexpr static size_t CALL_COUNT = 100000;
 		for (size_t i = 0; i < 1; ++i)
 		{
-			const clock_t hier_t = 0;// Runner(&HierarchicalSample::TestEvents, CALL_COUNT);
+			const clock_t hier_t = Runner(&HierarchicalSample::TestEvents, CALL_COUNT);
 			const clock_t template_t = Runner(&TemplateSample::TestEvents, CALL_COUNT);
 #if defined(BOOST_TEST)
 			const clock_t boost_t = Runner(&BoostSample::TestEvents, CALL_COUNT);

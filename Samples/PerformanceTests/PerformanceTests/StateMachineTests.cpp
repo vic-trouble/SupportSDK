@@ -293,7 +293,7 @@ namespace StateMachineTests
 			test_fsm.ProcessEvent<Event11>(Event11(Utilities::lexical_cast(i)));
 		}
 
-		constexpr size_t COUNT = 10000;
+		constexpr size_t COUNT = 100000;
 		auto time_compound = TestTransitionsPerformance<MyFSM>(COUNT);
 		auto time_trans_table = TestTransitionsPerformance<TestFSM>(COUNT);
 		std::cout << "Transitions test: " << std::endl
