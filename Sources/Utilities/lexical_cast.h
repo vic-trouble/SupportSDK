@@ -70,6 +70,19 @@ namespace SDK
 			};
 
 			template <>
+			struct Converter <__int64>
+			{
+				static __int64 convert_to(const std::string& i_value)
+				{
+					return std::stoi(i_value.c_str());
+				}
+				static std::string convert_from(const __int64& i_value)
+				{
+					return std::to_string(i_value);
+				}
+			};
+
+			template <>
 			struct Converter <unsigned int>
 			{
 				static unsigned int convert_to(const std::string& i_value)

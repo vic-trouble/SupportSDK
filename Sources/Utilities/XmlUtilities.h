@@ -3,11 +3,12 @@
 
 #include "UtilitiesAPI.h"
 
-#include "tinyxml.h"
-#include "tinystr.h"
+#include "tinyxml/tinyxml.h"
+#include "tinyxml/tinystr.h"
 
 #include "noncopyable.h"
 
+using namespace Xml;
 class XmlUtilities : SDK::Utilities::noncopyable
 {
 private:

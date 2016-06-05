@@ -13,34 +13,30 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\Sources\DecisionMaking\stdafx.h">
+    <ClInclude Include="..\..\..\Sources\DecisionMaking\DecisionMakingAPI.h">
       <Filter>_Maintanance</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Sources\DecisionMaking\DecisionMakingAPI.h">
+    <ClInclude Include="..\..\..\Sources\DecisionMaking\DecisionTrees\Decision.h">
       <Filter>_Maintanance</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Sources\DecisionMaking\_Link.h">
+    <ClInclude Include="..\..\..\Sources\DecisionMaking\DecisionTrees\DecisionTreeNode.h">
       <Filter>_Maintanance</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Sources\DecisionMaking\DecisionTrees\DecisionTreeNode.h">
-      <Filter>DecisionTrees</Filter>
+    <ClInclude Include="..\..\..\Sources\DecisionMaking\DecisionTrees\DecitionTree.h">
+      <Filter>_Maintanance</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Sources\DecisionMaking\DecisionTrees\Decision.h">
-      <Filter>DecisionTrees</Filter>
+    <ClInclude Include="..\..\..\Sources\DecisionMaking\Exceptions.h">
+      <Filter>_Maintanance</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Sources\DecisionMaking\DecisionTrees\DecitionTree.h">
-      <Filter>DecisionTrees</Filter>
+    <ClInclude Include="..\..\..\Sources\DecisionMaking\stdafx.h">
+      <Filter>_Maintanance</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\Sources\DecisionMaking\Exceptions.h">
-      <Filter>Base</Filter>
+    <ClInclude Include="..\..\..\Sources\DecisionMaking\_Link.h">
+      <Filter>_Maintanance</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\Sources\DecisionMaking\stdafx.cpp">
-      <Filter>_Maintanance</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\Sources\DecisionMaking\DecisionTrees\DecisionTree.cpp">
-      <Filter>DecisionTrees</Filter>
-    </ClCompile>
+    <ClCompile Include="..\..\..\Sources\DecisionMaking\DecisionTrees\DecisionTree.cpp" />
+    <ClCompile Include="..\..\..\Sources\DecisionMaking\stdafx.cpp" />
   </ItemGroup>
 </Project>

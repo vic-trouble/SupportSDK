@@ -4,7 +4,9 @@
 
 #include "IComponentSerializer.h"
 
-class TiXmlElement;
+namespace Xml {
+	class TiXmlElement;
+}
 class GameObject;
 
 namespace GameCore
@@ -39,10 +41,10 @@ namespace GameCore
       GAMECORE_EXPORT ObjectSettings (const IObjectComposer& i_composer);
       // construct object settings for i_type
       // parse i_object_node for getting list of components
-      GAMECORE_EXPORT ObjectSettings (int i_type, const TiXmlElement& i_object_node, const IObjectComposer& i_composer);
+      GAMECORE_EXPORT ObjectSettings (int i_type, const Xml::TiXmlElement& i_object_node, const IObjectComposer& i_composer);
       GAMECORE_EXPORT ~ObjectSettings();
 
-      GAMECORE_EXPORT void Initialize(int i_type, const TiXmlElement& i_object_node);
+      GAMECORE_EXPORT void Initialize(int i_type, const Xml::TiXmlElement& i_object_node);
 
       GAMECORE_EXPORT int                    GetType() const;
       GAMECORE_EXPORT void                   SetupObject(GameObject* ip_object) const;

@@ -2,7 +2,9 @@
 
 class IComponent;
 class GameObject;
-class TiXmlElement;
+namespace Xml {
+	class TiXmlElement;
+}
 
 namespace GameCore
   {
@@ -33,7 +35,7 @@ namespace GameCore
         { }
       virtual ~IComponentSerializer() {}
 
-      virtual void        Parse(const TiXmlElement& i_configuration_node) = 0;
+      virtual void        Parse(const Xml::TiXmlElement& i_configuration_node) = 0;
       virtual void        ApplyTo(IComponent& i_component) const = 0;
       /// creates component and sets ip_object as owner
       /// return component pointer if successfull; nullptr otherwise

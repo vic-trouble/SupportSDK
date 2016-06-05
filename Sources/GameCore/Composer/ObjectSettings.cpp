@@ -8,6 +8,8 @@
 
 #include <Utilities/XmlUtilities.h>
 
+using namespace Xml;
+
 //////////////////////////////////////////////////////////////////////////
 
 namespace GameCore
@@ -30,7 +32,7 @@ namespace GameCore
   ObjectSettings::~ObjectSettings()
     {}
 
-  void ObjectSettings::Initialize(int i_type, const TiXmlElement& i_object_node)
+  void ObjectSettings::Initialize(int i_type, const Xml::TiXmlElement& i_object_node)
     {
     m_object_type = i_type;
     std::string component_name = "";

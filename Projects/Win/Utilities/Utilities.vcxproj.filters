@@ -18,6 +18,9 @@
     <Filter Include="Strings">
       <UniqueIdentifier>{21873871-1886-4895-8cbf-e172a525a245}</UniqueIdentifier>
     </Filter>
+    <Filter Include="tinyxml">
+      <UniqueIdentifier>{e481eb1f-985a-4f04-94ef-bdf46f261d30}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Sources\Utilities\stdafx.h">
@@ -68,6 +71,12 @@
     <ClInclude Include="..\..\..\Sources\Utilities\type_index.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Sources\Utilities\tinyxml\tinystr.h">
+      <Filter>tinyxml</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Sources\Utilities\tinyxml\tinyxml.h">
+      <Filter>tinyxml</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Sources\Utilities\stdafx.cpp">
@@ -87,6 +96,18 @@
     </ClCompile>
     <ClCompile Include="..\..\..\Sources\Utilities\HashFunctions.cpp">
       <Filter>Strings</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Sources\Utilities\tinyxml\tinystr.cpp">
+      <Filter>tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Sources\Utilities\tinyxml\tinyxml.cpp">
+      <Filter>tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Sources\Utilities\tinyxml\tinyxmlerror.cpp">
+      <Filter>tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Sources\Utilities\tinyxml\tinyxmlparser.cpp">
+      <Filter>tinyxml</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

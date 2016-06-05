@@ -257,9 +257,9 @@ namespace StateMachineTests
 		{
 			fsm.OnUpdate(0.1f);			
 			fsm.ProcessEvent<Event22>(Event22());
-			fsm.ProcessEvent<Event11>(Event11(Utilities::lexical_cast(i)));
-			fsm.ProcessEvent<Event11>(Event11(Utilities::lexical_cast(i)));
-			fsm.ProcessEvent<Event11>(Event11(Utilities::lexical_cast(i)));
+			fsm.ProcessEvent<Event11>(Event11(Utilities::lexical_cast(static_cast<int>(i))));
+			fsm.ProcessEvent<Event11>(Event11(Utilities::lexical_cast(static_cast<int>(i))));
+			fsm.ProcessEvent<Event11>(Event11(Utilities::lexical_cast(static_cast<int>(i))));
 		}
 		return clock() - beg;
 	}
@@ -283,14 +283,14 @@ namespace StateMachineTests
 			test_fsm.OnUpdate(0.1f);
 			//std::cout << "Current " << my_fsm.GetCurrent() << " - " << test_fsm.GetCurrent() << std::endl;
 			my_fsm.ProcessEvent<Event22>(Event22());
-			my_fsm.ProcessEvent<Event11>(Event11(Utilities::lexical_cast(i)));
-			my_fsm.ProcessEvent<Event11>(Event11(Utilities::lexical_cast(i)));
-			my_fsm.ProcessEvent<Event11>(Event11(Utilities::lexical_cast(i)));
+			my_fsm.ProcessEvent<Event11>(Event11(Utilities::lexical_cast(static_cast<int>(i))));
+			my_fsm.ProcessEvent<Event11>(Event11(Utilities::lexical_cast(static_cast<int>(i))));
+			my_fsm.ProcessEvent<Event11>(Event11(Utilities::lexical_cast(static_cast<int>(i))));
 
 			test_fsm.ProcessEvent<Event22>(Event22());
-			test_fsm.ProcessEvent<Event11>(Event11(Utilities::lexical_cast(i)));
-			test_fsm.ProcessEvent<Event11>(Event11(Utilities::lexical_cast(i)));
-			test_fsm.ProcessEvent<Event11>(Event11(Utilities::lexical_cast(i)));
+			test_fsm.ProcessEvent<Event11>(Event11(Utilities::lexical_cast(static_cast<int>(i))));
+			test_fsm.ProcessEvent<Event11>(Event11(Utilities::lexical_cast(static_cast<int>(i))));
+			test_fsm.ProcessEvent<Event11>(Event11(Utilities::lexical_cast(static_cast<int>(i))));
 		}
 
 		constexpr size_t COUNT = 100000;
