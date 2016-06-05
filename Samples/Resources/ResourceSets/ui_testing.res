@@ -1,4 +1,4 @@
-set_name = "ui_testing"
+﻿set_name = "ui_testing"
 shader_program = {
 	resource_name = "TextShader"
 	shader = {

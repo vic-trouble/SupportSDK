@@ -169,9 +169,14 @@ namespace SDK
 					return InternalHandle::InvalidHandle();
 				}
 
-				// TODO: when will be async - this will not be reference to back element
-				// auto it = std::find(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(hash));
-				auto& res_info = m_loaded_resources.back();
+				// find just created resource
+				it = std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindByHash(hash, res_type));
+				if (it == m_loaded_resources.end())
+				{
+					Loader::RemoveHandle(handle);
+					return InternalHandle::InvalidHandle();
+				}
+				auto& res_info = *it;
 				res_info.m_state = ResourceInformation::State::Loaded;
 				Register<ResType>(res_info, std::move(load_res.second));
 				// add to current set
@@ -212,10 +217,15 @@ namespace SDK
 						m_loaded_resources.end());
 					return InternalHandle::InvalidHandle();
 				}
-
-				// TODO: when will be async - this will not be reference to back element
-				// auto it = std::find(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindPredicate(hash));
-				auto& res_info = m_loaded_resources.back();
+				
+				// find just created resource
+				it = std::find_if(m_loaded_resources.begin(), m_loaded_resources.end(), ResourceInformation::FindByHash(hash, res_type));
+				if (it == m_loaded_resources.end())
+				{
+					Loader::RemoveHandle(handle);
+					return InternalHandle::InvalidHandle();
+				}
+				auto& res_info = *it;
 				res_info.m_state = ResourceInformation::State::Loaded;
 				Register<ResType>(res_info, std::move(load_res.second));
 				// add to current set
