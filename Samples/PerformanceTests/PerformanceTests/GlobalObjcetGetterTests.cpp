@@ -173,7 +173,7 @@ namespace GlobalObjectGetterTests
 			g_getter.AddGlobalObject<Second1>();
 		}
 
-		constexpr static size_t CALL_COUNT = 1000000;
+		constexpr static size_t CALL_COUNT = 100000;
 		const clock_t gl_obj = Runner(&TestGlobalVars, CALL_COUNT);
 		const clock_t getter_t = Runner([&g_getter]() { TestGetter(g_getter); }, CALL_COUNT);
 		std::cout << "\tGlobal object: " << gl_obj << std::endl

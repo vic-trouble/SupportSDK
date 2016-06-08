@@ -32,13 +32,17 @@ namespace SDK
 			assert(p_obj != nullptr && "There is no registered global object");
 			assert(dynamic_cast<ObjectType*>(p_obj) != nullptr && "Cannot convert type.");
 #endif
-			return static_cast<ObjectType*>( GetGlobalObjectImpl(typeid(ObjectType).hash_code()) );
+			// cache object hash_code, because type will be always the same
+			static const size_t obj_type = typeid(ObjectType).hash_code();
+			return static_cast<ObjectType*>( GetGlobalObjectImpl(obj_type) );
 		}
 
 		template <typename ObjectType>
 		void RemoveGlobalObject()
 		{
-			RemoveGlobalObjectImpl(typeid(ObjectType).hash_code());
+			// cache object hash_code, because type will be always the same
+			static const size_t obj_type = typeid(ObjectType).hash_code();
+			RemoveGlobalObjectImpl(obj_type);
 		}
 	};
 } // SDK
