@@ -2,8 +2,30 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup>
-    <IncludePath>$(SUPPORTSDK_ROOT)\Sources;$(SUPPORTSDK_ROOT)\Sources\GameCore;$(IncludePath)</IncludePath>
-  </PropertyGroup>
-  <ItemGroup />
+	<PropertyGroup>
+		<IncludePath>$(SUPPORTSDK_ROOT)\Sources;$(SUPPORTSDK_ROOT)\Sources\GameCore;$(IncludePath)</IncludePath>
+		<SUPPORTSDK_BIN_DIR>$(SUPPORTSDK_ROOT)\Binaries\$(Platform)\$(Configuration)</SUPPORTSDK_BIN_DIR>
+	</PropertyGroup>
+
+	<Target Name="Copy SDK Files" BeforeTargets="Link">
+		<Exec Command="xcopy &quot;$(SUPPORTSDK_BIN_DIR)\GameCore.dll&quot; &quot;$(OutputPath)&quot; /Y /R /I /E" IgnoreExitCode="true"/>
+		<Exec Command="xcopy &quot;$(SUPPORTSDK_BIN_DIR)\Utilities.dll&quot; &quot;$(OutputPath)&quot; /Y /R /I /E" IgnoreExitCode="true"/>
+		<Exec Command="xcopy &quot;$(SUPPORTSDK_BIN_DIR)\Patterns.dll&quot; &quot;$(OutputPath)&quot; /Y /R /I /E" IgnoreExitCode="true"/>
+	</Target>
+	<Target Name="Copy opengl Files" BeforeTargets="Link">
+		<Exec Condition="'$(Configuration)' == 'Debug'"
+			  Command="xcopy &quot;$(THIRD_PARTIES_NEW)\opengl\glew-1.10.0\bin\$(Configuration)\$(Platform)\glew32d.dll&quot; &quot;$(OutputPath)&quot; /Y /R /I /E" IgnoreExitCode="true"
+			  />
+		<Exec Condition="'$(Configuration)' == 'Release'"
+			  Command="xcopy &quot;$(THIRD_PARTIES_NEW)\opengl\glew-1.10.0\bin\$(Configuration)\$(Platform)\glew32.dll&quot; &quot;$(OutputPath)&quot; /Y /R /I /E" IgnoreExitCode="true"
+			/>
+	</Target>
+	<Target Name="Copy assimp Files" BeforeTargets="Link">
+		<Exec Condition="'$(Configuration)' == 'Debug'"
+			  Command="xcopy &quot;$(THIRD_PARTIES_NEW)\assimp-3.2\lib\Win\$(Platform)\$(Configuration)\assimp-vc130-mt.dll&quot; &quot;$(OutputPath)&quot; /Y /R /I /E" IgnoreExitCode="true"
+		/>
+		<Exec Condition="'$(Configuration)' == 'Release'"
+			  Command="xcopy &quot;$(THIRD_PARTIES_NEW)\assimp-3.2\lib\Win\$(Platform)\$(Configuration)\assimp-vc130-mt.dll&quot; &quot;$(OutputPath)&quot; /Y /R /I /E" IgnoreExitCode="true"
+		/>
+	</Target>
 </Project>

@@ -155,7 +155,7 @@ namespace GlobalObjectGetterTests
 	void Test()
 	{
 		std::cout << "==========================================================" << std::endl
-			<< "\t\t\Global objects getter tests" << std::endl;
+			<< "\t\tGlobal objects getter tests" << std::endl;
 		ConstructIndices();
 		SDK::DefaultObjectsStorage g_getter;
 		{

@@ -722,12 +722,12 @@ namespace HierarchicalSample
 		});
 	}
 
-	void TestEvents(int count)
+	void TestEvents(size_t count)
 	{
 		StateMachine fsm;
 		TestEventsFSM(fsm);
 		fsm.Start<First>();
-		for (int i = 0; i < count; ++i)
+		for (size_t i = 0; i < count; ++i)
 		{
 			fsm.OnUpdate(0.1f);
 			fsm.ProcessEvent(std::make_unique<test_event>());
@@ -1105,10 +1105,10 @@ namespace TemplateSample
 		}
 	};
 
-	void TestEvents(int count)
+	void TestEvents(size_t count)
 	{
 		TestEventsFSM fsm;
-		for (int i = 0; i < count; ++i)
+		for (size_t i = 0; i < count; ++i)
 		{
 			fsm.OnUpdate(0.1f);
 			fsm.ProcessEvent(test_event());
@@ -1119,7 +1119,7 @@ namespace TemplateSample
 
 namespace HiararchicalvsTemplate
 {
-	clock_t Runner(std::function<void(int)> func, size_t i_nums)
+	clock_t Runner(std::function<void(size_t)> func, size_t i_nums)
 	{
 		clock_t begin = clock();
 		func(i_nums);
