@@ -356,6 +356,9 @@ namespace SDK
 			m_fsm.SetStates(std::move(i_states)...);
 		}
 
+		CompoundState()
+		{}
+
 		template <typename EventType>
 		void ProcessEvent(const EventType& i_evt)
 		{

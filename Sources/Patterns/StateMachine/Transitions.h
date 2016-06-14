@@ -102,7 +102,7 @@ namespace SDK
 	struct TransitionsTable
 	{
 		template <typename EventType, typename StateMachine, typename row>
-		bool CheckTransition(TransitionGetterResult& o_result, const EventType& i_event, const StateMachine& i_fsm, row&)
+		bool CheckTransition(TransitionGetterResult& o_result, const EventType& i_event, const StateMachine& i_fsm)
 		{
 			if (o_result.second != StateMachine::INVALID_EXECUTOR_INDEX)
 				return false;
@@ -115,7 +115,7 @@ namespace SDK
 		{
 			static size_t this_index = typeid(*this).hash_code();
 			o_result.first = this_index;
-			bool tr_results[] = { CheckTransition<EventType, StateMachine>(o_result, i_event, i_fsm, Transitions())... };
+			bool tr_results[] = { CheckTransition<EventType, StateMachine, Transitions>(o_result, i_event, i_fsm)... };
 		}
 
 		template <typename StateMachine, typename row>
