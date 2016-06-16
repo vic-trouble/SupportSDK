@@ -102,18 +102,14 @@ namespace SDK
 		{
 			// find appropriate element
 			int index = -1;
-			if (m_max_element < Size)
-				index = m_max_element + 1;
-			else
+			
+			// first empty element
+			for (size_t i = 0; i < Size; ++i)
 			{
-				// first empty element
-				for (size_t i = 0; i < Size; ++i)
+				if (m_elements[i].first.index == -1)
 				{
-					if (m_elements[i].first.index == -1)
-					{
-						index = i;
-						break;
-					}
+					index = i;
+					break;
 				}
 			}
 			// no empty slots
