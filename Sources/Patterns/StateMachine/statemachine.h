@@ -237,6 +237,13 @@ namespace SDK
 				SetNext(result);
 		}
 
+		// Change to next state if it is exist; without calling to Next::OnUpdate
+		void ForceChange()
+		{
+			ChangeStateIfNeeded();
+		}
+
+
 		template <typename State>
 		void Start()
 		{
