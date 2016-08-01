@@ -762,22 +762,7 @@ namespace TemplateSample
 
 
 	// idle states
-	struct Wait : public BaseState<>
-	{
-		std::function<void(const idle_action_completed&)> m_process_func;
-		template <typename StateMachine>
-		Wait(StateMachine& i_fsm)
-		{
-			m_process_func = BindProcessEventFunction<idle_action_completed, StateMachine>(i_fsm);
-		}
-
-		virtual void OnUpdate(float dt) override
-		{
-			std::cout << "\t[Wait] OnUpdate" << std::endl;
-			m_process_func(idle_action_completed());
-		}
-	};
-
+	struct Wait;
 	struct Dance : public BaseState<>
 	{
 		std::function<void(const idle_action_completed&)> m_process_func;
@@ -821,14 +806,7 @@ namespace TemplateSample
 	>;
 	struct Idle : public StateMachine<3, Tr, Wait>
 	{
-		Idle()
-		{
-			SetStates(
-				std::make_unique<Wait>(*this),
-				std::make_unique<Dance>(*this),
-				std::make_unique<Joke<Idle>>(*this)
-				);
-		}
+		Idle();
 		void OnEnter()
 		{		}
 		void OnEnter(const position_achieved&)
@@ -838,6 +816,31 @@ namespace TemplateSample
 		void OnEnter(const stop_attacking&)
 		{		}
 	};
+
+	struct Wait : public BaseState<>
+	{
+		std::function<void(const idle_action_completed&)> m_process_func;
+		template <typename StateMachine>
+		Wait(StateMachine& i_fsm)
+		{
+			m_process_func = BindProcessEventFunction<idle_action_completed, StateMachine>(i_fsm);
+		}
+
+		virtual void OnUpdate(float dt) override
+		{
+			std::cout << "\t[Wait] OnUpdate" << std::endl;
+			m_process_func(idle_action_completed());
+		}
+	};
+
+	Idle::Idle()
+	{
+		SetStates(
+			std::make_unique<Wait>(*this),
+			std::make_unique<Dance>(*this),
+			std::make_unique<Joke<Idle>>(*this)
+			);
+	}
 
 	struct IdleS;
 	using TrS = TransitionsTable<
@@ -1023,11 +1026,22 @@ namespace TemplateSample
 
 	////////////////////////////////////////////////////
 
+	void TestIdle()
+	{
+		Idle idle_fsm;
+		// or we can start with event
+		// idle_fsm.Start<Wait>(idle_action_completed());
+		for (int i = 0; i < 10; ++i)
+			idle_fsm.OnUpdate(.1f);
+	}
+
 	void Test()
 	{
+		//TestIdle();
 		CharacherFSM char_fsm;
 		// move to Wait
 		char_fsm.OnUpdate(.1f);
+		char_fsm.ProcessEvent(position_achieved());
 		// move to Dance
 		char_fsm.OnUpdate(.1f);
 		// move to Joke

@@ -50,11 +50,11 @@ namespace StateMachineTests
 	};
 
 	struct Event11;
-	typedef CompoundTransition<
-		Transition<MyState1, MyState2, Event22>,
-		CompoundTransition<Transition<MyState2, MyState3, Event11>, 
-		CompoundTransition<Transition<MyState3, MyState4, Event11>, Transition<MyState4, MyState1, Event11>> >
-	> TransitionTable;
+	using TransitionTable = _comp_tr<
+		_tr<MyState1, MyState2, Event22>,
+		_comp_tr<Transition<MyState2, MyState3, Event11>, 
+		_comp_tr<Transition<MyState3, MyState4, Event11>, _tr<MyState4, MyState1, Event11>> >
+	>;
 	class MyFSM : public SDK::StateMachine<4, TransitionTable, MyState1, float, SDK::BaseState<>, SDK::BaseState<>*>
 	{
 	private:

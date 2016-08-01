@@ -318,19 +318,6 @@ namespace SDK
 		/////////////////////////////////////////////////////////////
 		// BaseState overrides
 
-		template <typename EventType>
-		void OnEnter(const EventType& i_event)
-		{
-			if (m_current != NullState)
-				m_states[m_current]->OnEnter(i_event);
-		}
-
-		void OnExit()
-		{
-			if (m_current != NullState)
-				m_states[m_current]->OnExit();
-		}
-
 		void OnUpdate(OnUpdateParam i_param)
 		{
 			ChangeStateIfNeeded();

@@ -140,7 +140,6 @@ namespace SDK
 		template <typename StateMachine>
 		void Cache(StateMachine& o_fsm)
 		{
-			o_fsm.
 		}
 
 		template <typename EventType, typename StateMachine>
