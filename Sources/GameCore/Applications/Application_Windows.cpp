@@ -51,7 +51,7 @@ namespace
 
 	void PushMouseEventToInputSystem(USHORT buttsFlags, WPARAM wParam/*isMove, isInside*/, LPARAM lParam/*x,y*/)
 	{
-		SDK::MouseEvent m_ev(SDK::MousePhase::ButtonPressed);
+		SDK::MouseEvent m_ev(SDK::MousePhase::Moved);
 		if (buttsFlags & RI_MOUSE_LEFT_BUTTON_DOWN || buttsFlags & RI_MOUSE_RIGHT_BUTTON_DOWN || buttsFlags & RI_MOUSE_MIDDLE_BUTTON_DOWN)
 		{			
 			m_ev.m_phase = SDK::MousePhase::ButtonPressed;

@@ -50,7 +50,10 @@ namespace Game
 	{
 		void Handle(const UI::UIButtonEvent& e)
 		{
-			Core::GetApplication()->RequestShutdown();
+			if (e.m_type == UI::UIButtonEvent::Type::Released)
+			{
+				Core::GetApplication()->RequestShutdown();
+			}
 		}
 	};
 	TestHandler handler;
@@ -69,11 +72,14 @@ namespace Game
 
 	void CoreDelegateImpl::OnCreate()
 	{
+		auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
+		p_load_manager->LoadResourceSet("..\\..\\..\\Resources\\ResourceSets\\ui_testing.res");
+
 		auto p_ui_system = Core::GetGlobalObject<UI::UIControlSystem>();
-		p_ui_system->LoadScheme("..\\..\\Resources\\UI\\test.scheme");
+		p_ui_system->LoadScheme("..\\..\\..\\Resources\\UI\\test.scheme");
 		p_ui_system->UnloadScheme("test");
 		p_ui_system->SetActiveScheme("test");
-		auto scheme_handler = p_ui_system->LoadScheme("..\\..\\Resources\\UI\\TestUIProfile.scheme");				
+		auto scheme_handler = p_ui_system->LoadScheme("..\\..\\..\\Resources\\UI\\TestUIProfile.scheme");				
 		p_ui_system->SetActiveScheme(scheme_handler);
 		auto accessor = p_ui_system->CreateControl<UI::UIButton>();
 		p_ui_system->RemoveControl(accessor.GetHandler());
@@ -84,10 +90,6 @@ namespace Game
 
 		connection = SDK::Connection(msg_dsp, handler, &TestHandler::Handle, "my_mega_button");		
 		connection.disconnect();
-
-		auto p_load_manager = Core::GetGlobalObject<Resources::ResourceManager>();
-		p_load_manager->LoadResourceSet("..\\..\\Resources\\ResourceSets\\ui_testing.res");
-		Core::GetGlobalObject<Render::FontManager>()->LoadFont("Arial", Render::FontSettings(), "..\\..\\Resources\\Fonts\\arial.ttf");
 
 		Log::Info("Render", Source, "Test message");
 		Log::Info(0, Source, "{0}: {1}", "asdasd", 1);
@@ -116,9 +118,9 @@ namespace Game
 		std::wstring message = L"FPS: " + std::to_wstring(Core::GetApplication()->GetCurrentFPS());
 		auto ru_font = Core::GetGlobalObject<Resources::ResourceManager>()->GetHandleToResource<Render::Font>("Arial_ru");
 		auto en_font = Core::GetGlobalObject<Resources::ResourceManager>()->GetHandleToResource<Render::Font>("Arial_en");
-		Core::GetGlobalObject<Render::FontManager>()->Render({ x, y }, 1.f, message, en_font);
-		Core::GetGlobalObject<Render::FontManager>()->Render({ x, y - 50 }, 1.f, message_num_0, en_font);
-		Core::GetGlobalObject<Render::FontManager>()->Render({ x, y - 100 }, 1.f, L"Мама мыла раму!", ru_font);
+		//Core::GetGlobalObject<Render::FontManager>()->Render({ x, y }, 1.f, message, en_font);
+		//Core::GetGlobalObject<Render::FontManager>()->Render({ x, y - 50 }, 1.f, message_num_0, en_font);
+		//Core::GetGlobalObject<Render::FontManager>()->Render({ x, y - 100 }, 1.f, L"Мама мыла раму!", ru_font);
 	}
 
 } // Game

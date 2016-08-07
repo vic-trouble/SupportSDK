@@ -49,14 +49,46 @@ namespace SDK
 			*/
 			virtual bool MouseMoved(const MouseEvent& i_evt) override
 			{
+				if (i_evt.m_phase != MousePhase::Moved)
+					return false;
+				auto p_ui_sys = Core::GetGlobalObject<UI::UIControlSystem>();
+				auto& controls = p_ui_sys->m_controls;
+				for (auto& control : controls.m_elements)
+				{
+					if (control.second == nullptr)
+						continue;
+					UIControl* p_control = control.second.get();
+					if (control.second->IsHited({ i_evt.m_x, i_evt.m_y }))
+					{
+						p_control->MouseMoved(p_ui_sys->m_message_dispatcher, i_evt);
+						return true;
+					}
+				}
 				return false;
 			}
 			virtual bool MousePressed(const MouseEvent& i_evt) override
 			{
+				if (i_evt.m_phase != MousePhase::ButtonPressed)
+					return false;
+				auto p_ui_sys = Core::GetGlobalObject<UI::UIControlSystem>();
+				auto& controls = p_ui_sys->m_controls;
+				for (auto& control : controls.m_elements)
+				{
+					if (control.second == nullptr)
+						continue;
+					UIControl* p_control = control.second.get();
+					if (control.second->IsHited({ i_evt.m_x, i_evt.m_y }))
+					{
+						p_control->MousePressed(p_ui_sys->m_message_dispatcher, i_evt);
+						return true;
+					}
+				}
 				return false;
 			}
 			virtual bool MouseReleased(const MouseEvent& i_evt) override
 			{
+				if (i_evt.m_phase != MousePhase::ButtonReleased)
+					return false;
 				auto p_ui_sys = Core::GetGlobalObject<UI::UIControlSystem>();
 				auto& controls = p_ui_sys->m_controls;
 				for (auto& control : controls.m_elements)

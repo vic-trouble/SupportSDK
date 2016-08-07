@@ -12,7 +12,23 @@ namespace SDK
 		class UIButton : public UIControl
 		{
 		private:
-			Render::Batch m_batch;
+			Render::IndexBufferHandle m_indices;
+			Render::VertexBufferHandle m_hd_buffer;
+			Render::VertexLayoutHandle m_ver_layout;
+			Render::VertexLayoutHandle m_uv_layout;
+
+			Render::VertexBufferHandle m_vertices;
+			Render::VertexBufferHandle m_uvs;
+
+			enum class State
+			{
+				Idle,
+				Hovered,
+				Pressed
+			};
+			State m_state;
+
+			Render::TextureHandle m_tex_handles[3];
 
 		private:
 			virtual void UpdateImpl(float i_elapsed_time) override;

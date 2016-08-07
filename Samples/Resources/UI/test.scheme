@@ -6,6 +6,9 @@ screen = {
 		position = [ 0.5f 0.5f ]
 		scale = [ 1.2f 0.9f ]
 		rotation = [ 0.5f 1.8f ]
-		texture = "button.png"
+		texture_idle = "SimpleButton"
+		texture_hovered = "SimpleButton_hovered"
+		texture_pressed = "SimpleButton_pressed"
+		text = "My little pony"
 	}
 }

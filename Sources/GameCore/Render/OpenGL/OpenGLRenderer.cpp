@@ -322,7 +322,7 @@ namespace SDK
 					assert(false && "Cannot bind buffer");
 					continue;
 				}
-
+				
 				const auto& attributes = i_shader.GetAttributes();
 				for (const auto& attr : attributes)
 				{
@@ -331,6 +331,7 @@ namespace SDK
 						continue;
 					if (attr.element_semantic == element.m_semantic)
 					{
+						i_mgr.BindLayout(i_layouts[i], attr.location);
 						glVertexAttribPointer(attr.location, // index for shader attribute
 							element.m_vertex_size, // size
 							GetComponentType(element.m_component), // type
