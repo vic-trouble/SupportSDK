@@ -116,11 +116,11 @@ namespace Game
 		IRect rect = p_renderer->GetTargetRectangle();
 		p_renderer->SetMatrix(MatrixMode::Projection, Matrix4f::CreateOrtho(0, rect.Width(), 0, rect.Height()));
 		std::wstring message = L"FPS: " + std::to_wstring(Core::GetApplication()->GetCurrentFPS());
-		auto ru_font = Core::GetGlobalObject<Resources::ResourceManager>()->GetHandleToResource<Render::Font>("Arial_ru");
 		auto en_font = Core::GetGlobalObject<Resources::ResourceManager>()->GetHandleToResource<Render::Font>("Arial_en");
-		//Core::GetGlobalObject<Render::FontManager>()->Render({ x, y }, 1.f, message, en_font);
-		//Core::GetGlobalObject<Render::FontManager>()->Render({ x, y - 50 }, 1.f, message_num_0, en_font);
-		//Core::GetGlobalObject<Render::FontManager>()->Render({ x, y - 100 }, 1.f, L"Мама мыла раму!", ru_font);
+		auto arial_font = Core::GetGlobalObject<Resources::ResourceManager>()->GetHandleToResource<Render::Font>("Arial");
+		Core::GetGlobalObject<Render::FontManager>()->Render({ x, y }, 1.f, message, arial_font);
+		Core::GetGlobalObject<Render::FontManager>()->Render({ x, y - 50 }, 1.f, message_num_0, en_font);
+		Core::GetGlobalObject<Render::FontManager>()->Render({ x, y - 100 }, 1.f, L"Мама мыла раму!", arial_font);
 	}
 
 } // Game

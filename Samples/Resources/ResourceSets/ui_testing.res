@@ -39,6 +39,14 @@ font = {
 	pixel_height = 48
 }
 
+font = {
+	resource_name = "Arial"
+	path = "..\..\..\Resources\Fonts\arial.ttf"
+	codes = L" !\"#$%&'()*+,-./0123456789:;<=>?@АБВГДАЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЬЭЮЯ[\\]^_`абвгдежзийклмнопрстуфхцчшщъыьэюя{|}~ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+	pixel_width = 0
+	pixel_height = 48
+}
+
 texture = {
 	resource_name = "SimpleButton"
 	path = "..\..\..\Resources\Textures\SimpleButton.png"
