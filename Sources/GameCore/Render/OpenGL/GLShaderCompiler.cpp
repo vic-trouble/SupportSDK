@@ -293,7 +293,9 @@ namespace SDK
 				case SVT::Int:
 				case SVT::Sampler2D:
 					{
-						glUniform1i(i_location, reinterpret_cast<int>(ip_value));
+						const int* const val_ptr = reinterpret_cast<const int* const>(ip_value);
+						int val = val_ptr[0];
+						glUniform1i(i_location, val);
 					}
 					break;
 				case SVT::IntVec2:

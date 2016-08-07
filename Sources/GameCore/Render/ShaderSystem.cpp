@@ -264,7 +264,8 @@ namespace SDK
 				return;
 			const size_t data_size = i_value.size;
 			const void* p_data_ptr = i_value.GetDataPtr();
-			// catch data - it will be deleted after setting
+			// catch data - it will be deleted after setting; 
+			//	if data is in buffer than p_data will nullptr and all is OK
 			std::unique_ptr<char> p_data(i_value.p_data);
 			mp_current_shader_compiler->SetUniform(i_location, i_value.type, p_data_ptr, i_value.transposed);
 		}
