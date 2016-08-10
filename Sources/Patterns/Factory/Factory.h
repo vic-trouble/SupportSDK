@@ -29,12 +29,13 @@ namespace SDK
 		typename IdentifierType,
 		typename ReturnType = std::unique_ptr<BaseClass>,
 		template <typename, typename, typename> class ErrorPolicy = DefaultErrorPolicy,
-		size_t (*HashFunction)(const IdentifierType&) = &Utilities::hash_function<IdentifierType>
+		size_t (*HashFunction)(const IdentifierType&) = &Utilities::hash_function<IdentifierType>,
+		typename... CreatorParameters
 	>
 	class Factory
 	{
 	public:
-		typedef ReturnType(*Creator)(void);
+		typedef ReturnType(*Creator)(CreatorParameters&&...);
 		typedef ErrorPolicy<BaseClass, IdentifierType, ReturnType> _ErrorPolicy;
 	private:
 		typedef std::pair<size_t, Creator> ProductPair;
@@ -76,13 +77,13 @@ namespace SDK
 				);
 		}
 
-		ReturnType Create(const IdentifierType& i_id) const
+		ReturnType Create(const IdentifierType& i_id, CreatorParameters&&... i_parameters) const
 		{
 			const size_t hash = HashFunction(i_id);
 			const ProductPair* p_p = Find(hash);
 			if (p_p == nullptr)
 				return _ErrorPolicy::OnUnknownType(i_id);
-			return p_p->second();
+			return p_p->second(std::forward<CreatorParameters>(i_parameters...)...);
 		}
 	};
 

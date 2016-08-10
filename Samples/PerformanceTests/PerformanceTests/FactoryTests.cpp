@@ -6,6 +6,50 @@
 
 namespace FactoryTests
 {
+	namespace VariadicArgsInCreator
+	{
+		class Base
+		{
+		public:
+			virtual ~Base() {}
+		};
+		struct MyParameters {};
+		using TestFactory = SDK::Factory<Base, std::string, std::unique_ptr<Base>, SDK::DefaultErrorPolicy, &SDK::Utilities::hash_function<std::string>
+			, const MyParameters&>;
+
+		class Test1 : public Base
+		{
+		public:
+			void Init(const MyParameters&)
+			{}
+		};
+
+		class Test2 : public Base
+		{
+		public:
+			void Init(const MyParameters&)
+			{}
+		};
+
+		template <typename T>
+		std::unique_ptr<Base> CreateType(const MyParameters& params)
+		{
+			std::unique_ptr<T> p_obj(new T());
+			p_obj->Init(params);
+			return std::move(p_obj);
+		}
+
+		void Test()
+		{
+			TestFactory factory;
+			factory.Register("test1", &CreateType<Test1>);
+			factory.Register("test2", &CreateType<Test2>);
+
+			auto p_test1 = factory.Create("test1", MyParameters());
+			auto p_test2 = factory.Create("test2", MyParameters());
+		}
+
+	} // VariadicArgsInCreator
 
 	class Base
 	{
@@ -155,7 +199,7 @@ namespace FactoryTests
 
 	void Test()
 	{
-		static const size_t OBJ_NUMBER = 10000000;
+		static const size_t OBJ_NUMBER = 100000;
 		std::cout << "==========================================================" << std::endl
 			<< "\t\t\tFactory tests" << std::endl;
 		/*size_t sum = 0;
@@ -182,6 +226,7 @@ namespace FactoryTests
 		std::cout << "\tInt: " << OBJ_NUMBER << "-" << end << std::endl;
 		//Out(objects);
 		std::cout << "==========================================================" << std::endl;
+		VariadicArgsInCreator::Test();
 	}
 
 } // AbstractFactoryTests
