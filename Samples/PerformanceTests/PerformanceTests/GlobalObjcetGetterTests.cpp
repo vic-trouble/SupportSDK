@@ -99,46 +99,40 @@ namespace GlobalObjectGetterTests
 	void TestGlobalVars()
 	{
 		constexpr static size_t NUMBER_3 = NUMBER / 3;
-		for (size_t i = 0; i < NUMBER; ++i)
+		for (size_t i = 0; i < NUMBER_3; ++i)
 		{
-			if (i < NUMBER_3)
-			{
-				g_first[i].SetX(true);
-				g_second[i].SetX(false);
-			}
-			else if (i < NUMBER_3 * 2)
-			{
-				g_first_0[i].SetX(true);
-				g_second_0[i].SetX(false);
-			}
-			else
-			{
-				g_first_1[i].SetX(true);
-				g_second_1[i].SetX(false);
-			}
+			g_first[i].SetX(true);
+			g_second[i].SetX(false);
+		}
+		for (size_t i = 0; i < NUMBER_3; ++i)
+		{
+			g_first_0[i].SetX(true);
+			g_second_0[i].SetX(false);
+		}
+		for (size_t i = 0; i < NUMBER_3; ++i)
+		{
+			g_first_1[i].SetX(true);
+			g_second_1[i].SetX(false);
 		}
 	}
 
 	void TestGetter(SDK::ObjectStorageBase& i_getter)
 	{
 		constexpr static size_t NUMBER_3 = NUMBER / 3;
-		for (size_t i = 0; i < NUMBER; ++i)
+		for (size_t i = 0; i < NUMBER_3; ++i)
 		{
-			if (i < NUMBER_3)
-			{
-				i_getter.GetGlobalObject<First>()->SetX(true);
-				i_getter.GetGlobalObject<Second>()->SetX(false);
-			}
-			else if (i < NUMBER_3 * 2)
-			{
-				i_getter.GetGlobalObject<First0>()->SetX(true);
-				i_getter.GetGlobalObject<Second0>()->SetX(false);
-			}
-			else
-			{
-				i_getter.GetGlobalObject<First1>()->SetX(true);
-				i_getter.GetGlobalObject<Second1>()->SetX(false);
-			}
+			i_getter.GetGlobalObject<First>()->SetX(true);
+			i_getter.GetGlobalObject<Second>()->SetX(false);
+		}
+		for (size_t i = 0; i < NUMBER_3; ++i)
+		{
+			i_getter.GetGlobalObject<First0>()->SetX(true);
+			i_getter.GetGlobalObject<Second0>()->SetX(false);
+		}
+		for (size_t i = 0; i < NUMBER_3; ++i)
+		{
+			i_getter.GetGlobalObject<First1>()->SetX(true);
+			i_getter.GetGlobalObject<Second1>()->SetX(false);
 		}
 	}
 
@@ -173,11 +167,14 @@ namespace GlobalObjectGetterTests
 			g_getter.AddGlobalObject<Second1>();
 		}
 
-		constexpr static size_t CALL_COUNT = 100000;
-		const clock_t gl_obj = Runner(&TestGlobalVars, CALL_COUNT);
-		const clock_t getter_t = Runner([&g_getter]() { TestGetter(g_getter); }, CALL_COUNT);
-		std::cout << "\tGlobal object: " << gl_obj << std::endl
-			<< "\tGetter: " << getter_t << std::endl;
+		constexpr static size_t CALL_COUNT = 1000000;
+		for (size_t i = 0; i < 10; ++i)
+		{
+			const clock_t gl_obj = Runner(&TestGlobalVars, CALL_COUNT);
+			const clock_t getter_t = Runner([&g_getter]() { TestGetter(g_getter); }, CALL_COUNT);
+			std::cout << "\tGlobal object: " << gl_obj << std::endl
+				<< "\tGetter: " << getter_t << std::endl;
+		}
 	}
 
 } // GlobalObjectGetterTests
