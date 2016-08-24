@@ -9,6 +9,7 @@
 #include "FactoryTests.h"
 #include "GlobalObjectGetterTests.h"
 #include "TempTests.h"
+#include "MessageDispatcherTests.h"
 
 int main()
 {
@@ -18,5 +19,6 @@ int main()
 	HiararchicalvsTemplate::Test();
 	StateMachineTests::Test();
 	CmdBucketTest::Test();	
+	MessageDispatcherTests::Test();
     return 0;
 }

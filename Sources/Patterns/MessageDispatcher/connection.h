@@ -10,7 +10,7 @@ namespace SDK
 	{
 	private:
 		MessageDispatcher* mp_dispatcher;
-		std::type_index m_type;
+		std::size_t m_type;
 		std::string m_publisher;
 
 	public:
@@ -18,7 +18,7 @@ namespace SDK
 		Connection& operator = (const Connection&) = delete;
 
 		Connection()
-			: m_type(typeid(*this))
+			: m_type(0)
 			, mp_dispatcher(nullptr)
 		{}
 
@@ -41,7 +41,7 @@ namespace SDK
 
 		template <typename HandlerType, typename EventType>
 		Connection(MessageDispatcher& o_dispatcher, HandlerType& i_instance, void (HandlerType::*member_function)(const EventType&), const std::string& i_publisher)
-			: m_type(typeid(EventType))
+			: m_type(typeid(EventType).hash_code())
 			, mp_dispatcher(&o_dispatcher)
 			, m_publisher(i_publisher)
 		{
