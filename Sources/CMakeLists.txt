@@ -13,8 +13,13 @@ set(SDK_VERSION_MINOR 0)
 cmake_policy(SET CMP0011 NEW)
 cmake_policy(SET CMP0003 OLD)
 
-option(WITH_DEBUG_MODE "Build with debug mode" ON)
+option(WITH_TESTS "Build tests" ON)
 
+if(WITH_TESTS)
+	enable_testing()
+endif()
+
+# setup (could be moved to .cmake file)
 add_definitions(-DUNICODE)
 
 # Add third party modules
