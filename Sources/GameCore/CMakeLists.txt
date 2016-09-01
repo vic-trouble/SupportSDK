@@ -47,5 +47,24 @@ add_library(GameCore SHARED ${HEADER_FILES} ${SOURCE_FILES}
                             ${SYSTEMS_HEADER_FILES} ${SYSTEMS_SOURCE_FILES}
                             ${UI_HEADER_FILES} ${UI_SOURCE_FILES}
 	)
-target_include_directories(GameCore PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/.. ${TINYXML_INCLUDE_DIR} ${GLEW_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIR} ${SOIL_INCLUDE_DIR} ${FREETYPE_INCLUDE_DIR}/freetype2)    
-target_link_libraries(GameCore Utilities ${SOIL_LIB_DIR}/SOIL.lib ${TINYXML_LIB_DIR}/tinyxml2.lib opengl32.lib glu32.lib ${GLEW_LIB_DIR}/libglew_sharedd.lib ${ASSIMP_LIB_DIR}/assimp-vc140-mt.lib ${FREETYPE_LIB_DIR}/freetyped.lib)
+
+target_include_directories(GameCore PRIVATE 
+	${CMAKE_CURRENT_SOURCE_DIR} 
+	${CMAKE_CURRENT_SOURCE_DIR}/.. 
+	${TINYXML_INCLUDE_DIR} 
+	${GLEW_INCLUDE_DIR} 
+	${ASSIMP_INCLUDE_DIR} 
+	${SOIL_INCLUDE_DIR} 
+	${FREETYPE_INCLUDE_DIR}/freetype2)    
+
+target_link_libraries(GameCore 
+	Utilities 
+	${SOIL_LIB_DIR}/SOIL.lib 
+	${TINYXML_LIB_DIR}/tinyxml2.lib 
+	opengl32.lib 
+	glu32.lib 
+	${GLEW_LIB_DIR}/libglew_sharedd.lib 
+	${ASSIMP_LIB_DIR}/assimp-vc140-mt.lib 
+	${FREETYPE_LIB_DIR}/freetyped.lib)
+
+add_dependencies(GameCore SOIL tinyxml glew assimp freetype)
