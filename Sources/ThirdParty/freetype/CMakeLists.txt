@@ -1,4 +1,8 @@
 set(FREETYPE_INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}/ThirdParty/freetype)
 set(FREETYPE_INCLUDE_DIR ${FREETYPE_INSTALL_DIR}/include CACHE PATH INTERNAL)
 set(FREETYPE_LIB_DIR ${FREETYPE_INSTALL_DIR}/lib CACHE PATH INTERNAL)
-ExternalProject_Add(freetype URL http://download.savannah.gnu.org/releases/freetype/ft265.zip CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${FREETYPE_INSTALL_DIR})
+
+ExternalProject_Add(freetype 
+	URL http://download.savannah.gnu.org/releases/freetype/ft265.zip 
+	UPDATE_COMMAND ""
+	CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${FREETYPE_INSTALL_DIR})

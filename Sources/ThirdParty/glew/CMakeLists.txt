@@ -1,4 +1,8 @@
 set(GLEW_INSTALL_DIR ${CMAKE_CURRENT_BINARY_DIR}/ThirdParty/glew)
 set(GLEW_INCLUDE_DIR ${GLEW_INSTALL_DIR}/include CACHE PATH INTERNAL)
 set(GLEW_LIB_DIR ${GLEW_INSTALL_DIR}/lib CACHE PATH INTERNAL)
-ExternalProject_Add(glew GIT_REPOSITORY https://github.com/Perlmint/glew-cmake CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${GLEW_INSTALL_DIR})
+
+ExternalProject_Add(glew 
+	GIT_REPOSITORY https://github.com/Perlmint/glew-cmake GIT_TAG "glew-cmake-1.11.0"
+	UPDATE_COMMAND ""
+	CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${GLEW_INSTALL_DIR})
