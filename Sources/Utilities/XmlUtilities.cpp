@@ -15,7 +15,7 @@ XmlUtilities::~XmlUtilities()
 {
 }
 
-bool XmlUtilities::LoadXmlDocument(const std::string& fileName, TiXmlDocument& document)
+bool XmlUtilities::LoadXmlDocument(const std::string& fileName, XMLDocument& document)
 {
 	std::fstream f;
 	f.open(fileName.c_str());
@@ -31,7 +31,7 @@ bool XmlUtilities::LoadXmlDocument(const std::string& fileName, TiXmlDocument& d
 	return true;
 }
 
-const TiXmlElement* XmlUtilities::IterateChildElements(const TiXmlElement* i_parent_element, const TiXmlElement* i_child_element)
+const XMLElement* XmlUtilities::IterateChildElements(const XMLElement* i_parent_element, const XMLElement* i_child_element)
 {
   if (i_parent_element != 0)
   {
@@ -46,7 +46,7 @@ const TiXmlElement* XmlUtilities::IterateChildElements(const TiXmlElement* i_par
   return nullptr;
 }
 
-std::pair<float, float> XmlUtilities::GetXY(const TiXmlElement* i_xml_element)
+std::pair<float, float> XmlUtilities::GetXY(const XMLElement* i_xml_element)
 {
 	std::pair<float, float> xy;
   xy.first = GetRealAttribute(i_xml_element, "x", 0.0);
@@ -55,13 +55,13 @@ std::pair<float, float> XmlUtilities::GetXY(const TiXmlElement* i_xml_element)
 	return xy;
 }
 
-float XmlUtilities::GetRealAttribute(const TiXmlElement* i_xml_element, const char* i_name, float i_default_value)
+float XmlUtilities::GetRealAttribute(const XMLElement* i_xml_element, const char* i_name, float i_default_value)
 {
 	std::string value = GetStringAttribute(i_xml_element, i_name);
 	return value.empty() ? i_default_value : static_cast<float>(atof(value.c_str()));
 }
 
-std::string XmlUtilities::GetStringAttribute(const TiXmlElement* i_xml_element, const char* i_name)
+std::string XmlUtilities::GetStringAttribute(const XMLElement* i_xml_element, const char* i_name)
 {
 	const char* value = i_xml_element->Attribute(i_name);
 	if (value != 0)
@@ -70,19 +70,19 @@ std::string XmlUtilities::GetStringAttribute(const TiXmlElement* i_xml_element, 
 		return std::string();	
 }
 
-std::string XmlUtilities::GetStringAttribute(const TiXmlElement* i_xml_element, const char* i_name, const char* i_default_value)
+std::string XmlUtilities::GetStringAttribute(const XMLElement* i_xml_element, const char* i_name, const char* i_default_value)
 {
 	std::string value = GetStringAttribute(i_xml_element, i_name);
 	return value.empty() ? i_default_value : value;
 }
 
-int XmlUtilities::GetIntAttribute(const TiXmlElement* i_xml_element, const char* i_name, int i_default_value)
+int XmlUtilities::GetIntAttribute(const XMLElement* i_xml_element, const char* i_name, int i_default_value)
 {
 	std::string value = GetStringAttribute(i_xml_element, i_name);
 	return value.empty() ? i_default_value : atoi(value.c_str());
 }
 
-bool XmlUtilities::GetBoolAttribute(const TiXmlElement* i_xml_element, const char* i_name, bool i_default_value)
+bool XmlUtilities::GetBoolAttribute(const XMLElement* i_xml_element, const char* i_name, bool i_default_value)
 {
 	std::string value = GetStringAttribute(i_xml_element, i_name);
 	if(!value.empty())
@@ -90,7 +90,7 @@ bool XmlUtilities::GetBoolAttribute(const TiXmlElement* i_xml_element, const cha
 	return i_default_value;
 }
 
-size_t XmlUtilities::GetElementCount(const TiXmlElement* i_xml_element, const std::string& i_element_name)
+size_t XmlUtilities::GetElementCount(const XMLElement* i_xml_element, const std::string& i_element_name)
 {
 	size_t count = 0;
 
@@ -99,19 +99,19 @@ size_t XmlUtilities::GetElementCount(const TiXmlElement* i_xml_element, const st
 		count++;
 
 	//Recurse into children
-	const TiXmlElement* childElement = 0;
+	const XMLElement* childElement = 0;
 	while ((childElement = IterateChildElements(i_xml_element, childElement)))
 		count += GetElementCount(childElement, i_element_name);
 
 	return count;
 }
 
-size_t XmlUtilities::GetChildElementCount(const TiXmlElement* i_xml_element, const std::string& i_element_name)
+size_t XmlUtilities::GetChildElementCount(const XMLElement* i_xml_element, const std::string& i_element_name)
 {
 	size_t count = 0;
 
 	//Check children
-	const TiXmlElement* childElement = 0;
+	const XMLElement* childElement = 0;
 	while ((childElement = IterateChildElements(i_xml_element, childElement)))
 	{
 		if (i_element_name == childElement->Value())
