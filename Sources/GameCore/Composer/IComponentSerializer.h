@@ -2,8 +2,8 @@
 
 class IComponent;
 class GameObject;
-namespace Xml {
-	class TiXmlElement;
+namespace tinyxml2 {
+	class XMLElement;
 }
 
 namespace GameCore
@@ -35,7 +35,7 @@ namespace GameCore
         { }
       virtual ~IComponentSerializer() {}
 
-      virtual void        Parse(const Xml::TiXmlElement& i_configuration_node) = 0;
+      virtual void        Parse(const tinyxml2::XMLElement& i_configuration_node) = 0;
       virtual void        ApplyTo(IComponent& i_component) const = 0;
       /// creates component and sets ip_object as owner
       /// return component pointer if successfull; nullptr otherwise

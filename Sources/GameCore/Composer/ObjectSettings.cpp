@@ -8,7 +8,7 @@
 
 #include <Utilities/XmlUtilities.h>
 
-using namespace Xml;
+using namespace tinyxml2;
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -22,7 +22,7 @@ namespace GameCore
 
     }
 
-  ObjectSettings::ObjectSettings(int i_type, const TiXmlElement& i_object_node, const IObjectComposer& i_composer)
+  ObjectSettings::ObjectSettings(int i_type, const XMLElement& i_object_node, const IObjectComposer& i_composer)
     : m_object_type(i_type)
     , m_composer(i_composer)
     {
@@ -32,12 +32,12 @@ namespace GameCore
   ObjectSettings::~ObjectSettings()
     {}
 
-  void ObjectSettings::Initialize(int i_type, const Xml::TiXmlElement& i_object_node)
+  void ObjectSettings::Initialize(int i_type, const tinyxml2::XMLElement& i_object_node)
     {
     m_object_type = i_type;
     std::string component_name = "";
 
-    const TiXmlElement* p_child = 0;
+    const XMLElement* p_child = 0;
 
     while (p_child = XmlUtilities::IterateChildElements(&i_object_node, p_child))
       {

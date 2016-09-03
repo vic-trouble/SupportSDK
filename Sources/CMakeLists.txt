@@ -1,42 +1,40 @@
 #root
 cmake_minimum_required (VERSION 2.6)
 
-project (SupportSDK)
+project(SupportSDK)
 
-set (PROJECT SupportSDK)
+set(PROJECT SupportSDK)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # The version number.
-set (SDK_VERSION_MAJOR 1)
-set (SDK_VERSION_MINOR 0)
+set(SDK_VERSION_MAJOR 1)
+set(SDK_VERSION_MINOR 0)
 
 cmake_policy(SET CMP0011 NEW)
 cmake_policy(SET CMP0003 OLD)
 
-OPTION(WITH_DEBUG_MODE "Build with debug mode" ON)
+option(WITH_TESTS "Build tests" ON)
 
-# path settings
-include (SupportSDK.cmake)
+if(WITH_TESTS)
+	enable_testing()
+endif()
 
-# в текущем проекте ничего не нужно дополнительно компилировать
-set (LIBRARIES)
-# следующий код нужен для компиляции и подключения сторонних библиотек 
-    foreach (LIBRARY ${LIBRARIES})
-        find_library("${LIBRARY}_FOUND" ${LIBRARY})
-        message(STATUS "Check the ${LIBRARY} is installed: " ${${LIBRARY}_FOUND})
-        if ( "${${LIBRARY}_FOUND}" STREQUAL "${LIBRARY}_FOUND-NOTFOUND" )
-            message(STATUS "Adding library sources")
-            add_subdirectory (../${LIBRARY} lib/${LIBRARY})
-        endif ()
-    endforeach ()
+# setup (could be moved to .cmake file)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Binaries)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Binaries)
+add_definitions(-DUNICODE)
 
+# Add third party modules
+add_subdirectory(ThirdParty)
 
-
-# specify a precompiled header to use
-#use_precompiled_header(OgreMain 
-  #"${CMAKE_CURRENT_SOURCE_DIR}/include/OgreStableHeaders.h"
-  #"${CMAKE_CURRENT_SOURCE_DIR}/src/OgrePrecompiledHeaders.cpp"
-#)
-
-
-# Setup Math project
+# Add components
+add_subdirectory(DecisionMaking)
+add_subdirectory(ExecutionManagement)
+add_subdirectory(GameCore)
+add_subdirectory(Graphs)
 add_subdirectory(Math)
+add_subdirectory(Network)
+add_subdirectory(Patterns)
+add_subdirectory(Terrain)
+add_subdirectory(Utilities)
+add_subdirectory(WorldInterfacing)

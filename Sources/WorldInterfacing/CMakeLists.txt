@@ -1,0 +1,15 @@
+file(GLOB HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
+file(GLOB SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
+
+add_library(WorldInterfacing SHARED ${HEADER_FILES} ${SOURCE_FILES})
+target_include_directories(WorldInterfacing PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/..)
+
+if(WITH_TESTS)
+	file(GLOB TEST_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/WorldInterfacing.Tests/*.cpp")
+	add_executable(WorldInterfacing.Tests ${TEST_SOURCE_FILES})
+	target_include_directories(WorldInterfacing.Tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${GTEST_INCLUDE_DIR})
+	target_link_libraries(WorldInterfacing.Tests WorldInterfacing Utilities ${GTEST_LIB_DIR}/gtest.lib ${GTEST_LIB_DIR}/gmock.lib)
+	add_dependencies(WorldInterfacing.Tests gtest)
+	add_test(NAME WorldInterfacing.Tests COMMAND WorldInterfacing.Tests)
+	set_target_properties(WorldInterfacing.Tests PROPERTIES FOLDER "Tests")
+endif()

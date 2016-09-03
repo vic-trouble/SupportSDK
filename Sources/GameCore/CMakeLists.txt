@@ -1,34 +1,41 @@
-# Math
+set(ALL_FILES)
+file(GLOB ALL_FOLDERS "*")
+foreach(FOLDER ${ALL_FOLDERS})
+	file(GLOB_RECURSE HEADER_FILES "${FOLDER}/*.h")
+	file(GLOB_RECURSE SOURCE_FILES "${FOLDER}/*.cpp")
+	list(APPEND ${FOLDER}_FILES ${HEADER_FILES} ${SOURCE_FILES})
+	list(APPEND ALL_FILES ${${FOLDER}_FILES}) 
+endforeach()
 
 file(GLOB HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
 file(GLOB SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 
-file(GLOB APP_HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/Applications*.h")
-file(GLOB APP_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/Applications/*.cpp")
+add_library(GameCore SHARED ${HEADER_FILES} ${SOURCE_FILES} ${ALL_FILES})
 
-file(GLOB COMPOSER_HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/Composer/*.h")
-file(GLOB COMPOSER_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/Composer/*.cpp")
+target_include_directories(GameCore PRIVATE 
+	${CMAKE_CURRENT_SOURCE_DIR} 
+	${CMAKE_CURRENT_SOURCE_DIR}/.. 
+	${TINYXML_INCLUDE_DIR} 
+	${GLEW_INCLUDE_DIR} 
+	${ASSIMP_INCLUDE_DIR} 
+	${SOIL_INCLUDE_DIR} 
+	${FREETYPE_INCLUDE_DIR}/freetype2)    
 
-file(GLOB INPUT_HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/Input/*.h")
-file(GLOB INPUT_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/Input/*.cpp")
+set(LIB_SUFFIX $<$<CONFIG:Debug>:d>)
+target_link_libraries(GameCore 
+	Utilities 
+	${SOIL_LIB_DIR}/SOIL.lib 
+	${TINYXML_LIB_DIR}/tinyxml2.lib 
+	opengl32.lib 
+	glu32.lib 
+	${GLEW_LIB_DIR}/libglew_shared${LIB_SUFFIX}.lib
+	${ASSIMP_LIB_DIR}/assimp-vc140-mt.lib 
+	${FREETYPE_LIB_DIR}/freetype${LIB_SUFFIX}.lib)
 
-file(GLOB RENDER_HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/Render/*.h")
-file(GLOB RENDER_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/Render/*.cpp")
+add_dependencies(GameCore SOIL tinyxml glew assimp freetype)
 
-file(GLOB RENDER_GL_HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/Render/OpenGL/*.h")
-file(GLOB RENDER_GL_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/Render/OpenGL/*.cpp")
+foreach(FOLDER ${ALL_FOLDERS})
+	get_filename_component(FOLDER_NAME ${FOLDER} NAME)
+	source_group(${FOLDER_NAME} FILES ${${FOLDER}_FILES})
+endforeach()
 
-include_directories(
-  BEFORE ${CMAKE_CURRENT_SOURCE_DIR}/
-)
-include_directories(
-  ${CMAKE_CURRENT_SOURCE_DIR}/
-)
-
-add_library(GameCore SHARED ${HEADER_FILES} ${SOURCE_FILES}
-							${APP_HEADER_FILES} ${APP_SOURCE_FILES}
-							${COMPOSER_HEADER_FILES} ${COMPOSER_SOURCE_FILES}
-							${INPUT_HEADER_FILES} ${INPUT_SOURCE_FILES}
-							${RENDER_HEADER_FILES} ${RENDER_SOURCE_FILES}
-							${RENDER_GL_HEADER_FILES} ${RENDER_GL_SOURCE_FILES}
-	)
