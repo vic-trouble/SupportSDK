@@ -4,7 +4,7 @@ cmake_minimum_required (VERSION 2.6)
 project(SupportSDK)
 
 set(PROJECT SupportSDK)
-set(USE_FOLDERS ON)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # The version number.
 set(SDK_VERSION_MAJOR 1)
