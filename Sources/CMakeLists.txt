@@ -20,6 +20,8 @@ if(WITH_TESTS)
 endif()
 
 # setup (could be moved to .cmake file)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Binaries)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/Binaries)
 add_definitions(-DUNICODE)
 
 # Add third party modules

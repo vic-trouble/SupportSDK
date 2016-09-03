@@ -1,5 +1,7 @@
 include(ExternalProject)
 
+set(THIRDPARTY_INSTALL_FOLDER ${CMAKE_BINARY_DIR}/ThirdParty/install/${CMAKE_CFG_INTDIR})
+
 add_subdirectory(assimp)
 add_subdirectory(freetype)
 add_subdirectory(glew)

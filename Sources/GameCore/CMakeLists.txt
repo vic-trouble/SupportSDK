@@ -21,15 +21,16 @@ target_include_directories(GameCore PRIVATE
 	${SOIL_INCLUDE_DIR} 
 	${FREETYPE_INCLUDE_DIR}/freetype2)    
 
+set(LIB_SUFFIX $<$<CONFIG:Debug>:d>)
 target_link_libraries(GameCore 
 	Utilities 
 	${SOIL_LIB_DIR}/SOIL.lib 
 	${TINYXML_LIB_DIR}/tinyxml2.lib 
 	opengl32.lib 
 	glu32.lib 
-	${GLEW_LIB_DIR}/libglew_sharedd.lib 
+	${GLEW_LIB_DIR}/libglew_shared${LIB_SUFFIX}.lib
 	${ASSIMP_LIB_DIR}/assimp-vc140-mt.lib 
-	${FREETYPE_LIB_DIR}/freetyped.lib)
+	${FREETYPE_LIB_DIR}/freetype${LIB_SUFFIX}.lib)
 
 add_dependencies(GameCore SOIL tinyxml glew assimp freetype)
 
