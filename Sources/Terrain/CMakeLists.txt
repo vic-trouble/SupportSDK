@@ -3,3 +3,13 @@ file(GLOB SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 
 add_library(Terrain SHARED ${HEADER_FILES} ${SOURCE_FILES})
 target_include_directories(Terrain PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/..)
+
+if(WITH_TESTS)
+	file(GLOB TEST_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/Terrain.Tests/*.cpp")
+	add_executable(Terrain.Tests ${TEST_SOURCE_FILES})
+	target_include_directories(Terrain.Tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${GTEST_INCLUDE_DIR})
+	target_link_libraries(Terrain.Tests Terrain Utilities ${GTEST_LIB_DIR}/gtest.lib ${GTEST_LIB_DIR}/gmock.lib)
+	add_dependencies(Terrain.Tests gtest)
+	add_test(NAME Terrain.Tests COMMAND ${CMAKE_CURRENT_BINARY_DIR}/Terrain.Tests)
+	set_target_properties(Terrain.Tests PROPERTIES FOLDER "Tests")
+endif()

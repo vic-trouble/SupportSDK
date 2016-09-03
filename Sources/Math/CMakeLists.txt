@@ -1,7 +1,15 @@
-# Math
-
 file(GLOB HEADER_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
 file(GLOB SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 
 add_library(Math SHARED ${HEADER_FILES} ${SOURCE_FILES})
 target_include_directories(Math PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/..)
+
+if(WITH_TESTS)
+	file(GLOB TEST_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/Math.Tests/*.cpp")
+	add_executable(Math.Tests ${TEST_SOURCE_FILES})
+	target_include_directories(Math.Tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${GTEST_INCLUDE_DIR})
+	target_link_libraries(Math.Tests ${GTEST_LIB_DIR}/gtest.lib ${GTEST_LIB_DIR}/gmock.lib)
+	add_dependencies(Math.Tests gtest)
+	add_test(NAME Math.Tests COMMAND ${CMAKE_CURRENT_BINARY_DIR}/Math.Tests)
+	set_target_properties(Math.Tests PROPERTIES FOLDER "Tests")
+endif()

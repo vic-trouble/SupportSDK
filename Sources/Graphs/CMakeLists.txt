@@ -3,3 +3,13 @@ file(GLOB SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 
 add_library(Graphs SHARED ${HEADER_FILES} ${SOURCE_FILES})
 target_include_directories(Graphs PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/..)
+
+if(WITH_TESTS)
+	file(GLOB TEST_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/Graphs.Tests/*.cpp")
+	add_executable(Graphs.Tests ${TEST_SOURCE_FILES})
+	target_include_directories(Graphs.Tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/.. ${GTEST_INCLUDE_DIR})
+	target_link_libraries(Graphs.Tests Graphs Utilities ${GTEST_LIB_DIR}/gtest.lib ${GTEST_LIB_DIR}/gmock.lib)
+	add_dependencies(Graphs.Tests gtest)
+	add_test(NAME Graphs.Tests COMMAND ${CMAKE_CURRENT_BINARY_DIR}/Graphs.Tests)
+	set_target_properties(Graphs.Tests PROPERTIES FOLDER "Tests")
+endif()

@@ -3,3 +3,13 @@ file(GLOB SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 
 add_library(ExecutionManagement SHARED ${HEADER_FILES} ${SOURCE_FILES})
 target_include_directories(ExecutionManagement PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/..)
+
+if(WITH_TESTS)
+	file(GLOB TEST_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/ExecutionManagement.Tests/*.cpp")
+	add_executable(ExecutionManagement.Tests ${TEST_SOURCE_FILES})
+	target_include_directories(ExecutionManagement.Tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${GTEST_INCLUDE_DIR})
+	target_link_libraries(ExecutionManagement.Tests ExecutionManagement Utilities ${GTEST_LIB_DIR}/gtest.lib ${GTEST_LIB_DIR}/gmock.lib)
+	add_dependencies(ExecutionManagement.Tests gtest)
+	add_test(NAME ExecutionManagement.Tests COMMAND ${CMAKE_CURRENT_BINARY_DIR}/ExecutionManagement.Tests)
+	set_target_properties(ExecutionManagement.Tests PROPERTIES FOLDER "Tests")
+endif()

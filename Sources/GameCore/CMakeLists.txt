@@ -37,3 +37,4 @@ foreach(FOLDER ${ALL_FOLDERS})
 	get_filename_component(FOLDER_NAME ${FOLDER} NAME)
 	source_group(${FOLDER_NAME} FILES ${${FOLDER}_FILES})
 endforeach()
+
