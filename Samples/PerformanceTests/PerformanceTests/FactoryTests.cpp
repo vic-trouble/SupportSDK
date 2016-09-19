@@ -12,10 +12,17 @@ namespace FactoryTests
 		{
 		public:
 			virtual ~Base() {}
+			size_t GetType() const
+			{
+				return typeid(*this).hash_code();
+			}
 		};
-		struct MyParameters {};
-		using TestFactory = SDK::Factory<Base, std::string, std::unique_ptr<Base>, SDK::DefaultErrorPolicy, &SDK::Utilities::hash_function<std::string>
-			, const MyParameters&>;
+		struct MyParameters
+		{
+			int x = 0;
+		};
+		using TestFactory = SDK::Factory<Base, std::string, std::unique_ptr<Base>, SDK::DefaultErrorPolicy, &SDK::Utilities::hash_function<std::string>,
+			MyParameters&, const MyParameters&>;
 
 		class Test1 : public Base
 		{
@@ -39,14 +46,24 @@ namespace FactoryTests
 			return std::move(p_obj);
 		}
 
+		template <typename T>
+		void Write(MyParameters& o_writer, const T& obj)
+		{
+			o_writer.x = 1;
+		}
+
 		void Test()
 		{
 			TestFactory factory;
 			factory.Register("test1", &CreateType<Test1>);
 			factory.Register("test2", &CreateType<Test2>);
-
+			
+			factory.Register<Test1>(&Write<Test1>);
 			auto p_test1 = factory.Create("test1", MyParameters());
 			auto p_test2 = factory.Create("test2", MyParameters());
+
+			MyParameters out;
+			factory.Write(out, *p_test1);
 		}
 
 	} // VariadicArgsInCreator
