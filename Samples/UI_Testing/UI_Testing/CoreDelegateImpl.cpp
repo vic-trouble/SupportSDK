@@ -32,9 +32,6 @@ using namespace SDK;
 #include <Patterns/MessageDispatcher/Connection.h>
 #include <string>
 
-#include <Utilities/_Link.h>
-#include <Patterns/_Link.h>
-
 #include <GameCore/Resources/ResourceManager.h>
 #include <GameCore/Render/ShaderCompiler.h>
 #include <GameCore/Render/Fonts/FontManager.h>
