@@ -12,6 +12,7 @@ namespace SDK
 		MessageDispatcher* mp_dispatcher;
 		std::size_t m_type;
 		std::string m_publisher;
+		std::string m_handler_id;
 
 	public:
 		Connection(const Connection&) = delete;
@@ -40,12 +41,17 @@ namespace SDK
 		}
 
 		template <typename HandlerType, typename EventType>
-		Connection(MessageDispatcher& o_dispatcher, HandlerType& i_instance, void (HandlerType::*member_function)(const EventType&), const std::string& i_publisher)
+		Connection(MessageDispatcher& o_dispatcher,
+			HandlerType& i_instance,
+			void (HandlerType::*member_function)(const EventType&),
+			const std::string& i_handler_id,
+			const std::string& i_publisher)
 			: m_type(typeid(EventType).hash_code())
 			, mp_dispatcher(&o_dispatcher)
+			, m_handler_id(i_handler_id)
 			, m_publisher(i_publisher)
 		{
-			mp_dispatcher->RegisterHandler<HandlerType, EventType>(i_instance, member_function, i_publisher);
+			mp_dispatcher->RegisterHandler<HandlerType, EventType>(i_instance, member_function, m_handler_id, i_publisher);
 		}
 		~Connection()
 		{
@@ -61,7 +67,7 @@ namespace SDK
 			if (mp_dispatcher == nullptr)
 				return;
 
-			mp_dispatcher->UnregisterHandler(m_type, m_publisher);
+			mp_dispatcher->UnregisterHandler(m_type, m_handler_id, m_publisher);
 			mp_dispatcher = nullptr;
 		}
 	};

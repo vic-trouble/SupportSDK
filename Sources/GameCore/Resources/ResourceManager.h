@@ -274,14 +274,14 @@ namespace SDK
 			template <typename LoadSystem, typename ResType>
 			void RegisterLoader(LoadSystem& i_instance, void (LoadSystem::*member_function)(const PropertyElement&), const std::string& i_resource_id)
 			{
-				m_dispatcher.RegisterHandler<LoadSystem, const PropertyElement&>(i_instance, member_function, i_resource_id);
+				m_dispatcher.RegisterHandler<LoadSystem, const PropertyElement&>(i_instance, member_function, "ResourceMgr", i_resource_id);
 				using Loader = Serialization::LoaderImpl<ResType>;
 				m_additional_functions.push_back({ std::type_index(typeid(ResType)), &Loader::UnloadResource });
 			}
 			template <typename LoadSystem, typename ResType>
 			void Unregister(const std::string& i_resource_id)
 			{
-				m_dispatcher.UnregisterHandler<const PropertyElement&>(i_resource_id);
+				m_dispatcher.UnregisterHandler<const PropertyElement&>("ResourceMgr", i_resource_id);
 				std::type_index ti = typeid(ResType);
 				auto it = std::find_if(m_additional_functions.begin(), m_additional_functions.end(), [ti](AdditionalFunctions& i_funcs)
 				{
