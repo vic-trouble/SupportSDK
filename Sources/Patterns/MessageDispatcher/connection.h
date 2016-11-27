@@ -26,6 +26,7 @@ namespace SDK
 		Connection(Connection&& right)
 			: mp_dispatcher(right.mp_dispatcher)
 			, m_publisher(right.m_publisher)
+			, m_handler_id(right.m_handler_id)
 			, m_type(right.m_type)
 		{
 			right.mp_dispatcher = nullptr;
@@ -35,6 +36,7 @@ namespace SDK
 		{
 			mp_dispatcher = right.mp_dispatcher;
 			m_publisher = right.m_publisher;
+			m_handler_id = right.m_handler_id;
 			m_type = right.m_type;
 			right.mp_dispatcher = nullptr;
 			return *this;
