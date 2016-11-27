@@ -27,6 +27,12 @@ public:
 	~MessageDispatcherBase() {}
 
 	template < class HandlerType, typename EventType>
+	void RegisterHandler(HandlerType& i_instance, void (HandlerType::*member_function)(const EventType&))
+	{
+		RegisterHandler<HandlerType, EventType>(i_instance, member_function, std::string());
+	}
+
+	template < class HandlerType, typename EventType>
 	void RegisterHandler(HandlerType& i_instance, void (HandlerType::*member_function)(const EventType&), const std::string& i_publisher);
 
 	template < class EventType >
@@ -96,6 +102,7 @@ template < typename EventType >
 void MessageDispatcherBase<EventBase>::HandleMessage(const EventType& i_event, const std::string& i_publisher)
 {
 	static const size_t event_type_hash = typeid(EventType).hash_code();
+	static const size_t empty_string_hash = SDK::Utilities::hash_function(std::string());
 	auto handlers_it = std::find_if(m_handlers.begin(), m_handlers.end(), [](const HandlersPair& handlers)
 	{
 		return handlers.first == event_type_hash;
@@ -104,12 +111,11 @@ void MessageDispatcherBase<EventBase>::HandleMessage(const EventType& i_event, c
 	{
 		const size_t hash = SDK::Utilities::hash_function(i_publisher);
 		auto& handlers = handlers_it->second;
-		auto handler_it = std::find_if(handlers.begin(), handlers.end(), [hash](const HandlerPair& h_p)
+		for (auto& handler : handlers)
 		{
-			return h_p.first == hash;
-		});
-		if (handler_it != handlers.end())
-			handler_it->second->ExecuteHandler(i_event);
+			if (handler.first == empty_string_hash || handler.first == hash)
+				handler.second->ExecuteHandler(i_event);
+		}
 	}
 
 }
