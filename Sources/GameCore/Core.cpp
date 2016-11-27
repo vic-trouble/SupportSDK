@@ -45,7 +45,7 @@ namespace SDK
 	std::unique_ptr<CoreDelegate> Core::mp_delegate = nullptr;
 	std::unique_ptr<ApplicationBase> Core::mp_application = nullptr;
 	std::unique_ptr<IRenderer> Core::mp_renderer = nullptr;
-	std::unique_ptr<ObjectStorageBase> Core::mp_go_storage = nullptr;
+	std::unique_ptr<ObjectStorageBase<GlobalObjectBase>> Core::mp_go_storage = nullptr;
 	Options Core::m_options;
 
 	void Core::CreateSingletons()
