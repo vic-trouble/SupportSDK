@@ -1,16 +1,16 @@
 #ifndef	__GAMECORE_OBJECTSTORAGEBASE_H__
 #define __GAMECORE_OBJECTSTORAGEBASE_H__
 
-#include "GlobalObjectBase.h"
 #include <Utilities/type_index.h>
 
 namespace SDK
 {
+	template <typename BaseObject>
 	class ObjectStorageBase
 	{
 	private:
-		virtual GlobalObjectBase* GetGlobalObjectImpl(size_t i_type_code) const = 0;
-		virtual void AddGlobalObjectImpl(std::unique_ptr<GlobalObjectBase> ip_object) = 0;
+		virtual BaseObject* GetGlobalObjectImpl(size_t i_type_code) const = 0;
+		virtual void AddGlobalObjectImpl(std::unique_ptr<BaseObject> ip_object) = 0;
 		virtual void RemoveGlobalObjectImpl(size_t i_type_code) = 0;
 
 	public:

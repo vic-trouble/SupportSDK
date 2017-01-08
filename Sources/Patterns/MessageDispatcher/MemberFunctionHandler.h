@@ -25,4 +25,22 @@ class MemberFunctionHandler : public MessageHandlerBase < EventBase >
 	  }	 
   };
 
+template <class EventType, class EventBase>
+class FunctionHandler : public MessageHandlerBase < EventBase >
+{
+public:
+	using Function = void(*)(const EventType&);
+private:
+	Function m_function;
+public:
+	FunctionHandler(Function i_function)
+		: m_function(i_function)
+	{	}
+
+	virtual void ExecuteHandler(const EventBase& i_event) override
+	{
+		(m_function)(static_cast<const EventType&>(i_event));
+	}
+};
+
 #endif

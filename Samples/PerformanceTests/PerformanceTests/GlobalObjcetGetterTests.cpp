@@ -32,7 +32,7 @@ namespace GlobalObjectGetterTests
 	struct First : public SDK::GlobalObjectBase
 	{
 		int x;
-		void SetX(bool val)
+		virtual void SetX(bool val)
 		{
 			x = rand()%1;
 		}
@@ -116,7 +116,7 @@ namespace GlobalObjectGetterTests
 		}
 	}
 
-	void TestGetter(SDK::ObjectStorageBase& i_getter)
+	void TestGetter(SDK::ObjectStorageBase<SDK::GlobalObjectBase>& i_getter)
 	{
 		constexpr static size_t NUMBER_3 = NUMBER / 3;
 		for (size_t i = 0; i < NUMBER_3; ++i)
@@ -146,10 +146,35 @@ namespace GlobalObjectGetterTests
 		return clock() - begin;
 	}
 
+	void TestReplacement()
+	{
+		struct FirstReplace : public First
+		{
+			virtual void SetX(bool val) override
+			{
+				x = 5;
+			}
+
+			virtual void RecalcHashCode() { m_hash_code = typeid(First).hash_code(); }
+		};
+		SDK::DefaultObjectsStorage g_getter;
+
+		// this will be the default in programm
+		g_getter.AddGlobalObject<First>();
+		// in test we should delete first
+		g_getter.RemoveGlobalObject<First>();
+		// and add our replacement
+		g_getter.AddGlobalObject<FirstReplace>();
+		
+		g_getter.GetGlobalObject<First>()->SetX(false);
+		std::cout << g_getter.GetGlobalObject<First>()->x;
+	}
+
 	void Test()
 	{
 		std::cout << "==========================================================" << std::endl
 			<< "\t\tGlobal objects getter tests" << std::endl;
+		TestReplacement();
 		ConstructIndices();
 		SDK::DefaultObjectsStorage g_getter;
 		{

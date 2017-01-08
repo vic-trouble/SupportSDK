@@ -4,6 +4,7 @@
 #include "GameCoreAPI.h"
 
 #include "ObjectStorageBase.h"
+#include "GlobalObjectBase.h"
 
 // objects
 #include "Resources/ResourceManager.h"
@@ -11,7 +12,7 @@
 namespace SDK
 {
 
-	class DefaultObjectsStorage : public ObjectStorageBase
+	class DefaultObjectsStorage : public ObjectStorageBase<GlobalObjectBase>
 	{
 	private:
 		std::vector<GlobalObjectBase*> m_cache_objects;
