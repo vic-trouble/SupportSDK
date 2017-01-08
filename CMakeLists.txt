@@ -14,3 +14,4 @@ cmake_policy(SET CMP0003 OLD)
 #include (Sources/SupportSDK.cmake)
 
 add_subdirectory(Sources)
+add_subdirectory(Samples)
