@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
 #include "FSM_Test_HierarchicalvsTemplate.h"
 
@@ -1164,3 +1164,102 @@ namespace HiararchicalvsTemplate
 		}
 	}
 } // HiararchicalvsTemplate
+
+
+namespace Test
+{
+	using namespace SDK;
+
+	// определяем в ObjectDrop.h
+
+	template <typename T>
+	struct Helper {};
+
+	struct start_roll {};
+	struct start_jump {};
+
+	class EmptyState;
+
+	template <typename DerivedFSM>
+	using Tr = TransitionsTable<
+		_row<EmptyState, typename Helper<DerivedFSM>::JumpState, start_jump>,
+		_row<typename Helper<DerivedFSM>::JumpState, typename Helper<DerivedFSM>::RollingState, start_roll>
+	>;
+
+	template <typename Derived>
+	class BaseFSM : public StateMachine<3, Tr<Derived>, EmptyState>
+	{};
+
+
+	// уже в другом файле - CoinsDrop.h
+
+	class CoinJumpState;
+	class CoinRollState;
+	class CoinFSM;
+
+	template <>
+	struct Helper<CoinFSM>
+	{
+		using JumpState = CoinJumpState;
+		using RollingState = CoinRollState;
+	};
+
+	class CoinFSM : public BaseFSM<CoinFSM>
+	{
+	public:
+		CoinFSM()
+		{
+			// чего-то конструируем
+		}
+	};
+
+	class CoinJumpState : public BaseState<>
+	{};
+
+	class CoinRollState : public BaseState<>
+	{};
+
+	// уже в другом файле - DiamondDrop.h
+
+	class DropJumpState;
+	class DropRollState;
+	class DropFSM;
+
+	template <>
+	struct Helper<DropFSM>
+	{
+		using JumpState = CoinJumpState;
+		using RollingState = CoinRollState;
+	};
+
+	class DropFSM : public BaseFSM<DropFSM>
+	{
+	public:
+		DropFSM()
+		{
+			// чего-то конструируем
+		}
+	};
+
+	class DropJumpState : public BaseState<>
+	{
+	public:
+		void OnEnter(const start_jump&) {}
+	};
+
+	class DropRollState : public BaseState<>
+	{
+	public:
+		void OnEnter(const start_roll&) {}
+	};
+
+	void Test()
+	{
+		DropFSM drop;
+		drop.ProcessEvent(start_roll());
+
+		CoinFSM coin;
+		coin.ProcessEvent(start_roll());
+	}
+
+}
