@@ -49,6 +49,13 @@ namespace MessageDispatcherTests
 
 		dispatcher.UnregisterHandler<TestEvent>("handler_id", "publisher");
 		dispatcher.UnregisterHandler<TestEvent>("handler_id1", "publisher");
+
+		dispatcher.RegisterHandler<TestEvent>([](const TestEvent& i_evt)
+		{
+			std::cout << "asdasd" << std::endl;
+		}, "test", "pub");
+		dispatcher.HandleMessage(TestEvent(), "pub");
+		dispatcher.UnregisterHandler<TestEvent>("test", "pub");
 	}
 
 	void Test()

@@ -46,6 +46,38 @@ public:
 	template < class HandlerType, typename EventType >
 	void RegisterHandler(HandlerType& i_instance, void (HandlerType::*member_function)(const EventType&), const std::string& i_handler_id, const std::string& i_publisher);
 
+	template <typename EventType>
+	void RegisterHandler(void(*Function)(const EventType&), const std::string& i_handler_id, const std::string& i_publisher)
+	{
+		static const size_t event_type_hash = typeid(EventType).hash_code();
+		// find list of handlers for specific event
+		auto it = std::find_if(m_handlers.begin(), m_handlers.end(), [](const HandlersPair& handlers)
+		{
+			return handlers.first == event_type_hash;
+		});
+		if (it == m_handlers.end())
+		{
+			m_handlers.push_back(std::make_pair(event_type_hash, EventHandlers()));
+			// iterator for last element
+			it = m_handlers.end();
+			--it;
+		}
+		auto& handlers = it->second;
+		const size_t publisher_hash = SDK::Utilities::hash_function(i_publisher);
+		const size_t handler_hash = SDK::Utilities::hash_function(i_handler_id);
+		auto handler_it = std::find_if(handlers.begin(), handlers.end(), [publisher_hash, handler_hash](const HandlerPair& h_p)
+		{
+			return h_p.handler_hash == handler_hash && h_p.publisher_hash == publisher_hash;
+		});
+		if (handler_it != handlers.end())
+		{
+			//assert(false && "We have already handler for this event");
+			return;
+		}
+		auto p_handler = std::make_unique< FunctionHandler<EventType, EventBase> >(Function);
+		handlers.push_back(HandlerPair(publisher_hash, handler_hash, std::move(p_handler)));
+	}
+
 	template < class EventType >
 	void UnregisterHandler(const std::string& i_handler_id)
 	{
